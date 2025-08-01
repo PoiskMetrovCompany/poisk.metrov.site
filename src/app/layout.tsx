@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Onest } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
+import CarouselComponent from "@/layouts/carouselComponent"
 
 const onest = Onest({
   variable: "--font-onest",
