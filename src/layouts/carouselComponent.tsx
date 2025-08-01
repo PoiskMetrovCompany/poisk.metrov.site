@@ -23,14 +23,14 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
     items[0],
     items[1]
   ];
-  
+
   const cardWidth = itemWidth + gap;
   const initialOffset = -cardWidth * 2;
-  
+
   useEffect(() => {
     setTranslateX(initialOffset);
   }, [initialOffset]);
-  
+
   const moveCarousel = (direction: string) => {
     if (isAnimating) return;
     
@@ -58,10 +58,10 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
       }
     }, 500);
   };
-  
+
   const nextSlide = () => moveCarousel('next');
   const prevSlide = () => moveCarousel('prev');
-  
+
   return (
     <div className="carousel">
       <div className="carousel__navigation">
@@ -76,9 +76,10 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
           </svg>
         </button>
       </div>
-      <div className="carousel__viewport" style={{ width: '1690px', margin: '0 auto', overflow: 'hidden' }}>
-        <div
-          className="carousel__track"
+
+      <div className="carousel__viewport" style={{ width: '1440px', margin: '0 auto', overflow: 'hidden' }}>
+        <div 
+          className="carousel__track" 
           style={{
             display: 'flex',
             gap: `${gap}px`,

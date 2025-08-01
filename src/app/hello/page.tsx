@@ -92,7 +92,7 @@ const TestPage = () => {
   // Исправленный путь к изображению
   const images = [
     "/img/buidingExpandImg.png",
-    "/img/buidingExpandImg.png", // добавил для остальных карточек
+    "/img/buidingExpandImg.png", 
     "/img/buidingExpandImg.png",
     "/img/buidingExpandImg.png",
     "/img/buidingExpandImg.png"
