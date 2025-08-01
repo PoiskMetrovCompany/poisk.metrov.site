@@ -50,6 +50,56 @@
       }
 
       &__percent {
+        display: grid;
+        gap: 32px;
+        padding: 40px 40px 12px 40px;
+        border-radius: 32px;
+        background-color: var(--color-orange);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        color: var(--color-white);
+
+        &__text {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        &__title {
+          font-weight: 500;
+          font-size: 34px;
+          line-height: 130%;
+        }
+
+        &__subtitle {
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 130%;
+        }
+
+        &__date {
+          display: flex;
+          gap: 12px;
+          width: 100%;
+          background-color: var(--color-dark-orange);
+          border-radius: 20px;
+          padding: 8px 12px;
+
+          &__time {
+            display: flex;
+            gap: 4px;
+
+            &__number {
+              width: 80px;
+              height: 80px;
+            }
+          }
+        }
       }
     }
   }

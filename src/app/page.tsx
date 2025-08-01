@@ -24,14 +24,54 @@ export default function Home() {
             </Link>
           </div>
           <div className={styles.main__container__cards__percent}>
-            <h2>Следующее заседание Совета директоров ЦБ</h2>
-            <h3>Изменение процентных ставок</h3>
+            <div className={styles.main__container__cards__percent__text}>
+              <h2 className={styles.main__container__cards__percent__title}>
+                Следующее заседание Совета директоров ЦБ
+              </h2>
+              <h3 className={styles.main__container__cards__percent__subtitle}>
+                Изменение процентных ставок
+              </h3>
+            </div>
+
             <div className={styles.main__container__cards__percent__date}>
               <div
                 className={styles.main__container__cards__percent__date__time}
               >
-                <span>23</span> <span>:</span> <span>12</span> <span>:</span>{" "}
-                <span>18</span>
+                <span
+                  className={
+                    styles.main__container__cards__percent__date__time__number
+                  }
+                >
+                  23
+                </span>{" "}
+                <span
+                  className={
+                    styles.main__container__cards__percent__date__time__colon
+                  }
+                >
+                  :
+                </span>
+                <span
+                  className={
+                    styles.main__container__cards__percent__date__time__number
+                  }
+                >
+                  12
+                </span>
+                <span
+                  className={
+                    styles.main__container__cards__percent__date__time__colon
+                  }
+                >
+                  :
+                </span>
+                <span
+                  className={
+                    styles.main__container__cards__percent__date__time__number
+                  }
+                >
+                  18
+                </span>
               </div>
               <div
                 className={styles.main__container__cards__percent__date__desc}
@@ -40,6 +80,9 @@ export default function Home() {
                 <span>часов</span>
                 <span>минут</span>
               </div>
+            </div>
+            <div className={styles.main__container__cards__percent__button}>
+              Подробнее
             </div>
           </div>
         </div>
