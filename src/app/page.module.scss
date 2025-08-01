@@ -1,0 +1,56 @@
+.main {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &__cards {
+      margin-top: 63px;
+      display: grid;
+      grid-template-columns: 2.1fr 1fr 1fr;
+      gap: 40px;
+
+      &__title {
+        padding: 40px;
+
+        display: flex;
+        justify-content: space-between;
+
+        border-radius: 32px;
+        background-color: var(--color-green-light);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        grid-template-columns: auto 40px;
+        background-image: url("/images/maincard.svg");
+        background-position: center;
+        background-size: cover;
+
+        &__heading {
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 130%;
+          color: var(--color-white);
+
+          width: 565px;
+        }
+
+        &__link {
+          width: 64px;
+          height: 64px;
+          background-color: var(--color-white);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      &__percent {
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ body {
 .container {
   margin: 0 auto;
   padding: 0 120px;
+  max-width: 1920px;
 }
 
 :root {
@@ -24,4 +25,5 @@ body {
   --color-gray: #e4e4e4;
   --color-blue: #0436b6;
   --color-white: #fff;
+  --color-green-light: #639c70;
 }
