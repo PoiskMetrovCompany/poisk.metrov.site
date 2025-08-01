@@ -9,13 +9,19 @@ a {
   text-decoration: none;
 }
 
-.container {
-  padding: 0 120px;
+body {
   background-color: var(--color-beige);
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 120px;
 }
 
 :root {
   --color-black: #181817;
   --color-beige: #f4f4f1;
   --color-gray: #e4e4e4;
+  --color-blue: #0436b6;
+  --color-white: #fff;
 }
