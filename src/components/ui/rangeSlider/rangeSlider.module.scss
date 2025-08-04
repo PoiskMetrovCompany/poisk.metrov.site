@@ -1,0 +1,48 @@
+.rangeSlider {
+  position: relative;
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  margin-bottom: 0;
+  align-items: center;
+
+  .track {
+    position: relative;
+    height: 1.5px;
+    width: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: #e0e0e0;
+  }
+
+  .range {
+    position: absolute;
+    height: 100%;
+    background-color: #ff6b35;
+  }
+
+  .thumb {
+    display: block;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: var(--color-orange);
+
+    transition: all 0.2s ease;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+
+  .valueLabel {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import React from "react"
 import styles from "./header.module.scss"
-import Heading1 from "@/components/ui/Heading1"
+import Heading1 from "@/components/ui/heading1"
 import Image from "next/image"
 import IconButton from "@/components/ui/buttons/IconButton"
 
@@ -8,8 +8,8 @@ const DetailsHeader = () => {
   return (
     <div className={styles.header}>
       <div className={styles.header__title}>
-        <Heading1>1-комнатная квартира в ЖК Калининский квартал,</Heading1>
-        <Heading1>31.4 м², этаж 4</Heading1>
+        <Heading1>ЖК Калининский квартал</Heading1>
+        {/* <Heading1>31.4 м², этаж 4</Heading1> */}
       </div>
       <div className={styles.header__place}>
         <div className={styles.header__place__text}>

@@ -1,0 +1,84 @@
+.dropdown {
+  border: 1.5px solid var(--color-border-gray);
+  border-radius: 16px;
+  padding: 24px 32px;
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: transparent;
+
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  color: var(--color-text-gray);
+  font-family: var(--font-onest);
+}
+
+.Trigger {
+  all: unset;
+
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 13px;
+  line-height: 1;
+  height: 35px;
+  gap: 5px;
+}
+
+.Content {
+  background-color: var(--color-beige);
+  box-shadow: 0 4px 3px 2px #0000001a;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.Viewport {
+  padding: 5px;
+}
+
+.Item {
+  font-size: 13px;
+  line-height: 1;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 0 35px 0 25px;
+  position: relative;
+  user-select: none;
+  &[data-disabled] {
+    pointer-events: none;
+  }
+  &[data-highlighted] {
+    outline: none;
+  }
+}
+
+.Label {
+  padding: 0 25px;
+  font-size: 12px;
+  line-height: 25px;
+}
+
+.ItemIndicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ScrollButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  background-color: white;
+  color: var(--violet-11);
+  cursor: default;
+}

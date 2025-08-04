@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./details.module.scss"
 import DetailsHeader from "./components/header"
 import Estate from "./components/estate"
+import FlatList from "./components/flatList"
 
 const DetailsPage = () => {
   return (
@@ -9,6 +10,7 @@ const DetailsPage = () => {
       <div className={styles.details__container}>
         <DetailsHeader />
         <Estate />
+        <FlatList />
       </div>
     </div>
   )
