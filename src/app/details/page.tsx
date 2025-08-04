@@ -6,6 +6,7 @@ import FlatList from "./components/flatList"
 import AboutObject from "./components/aboutObject"
 import AboutComplex from "./components/aboutComplex"
 import Location from "./components/location"
+import ConstructionProgress from "./components/constructionProgress"
 
 const DetailsPage = () => {
   return (
@@ -17,6 +18,7 @@ const DetailsPage = () => {
         <AboutObject />
         <AboutComplex />
         <Location />
+        <ConstructionProgress />
       </div>
     </div>
   )

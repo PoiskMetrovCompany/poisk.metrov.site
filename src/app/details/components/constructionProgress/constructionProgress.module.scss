@@ -1,3 +1,147 @@
 .constructionProgress {
   margin: 120px 0;
+  padding: 60px 0;
+
+  &__header {
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  &__content {
+    position: relative;
+    margin: 0 auto;
+
+    // padding: 0 60px;
+  }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiperSlide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageCard {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
+  }
+}
+
+.imageWrapper {
+  position: relative;
+
+  overflow: hidden;
+
+  aspect-ratio: 533 / 360;
+  width: 100%;
+  border-radius: 32px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.date {
+  margin-top: 16px;
+
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 130%;
+  color: var(--color-black);
+}
+
+.navigationButton {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  color: var(--color-black);
+
+  transition: all 0.3s ease;
+
+  &::after {
+    display: none;
+  }
+
+  &:hover {
+    transform: translateY(-50%) scale(1.05);
+    background: var(--color-beige);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 15%);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+.navigationButtonPrev {
+  left: 0;
+}
+
+.navigationButtonNext {
+  right: 0;
+}
+
+@media (width <= 768px) {
+  .constructionProgress {
+    margin: 60px 0;
+    padding: 40px 0;
+
+    &__content {
+      padding: 0 40px;
+    }
+  }
+
+  .navigationButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .imageWrapper {
+    height: 200px;
+  }
+
+  .date {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (width <= 480px) {
+  .constructionProgress__content {
+    padding: 0 30px;
+  }
+
+  .navigationButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .imageWrapper {
+    height: 180px;
+  }
 }
