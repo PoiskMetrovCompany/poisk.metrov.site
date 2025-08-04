@@ -56,12 +56,18 @@ const Estate = () => {
             <button
               className={styles.info__description__price__hasChanged__button}
             >
-              <Image
-                src="/images/arrow-right.svg"
-                alt="arrow-right"
-                width={7}
-                height={10}
-              />
+              <div
+                className={
+                  styles.info__description__price__hasChanged__button__icon
+                }
+              >
+                <Image
+                  src="/images/arrow-right.svg"
+                  alt="arrow-right"
+                  fill
+                  objectFit="cover"
+                />
+              </div>
             </button>
           </div>
         </div>

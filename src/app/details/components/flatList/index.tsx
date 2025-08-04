@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./flatList.module.scss"
 import Filter from "./filter"
 import Heading2 from "@/components/ui/heading2"
+import LayoutList from "./layoutList"
 
 const FlatList = () => {
   return (
@@ -10,6 +11,7 @@ const FlatList = () => {
         <Heading2>Квартиры и цены</Heading2>
       </div>
       <Filter />
+      <LayoutList />
     </div>
   )
 }

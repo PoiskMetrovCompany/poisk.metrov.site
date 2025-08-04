@@ -10,4 +10,46 @@
   background-color: var(--color-white);
   border: 1.5px solid var(--color-border-gray);
   font-family: var(--font-onest);
+
+  &_sm {
+    width: 48px;
+    height: 48px;
+  }
+
+  &_md {
+    width: 64px;
+    height: 64px;
+  }
+
+  &_lg {
+    width: 80px;
+    height: 80px;
+  }
+
+  &_primary {
+    background-color: var(--color-white);
+    border: 1.5px solid var(--color-border-gray);
+  }
+
+  &_secondary {
+    background-color: var(--color-beige);
+    border: none;
+  }
+
+  &__icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: none;
+
+    &_primary {
+      width: 32px;
+      height: 32px;
+    }
+
+    &_secondary {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }
