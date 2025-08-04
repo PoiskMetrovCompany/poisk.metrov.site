@@ -1,0 +1,312 @@
+/* ==============================================
+    БАЗОВЫЕ СТИЛИ И ТИПОГРАФИЯ
+    ============================================== */
+
+/* Шрифты */
+@font-face {
+    font-family: "Onest";
+    src: url("../fonts/Onest-VariableFont_wght.ttf");
+}
+
+/* HTML и Body */
+html {
+    font-family: 'Onest';
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+:target{
+    scroll-margin-top: 120px;
+}
+
+body {
+    margin: 0;
+    background: rgba(244, 244, 241, 1);
+    padding-bottom: 3rem; /* 48px */
+}
+
+/* Базовая типография */
+h1, p {
+    margin: 0.625rem 0; /* 10px */
+}
+
+/* ==============================================
+LAYOUT СТРУКТУРА
+============================================== */
+
+/* Header */
+header {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 3rem; /* 48px */
+    position: relative;
+}
+
+.container{
+  padding: 0;
+}
+
+button{
+    cursor: pointer;
+    border: none; 
+}
+
+header p{
+    width: 40%;
+}
+
+#nonTextImg{
+    width: 40px;
+    height: 40px;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: calc(100vh - 5.625rem);
+    position: relative;
+    padding:  0 100px;
+}
+
+article {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 3rem; /* 48px */
+}
+
+article h1 {
+    font-weight: 500;
+    font-size: 1.5rem; /* 24px */
+}
+
+article p {
+    font-weight: 400;
+    color: #818181;
+    font-size: 1.125rem; /* 18px */
+}
+.offers{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+}
+.row{
+  display: flex;
+  width: 100%;
+}
+.property-card__content{
+  width: 90%;
+  margin: auto;
+}
+.property-card__row{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.offers__title{
+  font-weight: 500;
+  font-size: 34px;
+  padding-left: 30px;
+}
+.offers__container{
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+  gap: 50px;
+  position: relative;
+}
+.offers_navigation{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  position: absolute;
+  z-index: 1000;
+  top: calc(50% - 24px)
+}
+.offers_navigation_button{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+}
+.carousel__button{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+}
+.property-card{
+  min-width: 820px;
+  height: 730px;
+  background-color: white;
+  border-radius: 40px;
+  overflow-y: hidden;
+  position: relative;
+}
+
+.property-card .property-card__image > img {
+    width: 100% !important;
+    height: 600px !important;
+    border-radius: 40px;
+    transition: height 0.5s ease-in-out !important;
+    overflow: hidden;
+    object-fit: cover !important;
+    object-position: center !important;
+}
+
+.property-card:hover .property-card__image > img {
+    height: 360px !important;
+}
+
+.property-card__badge{
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  color: white;
+  display: flex;
+  gap: 10px
+}
+.property-card__badge span{
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 64px;
+}
+.property-card__title{
+  font-weight: 500;
+  font-size: 24px;
+}
+.property-card__price{
+  font-weight: 400;
+  font-size: 24px;
+}
+.property-card__subtitle{
+  font-weight: 400;
+  font-size: 18px;
+  color: rgba(73, 73, 73, 1)
+}
+.property-card__location{
+  display: flex;
+  justify-content: space-between;
+  width: 280px;
+}
+.property-card__location span{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(129, 129, 129, 1)
+}
+.property-card__location span img{
+  width: 23px;
+  height: 23px;
+}
+.property-card__icon{
+  width: 24px !important;
+  height: 24px !important;
+}
+.property-card__divider{
+  width: 100%;
+  border-bottom: 1px rgba(228, 228, 228, 1) solid ;
+  margin-top: 30px;
+}
+.property-card__specifications {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.specifications {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 16px 40px; 
+  width: 100%;
+}
+
+.specifications__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+}
+
+.specifications__type {
+  font-weight: 400;
+  font-size: 16px;
+  color: rgba(24, 24, 23, 1);
+  flex-shrink: 0; 
+}
+
+.specifications__price {
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  text-align: right;
+  white-space: nowrap; 
+}
+
+.property-card__actions{
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.property-card__button{
+  width: 326px;
+  height: 56px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.property-card__button_primary{
+  background: rgba(236, 125, 63, 1);
+  color: white;
+}
+.property-card__button_secondary{
+  background: none;
+  border: 1.5px rgba(233, 233, 233, 1) solid;
+}
+.property-card__favorite{
+  width: 56px;
+  height: 56px;
+  border-radius: 40px;
+  border: 1.5px rgba(233, 233, 233, 1) solid;
+  background: none;
+  display: flex;
+}
+.property-card__favorite svg{
+  width: 25px;
+  height: 25px;
+  margin: auto;
+}
+.offers_button.row{
+  justify-content: center;
+  width: 100%;
+}
+.offers_button-catalogue{
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+  background: rgba(236, 125, 63, 1);
+  padding: 20px;
+  border-radius: 40px;
+}
+.carousel{
+  position: relative;
+}
+.carousel__navigation{
+  width: 102%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  position: absolute;
+  z-index: 1000;
+  top: calc(50% - 24px);
+  left: -30px;
+}

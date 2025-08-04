@@ -1,8 +1,14 @@
-import React from "react";
+"use client";
 
-const DetailsButton = ({ onClick }) => {
+import React, { FC } from "react";
+
+interface IDetailsButtonProps {
+  onClick?: () => void;
+}
+
+const DetailsButton: FC<IDetailsButtonProps> = ({ onClick }) => {
   return (
-    <button 
+    <button
       className="property-card__button property-card__button_secondary"
       onClick={onClick}
     >
