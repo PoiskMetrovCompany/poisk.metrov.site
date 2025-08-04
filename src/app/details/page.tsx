@@ -3,7 +3,9 @@ import styles from "./details.module.scss"
 import DetailsHeader from "./components/header"
 import Estate from "./components/estate"
 import FlatList from "./components/flatList"
-import AboutObject from "./components/flatList/aboutObject"
+import AboutObject from "./components/aboutObject"
+import AboutComplex from "./components/aboutComplex"
+import Location from "./components/location"
 
 const DetailsPage = () => {
   return (
@@ -13,6 +15,8 @@ const DetailsPage = () => {
         <Estate />
         <FlatList />
         <AboutObject />
+        <AboutComplex />
+        <Location />
       </div>
     </div>
   )

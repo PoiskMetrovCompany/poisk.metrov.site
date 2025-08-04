@@ -71,7 +71,7 @@ const AboutObject = () => {
               <p
                 className={styles.aboutObject__content__item__text_description}
               >
-                этажей
+                Этажей
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ const AboutObject = () => {
               <p
                 className={styles.aboutObject__content__item__text_description}
               >
-                паркинг
+                Паркинг
               </p>
             </div>
           </div>
@@ -103,7 +103,7 @@ const AboutObject = () => {
               <p
                 className={styles.aboutObject__content__item__text_description}
               >
-                корпуса
+                Корпуса
               </p>
             </div>
           </div>
