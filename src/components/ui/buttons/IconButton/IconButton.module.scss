@@ -12,6 +12,8 @@
 
   background-color: var(--color-white);
 
+  transition: all 0.3s ease;
+
   &_sm {
     width: 48px;
     height: 48px;
@@ -25,26 +27,6 @@
   &_lg {
     width: 80px;
     height: 80px;
-  }
-
-  &_primary {
-    border: 1.5px solid var(--color-border-gray);
-    background-color: var(--color-white);
-
-    &:hover {
-      border: 2px solid var(--color-orange);
-      background-color: var(--color-beige);
-
-      // .iconButton__iconImage {
-      //   // background-color: var(--color-orange);
-      //   color: var(--color-orange) !important;
-      // }
-    }
-  }
-
-  &_secondary {
-    border: none;
-    background-color: var(--color-beige);
   }
 
   &__icon {
@@ -62,5 +44,24 @@
       width: 24px;
       height: 24px;
     }
+  }
+
+  &_primary {
+    border: 1.5px solid var(--color-border-gray);
+    background-color: var(--color-white);
+
+    &:hover {
+      border: 1.5px solid var(--color-orange);
+
+      .iconButton__icon {
+        filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+          saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+      }
+    }
+  }
+
+  &_secondary {
+    border: none;
+    background-color: var(--color-beige);
   }
 }

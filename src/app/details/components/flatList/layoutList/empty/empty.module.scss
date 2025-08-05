@@ -1,0 +1,40 @@
+.emptyList {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+
+  height: 367px;
+  padding: 56px 0;
+  border-radius: 64px;
+
+  background-color: var(--color-white);
+
+  &__icon {
+    position: relative;
+    width: 202px;
+    height: 152px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+
+    &__title {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 130%;
+      color: var(--color-black);
+      text-align: center;
+    }
+
+    &__description {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 150%;
+      color: var(--color-text-black);
+    }
+  }
+}

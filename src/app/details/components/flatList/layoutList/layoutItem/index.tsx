@@ -3,9 +3,9 @@ import React, { useState } from "react"
 import { Accordion } from "radix-ui"
 import Image from "next/image"
 import clsx from "clsx"
-import styles from "./layoutList.module.scss"
+import styles from "./layoutItem.module.scss"
 import FlatLayoutCard from "@/components/flatLayoutCard"
-import Pagination from "../pagination"
+import Pagination from "../../pagination"
 
 interface ILayoutItemProps {
   isOpen: boolean

@@ -1,15 +1,19 @@
 "use client"
 import React, { useState } from "react"
-import styles from "./layoutList.module.scss"
 import { Accordion } from "radix-ui"
 import LayoutItem from "./layoutItem"
+import EmptyList from "./empty"
 
 const LayoutList = () => {
   const [openId, setOpenId] = useState<string[]>([])
+  const [isEmpty, setIsEmpty] = useState(true)
+
+  if (isEmpty) {
+    return <EmptyList />
+  }
 
   return (
     <Accordion.Root
-      className={styles.layoutList}
       type="multiple"
       onValueChange={(value) => setOpenId(value as string[])}
     >
