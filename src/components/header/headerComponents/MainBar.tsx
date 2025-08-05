@@ -1,6 +1,6 @@
 "use client";
 import React, { FC } from "react";
-import styles from "../header.module.css";
+import styles from "../header.module.scss";
 import Navigation from "./Navigation";
 import ContactInfo from "./ContactInfo";
 import UserActions from "./UserActions";

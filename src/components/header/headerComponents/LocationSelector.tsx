@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import styles from "../header.module.css";
+import styles from "../header.module.scss";
 
 interface ICity {
   name: string;

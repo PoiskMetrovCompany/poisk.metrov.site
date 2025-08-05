@@ -1,6 +1,6 @@
 "use client";
 import React, { FC } from "react";
-import styles from "../header.module.css";
+import styles from "../header.module.scss";
 
 interface ILogoProps {
   src?: string;
