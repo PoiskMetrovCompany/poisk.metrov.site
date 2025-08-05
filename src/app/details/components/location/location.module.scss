@@ -11,8 +11,10 @@
     gap: 40px;
 
     &__map {
+      overflow: hidden;
       width: 100%;
-      background-color: #f0f0f0;
+      height: 620px;
+      border-radius: 32px;
     }
 
     &__info {
@@ -42,6 +44,12 @@
 
           background-color: transparent;
 
+          transition: all 0.2s ease;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
           &__icon {
             position: relative;
             width: 48px;
@@ -53,6 +61,21 @@
             font-weight: 500;
             line-height: 150%;
             color: var(--color-text-gray);
+
+            transition: color 0.2s ease;
+          }
+
+          &__active {
+            .location__content__info__list__item__title {
+              font-weight: 600;
+              color: var(--color-primary);
+            }
+
+            .location__content__info__list__item__icon {
+              filter: brightness(0) saturate(100%) invert(27%) sepia(51%)
+                saturate(2878%) hue-rotate(346deg) brightness(104%)
+                contrast(97%);
+            }
           }
         }
       }

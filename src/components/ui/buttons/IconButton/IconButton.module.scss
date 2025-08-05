@@ -5,11 +5,12 @@
 
   width: 64px;
   height: 64px;
-
-  border-radius: 50%;
-  background-color: var(--color-white);
   border: 1.5px solid var(--color-border-gray);
+  border-radius: 50%;
+
   font-family: var(--font-onest);
+
+  background-color: var(--color-white);
 
   &_sm {
     width: 48px;
@@ -27,13 +28,23 @@
   }
 
   &_primary {
-    background-color: var(--color-white);
     border: 1.5px solid var(--color-border-gray);
+    background-color: var(--color-white);
+
+    &:hover {
+      border: 2px solid var(--color-orange);
+      background-color: var(--color-beige);
+
+      // .iconButton__iconImage {
+      //   // background-color: var(--color-orange);
+      //   color: var(--color-orange) !important;
+      // }
+    }
   }
 
   &_secondary {
-    background-color: var(--color-beige);
     border: none;
+    background-color: var(--color-beige);
   }
 
   &__icon {
@@ -52,4 +63,8 @@
       height: 24px;
     }
   }
+}
+
+.iconButton__iconImage {
+  color: red !important;
 }

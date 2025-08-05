@@ -56,12 +56,7 @@ const FlatLayoutCard = () => {
                   styles.flatLayoutCard__content__price__change__info__icon
                 }
               >
-                <Image
-                  src="/images/price-graph.svg"
-                  alt="price-graph"
-                  fill
-                  objectFit="cover"
-                />
+                <Image src="/images/price-graph.svg" alt="price-graph" fill />
               </div>
               <span
                 className={
@@ -80,12 +75,7 @@ const FlatLayoutCard = () => {
                   styles.flatLayoutCard__content__price__change__button__icon
                 }
               >
-                <Image
-                  src="/images/arrow-right.svg"
-                  alt="arrow-right"
-                  fill
-                  objectFit="cover"
-                />
+                <Image src="/images/arrow-right.svg" alt="arrow-right" fill />
               </div>
             </button>
           </div>

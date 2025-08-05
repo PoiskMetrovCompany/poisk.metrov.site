@@ -37,7 +37,12 @@ const IconButton: React.FC<IconButtonProps> = ({
           [styles.iconButton__icon_secondary]: type === "secondary",
         })}
       >
-        <Image src={iconLink} alt="icon" objectFit="cover" fill />
+        <Image
+          src={iconLink}
+          alt="icon"
+          fill
+          className={styles.iconButton__iconImage}
+        />
       </div>
     </button>
   )

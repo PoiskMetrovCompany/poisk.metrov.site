@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:5174": "next dev --turbopack --port 5174",
+    "dev:5173": "next dev --turbopack --port 5173 --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,8 +14,11 @@
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-select": "^2.2.5",
+    "@yandex/ymaps3-types": "^1.0.17144096",
     "clsx": "^2.1.1",
+    "i": "^0.3.7",
     "next": "15.4.5",
+    "npm": "^11.5.2",
     "radix-ui": "^1.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",

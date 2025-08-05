@@ -1,9 +1,9 @@
 import React from "react"
-import styles from "./aboutObject.module.scss"
+import styles from "./aboutObjectSmall.module.scss"
 import Heading2 from "@/components/ui/heading2"
 import Image from "next/image"
 
-const AboutObject = () => {
+const AboutObjectSmall = () => {
   return (
     <div className={styles.aboutObject}>
       <div className={styles.aboutObject__header}>
@@ -18,9 +18,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               Кирпично-монолитный
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Тип стен
-            </p>
           </div>
         </div>
 
@@ -32,9 +29,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               До 2.7 м
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Высота потолков
-            </p>
           </div>
         </div>
 
@@ -46,9 +40,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               Пассажирский
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Лифт
-            </p>
           </div>
         </div>
 
@@ -60,9 +51,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               9
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Этажей
-            </p>
           </div>
         </div>
 
@@ -74,9 +62,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               Стоянка
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Паркинг
-            </p>
           </div>
         </div>
 
@@ -88,9 +73,6 @@ const AboutObject = () => {
             <span className={styles.aboutObject__content__item__text_title}>
               2
             </span>
-            <p className={styles.aboutObject__content__item__text_description}>
-              Корпуса
-            </p>
           </div>
         </div>
       </div>
@@ -98,4 +80,4 @@ const AboutObject = () => {
   )
 }
 
-export default AboutObject
+export default AboutObjectSmall

@@ -1,10 +1,8 @@
 .constructionProgress {
   margin: 120px 0;
-  padding: 60px 0;
 
   &__header {
     margin-bottom: 40px;
-    text-align: center;
   }
 
   &__content {
@@ -102,10 +100,10 @@
 
 .navigationButtonPrev {
   left: 0;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-22.5px);
 }
 
 .navigationButtonNext {
   right: 0;
-  transform: translateX(50%);
+  transform: translateX(50%) translateY(-22.5px);
 }

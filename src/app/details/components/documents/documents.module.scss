@@ -1,0 +1,37 @@
+.documents {
+  margin: 120px 0;
+
+  &__header {
+    margin-bottom: 40px;
+  }
+
+  &__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__item {
+      display: flex;
+      flex-shrink: 0;
+      gap: 16px;
+      align-items: center;
+
+      width: 677px;
+      height: 128px;
+      border-bottom: 1px solid #d2d2d2;
+
+      &__icon {
+        position: relative;
+        width: 64px;
+        height: 64px;
+      }
+
+      &__text {
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 130%;
+        color: var(--color-black);
+      }
+    }
+  }
+}
