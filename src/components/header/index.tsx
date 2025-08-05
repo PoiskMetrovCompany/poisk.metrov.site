@@ -1,7 +1,16 @@
-import React from "react"
+"use client";
+import React, { FC } from "react";
+import styles from "./header.module.css";
+import TopBar from "./headerComponents/TopBar";
+import MainBar from "./headerComponents/MainBar";
 
-const Header = () => {
-  return <div>Header</div>
-}
+const Header: FC = () => {
+  return (
+    <header className={styles.header}>
+      <TopBar />
+      <MainBar />
+    </header>
+  );
+};
 
-export default Header
+export default Header;

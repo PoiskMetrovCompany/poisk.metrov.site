@@ -36,11 +36,11 @@ LAYOUT СТРУКТУРА
 
 /* Header */
 header {
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
-    margin-bottom: 3rem; /* 48px */
-    position: relative;
+    background: white !important;
+    flex-wrap: wrap;
 }
 
 .container{
@@ -310,3 +310,4 @@ article p {
   top: calc(50% - 24px);
   left: -30px;
 }
+
