@@ -1,6 +1,7 @@
 import React from "react"
 import styles from "./pagination.module.scss"
 import clsx from "clsx"
+import { calculatePaginationItems, PaginationItem } from "./paginationLogic"
 
 interface PaginationProps {
   totalPages: number
@@ -26,96 +27,35 @@ const Pagination = ({
   }
 
   const renderPageNumbers = () => {
-    const pages = []
+    const paginationItems = calculatePaginationItems(totalPages, currentPage)
+    const pages: React.ReactElement[] = []
 
-    if (totalPages <= 7) {
-      // Если страниц мало
-      for (let i = 1; i <= totalPages; i++) {
+    paginationItems.forEach((item, index) => {
+      if (item.type === "ellipsis") {
         pages.push(
           <button
-            key={i}
-            className={clsx(styles.pagination__pages__item, {
-              [styles.pagination__pages__item_active]: i === currentPage,
-            })}
-            onClick={() => onPageChange(i)}
+            key={`ellipsis-${index}`}
+            className={styles.pagination__pages__ellipsis}
+            onClick={() => onPageChange(item.targetPage!)}
           >
-            {i}
+            ...
+          </button>
+        )
+      } else {
+        pages.push(
+          <button
+            key={item.value}
+            className={clsx(styles.pagination__pages__item, {
+              [styles.pagination__pages__item_active]:
+                item.value === currentPage,
+            })}
+            onClick={() => onPageChange(item.value as number)}
+          >
+            {item.value}
           </button>
         )
       }
-    } else {
-      const showPages = []
-
-      for (let i = 1; i <= Math.min(3, totalPages); i++) {
-        showPages.push(i)
-      }
-
-      if (currentPage <= 5) {
-        for (let i = 4; i <= Math.min(6, totalPages - 3); i++) {
-          showPages.push(i)
-        }
-        if (totalPages > 6) {
-          showPages.push("ellipsis")
-        }
-        for (let i = Math.max(7, totalPages - 2); i <= totalPages; i++) {
-          showPages.push(i)
-        }
-      } else if (currentPage >= totalPages - 4) {
-        showPages.push("ellipsis")
-        for (let i = Math.max(4, totalPages - 5); i <= totalPages - 3; i++) {
-          showPages.push(i)
-        }
-        for (let i = totalPages - 2; i <= totalPages; i++) {
-          showPages.push(i)
-        }
-      } else {
-        // Текущая страница в середине
-        showPages.push("ellipsis")
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          showPages.push(i)
-        }
-        showPages.push("ellipsis")
-        for (let i = totalPages - 2; i <= totalPages; i++) {
-          showPages.push(i)
-        }
-      }
-
-      // Рендер страниц
-      showPages.forEach((page, index) => {
-        if (page === "ellipsis") {
-          const isFirstEllipsis = index < showPages.length / 2
-          let targetPage: number
-
-          if (isFirstEllipsis) {
-            targetPage = Math.max(currentPage - 2, 1)
-          } else {
-            targetPage = Math.min(currentPage + 2, totalPages)
-          }
-
-          pages.push(
-            <button
-              key={`ellipsis-${index}`}
-              className={styles.pagination__pages__ellipsis}
-              onClick={() => onPageChange(targetPage)}
-            >
-              ...
-            </button>
-          )
-        } else {
-          pages.push(
-            <button
-              key={page}
-              className={clsx(styles.pagination__pages__item, {
-                [styles.pagination__pages__item_active]: page === currentPage,
-              })}
-              onClick={() => onPageChange(page as number)}
-            >
-              {page}
-            </button>
-          )
-        }
-      })
-    }
+    })
 
     return pages
   }
