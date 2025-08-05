@@ -9,7 +9,7 @@ interface ILogoProps {
 }
 
 const Logo: FC<ILogoProps> = ({
-  src = "/images/logo.png",
+  src = "/images/logo.webp",
   alt = "Логотип компании Поиск Метров",
   href = "/"
 }) => {

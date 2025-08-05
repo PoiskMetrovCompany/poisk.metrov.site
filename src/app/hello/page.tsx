@@ -6,7 +6,7 @@ import Image from "next/image";
 import "../../../public/styles/style.css";
 
 
-const cardExpandImg = "/styles/images/buidingExpandImg.png";
+const cardExpandImg = "/images/buidingExpandImg.webp";
 
 interface ISpecification {
   type: string;
