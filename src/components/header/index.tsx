@@ -1,24 +1,15 @@
-import React from "react"
-import styles from "./header.module.scss"
-import Image from "next/image"
+"use client";
+import React, { FC } from "react";
+import styles from "./header.module.scss";
+import TopBar from "./headerComponents/TopBar";
+import MainBar from "./headerComponents/MainBar";
 
-const Header = () => {
+const Header: FC = () => {
   return (
     <header className={styles.header}>
-      {/* <div className={styles.header__container}>
-        <div className={styles.header__top}>
-          <div className={styles.header__top__location}>
-            <Image src="/images/logo.svg" alt="logo" width={100} height={100} />
-            Новосибирск
-          </div>
-          <div className={styles.header__top__location}>
-            <Image src="/images/logo.svg" alt="logo" width={100} height={100} />
-            Новосибирск
-          </div>
-        </div>
-      </div> */}
+      <TopBar />
+      <MainBar />
     </header>
-  )
-}
-
-export default Header
+  );
+};
+export default Header;

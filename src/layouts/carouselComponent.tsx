@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState, FC } from "react";
 
 interface ICarouselProps {
-  children: React.ReactNode
-  itemWidth?: number
-  gap?: number
+  children: React.ReactNode;
+  itemWidth?: number;
+  gap?: number;
 }
 
 const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap = 50 }) => {
-  const [translateX, setTranslateX] = useState(0);
-  const [transition, setTransition] = useState('transform 0.5s ease-in-out');
-  const [isAnimating, setIsAnimating] = useState(false);
-  
-  const items = React.Children.toArray(children);
-  const itemsCount = items.length;
-  
-  const extendedItems = [
+  const [translateX, setTranslateX] = useState<number>(0);
+  const [transition, setTransition] = useState<string>('transform 0.5s ease-in-out');
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+
+  const items: React.ReactElement[] = React.Children.toArray(children) as React.ReactElement[];
+  const itemsCount: number = items.length;
+
+  const extendedItems: React.ReactElement[] = [
     items[itemsCount - 2],
     items[itemsCount - 1],
     ...items,
@@ -24,20 +24,20 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
     items[1]
   ];
 
-  const cardWidth = itemWidth + gap;
-  const initialOffset = -cardWidth * 2;
+  const cardWidth: number = itemWidth + gap;
+  const initialOffset: number = -cardWidth * 2;
 
   useEffect(() => {
     setTranslateX(initialOffset);
   }, [initialOffset]);
 
-  const moveCarousel = (direction: string) => {
+  const moveCarousel = (direction: 'next' | 'prev'): void => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
-    const newTranslateX = translateX + (direction === 'next' ? -cardWidth : cardWidth);
+    const newTranslateX: number = translateX + (direction === 'next' ? -cardWidth : cardWidth);
     setTranslateX(newTranslateX);
-    
+
     setTimeout(() => {
       if (direction === 'next' && newTranslateX <= -cardWidth * (itemsCount + 2)) {
         setTransition('none');
@@ -59,8 +59,8 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
     }, 500);
   };
 
-  const nextSlide = () => moveCarousel('next');
-  const prevSlide = () => moveCarousel('prev');
+  const nextSlide = (): void => moveCarousel('next');
+  const prevSlide = (): void => moveCarousel('prev');
 
   return (
     <div className="carousel">
@@ -76,10 +76,9 @@ const CarouselComponent: FC<ICarouselProps> = ({ children, itemWidth = 870, gap 
           </svg>
         </button>
       </div>
-
-      <div className="carousel__viewport" style={{ width: '1440px', margin: '0 auto', overflow: 'hidden' }}>
-        <div 
-          className="carousel__track" 
+      <div className="carousel__viewport" style={{ width: '1690px', margin: '0 auto', overflow: 'hidden' }}>
+        <div
+          className="carousel__track"
           style={{
             display: 'flex',
             gap: `${gap}px`,

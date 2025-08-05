@@ -1,66 +1,42 @@
-import React from "react";
-import Image from "next/image";
-import CarouselComponent from "@/layouts/carouselComponent";
+"use client";
+
+import React, { FC } from "react";
+import CatalogButton from "../ui/buttons/CatalogButton";
 import DetailsButton from "../ui/buttons/DetailsButton";
 import FavoriteButton from "../ui/buttons/FavoriteButton";
-import CatalogButton from "../ui/buttons/CatalogButton"; 
 
-interface Badge {
-  developer: string;
-  period: string;
-}
-
-interface Specification {
+interface ISpecification {
   type: string;
   price: string;
 }
 
-interface Property {
+interface IBadge {
+  developer: string;
+  period: string;
+}
+
+interface IProperty {
   title: string;
   price: string;
   subtitle: string;
-  badge: Badge;
+  badge: IBadge;
   metro: string;
   driveTime: string;
-  specifications: Specification[];
+  specifications: ISpecification[];
 }
 
-interface IPropertyCard {
-  property: Property;
+interface IPropertyCardProps {
+  property: IProperty;
   image: string;
-  children?: React.ReactNode;
-  itemWidth?: number;
-  gap?: number;
-  onCatalogClick?: () => void;
-  onDetailsClick?: () => void;
-  onFavoriteClick?: () => void;
 }
 
-const PropertyCard: React.FC<IPropertyCard> = ({ 
-  property, 
-  image, 
-  children,
-  itemWidth,
-  gap,
-  onCatalogClick,
-  onDetailsClick,
-  onFavoriteClick
-}) => {
+const PropertyCard: FC<IPropertyCardProps> = ({ property, image }) => {
   const { title, price, subtitle, badge, metro, driveTime, specifications } = property;
 
   return (
     <article className="property-card">
       <div className="property-card__image">
-        <Image
-          src={image}
-          alt={`Изображение ЖК ${title}`}
-          width={400}
-          height={300}
-          className="property-card__img"
-          priority={false}
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-        />
+        <img src={image} alt={`Изображение ЖК ${title}`} />
         <div className="property-card__badge">
           <span>{badge.developer}</span>
           <span>{badge.period}</span>
@@ -101,11 +77,10 @@ const PropertyCard: React.FC<IPropertyCard> = ({
           </div>
         </div>
         <div className="property-card__actions">
-          <CatalogButton onClick={onCatalogClick || (() => {})} />
-          <DetailsButton onClick={onDetailsClick || (() => {})} />
-          <FavoriteButton onClick={onFavoriteClick || (() => {})} />
+          <CatalogButton />
+          <DetailsButton />
+          <FavoriteButton />
         </div>
-        {children}
       </div>
     </article>
   );
