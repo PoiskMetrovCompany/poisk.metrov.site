@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./estate.module.scss"
 import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import Link from "next/link"
 
 const features = [
   {
@@ -48,12 +49,15 @@ const Estate = () => {
               от 4 359 990 ₽
             </span>
           </div>
-          <div className={styles.info__description__price__hasChanged}>
+          <Link
+            href="/"
+            className={styles.info__description__price__hasChanged}
+          >
             <span className={styles.info__description__price__hasChanged__text}>
               Цена не менялась
             </span>
 
-            <button
+            <div
               className={styles.info__description__price__hasChanged__button}
             >
               <div
@@ -63,8 +67,8 @@ const Estate = () => {
               >
                 <Image src="/images/arrow-right.svg" alt="arrow-right" fill />
               </div>
-            </button>
-          </div>
+            </div>
+          </Link>
         </div>
         <ul className={styles.info__description__features}>
           {features.map((feature) => (

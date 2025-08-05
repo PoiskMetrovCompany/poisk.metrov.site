@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./flatLayoutCard.module.scss"
 import Image from "next/image"
 import IconButton from "../ui/buttons/IconButton"
+import Link from "next/link"
 
 const description = [
   "Этаж 8 из 17",
@@ -21,9 +22,18 @@ const FlatLayoutCard = () => {
         </div>
       </div>
       <div className={styles.flatLayoutCard__content}>
-        <div className={styles.flatLayoutCard__content__image}>
-          <Image src="/images/temporary/room.png" alt="flat-layout-card" fill />
-        </div>
+        <Link
+          href="/details/1"
+          className={styles.flatLayoutCard__content__image__wrapper}
+        >
+          <div className={styles.flatLayoutCard__content__image}>
+            <Image
+              src="/images/temporary/room.png"
+              alt="flat-layout-card"
+              fill
+            />
+          </div>
+        </Link>
         <div className={styles.flatLayoutCard__content__title}>
           Студия, 25 м2
         </div>
@@ -47,7 +57,10 @@ const FlatLayoutCard = () => {
           <h4 className={styles.flatLayoutCard__content__price__value}>
             4 359 990 ₽
           </h4>
-          <div className={styles.flatLayoutCard__content__price__change}>
+          <Link
+            href="/details/1"
+            className={styles.flatLayoutCard__content__price__change}
+          >
             <div
               className={styles.flatLayoutCard__content__price__change__info}
             >
@@ -67,7 +80,7 @@ const FlatLayoutCard = () => {
               </span>
             </div>
 
-            <button
+            <div
               className={styles.flatLayoutCard__content__price__change__button}
             >
               <div
@@ -77,8 +90,8 @@ const FlatLayoutCard = () => {
               >
                 <Image src="/images/arrow-right.svg" alt="arrow-right" fill />
               </div>
-            </button>
-          </div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

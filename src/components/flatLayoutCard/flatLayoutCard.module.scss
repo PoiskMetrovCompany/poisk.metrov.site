@@ -1,7 +1,7 @@
 .flatLayoutCard {
   height: 586px;
-  border-radius: 32px;
   padding: 32px;
+  border-radius: 32px;
   background-color: var(--color-white);
 
   &__image {
@@ -11,17 +11,18 @@
 
   &__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
 
     > span {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 150%;
-      color: var(--color-text-black);
+      padding: 8px 16px;
       border: 1px solid #e4e4e4;
       border-radius: 64px;
-      padding: 8px 16px;
+
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 150%;
+      color: var(--color-text-black);
     }
 
     &__actions {
@@ -38,28 +39,40 @@
       position: relative;
       width: 162px;
       height: 153px;
+      margin: 50px auto;
 
-      margin: 65px auto 65px;
+      &__wrapper {
+        margin: 15px 0;
+        border: 1.5px solid transparent;
+        border-radius: 32px;
+        transition: border 0.3s ease;
+
+        &:hover {
+          border: 1.5px solid var(--color-orange);
+        }
+      }
     }
 
     &__title {
-      font-weight: 500;
+      margin-bottom: 12px;
+
       font-size: 24px;
+      font-weight: 500;
       line-height: 130%;
       color: var(--color-text-black);
-      margin-bottom: 12px;
     }
 
     &__description {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       gap: 8px 12px;
+      align-items: center;
+
       width: 95%;
 
       &__item {
-        font-weight: 400;
         font-size: 14px;
+        font-weight: 400;
         line-height: 150%;
         color: var(--color-text-black);
       }
@@ -79,8 +92,8 @@
       margin-top: 16px;
 
       &__value {
-        font-weight: 500;
         font-size: 24px;
+        font-weight: 500;
         line-height: 130%;
         color: var(--color-text-black);
       }
@@ -90,45 +103,49 @@
         align-items: center;
         justify-content: space-between;
 
-        background-color: var(--color-beige);
-        border-radius: 16px;
-        padding: 12px 16px;
         height: 42px;
+        padding: 12px 16px;
+        border-radius: 16px;
+
+        background-color: var(--color-beige);
 
         &__info {
           display: flex;
-          align-items: center;
           gap: 8px;
+          align-items: center;
 
           &__icon {
+            position: relative;
             width: 20px;
             height: 20px;
-            position: relative;
           }
 
           &__text {
-            font-weight: 400;
             font-size: 14px;
+            font-weight: 400;
             line-height: 150%;
             color: var(--color-text-black);
           }
         }
 
         &__button {
-          background-color: var(--color-white);
-          border: none;
           cursor: pointer;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
+
           display: flex;
           align-items: center;
           justify-content: center;
 
+          width: 24px;
+          height: 24px;
+          border: none;
+          border-radius: 50%;
+
+          background-color: var(--color-white);
+
           &__icon {
+            position: relative;
             width: 7px;
             height: 10px;
-            position: relative;
           }
         }
       }

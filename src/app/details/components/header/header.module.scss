@@ -1,7 +1,7 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
   &__title {
     display: flex;
@@ -18,8 +18,8 @@
       gap: 8px;
 
       &__title {
-        font-weight: 400;
         font-size: 18px;
+        font-weight: 400;
         line-height: 150%;
         color: var(--color-text-black);
       }
@@ -35,8 +35,8 @@
           gap: 8px;
           align-items: center;
 
-          font-weight: 400;
           font-size: 18px;
+          font-weight: 400;
           line-height: 150%;
           color: var(--color-text-gray);
         }

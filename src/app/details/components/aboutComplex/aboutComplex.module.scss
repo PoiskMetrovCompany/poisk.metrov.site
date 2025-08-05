@@ -21,6 +21,10 @@
       font-weight: 500;
       line-height: 150%;
       color: var(--color-orange);
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
