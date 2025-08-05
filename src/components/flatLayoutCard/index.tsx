@@ -3,6 +3,7 @@ import styles from "./flatLayoutCard.module.scss"
 import Image from "next/image"
 import IconButton from "../ui/buttons/IconButton"
 import Link from "next/link"
+import IconImage from "../ui/IconImage"
 
 const description = [
   "Этаж 8 из 17",
@@ -72,17 +73,13 @@ const FlatLayoutCard = () => {
             <div
               className={styles.flatLayoutCard__content__price__change__info}
             >
-              <div
+              <IconImage
                 className={
                   styles.flatLayoutCard__content__price__change__info__icon
                 }
-              >
-                <Image
-                  src="/images/icons/price-graph.svg"
-                  alt="price-graph"
-                  fill
-                />
-              </div>
+                iconLink="/images/icons/price-graph.svg"
+                alt="price-graph"
+              />
               <span
                 className={
                   styles.flatLayoutCard__content__price__change__info__text
@@ -95,17 +92,13 @@ const FlatLayoutCard = () => {
             <div
               className={styles.flatLayoutCard__content__price__change__button}
             >
-              <div
+              <IconImage
+                iconLink="/images/icons/arrow-right.svg"
+                alt="arrow-right"
                 className={
                   styles.flatLayoutCard__content__price__change__button__icon
                 }
-              >
-                <Image
-                  src="/images/icons/arrow-right.svg"
-                  alt="arrow-right"
-                  fill
-                />
-              </div>
+              />
             </div>
           </Link>
         </div>

@@ -3,6 +3,7 @@ import styles from "./estate.module.scss"
 import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import Link from "next/link"
+import IconImage from "@/components/ui/IconImage"
 
 const features = [
   {
@@ -60,17 +61,13 @@ const Estate = () => {
             <div
               className={styles.info__description__price__hasChanged__button}
             >
-              <div
+              <IconImage
                 className={
                   styles.info__description__price__hasChanged__button__icon
                 }
-              >
-                <Image
-                  src="/images/icons/arrow-right.svg"
-                  alt="arrow-right"
-                  fill
-                />
-              </div>
+                iconLink="/images/icons/arrow-right.svg"
+                alt="arrow-right"
+              />
             </div>
           </Link>
         </div>

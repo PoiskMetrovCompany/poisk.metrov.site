@@ -7,12 +7,26 @@ interface IconImageProps {
   className?: string
   iconLink: string
   alt: string
+  imageClassName?: string
+  loading?: "lazy" | "eager"
 }
 
-const IconImage = ({ iconLink, alt, className }: IconImageProps) => {
+const IconImage = ({
+  iconLink,
+  alt,
+  className,
+  imageClassName,
+  loading,
+}: IconImageProps) => {
   return (
     <div className={clsx(styles.iconImage, className)}>
-      <Image src={iconLink} alt={alt} fill />
+      <Image
+        src={iconLink}
+        alt={alt}
+        fill
+        className={imageClassName}
+        loading={loading}
+      />
     </div>
   )
 }

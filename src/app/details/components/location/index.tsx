@@ -7,6 +7,7 @@ import ActionButton from "@/components/ui/buttons/ActionButton"
 import { Map } from "./map/map"
 import { Place } from "./map/variables"
 import { useState } from "react"
+import IconImage from "@/components/ui/IconImage"
 
 export const places: Place[] = [[55.00844174651645, 82.93779287001264]].map(
   ([longitude, latitude], i) => ({
@@ -105,11 +106,11 @@ const Location = () => {
                 }`}
                 onClick={() => toggleInfrastructure(item.type)}
               >
-                <div
+                <IconImage
+                  iconLink={item.icon}
+                  alt={item.title}
                   className={styles.location__content__info__list__item__icon}
-                >
-                  <Image src={item.icon} alt={item.title} fill />
-                </div>
+                />
                 <span
                   className={styles.location__content__info__list__item__title}
                 >

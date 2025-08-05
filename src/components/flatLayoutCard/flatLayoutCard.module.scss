@@ -1,6 +1,6 @@
 .flatLayoutCard {
-  height: 586px;
-  padding: 32px;
+  min-height: 586px;
+  padding: 32px 32px 27px;
   border-radius: 32px;
   background-color: var(--color-white);
 
@@ -11,6 +11,7 @@
 
   &__header {
     display: flex;
+    gap: 5px;
     align-items: center;
     justify-content: space-between;
 
@@ -23,6 +24,7 @@
       font-weight: 400;
       line-height: 150%;
       color: var(--color-text-black);
+      text-align: center;
     }
 
     &__actions {
@@ -115,7 +117,6 @@
           align-items: center;
 
           &__icon {
-            position: relative;
             width: 20px;
             height: 20px;
           }
@@ -143,7 +144,6 @@
           background-color: var(--color-white);
 
           &__icon {
-            position: relative;
             width: 7px;
             height: 10px;
           }

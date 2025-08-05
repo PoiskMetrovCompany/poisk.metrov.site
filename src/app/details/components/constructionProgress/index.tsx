@@ -73,6 +73,7 @@ const ConstructionProgress = () => {
                     width={400}
                     height={300}
                     className={styles.imageCard__image}
+                    loading="lazy"
                   />
                 </div>
                 <div className={styles.imageCard__date}>{image.date}</div>

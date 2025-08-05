@@ -1,13 +1,15 @@
 import React from "react"
 import styles from "./empty.module.scss"
-import Image from "next/image"
+import IconImage from "@/components/ui/IconImage"
 
 const EmptyList = () => {
   return (
     <div className={styles.emptyList}>
-      <div className={styles.emptyList__icon}>
-        <Image src="/images/icons/empty-box.svg" alt="empty-list" fill />
-      </div>
+      <IconImage
+        iconLink="/images/icons/empty-box.svg"
+        alt="empty-list"
+        className={styles.emptyList__icon}
+      />
 
       <div className={styles.emptyList__content}>
         <h2 className={styles.emptyList__content__title}>

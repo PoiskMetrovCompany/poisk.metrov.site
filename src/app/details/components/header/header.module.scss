@@ -40,6 +40,11 @@
           font-weight: 400;
           line-height: 150%;
           color: var(--color-text-gray);
+
+          &__icon {
+            width: 20px;
+            height: 20px;
+          }
         }
       }
     }

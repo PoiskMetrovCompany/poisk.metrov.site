@@ -1,7 +1,7 @@
 import styles from "./documents.module.scss"
 import Heading2 from "@/components/ui/heading2"
-import Image from "next/image"
 import Link from "next/link"
+import IconImage from "@/components/ui/IconImage"
 
 const Documents = () => {
   return (
@@ -16,9 +16,11 @@ const Documents = () => {
             key={index}
             className={styles.documents__content__item}
           >
-            <div className={styles.documents__content__item__icon}>
-              <Image src="/images/icons/document.svg" alt="icon" fill />
-            </div>
+            <IconImage
+              iconLink="/images/icons/document.svg"
+              alt="document"
+              className={styles.documents__content__item__icon}
+            />
             <div className={styles.documents__content__item__text}>
               Проектная декларация (Эскроу)
             </div>

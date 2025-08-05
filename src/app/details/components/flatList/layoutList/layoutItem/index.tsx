@@ -5,7 +5,7 @@ import Image from "next/image"
 import clsx from "clsx"
 import styles from "./layoutItem.module.scss"
 import FlatLayoutCard from "@/components/flatLayoutCard"
-import Pagination from "../../pagination"
+import Pagination from "@/components/pagination"
 
 interface ILayoutItemProps {
   isOpen: boolean
@@ -14,7 +14,7 @@ interface ILayoutItemProps {
 
 const LayoutItem = ({ isOpen, name }: ILayoutItemProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(10)
+  const [totalPages, setTotalPages] = useState(30)
 
   return (
     <Accordion.Item className={styles.Item} value={name}>

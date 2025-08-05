@@ -3,6 +3,7 @@ import styles from "./header.module.scss"
 import Heading1 from "@/components/ui/heading1"
 import Image from "next/image"
 import IconButton from "@/components/ui/buttons/IconButton"
+import IconImage from "@/components/ui/IconImage"
 
 const DetailsHeader = () => {
   return (
@@ -18,21 +19,17 @@ const DetailsHeader = () => {
           </h4>
           <div className={styles.header__place__text__distance}>
             <div className={styles.header__place__text__distance__item}>
-              <Image
-                src="/images/icons/metro.svg"
+              <IconImage
+                iconLink="/images/icons/metro.svg"
                 alt="location"
-                width={20}
-                height={20}
                 className={styles.header__place__text__distance__item__icon}
               />
               <span>Октябрьская</span>
             </div>
             <div className={styles.header__place__text__distance__item}>
-              <Image
-                src="/images/icons/car.svg"
+              <IconImage
+                iconLink="/images/icons/car.svg"
                 alt="location"
-                width={20}
-                height={20}
                 className={styles.header__place__text__distance__item__icon}
               />
               <span>25 минут</span>

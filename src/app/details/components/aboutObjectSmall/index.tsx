@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./aboutObjectSmall.module.scss"
 import Heading2 from "@/components/ui/heading2"
 import Image from "next/image"
+import IconImage from "@/components/ui/IconImage"
 
 const AboutObjectSmall = () => {
   return (
@@ -11,9 +12,11 @@ const AboutObjectSmall = () => {
       </div>
       <div className={styles.aboutObject__content}>
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/wall.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/wall.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               Кирпично-монолитный
@@ -22,9 +25,11 @@ const AboutObjectSmall = () => {
         </div>
 
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/height.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/height.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               До 2.7 м
@@ -33,9 +38,11 @@ const AboutObjectSmall = () => {
         </div>
 
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/elevator.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/elevator.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               Пассажирский
@@ -44,9 +51,11 @@ const AboutObjectSmall = () => {
         </div>
 
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/stairs.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/stairs.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               9
@@ -55,9 +64,11 @@ const AboutObjectSmall = () => {
         </div>
 
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/parking.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/parking.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               Стоянка
@@ -66,9 +77,11 @@ const AboutObjectSmall = () => {
         </div>
 
         <div className={styles.aboutObject__content__item}>
-          <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/icons/building.svg" alt="icon" fill />
-          </div>
+          <IconImage
+            iconLink="/images/icons/building.svg"
+            alt="icon"
+            className={styles.aboutObject__content__item__icon}
+          />
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
               2
