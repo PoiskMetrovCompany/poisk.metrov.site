@@ -102,3 +102,34 @@
     background: var(--color-orange);
   }
 }
+
+.pagination__pages__ellipsis {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 54px;
+  height: 48px;
+  border: none;
+
+  font-family: var(--font-onest);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+  color: var(--color-text-gray);
+  text-align: center;
+
+  background: var(--color-white);
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-white-hover);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
