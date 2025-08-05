@@ -176,15 +176,15 @@ const getSearchQueryByType = (type: string): string => {
 
 const getIconByType = (type: string): string => {
   const icons: Record<string, string> = {
-    metro: "/images/gray-rounded/metro.svg",
-    schools: "/images/gray-rounded/book.svg",
-    parks: "/images/gray-rounded/tree.svg",
-    kindergartens: "/images/gray-rounded/kindergarten.svg",
-    shops: "/images/gray-rounded/shop.svg",
-    sport: "/images/gray-rounded/sport.svg",
-    pharmacies: "/images/gray-rounded/medicine.svg",
+    metro: "/images/icons/gray-rounded/metro.svg",
+    schools: "/images/icons/gray-rounded/book.svg",
+    parks: "/images/icons/gray-rounded/tree.svg",
+    kindergartens: "/images/icons/gray-rounded/kindergarten.svg",
+    shops: "/images/icons/gray-rounded/shop.svg",
+    sport: "/images/icons/gray-rounded/sport.svg",
+    pharmacies: "/images/icons/gray-rounded/medicine.svg",
   }
-  return icons[type] || "/images/gray-rounded/shop.svg"
+  return icons[type] || "/images/icons/gray-rounded/shop.svg"
 }
 
 // Кэш для хранения полученных данных

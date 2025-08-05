@@ -6,7 +6,7 @@ const EmptyList = () => {
   return (
     <div className={styles.emptyList}>
       <div className={styles.emptyList__icon}>
-        <Image src="/images/empty-box.svg" alt="empty-list" fill />
+        <Image src="/images/icons/empty-box.svg" alt="empty-list" fill />
       </div>
 
       <div className={styles.emptyList__content}>

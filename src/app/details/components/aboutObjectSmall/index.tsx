@@ -12,7 +12,7 @@ const AboutObjectSmall = () => {
       <div className={styles.aboutObject__content}>
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/wall.svg" alt="icon" fill />
+            <Image src="/images/icons/wall.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
@@ -23,7 +23,7 @@ const AboutObjectSmall = () => {
 
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/height.svg" alt="icon" fill />
+            <Image src="/images/icons/height.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
@@ -34,7 +34,7 @@ const AboutObjectSmall = () => {
 
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/elevator.svg" alt="icon" fill />
+            <Image src="/images/icons/elevator.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
@@ -45,7 +45,7 @@ const AboutObjectSmall = () => {
 
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/stairs.svg" alt="icon" fill />
+            <Image src="/images/icons/stairs.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
@@ -56,7 +56,7 @@ const AboutObjectSmall = () => {
 
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/parking.svg" alt="icon" fill />
+            <Image src="/images/icons/parking.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>
@@ -67,7 +67,7 @@ const AboutObjectSmall = () => {
 
         <div className={styles.aboutObject__content__item}>
           <div className={styles.aboutObject__content__item__icon}>
-            <Image src="/images/building.svg" alt="icon" fill />
+            <Image src="/images/icons/building.svg" alt="icon" fill />
           </div>
           <div className={styles.aboutObject__content__item__text}>
             <span className={styles.aboutObject__content__item__text_title}>

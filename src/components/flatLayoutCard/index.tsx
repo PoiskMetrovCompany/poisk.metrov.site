@@ -17,8 +17,16 @@ const FlatLayoutCard = () => {
       <div className={styles.flatLayoutCard__header}>
         <span>Европейский берег</span>
         <div className={styles.flatLayoutCard__header__actions}>
-          <IconButton size="sm" type="secondary" iconLink="/images/heart.svg" />
-          <IconButton size="sm" type="secondary" iconLink="/images/share.svg" />
+          <IconButton
+            size="sm"
+            type="secondary"
+            iconLink="/images/icons/heart.svg"
+          />
+          <IconButton
+            size="sm"
+            type="secondary"
+            iconLink="/images/icons/share.svg"
+          />
         </div>
       </div>
       <div className={styles.flatLayoutCard__content}>
@@ -69,7 +77,11 @@ const FlatLayoutCard = () => {
                   styles.flatLayoutCard__content__price__change__info__icon
                 }
               >
-                <Image src="/images/price-graph.svg" alt="price-graph" fill />
+                <Image
+                  src="/images/icons/price-graph.svg"
+                  alt="price-graph"
+                  fill
+                />
               </div>
               <span
                 className={
@@ -88,7 +100,11 @@ const FlatLayoutCard = () => {
                   styles.flatLayoutCard__content__price__change__button__icon
                 }
               >
-                <Image src="/images/arrow-right.svg" alt="arrow-right" fill />
+                <Image
+                  src="/images/icons/arrow-right.svg"
+                  alt="arrow-right"
+                  fill
+                />
               </div>
             </div>
           </Link>

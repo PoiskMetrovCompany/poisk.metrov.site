@@ -126,6 +126,7 @@
 
       &__item {
         display: flex;
+        gap: 12px;
         align-items: center;
         justify-content: space-between;
 
@@ -141,6 +142,7 @@
           font-weight: 500;
           line-height: 150%;
           color: var(--color-black);
+          text-align: right;
         }
       }
     }

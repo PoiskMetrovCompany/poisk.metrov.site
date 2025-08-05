@@ -20,7 +20,7 @@ const Dropdown = ({ items, placeholder, value, onChange }: DropdownProps) => {
         <Select.Value placeholder={placeholder} className={styles.value} />
         <Select.Icon className={styles.Icon}>
           <Image
-            src="/images/arrow-down.svg"
+            src="/images/icons/arrow-down.svg"
             alt="chevron-down"
             width={12}
             height={8}
@@ -38,7 +38,7 @@ const Dropdown = ({ items, placeholder, value, onChange }: DropdownProps) => {
         >
           <Select.ScrollUpButton className={styles.ScrollButton}>
             <Image
-              src="/images/arrow-down.svg"
+              src="/images/icons/arrow-down.svg"
               alt="chevron-down"
               width={12}
               height={8}
@@ -53,7 +53,7 @@ const Dropdown = ({ items, placeholder, value, onChange }: DropdownProps) => {
           </Select.Viewport>
           <Select.ScrollDownButton className={styles.ScrollButton}>
             <Image
-              src="/images/arrow-down.svg"
+              src="/images/icons/arrow-down.svg"
               alt="chevron-down"
               width={12}
               height={8}
@@ -83,7 +83,12 @@ const SelectItem = React.forwardRef(
       >
         <Select.ItemText>{children}</Select.ItemText>
         <Select.ItemIndicator className={styles.ItemIndicator}>
-          <Image src="/images/check.svg" alt="check" width={12} height={12} />
+          <Image
+            src="/images/icons/check.svg"
+            alt="check"
+            width={12}
+            height={12}
+          />
         </Select.ItemIndicator>
       </Select.Item>
     )

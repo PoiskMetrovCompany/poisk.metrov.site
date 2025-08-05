@@ -26,7 +26,7 @@ const LayoutItem = ({ isOpen, name }: ILayoutItemProps) => {
           от 4 359 990 ₽
           <Image
             className={clsx(styles.arrow, isOpen && styles.arrow_open)}
-            src="/images/arrow-top-price.svg"
+            src="/images/icons/arrow-top-price.svg"
             alt="arrow-top"
             width={24}
             height={24}

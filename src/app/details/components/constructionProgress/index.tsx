@@ -85,7 +85,7 @@ const ConstructionProgress = () => {
           className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
         >
           <div className={styles.navigationButton__icon}>
-            <Image src="/images/arrow-slider.svg" alt="arrow-left" fill />
+            <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
           </div>
         </div>
         <div
@@ -93,7 +93,7 @@ const ConstructionProgress = () => {
         >
           <div className={styles.navigationButton__icon}>
             <Image
-              src="/images/arrow-slider.svg"
+              src="/images/icons/arrow-slider.svg"
               alt="arrow-right"
               fill
               className={styles.navigationButton__icon__icon_next}

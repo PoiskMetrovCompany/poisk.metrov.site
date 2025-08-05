@@ -19,7 +19,7 @@ const DetailsHeader = () => {
           <div className={styles.header__place__text__distance}>
             <div className={styles.header__place__text__distance__item}>
               <Image
-                src="/images/metro.svg"
+                src="/images/icons/metro.svg"
                 alt="location"
                 width={20}
                 height={20}
@@ -29,7 +29,7 @@ const DetailsHeader = () => {
             </div>
             <div className={styles.header__place__text__distance__item}>
               <Image
-                src="/images/car.svg"
+                src="/images/icons/car.svg"
                 alt="location"
                 width={20}
                 height={20}
@@ -40,8 +40,8 @@ const DetailsHeader = () => {
           </div>
         </div>
         <div className={styles.header__place__buttons}>
-          <IconButton iconLink={"/images/heart.svg"} />
-          <IconButton iconLink={"/images/share.svg"} />
+          <IconButton iconLink={"/images/icons/heart.svg"} />
+          <IconButton iconLink={"/images/icons/share.svg"} />
         </div>
       </div>
     </div>

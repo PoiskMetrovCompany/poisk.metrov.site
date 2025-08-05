@@ -29,37 +29,37 @@ export const places: Place[] = [[55.00844174651645, 82.93779287001264]].map(
 
 const INFRASTRUCTURE = [
   {
-    icon: "/images/gray-rounded/metro.svg",
+    icon: "/images/icons/gray-rounded/metro.svg",
     title: "Метро",
     type: "metro",
   },
   {
-    icon: "/images/gray-rounded/book.svg",
+    icon: "/images/icons/gray-rounded/book.svg",
     title: "Школы",
     type: "schools",
   },
   {
-    icon: "/images/gray-rounded/tree.svg",
+    icon: "/images/icons/gray-rounded/tree.svg",
     title: "Парки",
     type: "parks",
   },
   {
-    icon: "/images/gray-rounded/kindergarten.svg",
+    icon: "/images/icons/gray-rounded/kindergarten.svg",
     title: "Детские сады",
     type: "kindergartens",
   },
   {
-    icon: "/images/gray-rounded/shop.svg",
+    icon: "/images/icons/gray-rounded/shop.svg",
     title: "Магазины",
     type: "shops",
   },
   {
-    icon: "/images/gray-rounded/sport.svg",
+    icon: "/images/icons/gray-rounded/sport.svg",
     title: "Спорт",
     type: "sport",
   },
   {
-    icon: "/images/gray-rounded/medicine.svg",
+    icon: "/images/icons/gray-rounded/medicine.svg",
     title: "Аптеки",
     type: "pharmacies",
   },

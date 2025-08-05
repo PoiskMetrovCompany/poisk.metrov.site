@@ -17,7 +17,7 @@ const Documents = () => {
             className={styles.documents__content__item}
           >
             <div className={styles.documents__content__item__icon}>
-              <Image src="/images/document.svg" alt="icon" fill />
+              <Image src="/images/icons/document.svg" alt="icon" fill />
             </div>
             <div className={styles.documents__content__item__text}>
               Проектная декларация (Эскроу)
