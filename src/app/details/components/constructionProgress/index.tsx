@@ -64,18 +64,18 @@ const ConstructionProgress = () => {
           className={styles.swiper}
         >
           {constructionImages.map((image) => (
-            <SwiperSlide key={image.id} className={styles.swiperSlide}>
+            <SwiperSlide key={image.id} className={styles.swiper__slide}>
               <div className={styles.imageCard}>
-                <div className={styles.imageWrapper}>
+                <div className={styles.imageCard__imageWrapper}>
                   <Image
                     src={image.src}
                     alt={`Ход строительства - ${image.date}`}
                     width={400}
                     height={300}
-                    className={styles.image}
+                    className={styles.imageCard__image}
                   />
                 </div>
-                <div className={styles.date}>{image.date}</div>
+                <div className={styles.imageCard__date}>{image.date}</div>
               </div>
             </SwiperSlide>
           ))}
@@ -84,40 +84,27 @@ const ConstructionProgress = () => {
         <div
           className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className={styles.navigationButton__icon}>
+            <Image
+              src="/images/arrow-slider.svg"
+              alt="arrow-left"
+              fill
+              objectFit="cover"
             />
-          </svg>
+          </div>
         </div>
         <div
           className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9 18L15 12L9 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className={styles.navigationButton__icon}>
+            <Image
+              src="/images/arrow-slider.svg"
+              alt="arrow-right"
+              fill
+              objectFit="cover"
+              className={styles.navigationButton__icon__icon_next}
             />
-          </svg>
+          </div>
         </div>
       </div>
     </div>
