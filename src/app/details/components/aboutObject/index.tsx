@@ -1,7 +1,6 @@
 import React from "react"
 import styles from "./aboutObject.module.scss"
 import Heading2 from "@/components/ui/heading2"
-import Image from "next/image"
 import IconImage from "@/components/ui/IconImage"
 
 const AboutObject = () => {

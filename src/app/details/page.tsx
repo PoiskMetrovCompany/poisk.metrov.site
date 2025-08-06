@@ -16,19 +16,17 @@ const DetailsPage = () => {
 
   return (
     <div className={styles.details}>
-      <div className={styles.details__container}>
-        <DetailsHeader />
-        <Estate />
-        <FlatList />
-        <AboutObject />
-        <AboutComplex />
-        <MapProvider apiUrl={yandexApiUrl}>
-          <Location />
-        </MapProvider>
-        <AboutObjectSmall />
-        <ConstructionProgress />
-        <Documents />
-      </div>
+      <DetailsHeader />
+      <Estate />
+      <FlatList />
+      <AboutObject />
+      <AboutComplex />
+      <MapProvider apiUrl={yandexApiUrl}>
+        <Location />
+      </MapProvider>
+      <AboutObjectSmall />
+      <ConstructionProgress />
+      <Documents />
     </div>
   )
 }

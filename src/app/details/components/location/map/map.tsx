@@ -1,12 +1,11 @@
 "use client"
 
 import { YMap, YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap"
-import React, { useMemo, useRef, useState, useCallback, useEffect } from "react"
+import React, { useRef, useState, useCallback, useEffect } from "react"
 
 import { useMap } from "@/providers/map-provider"
 
 import MarkerWithPopup from "./marker"
-import { getBboxByCoordinates } from "../helpers/getPosition"
 import { Place, InfrastructureItem } from "./variables"
 import styles from "./map.module.scss"
 import useDebounce from "@/utils/hooks/use-debounce"

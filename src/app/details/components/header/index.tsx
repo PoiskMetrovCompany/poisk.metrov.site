@@ -1,7 +1,6 @@
 import React from "react"
 import styles from "./header.module.scss"
 import Heading1 from "@/components/ui/heading1"
-import Image from "next/image"
 import IconButton from "@/components/ui/buttons/IconButton"
 import IconImage from "@/components/ui/IconImage"
 
