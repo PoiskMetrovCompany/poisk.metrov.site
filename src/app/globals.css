@@ -69,6 +69,7 @@ header {
     justify-content: center;
     background: white !important;
     flex-wrap: wrap;
+    margin-bottom: 4rem;
 }
 
 .container{
