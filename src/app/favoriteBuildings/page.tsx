@@ -1,33 +1,32 @@
-"use client";
+"use client"
 
-import React, { FC } from "react";
-import Image from "next/image";
-import styles from "../../components/carouselBuildings/carouselComponent.module.scss";
+import React, { FC } from "react"
+import styles from "../../components/carouselBuildings/carouselComponent.module.scss"
 import "../globals.css"
-import CarouselComponent from "@/components/carouselBuildings/carouselComponent";
-import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard";
+import CarouselComponent from "@/components/carouselBuildings/carouselComponent"
+import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard"
 
-const cardExpandImg = "/images/buidingExpandImg.webp";
+const cardExpandImg = "/images/buidingExpandImg.webp"
 
 interface ISpecification {
-  type: string;
-  price: string;
+  type: string
+  price: string
 }
 
 interface IBadge {
-  developer: string;
-  period: string;
+  developer: string
+  period: string
 }
 
 interface ICard {
-  id: number;
-  title: string;
-  price: string;
-  subtitle: string;
-  badge: IBadge;
-  metro: string;
-  driveTime: string;
-  specifications: ISpecification[];
+  id: number
+  title: string
+  price: string
+  subtitle: string
+  badge: IBadge
+  metro: string
+  driveTime: string
+  specifications: ISpecification[]
 }
 
 const BuildingCarousel: FC = () => {
@@ -45,8 +44,8 @@ const BuildingCarousel: FC = () => {
         { type: "1-комн. кв", price: "от 7,1 млн ₽" },
         { type: "2-комн. кв", price: "от 8,5 млн ₽" },
         { type: "3-комн. кв", price: "от 10,8 млн ₽" },
-        { type: "4+ комн. кв", price: "от 14,9 млн ₽" }
-      ]
+        { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
+      ],
     },
     {
       id: 2,
@@ -61,8 +60,8 @@ const BuildingCarousel: FC = () => {
         { type: "1-комн. кв", price: "от 6,2 млн ₽" },
         { type: "2-комн. кв", price: "от 7,8 млн ₽" },
         { type: "3-комн. кв", price: "от 9,5 млн ₽" },
-        { type: "4+ комн. кв", price: "от 12,1 млн ₽" }
-      ]
+        { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
+      ],
     },
     {
       id: 3,
@@ -77,8 +76,8 @@ const BuildingCarousel: FC = () => {
         { type: "1-комн. кв", price: "от 8,0 млн ₽" },
         { type: "2-комн. кв", price: "от 9,8 млн ₽" },
         { type: "3-комн. кв", price: "от 12,5 млн ₽" },
-        { type: "4+ комн. кв", price: "от 16,8 млн ₽" }
-      ]
+        { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
+      ],
     },
     {
       id: 4,
@@ -93,16 +92,21 @@ const BuildingCarousel: FC = () => {
         { type: "1-комн. кв", price: "от 9,3 млн ₽" },
         { type: "2-комн. кв", price: "от 11,2 млн ₽" },
         { type: "3-комн. кв", price: "от 14,8 млн ₽" },
-        { type: "4+ комн. кв", price: "от 19,5 млн ₽" }
-      ]
-    }
-  ];
+        { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
+      ],
+    },
+  ]
 
   return (
     <section className={styles.offers}>
-      <h2 className={`${styles.offers__title} ${styles.row}`}>Лучшие предложения</h2>
+      <h2 className={`${styles.offers__title} ${styles.row}`}>
+        Лучшие предложения
+      </h2>
 
-      <div className={`${styles.offers__container} ${styles.row}`} id="cardList">
+      <div
+        className={`${styles.offers__container} ${styles.row}`}
+        id="cardList"
+      >
         <CarouselComponent itemWidth={820} gap={50}>
           {cards.map((card) => (
             <PropertyCard
@@ -114,19 +118,21 @@ const BuildingCarousel: FC = () => {
                 badge: card.badge,
                 metro: card.metro,
                 driveTime: card.driveTime,
-                specifications: card.specifications
+                specifications: card.specifications,
               }}
               image={cardExpandImg}
             />
           ))}
         </CarouselComponent>
       </div>
-      
+
       <div className={`${styles.offers_button} ${styles.row}`}>
-        <button className={styles['offers_button-catalogue']}>Перейти в каталог</button>
+        <button className={styles["offers_button-catalogue"]}>
+          Перейти в каталог
+        </button>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default BuildingCarousel;
+export default BuildingCarousel

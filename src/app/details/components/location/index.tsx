@@ -2,7 +2,6 @@
 import styles from "./location.module.scss"
 import Heading2 from "@/components/ui/heading2"
 import Heading3 from "@/components/ui/heading3"
-import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import { Map } from "./map/map"
 import { Place } from "./map/variables"
