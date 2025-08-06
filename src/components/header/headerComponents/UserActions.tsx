@@ -36,14 +36,14 @@ const UserActions: FC<IUserActionsProps> = ({
   };
 
   return (
-    <div className={styles["user-actions"]}>
+    <div className={styles.user_actions}>
       <button
-        className={styles["user-actions__favorites"]}
+        className={styles.user_actions__favorites}
         type="button"
         onClick={handleFavoritesClick}
       >
         <svg
-          className={styles["user-actions__icon"]}
+          className={styles.user_actions__icon}
           width="20px"
           height="20px"
           viewBox="0 0 24 24"
@@ -59,18 +59,18 @@ const UserActions: FC<IUserActionsProps> = ({
           />
         </svg>
         {favoritesCount > 0 && (
-          <span className={styles["user-actions__count"]}>{favoritesCount}</span>
+          <span className={styles.user_actions__count}>{favoritesCount}</span>
         )}
-        <span className={styles["user-actions__label"]}>Избранное</span>
+        <span className={styles.user_actions__label}>Избранное</span>
       </button>
 
       <button
-        className={styles["user-actions__login"]}
+        className={styles.user_actions__login}
         type="button"
         onClick={handleLoginClick}
       >
         <svg
-          className={styles["user-actions__icon"]}
+          className={styles.user_actions__icon}
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -94,13 +94,13 @@ const UserActions: FC<IUserActionsProps> = ({
             strokeLinejoin="round"
           />
         </svg>
-        <span className={styles["user-actions__text"]}>
+        <span className={styles.user_actions__text}>
           {isLoggedIn ? "Профиль" : "Войти"}
         </span>
       </button>
 
       <button
-        className={styles["user-actions__showMenu"]}
+        className={styles.user_actions__showMenu}
         type="button"
         onClick={handleMenuClick}
       >

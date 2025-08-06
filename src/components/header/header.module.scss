@@ -1,5 +1,5 @@
 
-.top-bar {
+.top_bar {
     width: 100%;
     margin: 0px 50px;
     padding-bottom: 10px;
@@ -41,7 +41,7 @@
     }
 }
 
-.main-bar {
+.main_bar {
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -67,7 +67,7 @@
     }
 }
 
-.user-actions {
+.user_actions {
     align-items: center;
     display: flex;
     gap: 30px;
@@ -157,7 +157,7 @@
     }
 }
 
-.contact-info {
+.contact_info {
     &__phone {
         font-size: 20px;
         font-weight: 500;
@@ -198,7 +198,7 @@
     }
 }
 
-.location-selector {
+.location_selector {
     position: relative;
     display: flex;
     gap: 20px;
@@ -290,7 +290,7 @@
 /* Медиа-запросы для экранов менее 1024px */
 @media (max-width: 1224px) and (min-width: 1100px) {
     /* Уменьшаем размер текста на 2px */
-    .user-actions {
+    .user_actions {
         &__text {
             font-size: 18px;
         }
@@ -300,7 +300,7 @@
         }
     }
     
-    .contact-info {
+    .contact_info {
         &__phone {
             font-size: 18px;
         }
@@ -312,20 +312,20 @@
         }
     }
     
-    .location-selector {
+    .location_selector {
         &__button {
             font-size: 22px;
         }
     }
     
-    .top-bar {
+    .top_bar {
         &__item {
             font-size: 16px;
         }
     }
     
     /* Уменьшаем gap в блоках */
-    .main-bar {
+    .main_bar {
         &__left {
             gap: 20px;
         }
@@ -335,7 +335,7 @@
         }
     }
     
-    .user-actions {
+    .user_actions {
         gap: 20px;
 
         &__favorites {
@@ -353,7 +353,7 @@
         }
     }
     
-    .top-bar {
+    .top_bar {
         &__left {
             gap: 20px;
         }
@@ -363,7 +363,7 @@
         }
     }
     
-    .location-selector {
+    .location_selector {
         gap: 15px;
 
         &__button {
@@ -373,7 +373,7 @@
 }
 
 @media (max-width: 1099px) {
-    .user-actions {
+    .user_actions {
         &__text {
             font-size: 16px;
         }
@@ -383,7 +383,7 @@
         }
     }
 
-    .contact-info {
+    .contact_info {
         &__phone {
             font-size: 16px;
         }
@@ -395,20 +395,20 @@
         }
     }
 
-    .location-selector {
+    .location_selector {
         &__button {
             font-size: 20px;
         }
     }
 
-    .top-bar {
+    .top_bar {
         &__item {
             font-size: 14px;
         }
     }
 
     /* Уменьшаем gap в блоках */
-    .main-bar {
+    .main_bar {
         &__left {
             gap: 18px;
         }
@@ -418,7 +418,7 @@
         }
     }
 
-    .user-actions {
+    .user_actions {
         gap: 18px;
 
         &__favorites {
@@ -436,7 +436,7 @@
         }
     }
 
-    .top-bar {
+    .top_bar {
         &__left {
             gap: 18px;
         }
@@ -446,7 +446,7 @@
         }
     }
 
-    .location-selector {
+    .location_selector {
         gap: 13px;
 
         &__button {
@@ -456,7 +456,7 @@
 }
 
 @media (max-width: 1000px) {
-    .user-actions {
+    .user_actions {
         &__text {
             font-size: 14px;
         }
@@ -466,7 +466,7 @@
         }
     }
 
-    .contact-info {
+    .contact_info {
         &__phone {
             font-size: 14px;
         }
@@ -478,20 +478,20 @@
         }
     }
 
-    .location-selector {
+    .location_selector {
         &__button {
             font-size: 18px;
         }
     }
 
-    .top-bar {
+    .top_bar {
         &__item {
             font-size: 12px;
         }
     }
 
     /* Уменьшаем gap в блоках */
-    .main-bar {
+    .main_bar {
         &__left {
             gap: 0px;
         }
@@ -509,7 +509,7 @@
 }
 
 @media (min-width: 870px) {
-    .user-actions {
+    .user_actions {
         &__showMenu {
             display: none;
         }
@@ -521,7 +521,7 @@
         display: none;
     }
 
-    .user-actions {
+    .user_actions {
         &__text {
             display: none;
         }
@@ -561,11 +561,11 @@
 }
 
 @media (max-width: 500px) {
-    .top-bar {
+    .top_bar {
         margin: 0 20px;
     }
 
-    .main-bar {
+    .main_bar {
         margin: 0 20px;
     }
 
@@ -578,13 +578,13 @@
 }
 
 @media (max-width: 430px) {
-    .location-selector {
+    .location_selector {
         &__text {
             font-size: 12px;
         }
     }
 
-    .top-bar {
+    .top_bar {
         &__list {
             gap: 5px;
         }

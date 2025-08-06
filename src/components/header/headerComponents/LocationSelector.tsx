@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
 import styles from "../header.module.scss";
+import clsx from 'clsx';
 
 interface ICity {
   name: string;
@@ -16,7 +17,7 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
   defaultCity = "Новосибирск",
   onCityChange
 }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>(defaultCity);
 
   const cities: ICity[] = [
@@ -32,21 +33,21 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
     }
   };
 
-  const toggleDropdown = (): void => {
-    setIsOpen(!isOpen);
+  const toggleDropdown = () => {
+  setIsOpen(!isOpen);
   };
 
   return (
-    <div className={styles["location-selector"]}>
+    <div className={styles.location_selector}>
         <svg width="24px" height="24px" viewBox="0 0 100 100" ><path d="M87.13 0a2.386 2.386 0 0 0-.64.088a2.386 2.386 0 0 0-.883.463L11.34 62.373a2.386 2.386 0 0 0 1.619 4.219l37.959-1.479l17.697 33.614a2.386 2.386 0 0 0 4.465-.707L89.486 2.79A2.386 2.386 0 0 0 87.131 0z" fill="rgba(236, 125, 63, 1)"></path></svg>
       <button
-        className={styles["location-selector__button"]}
+        className={styles.location_selector__button}
         onClick={toggleDropdown}
         type="button"
       >
-        <span className={styles["location-selector__text"]}>{selectedCity}</span>
+        <span className={styles.location_selector__text}>{selectedCity}</span>
         <svg 
-          className={`${styles["location-selector__arrow"]} ${isOpen ? styles["location-selector__arrow--open"] : ""}`}
+          className={clsx(styles.location_selector__arrow, isOpen && styles["location-selector__arrow--open"])}
           width="16" 
           height="16" 
           viewBox="0 0 24 24" 
@@ -64,12 +65,12 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
       </button>
       
       {isOpen && (
-        <div className={styles["location-selector__dropdown"]}>
-          <ul className={styles["location-selector__list"]}>
+        <div className={styles.location_selector__dropdown}>
+          <ul className={styles.location_selector__list}>
             {cities.map((city) => (
-              <li key={city.id} className={styles["location-selector__item"]}>
+              <li key={city.id} className={styles.location_selector__item}>
                 <button
-                  className={`${styles["location-selector__option"]} ${
+                  className={`${styles.location_selector__option} ${
                     city.name === selectedCity ? styles["location-selector__option--active"] : ""
                   }`}
                   onClick={() => handleCitySelect(city.name)}
