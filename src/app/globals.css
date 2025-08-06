@@ -106,24 +106,17 @@ header p{
     height: 40px;
 }
 
-main{
-    display: flex;
-    justify-content: center;
-    width: 100vw;
-    flex-wrap: wrap;
-}
 
 section {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 990px;
+    width: 100vw;
     min-height: calc(100vh - 5.625rem);
     position: relative;
-    margin: 0px 40px;
-    width: 100%;
-    box-sizing: border-box;
+    padding:  0 100px;
 }
+
 
 article {
     width: 100%;

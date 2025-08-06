@@ -1,9 +1,9 @@
 "use client";
 import React, { FC } from "react";
-import CandidateRegForm from "../../components/candidateRegForm/candidateRegForm";
+import SecurityRegForm from "@/app/securityLogin/page";
 
 const CandidatesLoginPage: FC = () => {
-  return <CandidateRegForm />;
+  return <SecurityRegForm />;
 };
 
 export default CandidatesLoginPage;

@@ -6,6 +6,41 @@
         box-sizing: unset;
     }
 
+   section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 990px;
+        min-height: calc(100vh - 5.625rem);
+        position: relative;
+        margin: 0px 40px;
+        width: 100%;
+        box-sizing: border-box; 
+        padding: 0 !important;
+    }
+
+    main{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    article {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 3rem; /* 48px */
+    }
+
+    article h1 {
+        font-weight: 500;
+        font-size: 1.5rem; /* 24px */
+    }
+
+    article p {
+        font-weight: 400;
+        color: #818181;
+        font-size: 1.125rem; /* 18px */
+    }
 /* Основная карточка */
     .center-card {
         width: 21rem; /* 336px */
@@ -855,6 +890,10 @@
 
     .w-80{
         width: 80% !important;
+    }
+
+    .w-70{
+        width: 70% !important;
     }
 
     /* Направление flex */

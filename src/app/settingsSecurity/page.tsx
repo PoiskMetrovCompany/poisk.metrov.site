@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, FC } from 'react';
 import { useRouter } from 'next/navigation';
-import "../candidatesLogin/candidateRegForm.css";
+import "../candidatesSecurityBlock/candidateRegForm.css";
 
 
 interface Notification {

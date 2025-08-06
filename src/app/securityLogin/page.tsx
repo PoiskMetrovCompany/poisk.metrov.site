@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, FC } from 'react';
 import { useRouter } from 'next/navigation';
 import axios, { AxiosError } from 'axios';
-import "../candidatesLogin/candidateRegForm.css";
+import "../candidatesSecurityBlock/candidateRegForm.css";
 
 interface AuthAttributes {
     access_token?: string;
