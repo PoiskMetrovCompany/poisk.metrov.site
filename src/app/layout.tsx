@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Onest } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/header"
+import "./candidatesLogin/candidateRegForm.css";
 
 const onest = Onest({
   variable: "--font-onest",
