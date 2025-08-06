@@ -1,7 +1,6 @@
 import React from "react"
 import styles from "./pagination.module.scss"
-import clsx from "clsx"
-import { calculatePaginationItems, PaginationItem } from "./paginationLogic"
+import ReactPaginate from "react-paginate"
 
 interface PaginationProps {
   totalPages: number
@@ -14,6 +13,10 @@ const Pagination = ({
   currentPage,
   onPageChange,
 }: PaginationProps) => {
+  const handlePageClick = (event: { selected: number }) => {
+    onPageChange(event.selected + 1)
+  }
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1)
@@ -26,40 +29,6 @@ const Pagination = ({
     }
   }
 
-  const renderPageNumbers = () => {
-    const paginationItems = calculatePaginationItems(totalPages, currentPage)
-    const pages: React.ReactElement[] = []
-
-    paginationItems.forEach((item, index) => {
-      if (item.type === "ellipsis") {
-        pages.push(
-          <button
-            key={`ellipsis-${index}`}
-            className={styles.pagination__pages__ellipsis}
-            onClick={() => onPageChange(item.targetPage!)}
-          >
-            ...
-          </button>
-        )
-      } else {
-        pages.push(
-          <button
-            key={item.value}
-            className={clsx(styles.pagination__pages__item, {
-              [styles.pagination__pages__item_active]:
-                item.value === currentPage,
-            })}
-            onClick={() => onPageChange(item.value as number)}
-          >
-            {item.value}
-          </button>
-        )
-      }
-    })
-
-    return pages
-  }
-
   return (
     <div className={styles.pagination}>
       <button
@@ -69,7 +38,24 @@ const Pagination = ({
       >
         <span>Предыдущая</span>
       </button>
-      <div className={styles.pagination__pages}>{renderPageNumbers()}</div>
+      <ReactPaginate
+        previousLabel={null}
+        nextLabel={null}
+        breakLabel="..."
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={3}
+        pageCount={totalPages}
+        forcePage={currentPage - 1}
+        renderOnZeroPageCount={null}
+        containerClassName={styles.pagination__container}
+        pageClassName={styles.pagination__pages__item}
+        pageLinkClassName={styles.pagination__pages__link}
+        activeClassName={styles.pagination__pages__item_active}
+        activeLinkClassName={styles.pagination__pages__link_active}
+        breakClassName={styles.pagination__pages__ellipsis}
+        breakLinkClassName={styles.pagination__pages__ellipsis_link}
+      />
       <button
         className={styles.pagination__button__next}
         onClick={handleNextPage}
