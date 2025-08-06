@@ -1,4 +1,6 @@
 
+
+
 .top-bar {
     width: 100%;
     margin: 0px 50px;
@@ -147,7 +149,7 @@
     }
 
     &__text {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
     }
 
@@ -159,7 +161,7 @@
 
 .contact-info {
     &__phone {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
     }
 }
@@ -184,7 +186,7 @@
         background: none;
         border: none;
         color: rgba(24, 24, 23, 1);
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
         cursor: pointer;
         padding: 8px 12px;
@@ -206,7 +208,7 @@
     &__button {
         border: none;
         background: none;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 500;
         display: flex;
         gap: 10px;
@@ -314,7 +316,7 @@
     
     .location-selector {
         &__button {
-            font-size: 22px;
+            font-size: 16px;
         }
     }
     
@@ -397,7 +399,7 @@
 
     .location-selector {
         &__button {
-            font-size: 20px;
+            font-size: 16px;
         }
     }
 
@@ -480,13 +482,13 @@
 
     .location-selector {
         &__button {
-            font-size: 18px;
+            font-size: 14px;
         }
     }
 
     .top-bar {
         &__item {
-            font-size: 12px;
+            font-size: 14px;
         }
     }
 
@@ -495,16 +497,18 @@
         &__left {
             gap: 0px;
         }
-
-        &__right {
-            gap: 0px;
-        }
     }
 
     .navigation {
         &__list {
             gap: 0px;
         }
+    }
+    .logo {
+        &__image {
+            width: 45px;
+            height: 45px;
+    }
     }
 }
 
@@ -562,11 +566,11 @@
 
 @media (max-width: 500px) {
     .top-bar {
-        margin: 0 20px;
+        margin: 0 10px;
     }
 
     .main-bar {
-        margin: 0 20px;
+        margin: 0 10px;
     }
 
     .logo {
