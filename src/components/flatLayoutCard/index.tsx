@@ -43,15 +43,15 @@ const FlatLayoutCard = () => {
             />
           </div>
         </Link>
-        <div className={styles.flatLayoutCard__content__title}>
-          Студия, 25 м2
-        </div>
-        <div className={styles.flatLayoutCard__content__description}>
+        <span className={styles.flatLayoutCard__content__title}>
+          Студия, 25 м²
+        </span>
+        <ul className={styles.flatLayoutCard__content__description}>
           {description.map((item, index) => (
             <React.Fragment key={item}>
-              <h3 className={styles.flatLayoutCard__content__description__item}>
+              <li className={styles.flatLayoutCard__content__description__item}>
                 {item}
-              </h3>
+              </li>
               {index < description.length - 1 && (
                 <div
                   className={
@@ -61,7 +61,7 @@ const FlatLayoutCard = () => {
               )}
             </React.Fragment>
           ))}
-        </div>
+        </ul>
         <div className={styles.flatLayoutCard__content__price}>
           <h4 className={styles.flatLayoutCard__content__price__value}>
             4 359 990 ₽
