@@ -43,7 +43,7 @@
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    color: var(--color-border-gray);
   }
 
   &:not(:disabled) {
