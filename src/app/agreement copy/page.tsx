@@ -1,6 +1,6 @@
 import React from "react"
 import styles from "./page.module.scss"
-import H1 from "@/components/ui/Heading1"
+import H1 from "@/components/ui/heading1"
 import P from "@/components/ui/Paragragraph"
 import Link from "next/link"
 import CustomLink from "@/components/ui/Link"

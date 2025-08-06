@@ -1,4 +1,6 @@
 
+
+
 .top-bar {
     width: 100%;
     margin: 0px 50px;
@@ -147,7 +149,7 @@
     }
 
     &__text {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
     }
 
@@ -159,7 +161,7 @@
 
 .contact-info {
     &__phone {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
     }
 }
@@ -184,7 +186,7 @@
         background: none;
         border: none;
         color: rgba(24, 24, 23, 1);
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
         cursor: pointer;
         padding: 8px 12px;
@@ -495,10 +497,6 @@
         &__left {
             gap: 0px;
         }
-
-        &__right {
-            gap: 0px;
-        }
     }
 
     .navigation {
@@ -568,11 +566,11 @@
 
 @media (max-width: 500px) {
     .top-bar {
-        margin: 0 20px;
+        margin: 0 10px;
     }
 
     .main-bar {
-        margin: 0 20px;
+        margin: 0 10px;
     }
 
     .logo {
