@@ -1,0 +1,81 @@
+.range {
+  position: relative;
+
+  height: 72px;
+  padding: 12px 32px;
+  border: 1.5px solid var(--color-border-gray-light);
+  border-radius: 16px;
+
+  &__title {
+    float: none;
+
+    width: fit-content;
+    margin: -22px 0 0;
+    margin-left: -12px;
+    padding: 0 12px;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+
+    background-color: var(--color-beige);
+  }
+
+  &__input {
+    &__display {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-top: 18px;
+      margin-bottom: auto;
+
+      color: #666;
+
+      &__value {
+        display: flex;
+        align-items: center;
+        width: 50%;
+
+        &__label {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-text-gray);
+        }
+
+        &__count {
+          width: inherit;
+          margin: 0;
+          padding: 0;
+          border: none;
+
+          font-family: var(--font-onest);
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-text-black);
+          text-align: center;
+
+          background-color: transparent;
+          outline: none;
+        }
+      }
+
+      &__separator {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 150%;
+        color: var(--color-text-gray);
+        text-align: center;
+      }
+    }
+  }
+
+  &__slider {
+    position: absolute !important;
+    bottom: -1px !important;
+    width: calc(100% - 64px) !important;
+  }
+}

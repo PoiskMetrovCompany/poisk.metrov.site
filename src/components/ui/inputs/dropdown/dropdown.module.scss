@@ -1,0 +1,106 @@
+.dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 72px;
+  padding: 24px 32px;
+  border: 1.5px solid var(--color-border-gray-light);
+  border-radius: 16px;
+
+  font-family: var(--font-onest);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  color: var(--color-text-gray);
+
+  background-color: transparent;
+
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: var(--color-border-gray-hover);
+  }
+}
+
+.Trigger {
+  all: unset;
+
+  gap: 5px;
+
+  height: 35px;
+  padding: 0 15px;
+  border-radius: 4px;
+
+  font-size: 13px;
+  line-height: 1;
+}
+
+.Content {
+  overflow: hidden;
+
+  width: 100%;
+  border-radius: 6px;
+
+  background-color: var(--color-beige);
+  box-shadow: 0 4px 3px 2px #0000001a;
+}
+
+.Viewport {
+  padding: 5px;
+}
+
+.Item {
+  user-select: none;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  height: 25px;
+  padding: 0 35px 0 25px;
+  border-radius: 3px;
+
+  font-size: 13px;
+  line-height: 1;
+
+  &[data-disabled] {
+    pointer-events: none;
+  }
+
+  &[data-highlighted] {
+    outline: none;
+  }
+}
+
+.Label {
+  padding: 0 25px;
+  font-size: 12px;
+  line-height: 25px;
+}
+
+.ItemIndicator {
+  position: absolute;
+  left: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+}
+
+.ScrollButton {
+  cursor: default;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 25px;
+
+  color: var(--violet-11);
+
+  background-color: white;
+}
