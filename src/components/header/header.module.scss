@@ -1,5 +1,4 @@
-.top-bar {
-
+.top_bar {
     width: 100%;
     margin: 0px 50px;
     padding-bottom: 10px;
@@ -81,15 +80,16 @@
         position: relative;
         border: none;
         cursor: pointer;
+    }
 
-        svg {
-            box-sizing: border-box;
-            width: 48px;
-            height: 48px;
-            padding: 10px;
-            background-color: rgba(244, 244, 241, 1);
-            border-radius: 50%;
-        }
+    &__icon {
+        box-sizing: border-box;
+        width: 48px !important;
+        height: 48px !important;
+        padding: 10px;
+        background-color: rgba(244, 244, 241, 1);
+        border-radius: 50%;
+        object-fit: contain;
     }
 
     &__count {
@@ -116,22 +116,12 @@
         position: relative;
         border: none;
         cursor: pointer;
-
-        svg {
-            box-sizing: border-box;
-            width: 48px;
-            height: 48px;
-            padding: 10px;
-            background-color: rgba(244, 244, 241, 1);
-            border-radius: 50%;
-        }
     }
 
     &__showMenu {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 10px;
+        justify-content: center;
         background: none;
         position: relative;
         border: none;
@@ -141,9 +131,12 @@
         height: 30px;
         background-color: rgba(244, 244, 241, 1);
         border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+
+        img {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain;
+        }
     }
 
     &__text {
@@ -202,6 +195,7 @@
     position: relative;
     display: flex;
     gap: 20px;
+    align-items: center;
 
     &__button {
         border: none;
@@ -211,6 +205,14 @@
         display: flex;
         gap: 10px;
         align-items: center;
+    }
+
+    &__arrow {
+        transition: transform 0.2s ease;
+        
+        &--open {
+            transform: rotate(180deg);
+        }
     }
 
     &__dropdown {
@@ -506,7 +508,7 @@
         &__image {
             width: 45px;
             height: 45px;
-    }
+        }
     }
 }
 
@@ -532,20 +534,10 @@
             display: none;
         }
 
-        &__favorites {
-            svg {
-                width: 30px;
-                height: 30px;
-                padding: 5px;
-            }
-        }
-
-        &__login {
-            svg {
-                width: 30px;
-                height: 30px;
-                padding: 5px;
-            }
+        &__icon {
+            width: 30px !important;
+            height: 30px !important;
+            padding: 5px;
         }
 
         &__count {
@@ -563,13 +555,12 @@
 }
 
 @media (max-width: 500px) {
-    .top-bar {
+    .top_bar {
         margin: 0 10px;
     }
 
-    .main-bar {
+    .main_bar {
         margin: 0 10px;
-
     }
 
     .logo {
@@ -593,4 +584,3 @@
         }
     }
 }
-

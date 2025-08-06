@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
 import styles from "../header.module.scss";
+import Image from "next/image";
 import clsx from 'clsx';
 
 interface ICity {
@@ -39,29 +40,25 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
 
   return (
     <div className={styles.location_selector}>
-        <svg width="24px" height="24px" viewBox="0 0 100 100" ><path d="M87.13 0a2.386 2.386 0 0 0-.64.088a2.386 2.386 0 0 0-.883.463L11.34 62.373a2.386 2.386 0 0 0 1.619 4.219l37.959-1.479l17.697 33.614a2.386 2.386 0 0 0 4.465-.707L89.486 2.79A2.386 2.386 0 0 0 87.131 0z" fill="rgba(236, 125, 63, 1)"></path></svg>
+        <Image
+          src="/svgFiles/svgPickCity.svg"
+          alt="Location cursor"
+          width={24}
+          height={24}
+        />
       <button
         className={styles.location_selector__button}
         onClick={toggleDropdown}
         type="button"
       >
         <span className={styles.location_selector__text}>{selectedCity}</span>
-        <svg 
+        <Image
           className={clsx(styles.location_selector__arrow, isOpen && styles["location-selector__arrow--open"])}
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path 
-            d="M6 9L12 15L18 9" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          />
-        </svg>
+          src="/svgFiles/svgExpandArrow.svg"
+          alt="Arrow"
+          width={16}
+          height={16}
+        />
       </button>
       
       {isOpen && (
