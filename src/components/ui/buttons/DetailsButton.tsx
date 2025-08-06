@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
+import styles from "../../../layouts/carouselComponent.module.scss";
 
 interface IDetailsButtonProps {
   onClick?: () => void;
@@ -9,7 +10,7 @@ interface IDetailsButtonProps {
 const DetailsButton: FC<IDetailsButtonProps> = ({ onClick }) => {
   return (
     <button
-      className="property-card__button property-card__button_secondary"
+      className={`${styles['property-card__button']} ${styles['property-card__button_secondary']}`}
       onClick={onClick}
     >
       Подробнее

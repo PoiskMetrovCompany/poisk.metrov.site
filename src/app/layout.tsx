@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Onest } from "next/font/google"
 import "./globals.css"
-import "../../public/styles/style.css"
+import styles from "../layouts/carouselComponent.module.scss"
 import Header from "@/components/header"
 import CarouselComponent from "@/layouts/carouselComponent"
 

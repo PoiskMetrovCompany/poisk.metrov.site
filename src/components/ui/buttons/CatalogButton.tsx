@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
+import styles from "../../../layouts/carouselComponent.module.scss";
 
 interface ICatalogButtonProps {
   onClick?: () => void;
@@ -9,7 +10,7 @@ interface ICatalogButtonProps {
 const CatalogButton: FC<ICatalogButtonProps> = ({ onClick }) => {
   return (
     <button
-      className="property-card__button property-card__button_primary"
+      className={`${styles['property-card__button']} ${styles['property-card__button_primary']}`}
       onClick={onClick}
     >
       Каталог
