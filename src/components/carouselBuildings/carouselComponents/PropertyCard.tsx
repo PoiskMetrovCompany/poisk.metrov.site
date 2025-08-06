@@ -1,11 +1,11 @@
 "use client";
 
 import React, { FC } from "react";
-import "../../app/globals.css"
-import styles from "../../layouts/carouselComponent.module.scss";
-import CatalogButton from "../ui/buttons/CatalogButton";
-import DetailsButton from "../ui/buttons/DetailsButton";
-import FavoriteButton from "../ui/buttons/FavoriteButton";
+import "../../../app/globals.css"
+import styles from "../carouselComponent.module.scss";
+import CatalogButton from "../../ui/buttons/CatalogButton";
+import DetailsButton from "../../ui/buttons/DetailsButton";
+import FavoriteButton from "../../ui/buttons/FavoriteButton";
 
 interface ISpecification {
   type: string;

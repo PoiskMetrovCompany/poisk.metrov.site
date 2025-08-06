@@ -2,10 +2,10 @@
 
 import React, { FC } from "react";
 import Image from "next/image";
-import styles from "../../layouts/carouselComponent.module.scss";
+import styles from "../../components/carouselBuildings/carouselComponent.module.scss";
 import "../globals.css"
-import CarouselComponent from "@/layouts/carouselComponent";
-import PropertyCard from "@/components/propertyCard/PropertyCard";
+import CarouselComponent from "@/components/carouselBuildings/carouselComponent";
+import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard";
 
 const cardExpandImg = "/images/buidingExpandImg.webp";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import styles from "../../../layouts/carouselComponent.module.scss";
+import styles from "../../carouselBuildings/carouselComponent.module.scss";
 
 interface IFavoriteButtonProps {
   onClick?: () => void;

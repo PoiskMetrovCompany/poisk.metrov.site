@@ -3,7 +3,7 @@ import { Onest } from "next/font/google"
 import "./globals.css"
 import styles from "../layouts/carouselComponent.module.scss"
 import Header from "@/components/header"
-import CarouselComponent from "@/layouts/carouselComponent"
+import CarouselComponent from "@/components/carouselBuildings/carouselComponent"
 
 const onest = Onest({
   variable: "--font-onest",
