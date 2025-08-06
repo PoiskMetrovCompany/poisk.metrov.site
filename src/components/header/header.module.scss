@@ -206,7 +206,7 @@
     &__button {
         border: none;
         background: none;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 500;
         display: flex;
         gap: 10px;
@@ -314,7 +314,7 @@
     
     .location-selector {
         &__button {
-            font-size: 22px;
+            font-size: 16px;
         }
     }
     
@@ -397,7 +397,7 @@
 
     .location-selector {
         &__button {
-            font-size: 20px;
+            font-size: 16px;
         }
     }
 
@@ -480,13 +480,13 @@
 
     .location-selector {
         &__button {
-            font-size: 18px;
+            font-size: 14px;
         }
     }
 
     .top-bar {
         &__item {
-            font-size: 12px;
+            font-size: 14px;
         }
     }
 
@@ -505,6 +505,12 @@
         &__list {
             gap: 0px;
         }
+    }
+    .logo {
+        &__image {
+            width: 45px;
+            height: 45px;
+    }
     }
 }
 
