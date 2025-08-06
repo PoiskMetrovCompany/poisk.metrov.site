@@ -1,0 +1,48 @@
+.aboutObject {
+  margin: 120px 0;
+
+  &__header {
+    margin-bottom: 40px;
+  }
+
+  &__content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 64px 32px;
+    justify-content: space-between;
+
+    &__item {
+      display: flex;
+      flex-shrink: 0;
+      gap: 16px;
+      align-items: center;
+
+      width: 400px;
+
+      &__icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        &_title {
+          font-size: 24px;
+          font-weight: 500;
+          line-height: 130%;
+          color: var(--color-text-black);
+        }
+
+        &_description {
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-text-gray);
+        }
+      }
+    }
+  }
+}
