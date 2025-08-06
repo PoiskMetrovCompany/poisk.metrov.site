@@ -1,9 +1,11 @@
 "use client";
 
 import React, { FC } from "react";
-import CatalogButton from "../ui/buttons/CatalogButton";
-import DetailsButton from "../ui/buttons/DetailsButton";
-import FavoriteButton from "../ui/buttons/FavoriteButton";
+import "../../../app/globals.css"
+import styles from "../carouselComponent.module.scss";
+import CatalogButton from "../../ui/buttons/CatalogButton";
+import DetailsButton from "../../ui/buttons/DetailsButton";
+import FavoriteButton from "../../ui/buttons/FavoriteButton";
 
 interface ISpecification {
   type: string;
@@ -34,22 +36,24 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property, image }) => {
   const { title, price, subtitle, badge, metro, driveTime, specifications } = property;
 
   return (
-    <article className="property-card">
-      <div className="property-card__image">
+    <article className={styles['property-card']}>
+      <div className={styles['property-card__image']}>
         <img src={image} alt={`Изображение ЖК ${title}`} />
-        <div className="property-card__badge">
+        <div className={styles['property-card__badge']}>
           <span>{badge.developer}</span>
           <span>{badge.period}</span>
         </div>
       </div>
-      <div className="property-card__content">
-        <div className="property-card__row">
-          <div className="property-card__title">{title}</div>
-          <div className="property-card__price">{price}</div>
+      
+      <div className={styles['property-card__content']}>
+        <div className={styles['property-card__row']}>
+          <div className={styles['property-card__title']}>{title}</div>
+          <div className={styles['property-card__price']}>{price}</div>
         </div>
-        <div className="property-card__row">
-          <div className="property-card__subtitle">{subtitle}</div>
-          <div className="property-card__location">
+        
+        <div className={styles['property-card__row']}>
+          <div className={styles['property-card__subtitle']}>{subtitle}</div>
+          <div className={styles['property-card__location']}>
             <span>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#666"/>
@@ -65,18 +69,21 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property, image }) => {
             </span>
           </div>
         </div>
-        <div className="property-card__divider"></div>
-        <div className="property-card__specifications">
-          <div className="specifications">
+        
+        <div className={styles['property-card__divider']}></div>
+        
+        <div className={styles['property-card__specifications']}>
+          <div className={styles.specifications}>
             {specifications.map((spec, index) => (
-              <div key={index} className="specifications__item">
-                <span className="specifications__type">{spec.type}</span>
-                <span className="specifications__price">{spec.price}</span>
+              <div key={index} className={styles.specifications__item}>
+                <span className={styles.specifications__type}>{spec.type}</span>
+                <span className={styles.specifications__price}>{spec.price}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="property-card__actions">
+
+        <div className={styles['property-card__actions']}>
           <CatalogButton />
           <DetailsButton />
           <FavoriteButton />
