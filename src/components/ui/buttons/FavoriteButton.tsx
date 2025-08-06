@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
+import styles from "../../carouselBuildings/carouselComponent.module.scss";
 
 interface IFavoriteButtonProps {
   onClick?: () => void;
@@ -10,7 +11,7 @@ interface IFavoriteButtonProps {
 const FavoriteButton: FC<IFavoriteButtonProps> = ({ onClick, isFavorite = false }) => {
   return (
     <button
-      className="property-card__favorite"
+      className={styles['property-card__favorite']}
       onClick={onClick}
       aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
     >

@@ -38,7 +38,7 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
 
   return (
     <div className={styles["location-selector"]}>
-        <svg width="24px" height="24px" viewBox="0 0 100 100" ><path d="M87.13 0a2.386 2.386 0 0 0-.64.088a2.386 2.386 0 0 0-.883.463L11.34 62.373a2.386 2.386 0 0 0 1.619 4.219l37.959-1.479l17.697 33.614a2.386 2.386 0 0 0 4.465-.707L89.486 2.79A2.386 2.386 0 0 0 87.131 0z" fill="#000000"></path></svg>
+        <svg width="24px" height="24px" viewBox="0 0 100 100" ><path d="M87.13 0a2.386 2.386 0 0 0-.64.088a2.386 2.386 0 0 0-.883.463L11.34 62.373a2.386 2.386 0 0 0 1.619 4.219l37.959-1.479l17.697 33.614a2.386 2.386 0 0 0 4.465-.707L89.486 2.79A2.386 2.386 0 0 0 87.131 0z" fill="rgba(236, 125, 63, 1)"></path></svg>
       <button
         className={styles["location-selector__button"]}
         onClick={toggleDropdown}
