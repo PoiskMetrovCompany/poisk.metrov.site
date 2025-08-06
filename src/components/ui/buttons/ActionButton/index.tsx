@@ -5,7 +5,7 @@ interface ActionButtonProps {
   children: React.ReactNode
   className?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline"
+  type?: "primary" | "secondary" | "outline" | "beige"
 }
 
 const ActionButton = ({
@@ -16,11 +16,16 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   return (
     <button
-      className={clsx(styles.actionButton, className, {
-        [styles.actionButton_primary]: type === "primary",
-        [styles.actionButton_secondary]: type === "secondary",
-        [styles.actionButton_outline]: type === "outline",
-      })}
+      className={clsx(
+        styles.actionButton,
+        {
+          [styles.actionButton_primary]: type === "primary",
+          [styles.actionButton_secondary]: type === "secondary",
+          [styles.actionButton_outline]: type === "outline",
+          [styles.actionButton_beige]: type === "beige",
+        },
+        className
+      )}
       onClick={onClick}
     >
       {children}

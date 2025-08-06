@@ -42,4 +42,13 @@
       background-color: var(--color-beige);
     }
   }
+
+  &_beige {
+    color: var(--color-black);
+    background-color: var(--color-beige);
+
+    &:hover {
+      background-color: var(--color-border-gray);
+    }
+  }
 }

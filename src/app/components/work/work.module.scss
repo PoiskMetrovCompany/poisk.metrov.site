@@ -1,0 +1,110 @@
+.work {
+  padding-top: 100px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  &__content {
+    position: relative;
+    &__item {
+      display: flex;
+      gap: 80px;
+      align-items: center;
+      width: 100%;
+      padding: 0 110px;
+
+      &__image {
+        height: 532px;
+        width: 707px;
+        border-radius: 500px;
+        overflow: hidden;
+      }
+
+      &__content {
+        flex: 1;
+
+        &__title {
+          font-weight: 400;
+          font-size: 34px;
+          line-height: 130%;
+          color: var(--color-orange);
+        }
+
+        &__description {
+          font-weight: 400;
+          font-size: 34px;
+          line-height: 130%;
+          color: var(--color-black);
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+
+  &__slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.navigationButton {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+
+  background: var(--color-white);
+
+  transition: all 0.3s ease;
+
+  &::after {
+    display: none;
+  }
+
+  &__icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+
+    &__icon_next {
+      transform: rotate(180deg);
+    }
+  }
+
+  &:hover {
+    background: var(--color-beige);
+  }
+}
+
+.navigationButtonPrev {
+  left: 0;
+  transform: translateX(-50%) translateY(-22.5px);
+}
+
+.navigationButtonNext {
+  right: 0;
+  transform: translateX(50%) translateY(-22.5px);
+}
+
+// Скрываем стандартные кнопки Swiper
+:global(.swiper-button-disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

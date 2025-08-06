@@ -1,0 +1,39 @@
+.mortgage {
+  margin-top: 100px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 230px;
+
+  border-radius: 40px;
+  padding: 64px 120px 64px 64px;
+  background-color: var(--color-gray);
+
+  &__question {
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 130%;
+    text-transform: uppercase;
+    color: var(--color-black);
+
+    > b {
+      font-weight: 400;
+
+      color: var(--color-orange);
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 24px 24px;
+    flex-wrap: wrap;
+
+    > button {
+      width: auto;
+      font-size: 20px;
+      line-height: 130%;
+      padding: 20px 24px;
+    }
+  }
+}
