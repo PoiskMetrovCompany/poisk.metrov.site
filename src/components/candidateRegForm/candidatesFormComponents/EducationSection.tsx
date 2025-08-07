@@ -5,6 +5,8 @@ import { SectionHeader } from "./SectionHeader";
 import EducationDataTable from "../EducationDataTable";
 import CourseDataTable from "../CourseDataTable";
 
+import WorkExperienceTable from "../WorkExperienceTable";
+
 interface EducationSectionProps {
   selectedEducationLevel: string;
   setSelectedEducationLevel: React.Dispatch<React.SetStateAction<string>>;
@@ -113,6 +115,11 @@ export const EducationSection: FC<EducationSectionProps> = ({
           onChange={setSelectedProfessionalExperience}
         />
       </FormRow>
+
+      {/* Добавляем таблицу профессионального опыта при выборе "Опыт есть" */}
+      {selectedProfessionalExperience === 'Опыт есть' && (
+        <WorkExperienceTable formData={formData} setFormData={setFormData} />
+      )}
     </>
   );
 };

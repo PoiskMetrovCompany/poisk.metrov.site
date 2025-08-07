@@ -232,7 +232,7 @@ const CandidateRegForm: FC = () => {
           expirationDate.setTime(expirationDate.getTime() + (30 * 24 * 60 * 60 * 1000));
           document.cookie = `access_token=${response.data.attributes.access_token}; expires=${expirationDate.toUTCString()}; path=/; SameSite=Strict`;
           
-          const redirectUrl = response.data.attributes.user.role === "candidate" ? '/profile-candidates/' : '/profile-candidates/security/';
+          const redirectUrl = response.data.attributes.user.role === "candidate" ? '/candidatesForm' : '/candidatesSecurityTable';
           
           // Немедленное перенаправление без показа экрана успеха
           window.location.href = redirectUrl;

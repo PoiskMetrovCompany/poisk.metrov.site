@@ -647,17 +647,19 @@ const CandidateForm: FC = () => {
               />
 
               <SectionHeader title="1. Дети старше 18 лет" />
+              
 
-              <RadioGroup<boolean>
-                name="haveChildren"
-                value={haveChildren}
-                onChange={setHaveChildren}
-                options={[
-                  { value: true, label: "У меня есть дети старше 18 лет" },
-                  { value: false, label: "У меня нет детей старше 18 лет" }
-                ]}
-              />
-
+            <FormRow justifyContent="flex-start" style={{marginTop: 0}}>
+                <RadioGroup<boolean>
+                  name="haveChildren"
+                  value={haveChildren}
+                  onChange={setHaveChildren}
+                  options={[
+                    { value: true, label: "У меня есть дети старше 18 лет" },
+                    { value: false, label: "У меня нет детей старше 18 лет" }
+                  ]}
+                />
+              </FormRow>
               {haveChildren && (
                 <div className="toggle-block" style={{width: '100%'}}>
                   <ChildrenTable index={1} formData={formData} setFormData={setFormData} />

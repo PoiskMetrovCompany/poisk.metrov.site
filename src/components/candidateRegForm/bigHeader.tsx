@@ -11,7 +11,7 @@ interface INotification {
 
 interface IHeaderProps {
   onCityChange?: (city: string) => void;
-  activePage?: 'candidates' | 'settings'; // Новый параметр для определения активной страницы
+  activePage?: 'candidates' | 'settings'; 
 }
 
 const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }) => {
@@ -256,13 +256,13 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
         </div>
         <div className="w-80" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '30px'}}>
           <a 
-            href="/profile-candidates/security/"
+            href="/candidatesSecurityBlock/candidatesSecurityTable"
             className={activePage === 'candidates' ? 'active' : ''}
           >
             Кандидаты
           </a>
           <a 
-            href="/profile-candidates/security/settings"
+            href="/candidatesSecurityBlock/securitySettings"
             className={activePage === 'settings' ? 'active' : ''}
           >
             Настройки

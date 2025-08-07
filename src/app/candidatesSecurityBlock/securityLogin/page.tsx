@@ -66,7 +66,6 @@ const SecurityRegForm: FC = () => {
             setError('');
             console.log('Отправляем запрос на авторизацию администратора...');
 
-            // Отправляем запрос на аутентификацию
             const response = await axios.post<ApiResponse>('/api/v1/account/auth', {
                 email: login,
                 password: password
@@ -78,7 +77,6 @@ const SecurityRegForm: FC = () => {
 
             console.log('Ответ сервера:', response.data);
 
-            // Проверяем успешность запроса
             if (response.data.request && response.data.attributes) {
                 setAuthResult(response.data.attributes);
                 setIsAuthenticated(true);
@@ -139,8 +137,7 @@ const SecurityRegForm: FC = () => {
             const success = await sendAuthRequest(loginValue.trim(), passwordValue.trim());
             
             if (success) {
-                // Перенаправляем через Next.js router
-                router.push('/profile-candidates/security/');
+                router.push('/candidatesSecurityTable');
             }
         } else {
             console.log('Форма не валидна');
@@ -165,7 +162,7 @@ const SecurityRegForm: FC = () => {
     // Если администратор аутентифицирован, перенаправляем
     useEffect(() => {
         if (isAuthenticated && authResult) {
-            router.push('/profile-candidates/security/');
+            router.push('/candidatesSecurityTable');
         }
     }, [isAuthenticated, authResult, router]);
 
