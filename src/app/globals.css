@@ -57,12 +57,6 @@ button {
     БАЗОВЫЕ СТИЛИ И ТИПОГРАФИЯ
     ============================================== */
 
-/* Шрифты */
-@font-face {
-  font-family: Onest;
-  src: url("../../public/fonts/Onest-VariableFont_wght.ttf");
-}
-
 /* HTML и Body */
 html {
   scroll-behavior: smooth;

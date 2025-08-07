@@ -127,9 +127,7 @@ const BuildingCarousel: FC = () => {
       </div>
 
       <div className={`${styles.offers_button} ${styles.row}`}>
-        <button className={styles["offers_button-catalogue"]}>
-          Перейти в каталог
-        </button>
+        <button className={styles.offers_button_catalogue}>Перейти в каталог</button>
       </div>
     </section>
   )
