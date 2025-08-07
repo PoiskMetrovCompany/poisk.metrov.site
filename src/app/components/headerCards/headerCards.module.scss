@@ -40,6 +40,12 @@
 
       background-color: var(--color-white);
 
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: var(--color-border-gray);
+      }
+
       &__icon {
         width: 28px;
         height: 28px;
@@ -74,7 +80,7 @@
 
     &__subtitle {
       font-size: 20px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 130%;
     }
 
@@ -101,7 +107,7 @@
           height: 56px;
 
           font-size: 48px;
-          font-weight: 500;
+          font-weight: 400;
           line-height: 130%;
           text-align: center;
         }
@@ -119,7 +125,7 @@
         justify-content: space-between;
 
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 150%;
 
         &__item {
@@ -171,6 +177,12 @@
     &__button {
       height: 64px;
       margin-top: auto;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 0.8;
+        background-color: var(--color-beige) !important;
+      }
     }
   }
 }
