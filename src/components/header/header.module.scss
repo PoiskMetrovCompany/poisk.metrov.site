@@ -373,6 +373,10 @@
 }
 
 @media (max-width: 1099px) {
+    .top-bar{
+        display: none;
+    }
+
     .user-actions {
         &__text {
             font-size: 16px;
@@ -493,10 +497,6 @@
     /* Уменьшаем gap в блоках */
     .main-bar {
         &__left {
-            gap: 0px;
-        }
-
-        &__right {
             gap: 0px;
         }
     }
