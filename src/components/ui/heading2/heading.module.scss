@@ -3,4 +3,9 @@
   font-weight: 500;
   line-height: 130%;
   color: var(--color-black);
+
+  > b {
+    font-weight: 500;
+    color: var(--color-orange);
+  }
 }
