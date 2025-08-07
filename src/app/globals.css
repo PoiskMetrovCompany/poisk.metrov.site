@@ -133,3 +133,9 @@ article p {
     color: #818181;
     font-size: 1.125rem; 
 }
+
+@media (max-width: 470px) {
+  header{
+    margin-bottom: 1rem;
+  }
+}
