@@ -8,13 +8,13 @@ import Logo from "./Logo";
 
 const MainBar: FC = () => {
   return (
-    <div className={styles["main-bar"]}>
-      <div className={styles["main-bar__container"]}>
-        <div className={styles["main-bar__left"]}>
+    <div className={styles.main_bar}>
+      <div className={styles.main_bar__container}>
+        <div className={styles.main_bar__left}>
           <Logo />
           <Navigation />
         </div>
-        <div className={styles["main-bar__right"]}>
+        <div className={styles.main_bar__right}>
           <ContactInfo />
           <UserActions />
         </div>

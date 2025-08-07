@@ -25,6 +25,12 @@ button {
   background-color: transparent;
 }
 
+/* Скрываем стандартные кнопки Swiper */
+.swiper-button-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 :root {
   --color-black: #181817;
   --color-beige: #f4f4f1;
@@ -32,11 +38,15 @@ button {
   --color-blue: #0436b6;
   --color-white: #fff;
   --color-white-hover: #f9f9f9;
+  --color-green: #639c70;
+  --color-green-light: #7ab688;
   --color-text-black: #494949;
   --color-text-gray: #818181;
+  --color-text-gray-light: #9e9e9e;
   --color-border-gray: #e9e9e9;
   --color-border-gray-hover: #b1b1b1;
   --color-orange: #ec7d3f;
+  --color-dark-orange: #d05d1c;
   --color-orange-hover: #d05d1d;
   --color-orange-light: rgb(236 125 63 / 20%);
   --color-orange-light-hover: rgb(236 125 63 / 30%);
@@ -47,32 +57,27 @@ button {
     БАЗОВЫЕ СТИЛИ И ТИПОГРАФИЯ
     ============================================== */
 
-/* Шрифты */
-@font-face {
-    font-family: "Onest";
-    src: url("../../public/fonts/Onest-VariableFont_wght.ttf");
-}
-
 /* HTML и Body */
 html {
-    font-family: 'Onest';
-    font-size: 16px;
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+  font-family: Onest;
+  font-size: 16px;
 }
 
-:target{
-    scroll-margin-top: 120px;
+:target {
+  scroll-margin-top: 120px;
 }
 
 body {
-    margin: 0;
-    background: rgba(244, 244, 241, 1);
-    padding-bottom: 3rem; /* 48px */
+  margin: 0;
+  padding-bottom: 3rem; /* 48px */
+  background: rgb(244 244 241 / 100%);
 }
 
 /* Базовая типография */
-h1, p {
-    margin: 0.625rem 0; /* 10px */
+h1,
+p {
+  margin: 0.625rem 0; /* 10px */
 }
 
 /* ==============================================
@@ -81,56 +86,61 @@ LAYOUT СТРУКТУРА
 
 /* Header */
 header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background: white !important;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  width: 100%;
+  margin-bottom: 4rem;
+
+  background: white !important;
 }
 
-.container{
+.container {
   padding: 0;
 }
 
-button{
-    cursor: pointer;
-    border: none; 
+button {
+  cursor: pointer;
+  border: none;
 }
 
-header p{
-    width: 40%;
+header p {
+  width: 40%;
 }
 
-#nonTextImg{
-    width: 40px;
-    height: 40px;
+#nonTextImg {
+  width: 40px;
+  height: 40px;
 }
 
 
 section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    min-height: calc(100vh - 5.625rem);
-    position: relative;
-    padding:  0 100px;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  min-height: calc(100vh - 5.625rem);
+  padding: 0 100px;
 }
 
 
 article {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 3rem; 
+  width: 100%;
+  margin-bottom: 3rem;
+  text-align: center;
 }
 
 article h1 {
-    font-weight: 500;
-    font-size: 1.5rem; 
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
 article p {
-    font-weight: 400;
-    color: #818181;
-    font-size: 1.125rem; 
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #818181;
 }

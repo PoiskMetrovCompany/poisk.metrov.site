@@ -11,7 +11,7 @@ interface IFavoriteButtonProps {
 const FavoriteButton: FC<IFavoriteButtonProps> = ({ onClick, isFavorite = false }) => {
   return (
     <button
-      className={styles['property-card__favorite']}
+      className={styles.property_card__favorite}
       onClick={onClick}
       aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
     >
