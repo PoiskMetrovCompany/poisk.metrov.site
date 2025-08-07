@@ -17,17 +17,17 @@ const TopBar: FC = () => {
   ];
 
   return (
-    <div id = "1" className={styles["top-bar"]}>
-      <div className={styles["top-bar__container"]}>
-        <div className={styles["top-bar__left"]}>
+    <div id = "1" className={styles.top_bar}>
+      <div className={styles.top_bar__container}>
+        <div className={styles.top_bar__left}>
           <LocationSelector />
         </div>
-        <div className={styles["top-bar__right"]}>
-          <nav className={styles["top-bar__nav"]}>
-            <ul className={styles["top-bar__list"]}>
+        <div className={styles.top_bar__right}>
+          <nav className={styles.top_bar__nav}>
+            <ul className={styles.top_bar__list}>
               {links.map((link, index) => (
-                <li key={index} className={styles["top-bar__item"]}>
-                  <a href={link.href} className={styles["top-bar__link"]}>
+                <li key={index} className={styles.top_bar__item}>
+                  <a href={link.href} className={styles.top_bar__link}>
                     {link.text}
                   </a>
                 </li>

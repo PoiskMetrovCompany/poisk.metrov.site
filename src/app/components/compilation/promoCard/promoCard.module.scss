@@ -1,0 +1,21 @@
+.promoCard {
+  min-height: 586px;
+  padding: 32px 32px 27px;
+  border-radius: 32px;
+  background-image: url("/images/promoCard.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__header {
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 130%;
+    color: var(--color-black);
+    width: 70%;
+  }
+}

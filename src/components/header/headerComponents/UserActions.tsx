@@ -1,6 +1,8 @@
 "use client";
 import React, { FC } from "react";
 import styles from "../header.module.scss";
+import Image from "next/image";
+import clsx from "clsx";
 
 interface IUserActionsProps {
   favoritesCount?: number;
@@ -36,90 +38,57 @@ const UserActions: FC<IUserActionsProps> = ({
   };
 
   return (
-    <div className={styles["user-actions"]}>
+    <div className={styles.user_actions}>
       <button
-        className={styles["user-actions__favorites"]}
+        className={styles.user_actions__favorites}
         type="button"
         onClick={handleFavoritesClick}
       >
-        <svg
-          className={styles["user-actions__icon"]}
-          width="20px"
-          height="20px"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <Image
+          className={styles.user_actions__icon}
+          src="/svgFiles/favorite.svg"
+          alt="Favorites"
+          width={20}
+          height={20}
+        />
         {favoritesCount > 0 && (
-          <span className={styles["user-actions__count"]}>{favoritesCount}</span>
+          <span className={styles.user_actions__count}>{favoritesCount}</span>
         )}
-        <span className={styles["user-actions__label"]}>Избранное</span>
+        <span className={styles.user_actions__label}>Избранное</span>
       </button>
-
+      
       <button
-        className={styles["user-actions__login"]}
+        className={styles.user_actions__login}
         type="button"
         onClick={handleLoginClick}
       >
-        <svg
-          className={styles["user-actions__icon"]}
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle
-            cx="12"
-            cy="7"
-            r="4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className={styles["user-actions__text"]}>
+        <Image
+          className={styles.user_actions__icon}
+          src="/svgFiles/profile.svg"
+          alt="User"
+          width={20}
+          height={20}
+        />
+        <span className={styles.user_actions__text}>
           {isLoggedIn ? "Профиль" : "Войти"}
         </span>
       </button>
-
+      
       <button
-        className={styles["user-actions__showMenu"]}
+        className={styles.user_actions__showMenu}
         type="button"
         onClick={handleMenuClick}
       >
-        <svg className="showMenuSvg"
-          width="16px"
-          height="16px"
-          viewBox="0 0 16 16"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-        >
-          <path fill="#444" d="M0 1h16v2h-16v-2z"></path>
-          <path fill="#444" d="M0 5h16v2h-16v-2z"></path>
-          <path fill="#444" d="M0 9h16v2h-16v-2z"></path>
-          <path fill="#444" d="M0 13h16v2h-16v-2z"></path>
-        </svg>
+        <Image
+          className="showMenuSvg"
+          src="/svgFiles/showMenu.svg"
+          alt="Menu"
+          width={16}
+          height={16}
+        />
       </button>
     </div>
   );
-};
+}
 
 export default UserActions;
