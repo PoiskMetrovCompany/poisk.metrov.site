@@ -2,37 +2,15 @@
 
 import React from "react"
 import styles from "./favourites.module.scss"
-import PropertyCard from "./carouselBuildings/carouselComponents/PropertyCard"
+import PropertyCard from "../../../components/propertyCard"
 import Heading2 from "@/components/ui/heading2"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import { IProperty } from "@/types/PropertyCard"
 
-const cardExpandImg = "/images/buidingExpandImg.webp"
-
-interface ISpecification {
-  type: string
-  price: string
-}
-
-interface IBadge {
-  developer: string
-  period: string
-}
-
-interface ICard {
-  id: number
-  title: string
-  price: string
-  subtitle: string
-  badge: IBadge
-  metro: string
-  driveTime: string
-  specifications: ISpecification[]
-}
-
-const cards: ICard[] = [
+const cards: IProperty[] = [
   {
     id: 1,
     title: "Европейский берег",
@@ -48,6 +26,7 @@ const cards: ICard[] = [
       { type: "3-комн. кв", price: "от 10,8 млн ₽" },
       { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
     ],
+    image: "/images/buidingExpandImg.webp",
   },
   {
     id: 2,
@@ -64,6 +43,7 @@ const cards: ICard[] = [
       { type: "3-комн. кв", price: "от 9,5 млн ₽" },
       { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
     ],
+    image: "/images/buidingExpandImg.webp",
   },
   {
     id: 3,
@@ -80,6 +60,7 @@ const cards: ICard[] = [
       { type: "3-комн. кв", price: "от 12,5 млн ₽" },
       { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
     ],
+    image: "/images/buidingExpandImg.webp",
   },
   {
     id: 4,
@@ -96,6 +77,7 @@ const cards: ICard[] = [
       { type: "3-комн. кв", price: "от 14,8 млн ₽" },
       { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
     ],
+    image: "/images/buidingExpandImg.webp",
   },
 ]
 
@@ -118,18 +100,7 @@ const Favourites = () => {
         >
           {cards.map((card) => (
             <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              <PropertyCard
-                property={{
-                  title: card.title,
-                  price: card.price,
-                  subtitle: card.subtitle,
-                  badge: card.badge,
-                  metro: card.metro,
-                  driveTime: card.driveTime,
-                  specifications: card.specifications,
-                }}
-                image={cardExpandImg}
-              />
+              <PropertyCard property={card} />
             </SwiperSlide>
           ))}
         </Swiper>

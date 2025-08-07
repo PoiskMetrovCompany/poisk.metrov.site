@@ -1,48 +1,25 @@
 "use client"
 
 import React, { FC } from "react"
-import styles from "../carouselComponent.module.scss"
-import CatalogButton from "@/components/ui/buttons/CatalogButton"
-import DetailsButton from "@/components/ui/buttons/DetailsButton"
-import FavoriteButton from "@/components/ui/buttons/FavoriteButton"
+import styles from "./propertyCard.module.scss"
 import Image from "next/image"
 import clsx from "clsx"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
-
-interface ISpecification {
-  type: string
-  price: string
-}
-
-interface IBadge {
-  developer: string
-  period: string
-}
-
-interface IProperty {
-  title: string
-  price: string
-  subtitle: string
-  badge: IBadge
-  metro: string
-  driveTime: string
-  specifications: ISpecification[]
-}
+import { IProperty } from "@/types/PropertyCard"
 
 interface IPropertyCardProps {
   property: IProperty
-  image: string
 }
 
-const PropertyCard: FC<IPropertyCardProps> = ({ property, image }) => {
+const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
   const { title, price, subtitle, badge, metro, driveTime, specifications } =
     property
 
   return (
     <article className={styles.property_card}>
       <div className={styles.property_card__image}>
-        <img src={image} alt={`Изображение ЖК ${title}`} />
+        <img src={property.image} alt={`Изображение ЖК ${title}`} />
         <div className={styles.property_card__badge}>
           <span>{badge.developer}</span>
           <span>{badge.period}</span>
@@ -109,9 +86,6 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property, image }) => {
             iconClassName={styles.property_card__actions__like__icon}
             iconLink={"/images/icons/heart.svg"}
           />
-          {/* <CatalogButton />
-          <DetailsButton />
-          <FavoriteButton /> */}
         </div>
       </div>
     </article>

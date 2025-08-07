@@ -1,0 +1,320 @@
+.property_card_list {
+  overflow: hidden;
+  display: flex;
+  gap: 48px;
+
+  height: 520px;
+  border-radius: 40px;
+
+  background-color: #fff;
+
+  &__image {
+    overflow: hidden;
+
+    width: 660px;
+    height: 100%;
+    border-radius: 40px;
+
+    object-fit: cover;
+  }
+
+  &__content {
+    display: flex;
+    gap: 40px;
+    padding: 32px 32px 32px 0;
+
+    &__separator {
+      width: 1px;
+      height: 100%;
+      background-color: var(--color-gray);
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+
+      width: 555px;
+      height: 100%;
+
+      &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &__title {
+          font-size: 28px;
+          font-weight: 500;
+          line-height: 130%;
+          color: var(--text-black);
+        }
+
+        &__location {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          &__adress {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+
+            margin: 0;
+
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 150%;
+            color: var(--color-text-gray-dark);
+
+            &__button {
+              display: flex;
+              gap: 4px;
+              align-items: center;
+
+              font-size: 16px;
+              font-weight: 400;
+              line-height: 150%;
+              color: var(--color-orange);
+
+              &__icon {
+                width: 20px;
+                height: 20px;
+              }
+            }
+          }
+
+          &__way {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+
+            &__item {
+              display: flex;
+              gap: 8px;
+              align-items: center;
+
+              &__icon {
+                width: 24px;
+                height: 24px;
+
+                &_metro {
+                  width: 28px;
+                  height: 28px;
+                }
+              }
+
+              &__text {
+                font-size: 16px;
+                font-weight: 300;
+                line-height: 150%;
+                color: var(--color-text-gray);
+              }
+            }
+          }
+        }
+      }
+
+      &__specifications {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 8px;
+
+        &__item {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          &__name {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 150%;
+            color: var(--color-black);
+          }
+
+          &__price {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 150%;
+            color: var(--color-text-gray);
+          }
+        }
+      }
+
+      &__description {
+        display: flex;
+        gap: 32px;
+
+        margin-top: auto;
+        padding-top: 32px;
+        border-top: 1px solid var(--color-gray);
+
+        &__item {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          width: 126px;
+
+          &:nth-child(4) {
+            width: 78px;
+          }
+
+          &__type {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 150%;
+            color: var(--color-text-gray);
+          }
+
+          &__status {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 150%;
+            color: var(--color-black);
+          }
+        }
+      }
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 306px;
+
+      &__price {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+
+        &__value {
+          display: flex;
+          justify-content: space-between;
+
+          &__header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            &__number {
+              font-size: 24px;
+              font-weight: 400;
+              line-height: 120%;
+              color: var(--color-black);
+            }
+
+            &__description {
+              width: fit-content;
+              padding: 4px 8px;
+              border-radius: 64px;
+
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 150%;
+              color: var(--color-text-gray-dark);
+              text-align: center;
+
+              background: var(--color-beige);
+              backdrop-filter: blur(8px);
+            }
+          }
+
+          &__button {
+            width: 56px;
+            height: 56px;
+
+            &__icon {
+              width: 28px;
+              height: 28px;
+            }
+          }
+        }
+
+        &__mortgage {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          &__price {
+            width: 100%;
+            padding: 8px 0;
+            border-radius: 40px;
+
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 150%;
+            color: var(--color-orange);
+            text-align: center;
+
+            background: var(--color-orange-light);
+          }
+
+          &__description {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            &__header {
+              font-size: 16px;
+              font-weight: 400;
+              line-height: 150%;
+              color: var(--color-black);
+            }
+
+            &__text {
+              margin: 0;
+              font-size: 16px;
+              font-weight: 300;
+              color: var(--color-text-gray);
+            }
+          }
+        }
+      }
+
+      &__builder {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: auto;
+
+        &__header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          &__title {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 150%;
+            color: var(--color-black);
+          }
+
+          &__icon {
+            width: 48px;
+            height: 48px;
+          }
+        }
+
+        &__buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          &__button {
+            height: 56px;
+          }
+
+          &__more {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+
+            &__button {
+              height: 56px;
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
