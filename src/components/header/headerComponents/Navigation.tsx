@@ -16,10 +16,10 @@ const Navigation: FC = () => {
 
   return (
     <nav className={styles.navigation}>
-      <ul className={styles["navigation__list"]}>
+      <ul className={styles.navigation__list}>
         {navItems.map((item, index) => (
-          <li key={index} className={styles["navigation__item"]}>
-            <button className={styles["navigation__button"]} type="button">
+          <li key={index} className={styles.navigation__item}>
+            <button className={styles.navigation__button} type="button">
               {item.text}
             </button>
           </li>
