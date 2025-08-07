@@ -4,7 +4,7 @@ import { RadioGroup } from "./RadioGroup";
 import { SectionHeader } from "./SectionHeader";
 import EducationDataTable from "../EducationDataTable";
 import CourseDataTable from "../CourseDataTable";
-
+import Image from "next/image";
 import WorkExperienceTable from "../WorkExperienceTable";
 
 interface EducationSectionProps {
@@ -74,9 +74,12 @@ export const EducationSection: FC<EducationSectionProps> = ({
       <FormRow style={{marginBottom: 0}}>
         <button className="bigFormButton" onClick={onAddEducationTable}>
           <div className="textCont"></div>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <Image 
+            src="/images/icons/plus.svg" 
+            alt="Plus icon" 
+            width={24} 
+            height={24} 
+          />
           Добавить высшее образование
         </button>
       </FormRow>
@@ -91,9 +94,12 @@ export const EducationSection: FC<EducationSectionProps> = ({
       <FormRow style={{marginBottom: 0}}>
         <button className="bigFormButton" onClick={onAddCourseTable}>
           <div className="textCont"></div>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <Image 
+              src="/images/icons/plus.svg" 
+              alt="Plus icon" 
+              width={24} 
+              height={24} 
+          />
           Добавить дополнительное образование
         </button>
       </FormRow>

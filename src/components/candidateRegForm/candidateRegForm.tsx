@@ -4,7 +4,7 @@ import axios from "axios";
 import IMask from "imask";
 import Timer from "./Timer";
 import HeaderFormSmall from "./header";
-
+import Image from "next/image";
 interface IUserAttributes {
   phone?: string;
   [key: string]: any;
@@ -404,9 +404,12 @@ const CandidateRegForm: FC = () => {
                 />
                 {showCheckmark && (
                   <div className="checkmark-icon" id="checkmarkIcon">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
+                    <Image 
+                      src="/checkmark.svg" 
+                      alt="Checkmark" 
+                      width={24} 
+                      height={24} 
+                    />
                   </div>
                 )}
               </div>

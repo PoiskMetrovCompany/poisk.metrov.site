@@ -7,6 +7,8 @@ import EducationDataTable from "./EducationDataTable";
 import RelativeTable from "./RelativeTable";
 import ChildrenTable from "./ChildrenTable";
 import CustomSelect from "./CustomSelect";
+import Image from "next/image";
+
 
 import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection";
 import { EducationSection } from "./candidatesFormComponents/EducationSection";
@@ -671,9 +673,12 @@ const CandidateForm: FC = () => {
                   <FormRow>
                     <button className="bigFormButton" onClick={addChildrenTable}>
                       <div className="textCont"></div>
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                     <Image 
+                        src="/images/icons/plus.svg" 
+                        alt="Plus icon" 
+                        width={24} 
+                        height={24} 
+                      />
                       Добавить совершеннолетнего ребенка
                     </button>
                   </FormRow>

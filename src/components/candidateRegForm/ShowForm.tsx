@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "./candidateLoginComponents.module.css";
-
+import Image from "next/image";
 import BigHeader from "./bigHeader";
 
 interface SelectOption {
@@ -812,9 +812,12 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
               style={{position: 'absolute', top: '-2.7rem', left: '0', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer'}}
               onClick={() => setSelectedVacancyKey(null)}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6.5 3L2 7.5L6.5 12M2.5 7.5H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <Image 
+                src="/images/icons/arrow-left.svg" 
+                alt="Back" 
+                width={16} 
+                height={16} 
+              />
               Вернуться к списку
             </p>
 

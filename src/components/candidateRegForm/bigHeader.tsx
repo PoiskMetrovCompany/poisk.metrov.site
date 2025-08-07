@@ -222,20 +222,16 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
               >
                 {selectedCity}
               </span>
-              <svg 
-                width="12" 
-                height="12" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2"
-                style={{
-                  transform: showCityDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.2s ease'
-                }}
-              >
-                <path d="M6 9L12 15L18 9" />
-              </svg>
+              <Image
+                    src="/images/icons/chevron-down.svg"
+                    alt="Dropdown arrow"
+                    width={12}
+                    height={12}
+                    style={{
+                      transform: showCityDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s ease'
+                    }}
+              />
             </h5>
             
             {/* Выпадающий список городов */}

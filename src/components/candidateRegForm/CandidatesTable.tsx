@@ -669,35 +669,26 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                         </div>
                       </button>
                     )}
-                  <button
-                    id={`downloadBtn${candidate.id}`}
-                    className={"downloadBtn"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSingleDownload(candidate.vacancyKey, candidate.name);
-                    }}
-                    disabled={singleDownloadLoading[candidate.vacancyKey]}
-                    title={singleDownloadLoading[candidate.vacancyKey] ? 'Скачивание...' : 'Скачать анкету в PDF'}
+                <button
+                      id={`downloadBtn${candidate.id}`}
+                      className={"downloadBtn"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSingleDownload(candidate.vacancyKey, candidate.name);
+                      }}
+                      disabled={singleDownloadLoading[candidate.vacancyKey]}
+                      title={singleDownloadLoading[candidate.vacancyKey] ? 'Скачивание...' : 'Скачать анкету в PDF'}
                     >
-                    {singleDownloadLoading[candidate.vacancyKey] ? (
-                      <span>⏳</span>
-                    ) : (
-                      <svg 
-                      width="20" 
-                      height="20" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      xmlns="http://www.w3.org/2000/svg"
-                      >
-                      <path 
-                        d="M12 3V16M12 16L18 10M12 16L6 10M4 21H20" 
-                        stroke="currentColor" 
-                        strokeWidth="3" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                      />
-                      </svg>
-                    )}
+                      {singleDownloadLoading[candidate.vacancyKey] ? (
+                        <span>⏳</span>
+                      ) : (
+                        <Image 
+                          src="/images/icons/download.svg" 
+                          alt="Download" 
+                          width={20} 
+                          height={20} 
+                        />
+                      )}
                   </button>
                 </td>
               </tr>
@@ -750,9 +741,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                 disabled={downloadLoading}
               >
                 <span className="format-text">{selectedFormat}</span>
-                <svg className="chevron-down" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <Image 
+                  src="/images/icons/chevron-down.svg" 
+                  alt="Dropdown" 
+                  width={16} 
+                  height={16} 
+                  className="chevron-down"
+                />
               </button>
               <div className={`file-formats-card ${isFormatDropdownOpen ? '' : 'hide'}`}>
                 <div className="format-item" onClick={() => handleFormatSelect('.xlsx')}>.xlsx</div>
