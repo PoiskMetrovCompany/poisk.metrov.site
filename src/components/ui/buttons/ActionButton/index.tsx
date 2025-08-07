@@ -6,6 +6,7 @@ interface ActionButtonProps {
   className?: string
   onClick?: () => void
   type?: "primary" | "secondary" | "outline" | "beige"
+  size?: "small" | "medium" | "large"
 }
 
 const ActionButton = ({
@@ -13,6 +14,7 @@ const ActionButton = ({
   className,
   onClick,
   type = "primary",
+  size = "small",
 }: ActionButtonProps) => {
   return (
     <button
@@ -23,6 +25,11 @@ const ActionButton = ({
           [styles.actionButton_secondary]: type === "secondary",
           [styles.actionButton_outline]: type === "outline",
           [styles.actionButton_beige]: type === "beige",
+        },
+        {
+          [styles.actionButton_small]: size === "small",
+          [styles.actionButton_medium]: size === "medium",
+          [styles.actionButton_large]: size === "large",
         },
         className
       )}

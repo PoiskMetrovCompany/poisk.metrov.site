@@ -70,9 +70,3 @@
   right: 0;
   transform: translateX(50%) translateY(-22.5px);
 }
-
-// Скрываем стандартные кнопки Swiper
-:global(.swiper-button-disabled) {
-  cursor: not-allowed;
-  opacity: 0.5;
-}

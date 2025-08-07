@@ -5,6 +5,9 @@ import Mortage from "./components/mortgage"
 import Compilation from "./components/compilation"
 import Work from "./components/work"
 import Partners from "./components/partners"
+import Rating from "./components/rating"
+import Download from "./components/download"
+import Selection from "./components/selection"
 
 export default function Home() {
   return (
@@ -16,6 +19,9 @@ export default function Home() {
         <Compilation />
         <Work />
         <Partners />
+        <Rating />
+        <Download />
+        <Selection />
       </div>
     </div>
   )

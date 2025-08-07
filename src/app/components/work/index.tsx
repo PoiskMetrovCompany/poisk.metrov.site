@@ -37,8 +37,8 @@ const Work = () => {
           modules={[Navigation]}
           spaceBetween={20}
           navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next-work",
+            prevEl: ".swiper-button-prev-work",
           }}
           slidesPerView={1}
           className={styles.swiper}
@@ -67,14 +67,14 @@ const Work = () => {
         </Swiper>
 
         <div
-          className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
+          className={`swiper-button-prev-work ${styles.navigationButton} ${styles.navigationButtonPrev}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
           </div>
         </div>
         <div
-          className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
+          className={`swiper-button-next-work ${styles.navigationButton} ${styles.navigationButtonNext}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image

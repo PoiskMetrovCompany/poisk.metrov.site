@@ -12,26 +12,26 @@ const partnersLogos = [
   "kvs",
   "lcp",
   "lenstroy",
-  "polis",
-  "rbi",
-  "setl",
-  "terminal",
   "vita",
+  "terminal",
+  "setl",
+  "rbi",
+  "polis",
 ]
 
 const Partners = () => {
   return (
     <div className={styles.partners}>
-      <Heading2>Наши партнеры</Heading2>
+      <Heading2>
+        Партнёры, которые нам <b>доверяют</b>
+      </Heading2>
       <div className={styles.partners__logos}>
         {partnersLogos.map((logo, index) => (
-          <div className={styles.partners__logos__item} key={index}>
-            <IconImage
-              iconLink={`/images/partners/${logo}.webp`}
-              alt={logo}
-              className={styles.partners__logos__logo__image}
-            />
-          </div>
+          <div
+            className={styles.partners__logos__item}
+            key={index}
+            style={{ backgroundImage: `url(/images/partners/${logo}.webp)` }}
+          />
         ))}
       </div>
     </div>
