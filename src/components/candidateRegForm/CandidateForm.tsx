@@ -8,6 +8,14 @@ import RelativeTable from "./RelativeTable";
 import ChildrenTable from "./ChildrenTable";
 import CustomSelect from "./CustomSelect";
 
+import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection";
+import { EducationSection } from "./candidatesFormComponents/EducationSection";
+import { PassportSection } from "./candidatesFormComponents/PassportSection";
+import { FormRow } from "./candidatesFormComponents/FormRow";
+import { RadioGroup } from "./candidatesFormComponents/RadioGroup";
+import { SectionHeader } from "./candidatesFormComponents/SectionHeader";
+import { SuccessMessage } from "./candidatesFormComponents/successMessage";
+
 const CandidateForm: FC = () => {
   // Состояния для управления видимостью блоков
   const [surnameChanged, setSurnameChanged] = useState(true);
@@ -100,85 +108,8 @@ const CandidateForm: FC = () => {
     return null;
   };
 
-  const formatNameInput = (value: string): string => {
-    return value.replace(/[^а-яёА-ЯЁa-zA-Z\s\-]/g, '');
-  };
-
-  const formatDate = (value: string): string => {
-    const numbers = value.replace(/\D/g, '');
-    
-    if (numbers.length <= 2) {
-      return numbers;
-    } else if (numbers.length <= 4) {
-      return numbers.slice(0, 2) + '.' + numbers.slice(2);
-    } else {
-      return numbers.slice(0, 2) + '.' + numbers.slice(2, 4) + '.' + numbers.slice(4, 8);
-    }
-  };
-
-  const formatMobilePhone = (value: string): string => {
-    const numbers = value.replace(/\D/g, '');
-    
-    let formattedNumbers = numbers;
-    if (numbers.length > 0 && numbers[0] !== '7') {
-      formattedNumbers = '7' + numbers;
-    }
-
-    if (formattedNumbers.length <= 1) {
-      return '+7';
-    } else if (formattedNumbers.length <= 4) {
-      return '+7 (' + formattedNumbers.slice(1);
-    } else if (formattedNumbers.length <= 7) {
-      return '+7 (' + formattedNumbers.slice(1, 4) + ') ' + formattedNumbers.slice(4);
-    } else if (formattedNumbers.length <= 9) {
-      return '+7 (' + formattedNumbers.slice(1, 4) + ') ' + formattedNumbers.slice(4, 7) + '-' + formattedNumbers.slice(7);
-    } else {
-      return '+7 (' + formattedNumbers.slice(1, 4) + ') ' + formattedNumbers.slice(4, 7) + '-' + formattedNumbers.slice(7, 9) + '-' + formattedNumbers.slice(9, 11);
-    }
-  };
-
-  const formatHomePhone = (value: string): string => {
-    const numbers = value.replace(/\D/g, '');
-    
-    if (numbers.length <= 3) {
-      return numbers;
-    } else {
-      return numbers.slice(0, 3) + ' ' + numbers.slice(3, 6);
-    }
-  };
-
-  const formatPassport = (value: string): string => {
-    const numbers = value.replace(/\D/g, '');
-    
-    if (numbers.length <= 4) {
-      return numbers;
-    } else {
-      return numbers.slice(0, 4) + ' ' + numbers.slice(4, 10);
-    }
-  };
-
   const handleFormDataChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleDateChange = (name: string, value: string) => {
-    const formattedValue = formatDate(value);
-    handleFormDataChange(name, formattedValue);
-  };
-
-  const handleMobilePhoneChange = (name: string, value: string) => {
-    const formattedValue = formatMobilePhone(value);
-    handleFormDataChange(name, formattedValue);
-  };
-
-  const handleHomePhoneChange = (name: string, value: string) => {
-    const formattedValue = formatHomePhone(value);
-    handleFormDataChange(name, formattedValue);
-  };
-
-  const handlePassportChange = (name: string, value: string) => {
-    const formattedValue = formatPassport(value);
-    handleFormDataChange(name, formattedValue);
   };
 
   const collectEducationData = () => {
@@ -629,475 +560,64 @@ const CandidateForm: FC = () => {
       <main>
         <section>
           {submitSuccess ? (
-            <div className="center-card" style={{maxHeight: '364px'}}>
-              <div style={{marginTop: 0}} className="formRow justify-center">
-                <div className="successMarker">
-                  <svg width="56" height="56" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="20" cy="20" r="18" fill="#e8f5e8" stroke="#4caf50" strokeWidth="2"/>
-                    <polyline points="12,20 17,25 28,14" stroke="#4caf50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  </svg>
-                </div>
-              </div>
-              <div className="formRow justify-center">
-                <h1>Анкета успешно отправлена</h1>
-              </div>
-              <div className="formRow justify-center">
-                <p>Мы успешно получили вашу анкету</p>
-              </div>
-              <div className="formRow justify-center">
-                <button
-                  id="closeNotification"
-                  className="formBtn btn-active"
-                  onClick={() => window.location.reload()}
-                >
-                  Закрыть
-                </button>
-              </div>
-            </div>
+            <SuccessMessage onClose={() => window.location.reload()} />
           ) : (
             <div className="center-card big">
-              <h1>Общие сведения</h1>
-              <p>Мы не передаём эти данные третьим лицам и используем их только для целей адаптации и сопровождения кандидатов</p>
+              <SectionHeader 
+                title="Общие сведения" 
+                subtitle="Мы не передаём эти данные третьим лицам и используем их только для целей адаптации и сопровождения кандидатов" 
+              />
 
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="Vacancy" className="formLabel">Вакансия</label>
-                  <CustomSelect
-                    options={vacancyOptions}
-                    placeholder="Выберите вакансию, на которую подаетесь"
-                    value={selectedVacancy}
-                    show={showVacancyOptions}
-                    isLoading={isLoadingVacancies}
-                    error={vacancyError}
-                    onToggle={() => {
-                      setShowVacancyOptions(!showVacancyOptions);
-                      setShowMaritalOptions(false);
-                      setShowCityOptions(false); 
-                    }}
-                    onSelect={(option) => {
-                      setSelectedVacancy(option);
-                      setShowVacancyOptions(false);
-                    }}
-                  />
-                  {vacancyError && (
-                    <div className="error-message" style={{ marginTop: '5px', fontSize: '14px', color: '#e74c3c' }}>
-                      {vacancyError}
-                      <button
-                        onClick={loadVacancies}
-                        style={{
-                          marginLeft: '10px',
-                          background: 'none',
-                          border: 'none',
-                          color: '#3498db',
-                          cursor: 'pointer',
-                          textDecoration: 'underline'
-                        }}
-                      >
-                        Повторить
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+              {/* Основная информация */}
+              <PersonalInfoSection
+                formData={formData}
+                onFormDataChange={handleFormDataChange}
+                selectedVacancy={selectedVacancy}
+                setSelectedVacancy={setSelectedVacancy}
+                selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
+                vacancyOptions={vacancyOptions}
+                cityOptions={cityOptions}
+                showVacancyOptions={showVacancyOptions}
+                setShowVacancyOptions={setShowVacancyOptions}
+                showCityOptions={showCityOptions}
+                setShowCityOptions={setShowCityOptions}
+                isLoadingVacancies={isLoadingVacancies}
+                vacancyError={vacancyError}
+                loadVacancies={loadVacancies}
+                surnameChanged={surnameChanged}
+                setSurnameChanged={setSurnameChanged}
+              />
 
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="City" className="formLabel">Город работы</label>
-                  <CustomSelect
-                    options={cityOptions}
-                    placeholder="Выберите город в котором хотите работать"
-                    value={selectedCity}
-                    show={showCityOptions}
-                    isLoading={false}
-                    error=""
-                    onToggle={() => {
-                      setShowCityOptions(!showCityOptions);
-                      setShowVacancyOptions(false);
-                      setShowMaritalOptions(false);
-                    }}
-                    onSelect={(option) => {
-                      setSelectedCity(option);
-                      setShowCityOptions(false);
-                    }}
-                  />
-                </div>
-              </div>
+              {/* Образование и профессиональный опыт */}
+              <EducationSection
+                selectedEducationLevel={selectedEducationLevel}
+                setSelectedEducationLevel={setSelectedEducationLevel}
+                selectedProfessionalExperience={selectedProfessionalExperience}
+                setSelectedProfessionalExperience={setSelectedProfessionalExperience}
+                formData={formData}
+                setFormData={setFormData}
+                additionalEducationTables={additionalEducationTables}
+                additionalCourseTables={additionalCourseTables}
+                onAddEducationTable={addEducationTable}
+                onAddCourseTable={addCourseTable}
+              />
 
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="FIO" className="formLabel">ФИО</label>
-                  <input
-                    type="text"
-                    name="FIO"
-                    className="formInput big"
-                    placeholder="Иванов Иван Иванович"
-                    value={formData.FIO || ''}
-                    onChange={(e) => handleFormDataChange('FIO', formatNameInput(e.target.value))}
-                  />
-                </div>
-              </div>
+              {/* Паспортные данные */}
+              <PassportSection
+                formData={formData}
+                onFormDataChange={handleFormDataChange}
+                onDateChange={handleFormDataChange}
+                onPassportChange={handleFormDataChange}
+              />
 
-              <div className="formRow justify-flex-start">
-                <div className="input-container big">
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="surnameChanged"
-                      checked={surnameChanged}
-                      onChange={() => setSurnameChanged(true)}
-                    />
-                    <span className="radiomark"></span>
-                    Я менял(-а) фамилию
-                  </label>
+              {/* Состав семьи */}
+              <SectionHeader 
+                title="Состав семьи" 
+                subtitle="Заполните эти данные, чтобы мы могли предложить вам подходящие условия" 
+              />
 
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="surnameChanged"
-                      checked={!surnameChanged}
-                      onChange={() => setSurnameChanged(false)}
-                    />
-                    <span className="radiomark"></span>
-                    Я не менял(-а) фамилию
-                  </label>
-                </div>
-              </div>
-
-              {surnameChanged && (
-                <div className="toggle-block" style={{width: '100%'}}>
-                  <div className="formRow">
-                    <div className="input-container">
-                      <label htmlFor="reasonOfChange" className="formLabel">Причина изменения фамилии</label>
-                      <input
-                        type="text"
-                        name="reasonOfChange"
-                        className="formInput big"
-                        placeholder="Опишите, почему поменяли фамилию"
-                        value={formData.reasonOfChange || ''}
-                        onChange={(e) => handleFormDataChange('reasonOfChange', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="formRow justify-space-between">
-                <div className="input-container w-49">
-                  <label htmlFor="birthDate" className="formLabel">Дата рождения</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="birthDate"
-                    className="formInput"
-                    placeholder="01.01.1990"
-                    maxLength={10}
-                    value={formData.birthDate || ''}
-                    onChange={(e) => handleDateChange('birthDate', e.target.value)}
-                  />
-                </div>
-
-                <div className="input-container w-49">
-                  <label htmlFor="birthPlace" className="formLabel">Место рождения</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="birthPlace"
-                    className="formInput"
-                    placeholder="Страна, город"
-                    value={formData.birthPlace || ''}
-                    onChange={(e) => handleFormDataChange('birthPlace', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow justify-space-between">
-                <div className="input-container w-49">
-                  <label htmlFor="mobileNumber" className="formLabel">Мобильный телефон</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="mobileNumber"
-                    className="formInput"
-                    placeholder="+7 (905) 123-45-67"
-                    maxLength={18}
-                    value={formData.mobileNumber || ''}
-                    onChange={(e) => handleMobilePhoneChange('mobileNumber', e.target.value)}
-                  />
-                </div>
-
-                <div className="input-container w-49">
-                  <label htmlFor="domesticNumber" className="formLabel">Домашний телефон</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="domesticNumber"
-                    className="formInput"
-                    placeholder="999 999"
-                    maxLength={7}
-                    value={formData.domesticNumber || ''}
-                    onChange={(e) => handleHomePhoneChange('domesticNumber', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow justify-space-between">
-                <div className="input-container w-49">
-                  <label htmlFor="email" className="formLabel">E-mail</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="email"
-                    name="email"
-                    className="formInput"
-                    placeholder="example@gmail.com"
-                    value={formData.email || ''}
-                    onChange={(e) => handleFormDataChange('email', e.target.value)}
-                  />
-                </div>
-
-                <div className="input-container w-49">
-                  <label htmlFor="INN" className="formLabel">ИНН</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="tel"
-                    name="INN"
-                    className="formInput"
-                    placeholder="123456789012"
-                    maxLength={12}
-                    value={formData.INN || ''}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      handleFormDataChange('INN', value);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow flex-direction-column" style={{marginTop: '50px'}}>
-                <h3>Образование и профессиональный опыт</h3>
-                <h4>Заполните эти данные, чтобы мы могли предложить вам подходящие условия</h4>
-              </div>
-
-              <div className="formRow justify-flex-start">
-                <p style={{marginTop: 0, marginLeft: "0.4375rem", color: "rgba(24, 24, 23, 1)"}}>1. Какой ваш уровень образования</p>
-              </div>
-
-              <div className="formRow justify-flex-start" style={{marginTop: "10px"}}>
-                <div className="input-container big" style={{gap: "20px", display: "flex"}}>
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="educationLevel"
-                      checked={selectedEducationLevel === 'Высшее'}
-                      onChange={() => setSelectedEducationLevel('Высшее')}
-                    />
-                    <span className="radiomark"></span>
-                    Высшее
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="educationLevel"
-                      checked={selectedEducationLevel === 'Неоконченное высшее'}
-                      onChange={() => setSelectedEducationLevel('Неоконченное высшее')}
-                    />
-                    <span className="radiomark"></span>
-                    Неоконченное высшее
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="educationLevel"
-                      checked={selectedEducationLevel === 'Среднее специальное'}
-                      onChange={() => setSelectedEducationLevel('Среднее специальное')}
-                    />
-                    <span className="radiomark"></span>
-                    Среднее специальное
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="educationLevel"
-                      checked={selectedEducationLevel === 'Среднее общее'}
-                      onChange={() => setSelectedEducationLevel('Среднее общее')}
-                    />
-                    <span className="radiomark"></span>
-                    Среднее общее
-                  </label>
-                </div>
-              </div>
-
-              <EducationDataTable index={1} formData={formData} setFormData={setFormData} />
-              {additionalEducationTables.map(index => (
-                <EducationDataTable key={index} index={index} formData={formData} setFormData={setFormData} />
-              ))}
-
-              <div className="formRow" style={{marginBottom: 0}}>
-                <button className="bigFormButton" onClick={addEducationTable}>
-                  <div className="textCont"></div>
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Добавить высшее образование
-                </button>
-              </div>
-              <div className="formRow justify-flex-start" style={{marginTop: '10px'}}>
-                <p style={{marginTop: 0}}>Добавьте информацию о дополнительном высшем образовании</p>
-              </div>
-
-              {additionalCourseTables.map(index => (
-                <CourseDataTable key={index} index={index} formData={formData} setFormData={setFormData} />
-              ))}
-
-              <div className="formRow" style={{marginBottom: 0}}>
-                <button className="bigFormButton" onClick={addCourseTable}>
-                  <div className="textCont"></div>
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Добавить дополнительное образование
-                </button>
-              </div>
-              <div className="formRow justify-flex-start" style={{marginTop: '10px'}}>
-                <p style={{marginTop: 0}}>Добавьте информацию о пройденных курсах повышения квалификации</p>
-              </div>
-
-              <div className="formRow justify-flex-start">
-                <p style={{marginTop: 0, marginLeft: "0.4375rem", color: "rgba(24, 24, 23, 1)"}}>2. Какой ваш профессиональный опыт?</p>
-              </div>
-
-              <div className="formRow justify-flex-start" style={{marginTop: "10px"}}>
-                <div className="input-container big" style={{gap: "20px", display: "flex"}}>
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="professionalExperience"
-                      checked={selectedProfessionalExperience === 'Нет опыта'}
-                      onChange={() => setSelectedProfessionalExperience('Нет опыта')}
-                    />
-                    <span className="radiomark"></span>
-                    Нет опыта
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="professionalExperience"
-                      checked={selectedProfessionalExperience === 'Опыт есть'}
-                      onChange={() => setSelectedProfessionalExperience('Опыт есть')}
-                    />
-                    <span className="radiomark"></span>
-                    Опыт есть
-                  </label>
-                </div>
-              </div>
-
-              {selectedProfessionalExperience === 'Опыт есть' && (
-                <WorkExperienceTable formData={formData} setFormData={setFormData} />
-              )}
-
-              <div className="formRow" style={{marginTop: '50px'}}>
-                <h3>Паспортные данные</h3>
-              </div>
-
-              <div className="formRow justify-space-between">
-                <div className="input-container w-49">
-                  <label htmlFor="passwordSeriaNumber" className="formLabel">Серия и номер</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="passwordSeriaNumber"
-                    className="formInput"
-                    placeholder="1234 567890"
-                    maxLength={11}
-                    value={formData.passwordSeriaNumber || ''}
-                    onChange={(e) => handlePassportChange('passwordSeriaNumber', e.target.value)}
-                  />
-                </div>
-
-                <div className="input-container w-49">
-                  <label htmlFor="dateOfIssue" className="formLabel">Дата выдачи</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="dateOfIssue"
-                    className="formInput"
-                    placeholder="01.01.1990"
-                    maxLength={10}
-                    value={formData.dateOfIssue || ''}
-                    onChange={(e) => handleDateChange('dateOfIssue', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="issuedBy" className="formLabel">Кем выдан</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="issuedBy"
-                    className="formInput"
-                    placeholder="ОФУМС России"
-                    value={formData.issuedBy || ''}
-                    onChange={(e) => handleFormDataChange('issuedBy', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="adressOfPermanentReg" className="formLabel">Адрес постоянной регистрации</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="adressOfPermanentReg"
-                    className="formInput"
-                    placeholder="Адрес постоянной регистрации"
-                    value={formData.adressOfPermanentReg || ''}
-                    onChange={(e) => handleFormDataChange('adressOfPermanentReg', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="adressOfTemporaryReg" className="formLabel">Адрес временной регистрации</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="adressOfTemporaryReg"
-                    className="formInput"
-                    placeholder="Адрес временной регистрации"
-                    value={formData.adressOfTemporaryReg || ''}
-                    onChange={(e) => handleFormDataChange('adressOfTemporaryReg', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow">
-                <div className="input-container">
-                  <label htmlFor="adressOfFactialLiving" className="formLabel">Адрес фактического проживания</label>
-                  <input
-                    style={{width: '100%'}}
-                    type="text"
-                    name="adressOfFactialLiving"
-                    className="formInput"
-                    placeholder="Адрес фактического проживания"
-                    value={formData.adressOfFactialLiving || ''}
-                    onChange={(e) => handleFormDataChange('adressOfFactialLiving', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="formRow flex-direction-column" style={{marginTop: '50px'}}>
-                <h3>Состав семьи</h3>
-                <h4>Заполните эти данные, чтобы мы могли предложить вам подходящие условия</h4>
-              </div>
-
-              <div className="formRow">
+              <FormRow>
                 <div className="input-container">
                   <label htmlFor="maritalStatus" className="formLabel">Семейное положение</label>
                   <CustomSelect
@@ -1118,7 +638,7 @@ const CandidateForm: FC = () => {
                     }}
                   />
                 </div>
-              </div>
+              </FormRow>
 
               <SpouseTable
                 formData={formData}
@@ -1126,35 +646,17 @@ const CandidateForm: FC = () => {
                 isVisible={selectedMaritalStatus === 'Состою в зарегистрированном браке'}
               />
 
-              <div className="formRow flex-direction-column">
-                <h3>1. Дети старше 18 лет</h3>
-              </div>
+              <SectionHeader title="1. Дети старше 18 лет" />
 
-              <div className="formRow justify-flex-start">
-                <div className="input-container big">
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="haveChildren"
-                      checked={haveChildren}
-                      onChange={() => setHaveChildren(true)}
-                    />
-                    <span className="radiomark"></span>
-                    У меня есть дети старше 18 лет
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="haveChildren"
-                      checked={!haveChildren}
-                      onChange={() => setHaveChildren(false)}
-                    />
-                    <span className="radiomark"></span>
-                    У меня нет детей старше 18 лет
-                  </label>
-                </div>
-              </div>
+              <RadioGroup<boolean>
+                name="haveChildren"
+                value={haveChildren}
+                onChange={setHaveChildren}
+                options={[
+                  { value: true, label: "У меня есть дети старше 18 лет" },
+                  { value: false, label: "У меня нет детей старше 18 лет" }
+                ]}
+              />
 
               {haveChildren && (
                 <div className="toggle-block" style={{width: '100%'}}>
@@ -1164,7 +666,7 @@ const CandidateForm: FC = () => {
                     <ChildrenTable key={index} index={index} formData={formData} setFormData={setFormData} />
                   ))}
 
-                  <div className="formRow" style={{marginBottom: 0}}>
+                  <FormRow>
                     <button className="bigFormButton" onClick={addChildrenTable}>
                       <div className="textCont"></div>
                       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1172,79 +674,55 @@ const CandidateForm: FC = () => {
                       </svg>
                       Добавить совершеннолетнего ребенка
                     </button>
-                  </div>
-                  <div className="formRow justify-flex-start" style={{marginTop: '10px'}}>
+                  </FormRow>
+                  <FormRow justifyContent="flex-start">
                     <p style={{marginTop: 0, textAlign: "left"}}>Добавьте всех ближайших совершеннолетних членов семьи: родителей, братьев/сестер</p>
-                  </div>
+                  </FormRow>
                 </div>
               )}
 
-              <div className="formRow flex-direction-column" style={{marginTop: '50px'}}>
-                <h3>Юридический статус</h3>
-                <h4>Ответьте на следующие вопросы, которые помогут нам оценить ваше соответствие вакансии</h4>
-              </div>
+              {/* Юридический статус */}
+              <SectionHeader 
+                title="Юридический статус" 
+                subtitle="Ответьте на следующие вопросы, которые помогут нам оценить ваше соответствие вакансии" 
+              />
 
-              <div className="formRow justify-flex-start">
+              <FormRow justifyContent="flex-start">
                 <p style={{marginTop: 0, color: '#181817', fontSize: '18px', textAlign: "left"}}>1. Являетесь ли военнообязанным(-ой)?</p>
-              </div>
-              <div className="formRow justify-flex-start" style={{marginTop: 0, fontSize: '18px'}}>
-                <div className="input-container big">
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="militaryDuty"
-                      checked={militaryDuty}
-                      onChange={() => setMilitaryDuty(true)}
-                    />
-                    <span className="radiomark"></span>
-                    Да, являюсь
-                  </label>
+              </FormRow>
+              
+              <FormRow justifyContent="flex-start" style={{marginTop: 0}}>
+                  <RadioGroup<boolean>
+                    name="militaryDuty"
+                    value={militaryDuty}
+                    onChange={setMilitaryDuty}
+                    options={[
+                      { value: true, label: "Да, являюсь" },
+                      { value: false, label: "Нет, не являюсь" }
+                    ]}
+                  />
+              </FormRow>
 
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="militaryDuty"
-                      checked={!militaryDuty}
-                      onChange={() => setMilitaryDuty(false)}
-                    />
-                    <span className="radiomark"></span>
-                    Нет, не являюсь
-                  </label>
-                </div>
-              </div>
 
-              <div className="formRow justify-flex-start" style={{marginTop: '50px'}}>
+              <FormRow justifyContent="flex-start" style={{marginTop: '50px'}}>
                 <p style={{marginTop: 0, color: '#181817', fontSize: '18px', textAlign: "left"}}>2. Привлекались ли вы когда-либо к уголовной ответственности?</p>
-              </div>
-              <div className="formRow justify-flex-start" style={{marginTop: 0, fontSize: '18px'}}>
-                <div className="input-container big">
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
+              </FormRow>
+              
+              <FormRow justifyContent="flex-start" style={{marginTop: '0'}}>
+                    <RadioGroup<boolean>
                       name="criminalResponsibility"
-                      checked={criminalResponsibility}
-                      onChange={() => setCriminalResponsibility(true)}
+                      value={criminalResponsibility}
+                      onChange={setCriminalResponsibility}
+                      options={[
+                        { value: true, label: "Да, привлекался" },
+                        { value: false, label: "Нет, не привлекался" }
+                      ]}
                     />
-                    <span className="radiomark"></span>
-                    Да, привлекался
-                  </label>
-
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="criminalResponsibility"
-                      checked={!criminalResponsibility}
-                      onChange={() => setCriminalResponsibility(false)}
-                    />
-                    <span className="radiomark"></span>
-                    Нет, не привлекался
-                  </label>
-                </div>
-              </div>
+              </FormRow>
 
               {criminalResponsibility && (
                 <div className="toggle-block" style={{width: '100%'}}>
-                  <div className="formRow">
+                  <FormRow>
                     <div className="input-container">
                       <label htmlFor="whyPrisoner" className="formLabel">Причины привлечения</label>
                       <input
@@ -1257,42 +735,32 @@ const CandidateForm: FC = () => {
                         onChange={(e) => handleFormDataChange('whyPrisoner', e.target.value)}
                       />
                     </div>
-                  </div>
+                  </FormRow>
                 </div>
               )}
 
-              <div className="formRow justify-flex-start" style={{marginTop: '50px'}}>
+              <FormRow justifyContent="flex-start" style={{marginTop: '50px'}}>
                 <p style={{marginTop: 0, color: '#181817', fontSize: '18px', textAlign: "left"}}>3. Являетесь ли вы (со-)учредителем юридического лица?</p>
-              </div>
-              <div className="formRow justify-flex-start" style={{marginTop: 0, fontSize: '18px'}}>
-                <div className="input-container big">
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="legalEntity"
-                      checked={legalEntity}
-                      onChange={() => setLegalEntity(true)}
-                    />
-                    <span className="radiomark"></span>
-                    Да, являюсь
-                  </label>
+              </FormRow>
+              
 
-                  <label className="custom-radio">
-                    <input
-                      type="radio"
-                      name="legalEntity"
-                      checked={!legalEntity}
-                      onChange={() => setLegalEntity(false)}
-                    />
-                    <span className="radiomark"></span>
-                    Нет, не являюсь
-                  </label>
-                </div>
-              </div>
+              <FormRow justifyContent="flex-start" style={{marginTop: '0'}}>
+                <RadioGroup<boolean>
+                  name="legalEntity"
+                  value={legalEntity}
+                  onChange={setLegalEntity}
+                  options={[
+                    { value: true, label: "Да, являюсь" },
+                    { value: false, label: "Нет, не являюсь" }
+                  ]}
+                />
+              </FormRow>
+
+
 
               {legalEntity && (
                 <div className="toggle-block" style={{width: '100%'}}>
-                  <div className="formRow">
+                  <FormRow>
                     <div className="input-container">
                       <label htmlFor="LegalEntityActivity" className="formLabel">Укажите наименование и сферу деятельности</label>
                       <input
@@ -1305,7 +773,7 @@ const CandidateForm: FC = () => {
                         onChange={(e) => handleFormDataChange('LegalEntity', e.target.value)}
                       />
                     </div>
-                  </div>
+                  </FormRow>
                 </div>
               )}
 
@@ -1323,7 +791,7 @@ const CandidateForm: FC = () => {
                 <label htmlFor="personalData">Я даю согласие на обработку <span>своих персональных данных</span></label>
               </div>
 
-              <div className="formRow" style={{marginTop: '0px'}}>
+              <FormRow style={{marginTop: '0px'}}>
                 <button
                   className={personalDataChecked ? "formBtn btn-active" : "formBtn btn-inactive"}
                   disabled={!personalDataChecked || isSubmitting}
@@ -1331,14 +799,14 @@ const CandidateForm: FC = () => {
                 >
                   {isSubmitting ? 'Отправка...' : 'Отправить анкету'}
                 </button>
-              </div>
+              </FormRow>
 
               {submitError && (
-                <div className="formRow">
+                <FormRow>
                   <div style={{ color: '#e74c3c', fontSize: '14px', marginTop: '10px' }}>
                     {submitError}
                   </div>
-                </div>
+                </FormRow>
               )}
             </div>
           )}
