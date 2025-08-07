@@ -1,0 +1,12 @@
+.bestOffers {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 120px;
+
+  &__button {
+    width: 260px !important;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

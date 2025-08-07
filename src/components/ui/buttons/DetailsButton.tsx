@@ -10,7 +10,7 @@ interface IDetailsButtonProps {
 const DetailsButton: FC<IDetailsButtonProps> = ({ onClick }) => {
   return (
     <button
-      className={`${styles['property-card__button']} ${styles['property-card__button_secondary']}`}
+      className={`${styles.property_card__button} ${styles.property_card__button_secondary}`}
       onClick={onClick}
     >
       Подробнее
