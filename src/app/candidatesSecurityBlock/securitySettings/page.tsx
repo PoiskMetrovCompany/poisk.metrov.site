@@ -4,9 +4,12 @@ import BigHeader from "@/components/candidateRegForm/bigHeader";
 import CandidatesSettings from "@/components/candidateRegForm/candidatesSettings";
 
 const CandidatesSettingsPage: FC = () => {
+    const handleCityChange = (city: string) => {
+      console.log('Город изменен на:', city);
+    };
   return (
     <>
-      <BigHeader />
+      <BigHeader onCityChange={handleCityChange} activePage="settings" />
       <CandidatesSettings />
     </>
   );

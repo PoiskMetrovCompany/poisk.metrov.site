@@ -6,7 +6,7 @@ import "../globals.css"
 import CarouselComponent from "@/components/carouselBuildings/carouselComponent"
 import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard"
 
-const cardExpandImg = "/images/buidingExpandImg.webp"
+const cardExpandImg = "/images/buildingCarousel/buidingExpandImg.webp"
 
 interface ISpecification {
   type: string

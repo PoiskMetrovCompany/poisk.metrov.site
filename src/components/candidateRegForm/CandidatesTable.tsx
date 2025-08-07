@@ -4,6 +4,8 @@ import React, { useState, useEffect, RefObject } from "react";
 import styles from "./candidateLoginComponents.module.css";
 import { FormRow } from "./candidatesFormComponents/FormRow";
 
+import Image from "next/image";
+
 interface Candidate {
   id: string;
   name: string;
@@ -435,7 +437,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             vacancy: 'Backend разработчик',
             status: 'Проверен',
             statusID: 'checked',
-            hasVacancyComment: '',
+            hasVacancyComment: 'Мутный челик, не понравился',
             vacancyKey: 'mock-key-2',
             fullData: {}
         },
@@ -594,7 +596,12 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           aria-label="Нажмите, чтобы открыть фильтры"
           onClick={onFiltersClick}
         >
-          <img src="/img/filters.png" alt="PNG картинка, фильтров" />
+          <Image 
+            src="/images/candidatesSecurityImg/filters.webp" 
+            alt="PNG картинка, фильтров"
+            width={20}
+            height={20}
+          />
           Фильтры
         </button>
       </FormRow>
@@ -651,7 +658,12 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                         onMouseEnter={() => setActiveTooltip(candidate.id)}
                         onMouseLeave={() => setActiveTooltip(null)}
                       >
-                        <img src="/img/pen.png" alt="Редактировать анкету" />
+                        <Image 
+                            src="/images/candidatesSecurityImg/pen.webp" 
+                            alt="Кнопка комментария"
+                            width={20}
+                            height={20}
+                          />
                         <div className={`comment-tooltip ${activeTooltip === candidate.id ? 'visible' : ''}`}>
                           {candidate.hasVacancyComment}
                         </div>

@@ -214,7 +214,7 @@ const Header: FC<HeaderProps> = ({ onCityChange }) => {
 
     // Определяем какую иконку показывать
     const getNotificationIcon = (): string => {
-        return notifications.length > 0 ? '/img/ringActive.png' : '/img/ring.png';
+        return notifications.length > 0 ? '/img/ringActive.webp' : '/img/ring.webp';
     };
 
     const getNotificationAlt = (): string => {
@@ -225,7 +225,7 @@ const Header: FC<HeaderProps> = ({ onCityChange }) => {
         <header>
             <div className="formRow justify-space-between w-80">
                 <div style={{display: 'flex', alignItems: 'center'}}>
-                    <img id="nonTextImg" src="/img/ logo без текста.png" alt="Логотип компании Поиск Метров" />
+                    <img id="nonTextImg" src="/img/ logo без текста.webp" alt="Логотип компании Поиск Метров" />
                     <div style={{position: 'relative'}} ref={cityDropdownRef}>
                         <h5 id="city">
                             Город: 
@@ -324,7 +324,7 @@ const Header: FC<HeaderProps> = ({ onCityChange }) => {
                         )}
                     </div>
                     <button id="exitBtn" onClick={handleLogout}>
-                        Выйти из ЛК <img src="/img/arowRight.png" alt="Стрелочка вправо" />
+                        Выйти из ЛК <img src="/img/arowRight.webp" alt="Стрелочка вправо" />
                     </button>
                 </div>
             </div>

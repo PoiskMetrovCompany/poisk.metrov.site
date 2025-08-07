@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./candidateLoginComponents.module.css";
 
+import BigHeader from "./bigHeader";
+
 interface SelectOption {
   value: string;
   text: string;
@@ -588,6 +590,10 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
     setIsSelectOpen(false);
   };
 
+  const handleCityChange = (city: string) => {
+    console.log('Город изменен на:', city);
+  };
+
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentValue(e.target.value);
   };
@@ -742,7 +748,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
   const educationalInstitutions = parseJsonField(candidateData.educational_institution);
   const courses = parseJsonField(candidateData.courses);
 
-  // Безопасная проверка для семейных данных
+
   const hasPartner = candidateData.family_partner && 
                     Array.isArray(candidateData.family_partner) && 
                     candidateData.family_partner.length > 0;
@@ -757,32 +763,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
 
   return (
     <>
-      <header>
-        <div className="formRow justify-space-between w-60">
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <img id="nonTextImg" src="/img/ logo без текста.png" alt="Логотип компании Поиск Метров" />
-            <h5 id="city">Город: <span>Новосибирск</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M6 9L12 15L18 9" />
-              </svg>
-            </h5>
-          </div>
-          <div className="w-60" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '30px'}}>
-            <span 
-              style={{cursor: 'pointer'}} 
-              onClick={() => setSelectedVacancyKey(null)}
-              className="active"
-            >
-              Кандидаты
-            </span>
-            <a href="/profile-candidates/security/settings">Настройки</a>
-          </div>
-          <div style={{display: 'flex', justifyContent: 'space-between', minWidth: '250px'}}>
-            <button id="notifBtn"><img src="/img/ring.png" alt="Уведомлений нет" /></button>
-            <button id="exitBtn" onClick={handleLogout}>Выйти из ЛК <img src="/img/arowRight.png" alt="Стрелочка вправо" /></button>
-          </div>
-        </div>
-      </header>
+      <BigHeader onCityChange={handleCityChange} activePage="candidates" />
       <main style={{marginTop: '5rem'}}>
         <section>
           <div className="center-card big">

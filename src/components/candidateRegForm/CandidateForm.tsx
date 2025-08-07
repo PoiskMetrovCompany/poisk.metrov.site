@@ -16,6 +16,8 @@ import { RadioGroup } from "./candidatesFormComponents/RadioGroup";
 import { SectionHeader } from "./candidatesFormComponents/SectionHeader";
 import { SuccessMessage } from "./candidatesFormComponents/successMessage";
 
+import HeaderFormSmall from "./header";
+
 const CandidateForm: FC = () => {
   // Состояния для управления видимостью блоков
   const [surnameChanged, setSurnameChanged] = useState(true);
@@ -546,9 +548,7 @@ const CandidateForm: FC = () => {
 
   return (
     <>
-      <header>
-        <img src="/img/Logo с текстом.png" alt="Картинка с логотипом агенства и подписью Поиск метров" />
-      </header>
+      <HeaderFormSmall></HeaderFormSmall>
 
       {!submitSuccess && (
         <article>

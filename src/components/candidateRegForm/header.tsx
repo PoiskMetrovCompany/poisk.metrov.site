@@ -1,15 +1,25 @@
 "use client";
 import React, { FC } from "react";
+import clsx from "clsx";
+import Image from "next/image";
 
-const Header: FC = () => {
+interface HeaderFormSmallProps {
+  className?: string;
+}
+
+const HeaderFormSmall: FC<HeaderFormSmallProps> = ({ className }) => {
   return (
-    <header>
-      <img 
-        src="/img/Logo с текстом.png" 
-        alt="Картинка с логотипом агенства и подписью Поиск метров" 
+    <header className={clsx('header', className)}>
+      <Image
+        src="/images/candidatesSecurityImg/logo_с_текстом.webp"
+        alt="Картинка с логотипом агенства и подписью Поиск метров"
+        width={121}
+        height={42}
+        priority
+        className={clsx('logo-image')}
       />
     </header>
   );
 };
 
-export default Header;
+export default HeaderFormSmall;

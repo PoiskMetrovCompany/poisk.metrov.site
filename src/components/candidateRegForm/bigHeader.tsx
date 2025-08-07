@@ -1,6 +1,8 @@
 "use client";
 import React, { FC, useState, useEffect, useRef } from "react";
 
+import Image from "next/image";
+
 interface INotification {
   id?: { $oid?: string };
   title: string;
@@ -9,9 +11,10 @@ interface INotification {
 
 interface IHeaderProps {
   onCityChange?: (city: string) => void;
+  activePage?: 'candidates' | 'settings'; // Новый параметр для определения активной страницы
 }
 
-const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
+const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }) => {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -189,7 +192,9 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
 
   // Определяем какую иконку показывать
   const getNotificationIcon = (): string => {
-    return notifications.length > 0 ? '/img/ringActive.png' : '/img/ring.png';
+    return notifications.length > 0 
+      ? '/images/candidatesSecurityImg/ringActive.webp' 
+      : '/images/candidatesSecurityImg/ring.webp';
   };
 
   const getNotificationAlt = (): string => {
@@ -200,7 +205,13 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
     <header>
       <div className="formRow justify-space-between w-80">
         <div style={{display: 'flex', alignItems: 'center'}}>
-          <img id="nonTextImg" src="/img/ logo без текста.png" alt="Логотип компании Поиск Метров" />
+          <Image
+            id="nonTextImg"
+            src="/images/candidatesSecurityImg/logo_без _текста.webp"
+            alt="Логотип компании Поиск Метров"
+            width={40} 
+            height={40}
+          />
           <div style={{position: 'relative'}} ref={cityDropdownRef}>
             <h5 id="city">
               Город: 
@@ -244,8 +255,18 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
           </div>
         </div>
         <div className="w-80" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '30px'}}>
-          <a href="/profile-candidates/security/">Кандидаты</a>
-          <a href="/profile-candidates/security/settings" className="active">Настройки</a>
+          <a 
+            href="/profile-candidates/security/"
+            className={activePage === 'candidates' ? 'active' : ''}
+          >
+            Кандидаты
+          </a>
+          <a 
+            href="/profile-candidates/security/settings"
+            className={activePage === 'settings' ? 'active' : ''}
+          >
+            Настройки
+          </a>
         </div>
         <div style={{display: 'flex', justifyContent: 'space-between', minWidth: '250px', position: 'relative'}}>
           {/* Контейнер для кнопки уведомлений и блока уведомлений */}
@@ -256,9 +277,11 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
               onClick={toggleNotifications}
               style={{position: 'relative'}}
             >
-              <img 
+              <Image 
                 src={getNotificationIcon()} 
-                alt={getNotificationAlt()} 
+                alt={getNotificationAlt()}
+                width={24}
+                height={24}
               />
             </button>
             {/* Блок уведомлений */}
@@ -299,7 +322,13 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange }) => {
             )}
           </div>
           <button id="exitBtn" onClick={handleLogout}>
-            Выйти из ЛК <img src="/img/arowRight.png" alt="Стрелочка вправо" />
+            Выйти из ЛК 
+            <Image 
+              src="/images/candidatesSecurityImg/arowRight.webp" 
+              alt="Стрелочка вправо"
+              width={16}
+              height={16}
+            />
           </button>
         </div>
       </div>

@@ -74,7 +74,7 @@ const CandidatesLoginPage = () => {
 
   return (
     <>
-      {!selectedVacancyKey && <BigHeader onCityChange={handleCityChange} />}
+      {!selectedVacancyKey && <BigHeader onCityChange={handleCityChange} activePage="candidates" />}
       <main>
         {selectedVacancyKey ? (
           <ShowForm

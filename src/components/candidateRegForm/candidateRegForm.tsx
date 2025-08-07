@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import IMask from "imask";
 import Timer from "./Timer";
+import HeaderFormSmall from "./header";
 
 interface IUserAttributes {
   phone?: string;
@@ -370,9 +371,7 @@ const CandidateRegForm: FC = () => {
 
   return (
     <>
-      <header>
-        <img src="/img/Logo с текстом.png" alt="Картинка с логотипом агенства и подписью Поиск метров" />
-      </header>
+    <HeaderFormSmall></HeaderFormSmall>
 
       <main>
         <section>
