@@ -1,45 +1,44 @@
 .headerCards {
   display: flex;
-
   gap: 40px;
 
   &__title {
-    flex: 1;
-    padding: 40px;
+    user-select: none;
 
     display: flex;
+    grid-template-columns: auto 40px;
+    flex: 1;
     justify-content: space-between;
 
+    padding: 40px;
     border-radius: 32px;
+
     background-color: var(--color-green);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    grid-template-columns: auto 40px;
     background-image: url("/images/icons/maincard.svg");
     background-position: center;
     background-size: cover;
 
+    -webkit-touch-callout: none;
+
     &__heading {
-      font-weight: 400;
+      width: 565px;
+
       font-size: 40px;
+      font-weight: 400;
       line-height: 130%;
       color: var(--color-white);
-
-      width: 565px;
     }
 
     &__link {
-      width: 64px;
-      height: 64px;
-      background-color: var(--color-white);
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+
+      background-color: var(--color-white);
 
       &__icon {
         width: 28px;
@@ -50,14 +49,15 @@
 
   &__percent {
     width: 390px;
-
     padding: 12px;
     border-radius: 32px;
-    background-color: var(--color-orange);
+
     color: var(--color-white);
 
+    background-color: var(--color-orange);
+
     &__content {
-      padding: 28px 28px 0px 28px;
+      padding: 28px 28px 0;
     }
 
     &__text {
@@ -67,26 +67,28 @@
     }
 
     &__title {
-      font-weight: 400;
       font-size: 34px;
+      font-weight: 400;
       line-height: 130%;
     }
 
     &__subtitle {
-      font-weight: 400;
       font-size: 20px;
+      font-weight: 400;
       line-height: 130%;
     }
 
     &__date {
-      margin-top: 32px;
       display: flex;
-      gap: 0px;
-      width: 100%;
-      background-color: var(--color-dark-orange);
-      border-radius: 20px;
-      padding: 8px 12px;
       flex-direction: column;
+      gap: 0;
+
+      width: 100%;
+      margin-top: 32px;
+      padding: 8px 12px;
+      border-radius: 20px;
+
+      background-color: var(--color-dark-orange);
 
       &__time {
         display: flex;
@@ -98,25 +100,26 @@
           width: 80px;
           height: 56px;
 
-          font-weight: 500;
           font-size: 48px;
+          font-weight: 500;
           line-height: 130%;
           text-align: center;
         }
 
         &__colon {
-          font-weight: 500;
           font-size: 56px;
+          font-weight: 500;
           line-height: 130%;
           text-align: center;
         }
       }
+
       &__desc {
         display: flex;
         justify-content: space-between;
 
-        font-weight: 500;
         font-size: 16px;
+        font-weight: 500;
         line-height: 150%;
 
         &__item {
@@ -133,36 +136,36 @@
   }
 
   &__firstCard {
-    width: 390px;
-
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 12px;
-    background-color: var(--color-border-gray);
-    border-radius: 40px;
+    align-items: center;
+
+    width: 390px;
     padding: 12px;
+    border-radius: 40px;
+
+    background-color: var(--color-border-gray);
 
     &__content {
-      padding: 28px 28px 0px 28px;
-
       display: flex;
       flex-direction: column;
+      padding: 28px 28px 0;
     }
 
     &__title {
-      font-weight: 400;
       font-size: 34px;
+      font-weight: 400;
       line-height: 130%;
       color: var(--color-black);
     }
 
     &__icon {
-      margin-top: 75px;
       width: 93px;
       height: 93px;
-      margin-left: auto;
+      margin-top: 75px;
       margin-right: auto;
+      margin-left: auto;
     }
 
     &__button {

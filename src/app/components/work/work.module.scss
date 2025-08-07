@@ -1,42 +1,44 @@
 .work {
-  padding-top: 100px;
-
   display: flex;
   flex-direction: column;
   gap: 40px;
+  padding-top: 100px;
 
   &__content {
     position: relative;
+
     &__item {
       display: flex;
       gap: 80px;
       align-items: center;
+
       width: 100%;
       padding: 0 110px;
 
       &__image {
-        height: 532px;
-        width: 707px;
-        border-radius: 500px;
         overflow: hidden;
+        width: 707px;
+        height: 532px;
+        border-radius: 500px;
       }
 
       &__content {
         flex: 1;
 
         &__title {
-          font-weight: 400;
           font-size: 34px;
+          font-weight: 400;
           line-height: 130%;
           color: var(--color-orange);
         }
 
         &__description {
-          font-weight: 400;
+          margin: 0;
+
           font-size: 34px;
+          font-weight: 400;
           line-height: 130%;
           color: var(--color-black);
-          margin: 0;
         }
       }
     }
@@ -105,6 +107,6 @@
 
 // Скрываем стандартные кнопки Swiper
 :global(.swiper-button-disabled) {
-  opacity: 0.5;
   cursor: not-allowed;
+  opacity: 0.5;
 }
