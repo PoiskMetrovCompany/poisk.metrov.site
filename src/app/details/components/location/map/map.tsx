@@ -20,17 +20,14 @@ interface MapProps {
 export const Map = ({ places, selectedInfrastructure = [] }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
 
-  // Заменяем usePageState на обычные useState
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
   const [bounds, setBounds] = useState<unknown>(null)
 
-  // Состояние для хранения данных инфраструктуры
   const [infrastructureData, setInfrastructureData] = useState<
     InfrastructureItem[]
   >([])
   const [loading, setLoading] = useState(false)
 
-  // Загружаем данные инфраструктуры при изменении выбранных типов
   useEffect(() => {
     const loadInfrastructure = async () => {
       if (selectedInfrastructure.length === 0) {
@@ -62,7 +59,6 @@ export const Map = ({ places, selectedInfrastructure = [] }: MapProps) => {
     loadInfrastructure()
   }, [selectedInfrastructure])
 
-  // Фильтруем инфраструктуру по выбранным типам
   const filteredInfrastructure = infrastructureData.filter((item) =>
     selectedInfrastructure.includes(item.type)
   )
@@ -71,7 +67,6 @@ export const Map = ({ places, selectedInfrastructure = [] }: MapProps) => {
     setSelectedPlaceId(placeId)
   }, [])
 
-  // Инициализируем карту с центром Новосибирска
   const [location] = useState<YMapLocationRequest>({
     center: cityCenterCooridnates.novosibirsk,
     zoom: 14,
@@ -92,52 +87,66 @@ export const Map = ({ places, selectedInfrastructure = [] }: MapProps) => {
     YMapDefaultFeaturesLayer,
   } = reactifyApi
 
+  const hasDataToShow = false
+  // const hasDataToShow = filteredInfrastructure.length > 0 || places.length > 0
+
   return (
-    <YMap
-      className={styles.map}
-      margin={[20, 20, 20, 20]}
-      location={location}
-      ref={mapRef}
-    >
-      <YMapDefaultSchemeLayer />
-      <YMapDefaultFeaturesLayer />
+    <div className={styles.mapContainer}>
+      <YMap
+        className={styles.map}
+        margin={[20, 20, 20, 20]}
+        location={location}
+        ref={mapRef}
+      >
+        <YMapDefaultSchemeLayer />
+        <YMapDefaultFeaturesLayer />
 
-      <YMapListener
-        onUpdate={({ location }) => {
-          setBoundsDebounced(location.bounds)
-        }}
-      />
+        <YMapListener
+          onUpdate={({ location }) => {
+            setBoundsDebounced(location.bounds)
+          }}
+        />
 
-      {/* Отображаем маркеры инфраструктуры */}
-      {!loading &&
-        filteredInfrastructure.map((item) => (
+        {/* Отображаем маркеры инфраструктуры */}
+        {!loading &&
+          filteredInfrastructure.map((item) => (
+            <MarkerWithPopup
+              key={item.id}
+              place={{
+                id: item.id,
+                label: item.name,
+                text: item.name,
+                longitude: item.longitude,
+                latitude: item.latitude,
+              }}
+              mapRef={mapRef}
+              reactifyApi={reactifyApi}
+              selected={selectedPlaceId === item.id}
+              selectPlace={selectPlace}
+              icon={item.icon}
+            />
+          ))}
+
+        {/* {places.map((place) => (
           <MarkerWithPopup
-            key={item.id}
-            place={{
-              id: item.id,
-              label: item.name,
-              text: item.name,
-              longitude: item.longitude,
-              latitude: item.latitude,
-            }}
+            key={place.id}
+            place={place}
             mapRef={mapRef}
             reactifyApi={reactifyApi}
-            selected={selectedPlaceId === item.id}
+            selected={selectedPlaceId === place.id}
             selectPlace={selectPlace}
-            icon={item.icon}
           />
-        ))}
+        ))} */}
+      </YMap>
 
-      {/* {places.map((place) => (
-        <MarkerWithPopup
-          key={place.id}
-          place={place}
-          mapRef={mapRef}
-          reactifyApi={reactifyApi}
-          selected={selectedPlaceId === place.id}
-          selectPlace={selectPlace}
-        />
-      ))} */}
-    </YMap>
+      {/* Блок с сообщением о том, что ничего не найдено */}
+      {!loading && !hasDataToShow && (
+        <div className={styles.noDataOverlay}>
+          <div className={styles.noDataMessage}>
+            В данной области ничего не найдено
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

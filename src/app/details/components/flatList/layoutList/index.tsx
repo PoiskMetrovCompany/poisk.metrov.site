@@ -2,14 +2,20 @@
 import React, { useState } from "react"
 import { Accordion } from "radix-ui"
 import LayoutItem from "./layoutItem"
-import EmptyList from "./empty"
+import NotFound from "@/components/notFound"
 
 const LayoutList = () => {
   const [openId, setOpenId] = useState<string[]>([])
-  const [isEmpty, setIsEmpty] = useState(false)
+  const [isEmpty, setIsEmpty] = useState(true)
 
   if (isEmpty) {
-    return <EmptyList />
+    return (
+      <NotFound
+        title="Подходящих вариантов нет"
+        description="Измените фильтры, чтобы изучить другие предложения в этом ЖК"
+        buttonText="Изменить фильтры"
+      />
+    )
   }
 
   return (
