@@ -60,7 +60,29 @@
     font-size: 18px;
   }
 
-  &_large {
-    font-size: 20px;
+  &_tiny {
+    height: 56px;
+    font-size: 16px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      height: 48px;
+      font-size: 14px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      height: 40px;
+      font-size: 13px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      height: 40px;
+      font-size: 13px;
+    }
+
+    @media screen and (width < 768px) {
+      height: 40px;
+      padding: 0;
+      font-size: 12px;
+    }
   }
 }

@@ -2,7 +2,6 @@
 
 import React, { FC } from "react"
 import styles from "./propertyCard.module.scss"
-import Image from "next/image"
 import clsx from "clsx"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
@@ -28,7 +27,12 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
       </div>
 
       <div className={styles.property_card__content}>
-        <div className={styles.property_card__row}>
+        <div
+          className={clsx(
+            styles.property_card__row,
+            styles.property_card__row_title
+          )}
+        >
           <span className={styles.property_card__title}>{title}</span>
           <span className={styles.property_card__price}>{price}</span>
         </div>
@@ -89,20 +93,20 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
         </div>
 
         <div className={styles.property_card__actions}>
-          <ActionButton className={styles.property_card__actions__button}>
+          <ActionButton
+            size="tiny"
+            className={styles.property_card__actions__button}
+          >
             Каталог
           </ActionButton>
           <ActionButton
             className={styles.property_card__actions__button}
             type="outline"
+            size="tiny"
           >
             Подробнее
           </ActionButton>
-          <IconButton
-            className={styles.property_card__actions__like}
-            iconClassName={styles.property_card__actions__like__icon}
-            iconLink={"/images/icons/heart.svg"}
-          />
+          <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
         </div>
       </div>
     </article>

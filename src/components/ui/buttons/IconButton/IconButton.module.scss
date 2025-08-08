@@ -46,6 +46,56 @@
     }
   }
 
+  &_tiny {
+    width: 56px;
+    height: 56px;
+
+    .iconButton__icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 48px;
+      height: 48px;
+
+      .iconButton__icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media screen and (width < 768px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
   &:hover {
     border: 1.5px solid var(--color-orange);
 

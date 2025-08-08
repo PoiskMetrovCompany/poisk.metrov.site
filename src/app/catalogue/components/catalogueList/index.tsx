@@ -10,6 +10,7 @@ import clsx from "clsx"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 const cards: IProperty[] = [
   {
@@ -112,10 +113,12 @@ const CatalogueList = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
 
+  const { isLaptop } = useScreenSize()
+
   const selectedSorting: SortType = useMemo(() => {
     const sortParam = searchParams.get("sort") as SortType
-    return sortParam === "list" ? "list" : "cards"
-  }, [searchParams])
+    return sortParam === "list" && isLaptop ? "list" : "cards"
+  }, [searchParams, isLaptop])
 
   const setSelectedSorting = useCallback(
     (sort: SortType) => {
@@ -123,59 +126,61 @@ const CatalogueList = () => {
 
       if (sort === "cards") {
         params.delete("sort")
-      } else {
+      } else if (isLaptop) {
         params.set("sort", sort)
       }
 
       router.push(`?${params.toString()}`)
     },
-    [searchParams, router]
+    [searchParams, router, isLaptop]
   )
 
   return (
     <div className={styles.catalogue}>
       <div className={styles.catalogue__header}>
         <Heading3>Найдено 102 ЖК из 182</Heading3>
-        <div className={styles.catalogue__header__buttons}>
-          <button
-            className={clsx(
-              styles.catalogue__header__buttons__button,
-              selectedSorting === "cards" &&
-                styles.catalogue__header__buttons__button_active
-            )}
-            onClick={() => setSelectedSorting("cards")}
-          >
-            <IconImage
-              iconLink={
-                selectedSorting === "cards"
-                  ? "/images/icons/sort-cards-colored.svg"
-                  : "/images/icons/sort-cards.svg"
-              }
-              alt="cards"
-              className={styles.catalogue__header__buttons__button__icon}
-            />
-            <span>Карточки</span>
-          </button>
-          <button
-            className={clsx(
-              styles.catalogue__header__buttons__button,
-              selectedSorting === "list" &&
-                styles.catalogue__header__buttons__button_active
-            )}
-            onClick={() => setSelectedSorting("list")}
-          >
-            <IconImage
-              iconLink={
-                selectedSorting === "list"
-                  ? "/images/icons/sort-list-colored.svg"
-                  : "/images/icons/sort-list.svg"
-              }
-              alt="list"
-              className={styles.catalogue__header__buttons__button__icon}
-            />
-            <span>Список</span>
-          </button>
-        </div>
+        {isLaptop && (
+          <div className={styles.catalogue__header__buttons}>
+            <button
+              className={clsx(
+                styles.catalogue__header__buttons__button,
+                selectedSorting === "cards" &&
+                  styles.catalogue__header__buttons__button_active
+              )}
+              onClick={() => setSelectedSorting("cards")}
+            >
+              <IconImage
+                iconLink={
+                  selectedSorting === "cards"
+                    ? "/images/icons/sort-cards-colored.svg"
+                    : "/images/icons/sort-cards.svg"
+                }
+                alt="cards"
+                className={styles.catalogue__header__buttons__button__icon}
+              />
+              <span>Карточки</span>
+            </button>
+            <button
+              className={clsx(
+                styles.catalogue__header__buttons__button,
+                selectedSorting === "list" &&
+                  styles.catalogue__header__buttons__button_active
+              )}
+              onClick={() => setSelectedSorting("list")}
+            >
+              <IconImage
+                iconLink={
+                  selectedSorting === "list"
+                    ? "/images/icons/sort-list-colored.svg"
+                    : "/images/icons/sort-list.svg"
+                }
+                alt="list"
+                className={styles.catalogue__header__buttons__button__icon}
+              />
+              <span>Список</span>
+            </button>
+          </div>
+        )}
       </div>
       <div
         className={clsx(
