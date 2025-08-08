@@ -207,7 +207,7 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
         <div style={{display: 'flex', alignItems: 'center'}}>
           <Image
             id="nonTextImg"
-            src="/images/candidatesSecurityImg/logo_без _текста.webp"
+            src="/images/candidatesSecurityImg/logoNonText.webp"
             alt="Логотип компании Поиск Метров"
             width={40} 
             height={40}
