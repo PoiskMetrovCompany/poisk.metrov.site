@@ -375,92 +375,92 @@
 }
 
 @media (max-width: 1099px) {
-    .top-bar{
+    .top_bar{
         display: none;
-  }
-    .user-actions {
-        &__text {
-            font-size: 16px;
-        }
-
-        &__label {
-            font-size: 16px;
-        }
     }
+    // .user-actions {
+    //     &__text {
+    //         font-size: 16px;
+    //     }
 
-    .contact-info {
-        &__phone {
-            font-size: 16px;
-        }
-    }
+    //     &__label {
+    //         font-size: 16px;
+    //     }
+    // }
 
-    .navigation {
-        &__button {
-            font-size: 16px;
-        }
-    }
+    // .contact-info {
+    //     &__phone {
+    //         font-size: 16px;
+    //     }
+    // }
 
-    .location-selector {
-        &__button {
-            font-size: 16px;
-        }
-    }
+    // .navigation {
+    //     &__button {
+    //         font-size: 16px;
+    //     }
+    // }
 
-    .top-bar {
-        &__item {
-            font-size: 14px;
-        }
-    }
+    // .location-selector {
+    //     &__button {
+    //         font-size: 16px;
+    //     }
+    // }
 
-    /* Уменьшаем gap в блоках */
-    .main-bar {
-        &__left {
-            gap: 18px;
-        }
+    // .top_bar {
+    //     &__item {
+    //         font-size: 14px;
+    //     }
+    // }
 
-        &__right {
-            gap: 18px;
-        }
-    }
 
-    .user-actions {
-        gap: 18px;
+    // .main_bar {
+    //     &__left {
+    //         gap: 18px;
+    //     }
 
-        &__favorites {
-            gap: 6px;
-        }
+    //     &__right {
+    //         gap: 18px;
+    //     }
+    // }
 
-        &__login {
-            gap: 6px;
-        }
-    }
+    // .user-actions {
+    //     gap: 18px;
 
-    .navigation {
-        &__list {
-            gap: 18px;
-        }
-    }
+    //     &__favorites {
+    //         gap: 6px;
+    //     }
 
-    .top-bar {
-        &__left {
-            gap: 18px;
-        }
+    //     &__login {
+    //         gap: 6px;
+    //     }
+    // }
 
-        &__list {
-            gap: 18px;
-        }
-    }
+    // .navigation {
+    //     &__list {
+    //         gap: 18px;
+    //     }
+    // }
 
-    .location-selector {
-        gap: 13px;
+    // .top_bar {
+    //     &__left {
+    //         gap: 18px;
+    //     }
 
-        &__button {
-            gap: 6px;
-        }
-    }
+    //     &__list {
+    //         gap: 18px;
+    //     }
+    // }
+
+    // .location-selector {
+    //     gap: 13px;
+
+    //     &__button {
+    //         gap: 6px;
+    //     }
+    // }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1099px) {
     .user_actions {
         &__text {
             font-size: 14px;
@@ -515,7 +515,7 @@
     }
 }
 
-@media (min-width: 870px) {
+@media (min-width: 905px) {
     .user_actions {
         &__showMenu {
             display: none;
@@ -523,7 +523,7 @@
     }
 }
 
-@media (max-width: 870px) {
+@media (max-width: 905px) {
     .navigation {
         display: none;
     }
