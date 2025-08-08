@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useMemo, useCallback } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import React, { useEffect, useState } from "react"
 import styles from "./catalogueList.module.scss"
 import Heading3 from "@/components/ui/heading3"
 import IconImage from "@/components/ui/IconImage"
@@ -110,30 +109,16 @@ const cards: IProperty[] = [
 type SortType = "cards" | "list"
 
 const CatalogueList = () => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-
+  const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
-  const selectedSorting: SortType = useMemo(() => {
-    const sortParam = searchParams.get("sort") as SortType
-    return sortParam === "list" && isLaptop ? "list" : "cards"
-  }, [searchParams, isLaptop])
+  const handleSorting = (sort: SortType) => {
+    setSelectedSorting(sort)
+  }
 
-  const setSelectedSorting = useCallback(
-    (sort: SortType) => {
-      const params = new URLSearchParams(searchParams)
-
-      if (sort === "cards") {
-        params.delete("sort")
-      } else if (isLaptop) {
-        params.set("sort", sort)
-      }
-
-      router.push(`?${params.toString()}`)
-    },
-    [searchParams, router, isLaptop]
-  )
+  useEffect(() => {
+    if (!isLaptop) setSelectedSorting("cards")
+  }, [isLaptop])
 
   return (
     <div className={styles.catalogue}>
@@ -147,7 +132,7 @@ const CatalogueList = () => {
                 selectedSorting === "cards" &&
                   styles.catalogue__header__buttons__button_active
               )}
-              onClick={() => setSelectedSorting("cards")}
+              onClick={() => handleSorting("cards")}
             >
               <IconImage
                 iconLink={
@@ -166,7 +151,7 @@ const CatalogueList = () => {
                 selectedSorting === "list" &&
                   styles.catalogue__header__buttons__button_active
               )}
-              onClick={() => setSelectedSorting("list")}
+              onClick={() => handleSorting("list")}
             >
               <IconImage
                 iconLink={

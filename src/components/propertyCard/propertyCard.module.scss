@@ -478,7 +478,8 @@
   }
 
   @media screen and (width < 768px) {
-    height: 555px;
+    height: auto;
+    min-height: 555px;
     border-radius: 32px;
   }
 }

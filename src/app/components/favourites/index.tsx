@@ -26,6 +26,12 @@ const cards: IProperty[] = [
       { type: "3-комн. кв", price: "от 10,8 млн ₽" },
       { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
     ],
+    description: [
+      { type: "Срок сдачи", status: "Сдан — IV 2028" },
+      { type: "Недвижимость", status: "Жилая" },
+      { type: "Класс жилья", status: "Комфорт +" },
+      { type: "Квартир", status: "8 402" },
+    ],
     image: "/images/buidingExpandImg.webp",
   },
   {
@@ -42,6 +48,12 @@ const cards: IProperty[] = [
       { type: "2-комн. кв", price: "от 7,8 млн ₽" },
       { type: "3-комн. кв", price: "от 9,5 млн ₽" },
       { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
+    ],
+    description: [
+      { type: "Срок сдачи", status: "Сдан — IV 2028" },
+      { type: "Недвижимость", status: "Жилая" },
+      { type: "Класс жилья", status: "Комфорт +" },
+      { type: "Квартир", status: "8 402" },
     ],
     image: "/images/buidingExpandImg.webp",
   },
@@ -60,6 +72,12 @@ const cards: IProperty[] = [
       { type: "3-комн. кв", price: "от 12,5 млн ₽" },
       { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
     ],
+    description: [
+      { type: "Срок сдачи", status: "Сдан — IV 2028" },
+      { type: "Недвижимость", status: "Жилая" },
+      { type: "Класс жилья", status: "Комфорт +" },
+      { type: "Квартир", status: "8 402" },
+    ],
     image: "/images/buidingExpandImg.webp",
   },
   {
@@ -76,6 +94,12 @@ const cards: IProperty[] = [
       { type: "2-комн. кв", price: "от 11,2 млн ₽" },
       { type: "3-комн. кв", price: "от 14,8 млн ₽" },
       { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
+    ],
+    description: [
+      { type: "Срок сдачи", status: "Сдан — IV 2028" },
+      { type: "Недвижимость", status: "Жилая" },
+      { type: "Класс жилья", status: "Комфорт +" },
+      { type: "Квартир", status: "8 402" },
     ],
     image: "/images/buidingExpandImg.webp",
   },

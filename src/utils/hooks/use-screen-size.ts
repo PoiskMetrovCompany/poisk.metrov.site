@@ -13,8 +13,20 @@ interface ScreenSize {
 
 export const useScreenSize = (debounceDelay: number = 150): ScreenSize => {
   const [screenSize, setScreenSize] = useState<ScreenSize>(() => {
-    const width = typeof window !== "undefined" ? window.innerWidth : 0
-    const height = typeof window !== "undefined" ? window.innerHeight : 0
+    if (typeof window === "undefined") {
+      return {
+        width: 0,
+        height: 0,
+        isDesktop: true,
+        isLaptop: true,
+        isTablet: true,
+        isMobile: true,
+        isSmallMobile: true,
+      }
+    }
+
+    const width = window.innerWidth
+    const height = window.innerHeight
 
     return {
       width,
@@ -26,6 +38,12 @@ export const useScreenSize = (debounceDelay: number = 150): ScreenSize => {
       isSmallMobile: width < 768,
     }
   })
+
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   const updateScreenSize = useCallback(() => {
     const width = window.innerWidth
@@ -51,6 +69,18 @@ export const useScreenSize = (debounceDelay: number = 150): ScreenSize => {
       window.removeEventListener("resize", debouncedUpdateScreenSize)
     }
   }, [debouncedUpdateScreenSize])
+
+  if (!isHydrated) {
+    return {
+      width: 0,
+      height: 0,
+      isDesktop: true,
+      isLaptop: true,
+      isTablet: true,
+      isMobile: true,
+      isSmallMobile: true,
+    }
+  }
 
   return screenSize
 }
