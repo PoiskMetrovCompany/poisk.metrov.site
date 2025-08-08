@@ -375,11 +375,10 @@
 }
 
 @media (max-width: 1099px) {
-
     .top-bar{
         display: none;
   }
-   .user_actions {
+    .user-actions {
         &__text {
             font-size: 16px;
         }
@@ -389,7 +388,7 @@
         }
     }
 
-    .contact_info {
+    .contact-info {
         &__phone {
             font-size: 16px;
         }
@@ -401,20 +400,20 @@
         }
     }
 
-    .location_selector {
+    .location-selector {
         &__button {
             font-size: 16px;
         }
     }
 
-    .top_bar {
+    .top-bar {
         &__item {
             font-size: 14px;
         }
     }
 
     /* Уменьшаем gap в блоках */
-    .main_bar {
+    .main-bar {
         &__left {
             gap: 18px;
         }
@@ -424,7 +423,7 @@
         }
     }
 
-    .user_actions {
+    .user-actions {
         gap: 18px;
 
         &__favorites {
@@ -442,7 +441,7 @@
         }
     }
 
-    .top_bar {
+    .top-bar {
         &__left {
             gap: 18px;
         }
@@ -452,7 +451,7 @@
         }
     }
 
-    .location_selector {
+    .location-selector {
         gap: 13px;
 
         &__button {

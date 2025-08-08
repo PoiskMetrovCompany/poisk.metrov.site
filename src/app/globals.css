@@ -114,6 +114,7 @@ header p {
   height: 40px;
 }
 
+
 section {
   position: relative;
 
@@ -125,6 +126,7 @@ section {
   min-height: calc(100vh - 5.625rem);
   padding: 0 100px;
 }
+
 
 article {
   width: 100%;
