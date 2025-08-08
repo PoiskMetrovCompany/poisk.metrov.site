@@ -33,7 +33,7 @@ const cards: IProperty[] = [
       { type: "Класс жилья", status: "Комфорт +" },
       { type: "Квартир", status: "8 402" },
     ],
-    image: "/images/buidingExpandImg.webp",
+    image: "/images/buildingCarousel/buidingExpandImg.webp",
   },
   {
     id: 2,
@@ -56,7 +56,7 @@ const cards: IProperty[] = [
       { type: "Класс жилья", status: "Комфорт +" },
       { type: "Квартир", status: "8 402" },
     ],
-    image: "/images/buidingExpandImg.webp",
+    image: "/images/buildingCarousel/buidingExpandImg.webp",
   },
   {
     id: 3,
@@ -79,7 +79,7 @@ const cards: IProperty[] = [
       { type: "Класс жилья", status: "Комфорт +" },
       { type: "Квартир", status: "8 402" },
     ],
-    image: "/images/buidingExpandImg.webp",
+    image: "/images/buildingCarousel/buidingExpandImg.webp",
   },
   {
     id: 4,
@@ -102,7 +102,7 @@ const cards: IProperty[] = [
       { type: "Класс жилья", status: "Комфорт +" },
       { type: "Квартир", status: "8 402" },
     ],
-    image: "/images/buidingExpandImg.webp",
+    image: "/images/buildingCarousel/buidingExpandImg.webp",
   },
 ]
 
