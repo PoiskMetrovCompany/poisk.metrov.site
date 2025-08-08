@@ -10,6 +10,7 @@ import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
+import NotFound from "@/components/notFound"
 
 const cards: IProperty[] = [
   {
@@ -109,6 +110,8 @@ const cards: IProperty[] = [
 type SortType = "cards" | "list"
 
 const CatalogueList = () => {
+  const [isEmpty, setIsEmpty] = useState(true)
+
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
@@ -119,6 +122,15 @@ const CatalogueList = () => {
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
+
+  if (isEmpty) {
+    return (
+      <NotFound
+        title="Подходящих вариантов нет"
+        description="Измените фильтры, чтобы изучить другие предложения в этом ЖК"
+      />
+    )
+  }
 
   return (
     <div className={styles.catalogue}>
