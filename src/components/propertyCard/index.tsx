@@ -7,6 +7,7 @@ import clsx from "clsx"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
 import { IProperty } from "@/types/PropertyCard"
+import IconImage from "../ui/IconImage"
 
 interface IPropertyCardProps {
   property: IProperty
@@ -28,28 +29,31 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
 
       <div className={styles.property_card__content}>
         <div className={styles.property_card__row}>
-          <div className={styles.property_card__title}>{title}</div>
-          <div className={styles.property_card__price}>{price}</div>
+          <span className={styles.property_card__title}>{title}</span>
+          <span className={styles.property_card__price}>{price}</span>
         </div>
 
-        <div className={styles.property_card__row}>
+        <div
+          className={clsx(
+            styles.property_card__row,
+            styles.property_card__row_subtitle
+          )}
+        >
           <div className={styles.property_card__subtitle}>{subtitle}</div>
           <div className={styles.property_card__location}>
-            <span className={clsx(styles.location__item)}>
-              <Image
-                src="/images/icons/metro.svg"
-                alt="Location"
-                width={24}
-                height={24}
+            <span className={clsx(styles.property_card__location__item)}>
+              <IconImage
+                iconLink="/images/icons/metro.svg"
+                alt="Metro"
+                className={styles.property_card__location__item__icon}
               />
               {metro}
             </span>
-            <span className={clsx(styles.location__item)}>
-              <Image
-                src="/images/icons/car.svg"
+            <span className={clsx(styles.property_card__location__item)}>
+              <IconImage
+                iconLink="/images/icons/car.svg"
                 alt="Drive time"
-                width={24}
-                height={24}
+                className={styles.property_card__location__item__icon}
               />
               {driveTime}
             </span>
@@ -59,11 +63,24 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
         <div className={styles.property_card__divider}></div>
 
         <div className={styles.property_card__specifications}>
-          <div className={styles.specifications}>
+          <div className={styles.property_card__specifications__list}>
             {specifications.map((spec, index) => (
-              <div key={index} className={styles.specifications__item}>
-                <span className={styles.specifications__type}>{spec.type}</span>
-                <span className={styles.specifications__price}>
+              <div
+                key={index}
+                className={styles.property_card__specifications__list__item}
+              >
+                <span
+                  className={
+                    styles.property_card__specifications__list__item__type
+                  }
+                >
+                  {spec.type}
+                </span>
+                <span
+                  className={
+                    styles.property_card__specifications__list__item__price
+                  }
+                >
                   {spec.price}
                 </span>
               </div>
