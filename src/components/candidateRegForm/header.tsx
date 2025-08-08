@@ -11,7 +11,7 @@ const HeaderFormSmall: FC<HeaderFormSmallProps> = ({ className }) => {
   return (
     <header className={clsx('header', className)}>
       <Image
-        src="/images/candidatesSecurityImg/logo_с_текстом.webp"
+        src="/images/candidatesSecurityImg/logoText.webp"
         alt="Картинка с логотипом агенства и подписью Поиск метров"
         width={121}
         height={42}
