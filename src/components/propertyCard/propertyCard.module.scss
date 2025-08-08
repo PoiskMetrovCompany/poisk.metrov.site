@@ -1,0 +1,485 @@
+.property_card {
+  position: relative;
+
+  overflow-y: hidden;
+
+  height: 728px;
+  margin-bottom: 24px;
+  border-radius: 40px;
+
+  background-color: white;
+
+  &__content {
+    margin: auto;
+    margin-top: 20px;
+    padding: 0 40px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      margin-top: 23px;
+      padding: 0 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      margin-top: 15px;
+      padding: 0 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      margin-top: 15px;
+      padding: 0 24px;
+    }
+
+    @media screen and (width < 768px) {
+      margin-top: 11px;
+      padding: 0 16px;
+    }
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+
+    &_title {
+      align-items: center;
+    }
+
+    &_subtitle {
+      margin-top: 8px;
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      @media screen and (width < 768px) {
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 12px;
+      }
+    }
+  }
+
+  &__image > img {
+    overflow: hidden;
+
+    width: 100%;
+    height: 600px;
+    border-radius: 40px;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: height 0.5s ease-in-out;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      height: 480px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      height: 260px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      height: 360px;
+    }
+
+    @media screen and (width < 768px) {
+      height: 220px;
+      border-radius: 32px;
+    }
+  }
+
+  &:hover &__image > img {
+    height: 360px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      height: 281px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      height: 260px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      height: 360px;
+    }
+
+    @media screen and (width < 768px) {
+      height: 238px;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+
+    display: flex;
+    gap: 6px;
+
+    color: white;
+
+    span {
+      padding: 8px 16px;
+      border-radius: 64px;
+
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 150%;
+
+      background: rgb(0 0 0 / 40%);
+      backdrop-filter: blur(10px);
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        font-size: 14px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      @media screen and (width < 768px) {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+    }
+
+    @media screen and (width < 768px) {
+      top: 16px;
+      left: 16px;
+    }
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 130%;
+    color: var(--color-black);
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 18px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 18px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 18px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 16px;
+    }
+  }
+
+  &__price {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 150%;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 20px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 18px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 18px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 16px;
+    }
+  }
+
+  &__subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 150%;
+    color: var(--color-text-black);
+    text-align: left;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 16px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 15px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 15px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 14px;
+    }
+  }
+
+  &__location {
+    display: flex;
+    gap: 12px;
+
+    &__item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--color-text-gray);
+
+      &__icon {
+        width: 24px;
+        height: 24px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          width: 24px;
+          height: 24px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          width: 20px;
+          height: 20px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          width: 20px;
+          height: 20px;
+        }
+
+        @media screen and (width < 768px) {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 8px;
+        font-size: 15px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 4px;
+        font-size: 15px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 4px;
+        font-size: 15px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 4px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  &__icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  &__divider {
+    width: 100%;
+    margin-top: 32px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--color-gray);
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      margin: 24px 0 20px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      margin: 16px 0;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      margin: 16px 0;
+    }
+
+    @media screen and (width < 768px) {
+      margin: 16px 0;
+    }
+  }
+
+  &__specifications {
+    width: 100%;
+
+    &__list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 80px;
+      width: 90%;
+
+      &__item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        text-align: left;
+
+        &__type {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-black);
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            font-size: 14px;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
+        }
+
+        &__price {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-black);
+          white-space: nowrap;
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            font-size: 14px;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 8px 80px;
+        width: 100%;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 8px 40px;
+        width: 100%;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 8px 80px;
+        width: 75%;
+      }
+
+      @media screen and (width < 768px) {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    margin-top: 50px;
+
+    &__button {
+      flex: 1;
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 8px;
+      margin-top: 30px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 8px;
+      margin-top: 30px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 8px;
+      margin-top: 20px;
+    }
+  }
+
+  &__button {
+    width: 326px;
+    height: 56px;
+    border: none;
+    border-radius: 40px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    &_primary {
+      color: white;
+      background: rgb(236 125 63 / 100%);
+    }
+
+    &_secondary {
+      border: 1.5px rgb(233 233 233 / 100%) solid;
+      background: none;
+    }
+  }
+
+  &__favorite {
+    display: flex;
+
+    width: 56px;
+    height: 56px;
+    border: 1.5px rgb(233 233 233 / 100%) solid;
+    border-radius: 40px;
+
+    background: none;
+
+    svg {
+      width: 25px;
+      height: 25px;
+      margin: auto;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    height: 594px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    height: 570px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    height: 643px;
+  }
+
+  @media screen and (width < 768px) {
+    height: auto;
+    min-height: 555px;
+    border-radius: 32px;
+  }
+}

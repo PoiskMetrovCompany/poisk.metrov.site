@@ -8,7 +8,7 @@ type IconButtonProps = {
   onClick?: () => void
   className?: string
   iconClassName?: string
-  size?: "sm" | "md" | "lg"
+  size?: "sm" | "md" | "lg" | "tiny"
   type?: "primary" | "secondary"
 }
 
@@ -26,6 +26,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         [styles.iconButton_sm]: size === "sm",
         [styles.iconButton_md]: size === "md",
         [styles.iconButton_lg]: size === "lg",
+        [styles.iconButton_tiny]: size === "tiny",
         [styles.iconButton_primary]: type === "primary",
         [styles.iconButton_secondary]: type === "secondary",
       })}

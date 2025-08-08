@@ -1,14 +1,15 @@
 "use client"
 
-import React from "react"
-import styles from "./favourites.module.scss"
-import PropertyCard from "../../../components/propertyCard"
-import Heading2 from "@/components/ui/heading2"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import Image from "next/image"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+import React, { useEffect, useState } from "react"
+import styles from "./catalogueList.module.scss"
+import Heading3 from "@/components/ui/heading3"
+import IconImage from "@/components/ui/IconImage"
+import clsx from "clsx"
+
 import { IProperty } from "@/types/PropertyCard"
+import PropertyCard from "@/components/propertyCard"
+import PropertyCardList from "@/components/propertyCardList"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 const cards: IProperty[] = [
   {
@@ -105,58 +106,84 @@ const cards: IProperty[] = [
   },
 ]
 
-const Favourites = () => {
+type SortType = "cards" | "list"
+
+const CatalogueList = () => {
+  const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
+  const { isLaptop } = useScreenSize(0)
+
+  const handleSorting = (sort: SortType) => {
+    setSelectedSorting(sort)
+  }
+
+  useEffect(() => {
+    if (!isLaptop) setSelectedSorting("cards")
+  }, [isLaptop])
+
   return (
-    <div className={styles.favourites}>
-      <Heading2 className={styles.favourites__header}>
-        Лучшие предложения
-      </Heading2>
-      <div className={styles.favourites__content}>
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={20}
-          slidesPerView={2}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
-          className={styles.swiper}
-        >
-          {cards.map((card) => (
-            <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              <PropertyCard property={card} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        <div
-          className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
-        >
-          <div className={styles.navigationButton__icon}>
-            <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+    <div className={styles.catalogue}>
+      <div className={styles.catalogue__header}>
+        <Heading3>Найдено 102 ЖК из 182</Heading3>
+        {isLaptop && (
+          <div className={styles.catalogue__header__buttons}>
+            <button
+              className={clsx(
+                styles.catalogue__header__buttons__button,
+                selectedSorting === "cards" &&
+                  styles.catalogue__header__buttons__button_active
+              )}
+              onClick={() => handleSorting("cards")}
+            >
+              <IconImage
+                iconLink={
+                  selectedSorting === "cards"
+                    ? "/images/icons/sort-cards-colored.svg"
+                    : "/images/icons/sort-cards.svg"
+                }
+                alt="cards"
+                className={styles.catalogue__header__buttons__button__icon}
+              />
+              <span>Карточки</span>
+            </button>
+            <button
+              className={clsx(
+                styles.catalogue__header__buttons__button,
+                selectedSorting === "list" &&
+                  styles.catalogue__header__buttons__button_active
+              )}
+              onClick={() => handleSorting("list")}
+            >
+              <IconImage
+                iconLink={
+                  selectedSorting === "list"
+                    ? "/images/icons/sort-list-colored.svg"
+                    : "/images/icons/sort-list.svg"
+                }
+                alt="list"
+                className={styles.catalogue__header__buttons__button__icon}
+              />
+              <span>Список</span>
+            </button>
           </div>
-        </div>
-        <div
-          className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
-        >
-          <div className={styles.navigationButton__icon}>
-            <Image
-              src="/images/icons/arrow-slider.svg"
-              alt="arrow-right"
-              fill
-              className={styles.navigationButton__icon__icon_next}
-            />
-          </div>
-        </div>
+        )}
       </div>
-
-      <div className={styles.favourites__buttons}>
-        <ActionButton className={styles.favourites__buttons__button}>
-          Перейти в каталог
-        </ActionButton>
+      <div
+        className={clsx(
+          styles.catalogue__cards,
+          selectedSorting === "cards" && styles.catalogue__cards_cards,
+          selectedSorting === "list" && styles.catalogue__cards_list
+        )}
+      >
+        {cards.map((card) =>
+          selectedSorting === "cards" ? (
+            <PropertyCard key={card.id} property={card} />
+          ) : (
+            <PropertyCardList key={card.id} property={card} />
+          )
+        )}
       </div>
     </div>
   )
 }
 
-export default Favourites
+export default CatalogueList
