@@ -144,3 +144,9 @@ article p {
   font-weight: 400;
   color: #818181;
 }
+
+@media (max-width: 470px) {
+  header{
+    margin-bottom: 1rem;
+  }
+}
