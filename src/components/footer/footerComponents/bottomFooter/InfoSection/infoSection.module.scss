@@ -1,0 +1,10 @@
+.infoSection{
+    width: 100%;
+    padding: 50px 0;
+}
+.infoSection__container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}

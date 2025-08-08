@@ -1,0 +1,56 @@
+.w_50 {
+    width: 50% !important;
+}
+
+.hideOnDesktop {
+  @media screen and (width > 1024px) {
+    display: none !important;
+  }
+}
+
+
+.contactForm__phoneGroup{
+    width: 50%;
+}
+.mt_0{
+    margin-top: 0 !important;
+}
+.contactForm{
+    width: 50%;
+}
+.position{
+    top: 2px;
+    right: -70px;
+}
+.borderRadius{
+    border-radius: 16px !important;
+}
+
+@media (max-width: 1024px) {
+    .borderRadius{
+        display: none;
+    }
+    .contactForm{
+        width: 60%;
+    }
+}
+
+@media (max-width: 768px) {
+    .w_50{
+        width: 100% !important;
+    }
+    .smallWrap{
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 680px) {
+    .contactForm{
+        width: 100%;
+    }
+}
+
+
+    
+
+

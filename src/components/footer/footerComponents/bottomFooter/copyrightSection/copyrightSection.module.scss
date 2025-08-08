@@ -1,0 +1,35 @@
+.copyrightSection{
+    width: 100%;
+    padding: 0;
+
+}
+.copyrightSection__container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.copyrightSection__text{
+    font-size: 14px;
+    color: var(--color-text-gray-light);
+}
+.copyrightSection__link{
+    text-decoration: underline;
+    color: var(--color-text-gray-light);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+
+}
+
+@media (max-width: 630px) {
+    .copyrightSection__text{
+        font-size: 12px;
+        width: 100%;
+    }
+    .copyrightSection__link{
+        font-size: 12px;
+        width: 100%;
+    }
+
+}

@@ -1,65 +1,71 @@
 .actionButton {
   cursor: pointer;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 64px;
   padding: 0 40px;
   border: none;
   border-radius: 40px;
-
   font-family: var(--font-onest);
   font-size: 16px;
   font-weight: 500;
   line-height: 150%;
   color: var(--color-white);
   text-align: center;
-
   transition: background-color 0.3s ease;
-
+  
   &_primary {
     color: var(--color-beige);
     background-color: var(--color-orange);
-
     &:hover {
       background-color: var(--color-orange-hover);
     }
   }
-
+  
+  &_svg {
+    filter: brightness(0) invert(1);
+    transition: transform 0.2s ease;
+    margin-left: 30px;
+  }
+  
+  &:hover &_svg {
+    transform: translateX(2px);
+  }
+  
   &_secondary {
     color: var(--color-orange);
     background-color: var(--color-orange-light);
-
     &:hover {
       background-color: var(--color-orange-light-hover);
     }
   }
-
+  
   &_outline {
     border: 1px solid var(--color-border-gray);
     color: var(--color-black);
-
     &:hover {
       background-color: var(--color-beige);
     }
   }
-
+  
   &_beige {
     color: var(--color-black);
     background-color: var(--color-beige);
-
     &:hover {
       background-color: var(--color-border-gray);
     }
   }
-
+  
   &_small {
     font-size: 16px;
   }
-
+  
   &_medium {
     font-size: 18px;
   }
-
+  
   &_large {
     font-size: 20px;
   }
