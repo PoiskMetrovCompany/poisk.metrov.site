@@ -587,3 +587,14 @@
         }
     }
 }
+
+@media (max-width: 370px){
+    .main_bar{
+        &__right{
+            gap: 10px;
+        }
+    }
+    .user_actions{
+        gap: 20px
+    }
+}
