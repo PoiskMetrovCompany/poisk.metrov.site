@@ -10,7 +10,7 @@ interface ICatalogButtonProps {
 const CatalogButton: FC<ICatalogButtonProps> = ({ onClick }) => {
   return (
     <button
-      className={`${styles['property-card__button']} ${styles['property-card__button_primary']}`}
+      className={`${styles.property_card__button} ${styles.property_card__button_primary}`}
       onClick={onClick}
     >
       Каталог

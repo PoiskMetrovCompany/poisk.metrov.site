@@ -10,8 +10,8 @@ const ContactInfo: FC<IContactInfoProps> = ({ phone = "+7 999 448 46-95" }) => {
   const formattedPhone = phone.replace(/\s/g, "");
 
   return (
-    <div className={styles["contact-info"]}>
-      <a href={`tel:${formattedPhone}`} className={styles["contact-info__phone"]}>
+    <div className={styles.contact_info}>
+      <a href={`tel:${formattedPhone}`} className={styles.contact_info__phone}>
         {phone}
       </a>
     </div>
