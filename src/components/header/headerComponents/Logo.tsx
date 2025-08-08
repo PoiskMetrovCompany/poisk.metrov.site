@@ -11,7 +11,7 @@ interface ILogoProps {
 }
 
 const Logo: FC<ILogoProps> = ({
-  src = "/images/logo.webp",
+  src = "/images/header/logo.webp",
   alt = "Логотип компании Поиск Метров",
   href = "/"
 }) => {
