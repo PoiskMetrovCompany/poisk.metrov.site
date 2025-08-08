@@ -1,3 +1,5 @@
+"use client"
+
 import React, { FC } from "react"
 import styles from "./propertyCardList.module.scss"
 import { IProperty } from "@/types/PropertyCard"
@@ -17,6 +19,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
         className={styles.property_card_list__image}
         iconLink={property.image}
         alt={property.title}
+        objectFit="cover"
       />
       <div className={styles.property_card_list__content}>
         <div className={styles.property_card_list__content__info}>
@@ -188,28 +191,22 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   Эскроу счет
                 </span>
               </div>
-              <IconButton
-                className={
-                  styles.property_card_list__content__actions__price__value__button
-                }
-                iconClassName={
-                  styles.property_card_list__content__actions__price__value__button__icon
-                }
-                iconLink={"/images/icons/heart.svg"}
-              />
+              <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
             </div>
             <div
               className={
                 styles.property_card_list__content__actions__price__mortgage
               }
             >
-              <span
+              <ActionButton
                 className={
                   styles.property_card_list__content__actions__price__mortgage__price
                 }
+                size="tiny"
+                type="secondary"
               >
                 от 23 538 ₽/мес
-              </span>
+              </ActionButton>
               <div
                 className={
                   styles.property_card_list__content__actions__price__mortgage__description
@@ -263,7 +260,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   styles.property_card_list__content__actions__builder__buttons__button
                 }
                 type="secondary"
-                size="small"
+                size="tiny"
               >
                 Показать телефон
               </ActionButton>

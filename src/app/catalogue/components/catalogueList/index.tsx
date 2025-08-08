@@ -113,7 +113,7 @@ const CatalogueList = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const { isLaptop } = useScreenSize()
+  const { isLaptop } = useScreenSize(0)
 
   const selectedSorting: SortType = useMemo(() => {
     const sortParam = searchParams.get("sort") as SortType

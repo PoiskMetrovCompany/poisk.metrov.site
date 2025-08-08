@@ -9,6 +9,7 @@ interface IconImageProps {
   alt: string
   imageClassName?: string
   loading?: "lazy" | "eager"
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down"
 }
 
 const IconImage = ({
@@ -17,6 +18,7 @@ const IconImage = ({
   className,
   imageClassName,
   loading,
+  objectFit,
 }: IconImageProps) => {
   return (
     <div className={clsx(styles.iconImage, className)}>
@@ -26,6 +28,7 @@ const IconImage = ({
         fill
         className={imageClassName}
         loading={loading}
+        objectFit={objectFit}
       />
     </div>
   )

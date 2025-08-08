@@ -54,6 +54,23 @@
 
   &_small {
     font-size: 16px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 14px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 13px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 13px;
+    }
+
+    @media screen and (width < 768px) {
+      padding: 0;
+      font-size: 12px;
+    }
   }
 
   &_medium {
