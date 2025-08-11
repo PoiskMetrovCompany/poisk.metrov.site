@@ -3,6 +3,22 @@
 
   &__header {
     margin-bottom: 40px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      margin-bottom: 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      margin-bottom: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      margin-bottom: 24px;
+    }
+
+    @media screen and (width < 768px) {
+      margin-bottom: 16px;
+    }
   }
 
   &__content {
@@ -22,6 +38,26 @@
       &__icon {
         width: 64px;
         height: 64px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          width: 56px;
+          height: 56px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          width: 48px;
+          height: 48px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (width < 768px) {
+          width: 40px;
+          height: 40px;
+        }
       }
 
       &__text {
@@ -37,12 +73,71 @@
         }
 
         &_description {
+          margin: 0;
+
           font-size: 18px;
-          font-weight: 400;
+          font-weight: 300;
           line-height: 150%;
           color: var(--color-text-gray);
         }
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          gap: 2px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 0;
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 12px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 12px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 8px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 8px;
       }
     }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 56px 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 56px 32px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 40px 32px;
+    }
+
+    @media screen and (width < 768px) {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    margin: 100px 0;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    margin: 80px 0;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    margin: 64px 0;
+  }
+
+  @media screen and (width < 768px) {
+    margin: 64px 0;
   }
 }

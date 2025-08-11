@@ -19,7 +19,7 @@ const DetailsPage = () => {
       <DetailsHeader />
       <Estate />
       <FlatList />
-      {/* <AboutObject /> */}
+      <AboutObject />
       {/* <AboutComplex /> */}
       {/* <MapProvider apiUrl={yandexApiUrl}>
         <Location />
