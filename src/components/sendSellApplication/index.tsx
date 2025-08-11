@@ -13,7 +13,7 @@ const SendSellApplication:FC = () => {
                 Оставьте заявку
               </div>
             </div>
-            <div className={styles.sendSelectApp__rightSide}>
+            <div className={styles.sendSellApp__rightSide}>
                 <FormSendSellApp
                   
                 />

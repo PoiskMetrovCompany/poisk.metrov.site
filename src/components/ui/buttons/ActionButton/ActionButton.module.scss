@@ -67,6 +67,12 @@
     }
   }
 
+  &_disabled{
+    background: var(--color-gray);
+    color: var(--color-text-gray);
+    pointer-events: none;
+  }
+
   &_telegram {
     background: var(--color-telegram);
     min-width: 202px;

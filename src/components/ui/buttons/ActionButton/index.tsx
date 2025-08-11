@@ -6,7 +6,7 @@ interface ActionButtonProps {
   children: React.ReactNode
   className?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline" | "beige" | "whatsapp" | "telegram"
+  type?: "primary" | "secondary" | "outline" | "beige" | "whatsapp" | "telegram" | "disabled"
   size?: "small" | "medium" | "large"
   svgSrc?: string
   svgAlt?: string
@@ -36,6 +36,7 @@ const ActionButton = ({
           [styles.actionButton_secondary]: type === "secondary",
           [styles.actionButton_outline]: type === "outline",
           [styles.actionButton_beige]: type === "beige",
+          [styles.actionButton_disabled]: type === "disabled",
           [styles.actionButton_whatsap]: type === "whatsapp",
           [styles.actionButton_telegram]: type === "telegram"
         },

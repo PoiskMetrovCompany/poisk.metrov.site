@@ -1,3 +1,7 @@
 .sellForm{
     margin: 50px;
+
+    @media (max-width: 570px) {
+        margin: 20px;
+    }
 }

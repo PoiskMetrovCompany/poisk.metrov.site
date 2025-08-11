@@ -1,0 +1,97 @@
+.customSelect {
+  position: relative;
+  width: 100%;
+
+  select {
+    display: none;
+  }
+}
+.selectLabel{
+  position: absolute;
+    
+}
+.selectSelected {
+  width: 100%;
+  height: 4rem; /* 64px */
+  border-radius: 1rem; /* 16px */
+  border: 1.5px solid rgba(210, 210, 210, 1);
+  padding: 0 0.875rem; /* 0 14px */
+  font-weight: 400;
+  font-size: 1rem; /* 16px */
+  line-height: 4rem; /* 64px */
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+  box-sizing: border-box;
+  position: relative;
+  transition: border-color 0.3s ease;
+  text-align: left;
+
+  &::after {
+    position: absolute;
+    content: "";
+    top: 1.25rem; /* 20px */
+    right: 1rem; /* 16px */
+    width: 0.625rem; /* 10px */
+    height: 0.625rem; /* 10px */
+    border: solid #818181;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
+  }
+
+  &.selectArrowActive::after {
+    transform: rotate(-135deg);
+    top: 1.25rem; /* 20px */
+  }
+}
+
+.selectItems {
+  position: absolute;
+  background-color: white;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  border-radius: 1rem; /* 16px */
+  border: 1.5px solid rgba(210, 210, 210, 1);
+  margin-top: 0.5rem; /* 8px */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 18.75rem; /* 300px */
+  overflow-y: auto;
+
+  div {
+    padding: 0.75rem 1rem; /* 12px 16px */
+    cursor: pointer;
+    font-size: 1rem; /* 16px */
+    color: #333;
+    transition: background-color 0.3s ease;
+    text-align: left;
+
+    &:hover {
+      background-color: rgba(236, 125, 63, 0.1);
+    }
+  }
+}
+
+.selectHide {
+  display: none;
+}
+
+.sameAsSelected {
+  background-color: rgba(236, 125, 63, 0.1);
+  color: #EC7D3F;
+}
+
+.selectLabel {
+  position: absolute;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 1);
+  top: -0.6875rem; /* -10.5px */
+  left: 0.5rem; /* 8px */
+  padding: 0 0.3125rem; /* 0 5px */
+  font-weight: 400;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+}
