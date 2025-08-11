@@ -1,0 +1,32 @@
+.telegramPromo__title{
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-gray-white)
+}
+.telegramPromo__description{
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-gray-white)
+}
+.telegramPromo__button{
+    background: var(--color-orange);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+}
+
+.divider{
+    // display: none;
+    margin: 20px 0;
+    width: 100%;
+    border: 1px solid var( --color-text-black);
+}
+
+@media (max-width: 1024px) {
+    .telegramPromo{
+        width: 100%;
+    }
+}

@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import Image from "next/image"
 import styles from "./ActionButton.module.scss"
 
 interface ActionButtonProps {
@@ -6,7 +7,11 @@ interface ActionButtonProps {
   className?: string
   onClick?: () => void
   type?: "primary" | "secondary" | "outline" | "beige"
-  size?: "small" | "medium" | "tiny"
+  size?: "small" | "medium" | "large"
+  svgSrc?: string
+  svgAlt?: string
+  svgWidth?: number
+  svgHeight?: number
 }
 
 const ActionButton = ({
@@ -15,6 +20,10 @@ const ActionButton = ({
   onClick,
   type = "primary",
   size = "small",
+  svgSrc,
+  svgAlt = "",
+  svgWidth = 16,
+  svgHeight = 16,
 }: ActionButtonProps) => {
   return (
     <button
@@ -36,6 +45,15 @@ const ActionButton = ({
       onClick={onClick}
     >
       {children}
+      {svgSrc && (
+        <Image 
+          src={svgSrc} 
+          alt={svgAlt}
+          width={svgWidth}
+          height={svgHeight}
+          className={styles.actionButton_svg}
+        />
+      )}
     </button>
   )
 }
