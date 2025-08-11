@@ -35,6 +35,26 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 32px 40px;
     padding: 40px 0;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media screen and (width < 768px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
   }
 }
 
