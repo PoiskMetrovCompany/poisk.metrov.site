@@ -47,11 +47,13 @@ const RightSide:FC = () => {
                     name = "firstNameDreamFlat"
                 />
                 <InputContainer
-                    label = ""
-                    placeholder="Ваш телефон"
+                    label=""
+                    placeholder=""
                     value={formData.phoneNumber}
-                    onChange={(value) => handleInputChange("phoneNumber", value)}
-                    name = "phoneNumberDreamFlat"
+                    onChange={(value) => handleInputChange("phone", value)}
+                    name="phoneDreamFlat"
+                    prefix="+7"
+                    className={styles.w_50}
                 />
 
                 <ActionButton

@@ -50,6 +50,39 @@
     }
   }
   
+  &_whatsap {
+    background: var(--color-whatsapp);
+    min-width: 202px;
+
+    
+    @media (max-width: 1440px) {
+      font-size: 15px !important;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    @media (max-width: 950px) {
+      padding: 0;
+    }
+  }
+
+  &_telegram {
+    background: var(--color-telegram);
+    min-width: 202px;
+    
+    @media (max-width: 1440px) {
+      font-size: 15px !important;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    @media (max-width: 950px) {
+      padding: 0;
+    }
+  }
+
   &_beige {
     color: var(--color-black);
     background-color: var(--color-beige);

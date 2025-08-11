@@ -9,7 +9,8 @@ import clsx from "clsx"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
-import GetYourDreamFlat from "@/components/getYourDreamFlat" // Импортируем компонент
+import GetYourDreamFlat from "@/components/getYourDreamFlat"
+import GetCatalogue from "@/components/getCatalogue" // Импортируем новый компонент
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 const cards: IProperty[] = [
@@ -121,19 +122,18 @@ const CatalogueList = () => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
 
-  
   const renderCardsWithDreamFlat = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
     
     cards.forEach((card, index) => {
-      
+      // Добавляем карточку недвижимости
       if (selectedSorting === "cards") {
         result.push(<PropertyCard key={card.id} property={card} />)
       } else {
         result.push(<PropertyCardList key={card.id} property={card} />)
       }
       
-      
+      // Добавляем GetYourDreamFlat после второй карточки (индекс 1)
       if (index === 1) {
         result.push(
           <div 
@@ -145,6 +145,16 @@ const CatalogueList = () => {
         )
       }
     })
+    
+    // Добавляем GetCatalogue после всех карточек
+    result.push(
+      <div 
+        key="get-catalogue" 
+        className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+      >
+        <GetCatalogue />
+      </div>
+    )
     
     return result
   }
