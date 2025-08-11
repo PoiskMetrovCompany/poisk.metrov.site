@@ -10,8 +10,8 @@ const FlatList = () => {
       <div className={styles.flatList__header}>
         <Heading2>Квартиры и цены</Heading2>
       </div>
-      {/* <Filter /> */}
-      <LayoutList />
+      <Filter />
+      {/* <LayoutList /> */}
     </div>
   )
 }

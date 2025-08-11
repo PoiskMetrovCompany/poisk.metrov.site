@@ -87,8 +87,15 @@ const Estate = () => {
           ))}
         </ul>
         <div className={styles.info__description__buttons}>
-          <ActionButton>Записаться на просмотр</ActionButton>
-          <ActionButton type="secondary">Скачать презентацию</ActionButton>
+          <ActionButton className={styles.info__description__buttons__button}>
+            Записаться на просмотр
+          </ActionButton>
+          <ActionButton
+            className={styles.info__description__buttons__button}
+            type="secondary"
+          >
+            Скачать презентацию
+          </ActionButton>
         </div>
       </div>
     </div>
