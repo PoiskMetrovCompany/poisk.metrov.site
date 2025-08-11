@@ -9,6 +9,7 @@ import clsx from "clsx"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
+import GetYourDreamFlat from "@/components/getYourDreamFlat" // Импортируем компонент
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 const cards: IProperty[] = [
@@ -120,6 +121,34 @@ const CatalogueList = () => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
 
+  
+  const renderCardsWithDreamFlat = (): React.ReactNode[] => {
+    const result: React.ReactNode[] = []
+    
+    cards.forEach((card, index) => {
+      
+      if (selectedSorting === "cards") {
+        result.push(<PropertyCard key={card.id} property={card} />)
+      } else {
+        result.push(<PropertyCardList key={card.id} property={card} />)
+      }
+      
+      
+      if (index === 1) {
+        result.push(
+          <div 
+            key={`dream-flat-${index}`} 
+            className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+          >
+            <GetYourDreamFlat />
+          </div>
+        )
+      }
+    })
+    
+    return result
+  }
+
   return (
     <div className={styles.catalogue}>
       <div className={styles.catalogue__header}>
@@ -174,13 +203,7 @@ const CatalogueList = () => {
           selectedSorting === "list" && styles.catalogue__cards_list
         )}
       >
-        {cards.map((card) =>
-          selectedSorting === "cards" ? (
-            <PropertyCard key={card.id} property={card} />
-          ) : (
-            <PropertyCardList key={card.id} property={card} />
-          )
-        )}
+        {renderCardsWithDreamFlat()}
       </div>
     </div>
   )

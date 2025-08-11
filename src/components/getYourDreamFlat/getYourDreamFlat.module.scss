@@ -1,0 +1,55 @@
+.dreamFlat{
+    width: 100%;
+    min-height: 200px;
+    background: linear-gradient(182deg, rgba(228, 98, 25, 0.15) 2.4%, rgba(236, 125, 63, 0.15) 100%);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    
+    &__container{
+        width: 100%;
+        padding: 40px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        position: relative;
+
+        @media (max-width: 700px) {
+            padding: 20px;
+        }
+    }
+    &__leftSide{
+        width: 50%;
+        @media (max-width:1440px) {
+            width: 30%
+        }
+        @media (max-width: 1024px) {
+            width: 70%;
+        }
+        @media (max-width: 700px) {
+            width: 100%;
+        }
+    }
+    &__rightSide{
+        width: 50%;
+        @media (max-width:1440px) {
+            width: 65%
+        }
+        @media (max-width:1024px) {
+            width: 100%;
+            margin-top: 40px;
+        }
+    }
+
+    &__backImg{
+        position: absolute;
+        right: -10px;
+        top: -137px;
+
+        @media (max-width: 700px) {
+            display: none;
+        }
+    }
+
+}

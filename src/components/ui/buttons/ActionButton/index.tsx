@@ -38,7 +38,7 @@ const ActionButton = ({
         {
           [styles.actionButton_small]: size === "small",
           [styles.actionButton_medium]: size === "medium",
-          [styles.actionButton_tiny]: size === "tiny",
+          [styles.actionButton_large]: size === "large",
         },
         className
       )}
@@ -46,8 +46,8 @@ const ActionButton = ({
     >
       {children}
       {svgSrc && (
-        <Image 
-          src={svgSrc} 
+        <Image
+          src={svgSrc}
           alt={svgAlt}
           width={svgWidth}
           height={svgHeight}
