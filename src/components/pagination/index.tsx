@@ -5,12 +5,14 @@ import ReactPaginate from "react-paginate"
 interface PaginationProps {
   totalPages: number
   currentPage: number
+  itemsPerPage: number
   onPageChange: (page: number) => void
 }
 
 const Pagination = ({
   totalPages,
   currentPage,
+  itemsPerPage,
   onPageChange,
 }: PaginationProps) => {
   const handlePageClick = (event: { selected: number }) => {
@@ -46,6 +48,7 @@ const Pagination = ({
         pageRangeDisplayed={3}
         marginPagesDisplayed={3}
         pageCount={totalPages}
+        // pageCount={Math.ceil(totalPages / itemsPerPage)}
         forcePage={currentPage - 1}
         renderOnZeroPageCount={null}
         containerClassName={styles.pagination__container}

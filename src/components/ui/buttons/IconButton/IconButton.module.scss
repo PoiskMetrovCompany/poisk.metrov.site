@@ -17,6 +17,16 @@
   &_sm {
     width: 48px;
     height: 48px;
+
+    @media screen and (width < 1920px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   &_md {

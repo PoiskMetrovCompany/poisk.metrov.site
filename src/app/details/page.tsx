@@ -18,7 +18,7 @@ const DetailsPage = () => {
     <div className={styles.details}>
       <DetailsHeader />
       <Estate />
-      {/* <FlatList /> */}
+      <FlatList />
       {/* <AboutObject /> */}
       {/* <AboutComplex /> */}
       {/* <MapProvider apiUrl={yandexApiUrl}>
