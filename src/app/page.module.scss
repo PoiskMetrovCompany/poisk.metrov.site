@@ -6,4 +6,19 @@
     display: flex;
     flex-direction: column;
   }
+
+  @media (width <= 1440px) {
+    padding: 0 70px;
+  }
+
+  @media (width <= 1250px) {
+    padding: 0 40px;
+  }
+
+  @media (width <= 620px) {
+    padding: 0 80px;
+  }
+  @media (max-width: 470px) {
+    padding: 0 30px;
+  }
 }

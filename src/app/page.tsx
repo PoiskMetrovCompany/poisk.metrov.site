@@ -14,14 +14,14 @@ export default function Home() {
     <div className={styles.main}>
       <div className={styles.main__container}>
         <HeaderCards />
-        <Favourites />
+        {/* <Favourites />
         <Mortage />
         <Compilation />
         <Work />
         <Partners />
         <Rating />
         <Download />
-        <Selection />
+        <Selection /> */}
       </div>
     </div>
   )
