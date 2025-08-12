@@ -1,10 +1,10 @@
-@import "@/utils/mixins";
+@use "@/utils/mixins" as mixins;
 
 .aboutComplex {
-  @include adaptive-vertical-margin;
+  @include mixins.adaptive-vertical-margin;
 
   &__header {
-    @include adaptive-heading-margin;
+    @include mixins.adaptive-heading-margin;
   }
 
   &__content {

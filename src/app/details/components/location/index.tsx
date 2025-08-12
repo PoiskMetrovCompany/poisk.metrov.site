@@ -1,12 +1,11 @@
 "use client"
 import styles from "./location.module.scss"
 import Heading2 from "@/components/ui/heading2"
-import Heading3 from "@/components/ui/heading3"
-import ActionButton from "@/components/ui/buttons/ActionButton"
 import { Map } from "./map/map"
 import { Place } from "./map/variables"
 import { useState } from "react"
-import IconImage from "@/components/ui/IconImage"
+import Infrastructure from "./infrastructure"
+import InfrastructureDialog from "./infrastructure/infrastructureDialog"
 
 export const places: Place[] = [[55.00844174651645, 82.93779287001264]].map(
   ([longitude, latitude], i) => ({
@@ -26,44 +25,6 @@ export const places: Place[] = [[55.00844174651645, 82.93779287001264]].map(
           Lorem Ipsum.`,
   })
 )
-
-const INFRASTRUCTURE = [
-  {
-    icon: "/images/icons/gray-rounded/metro.svg",
-    title: "Метро",
-    type: "metro",
-  },
-  {
-    icon: "/images/icons/gray-rounded/book.svg",
-    title: "Школы",
-    type: "schools",
-  },
-  {
-    icon: "/images/icons/gray-rounded/tree.svg",
-    title: "Парки",
-    type: "parks",
-  },
-  {
-    icon: "/images/icons/gray-rounded/kindergarten.svg",
-    title: "Детские сады",
-    type: "kindergartens",
-  },
-  {
-    icon: "/images/icons/gray-rounded/shop.svg",
-    title: "Магазины",
-    type: "shops",
-  },
-  {
-    icon: "/images/icons/gray-rounded/sport.svg",
-    title: "Спорт",
-    type: "sport",
-  },
-  {
-    icon: "/images/icons/gray-rounded/medicine.svg",
-    title: "Аптеки",
-    type: "pharmacies",
-  },
-]
 
 const Location = () => {
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<
@@ -90,51 +51,17 @@ const Location = () => {
             selectedInfrastructure={selectedInfrastructure}
           />
         </div>
-        <ActionButton
-          type="gray"
-          className={styles.location__content__buttonMobile}
-          svgSrc={"/images/icons/settings.svg"}
-          svgWidth={24}
-          svgHeight={24}
-        >
-          Фильтры
-        </ActionButton>
-        <div className={styles.location__content__info}>
-          <div className={styles.location__content__info__header}>
-            <Heading3>Инфраструктура</Heading3>
-          </div>
 
-          <div className={styles.location__content__info__list}>
-            {INFRASTRUCTURE.map((item, index) => (
-              <button
-                key={index}
-                className={`${styles.location__content__info__list__item} ${
-                  selectedInfrastructure.includes(item.type)
-                    ? styles.location__content__info__list__item__active
-                    : ""
-                }`}
-                onClick={() => toggleInfrastructure(item.type)}
-              >
-                <IconImage
-                  iconLink={item.icon}
-                  alt={item.title}
-                  className={styles.location__content__info__list__item__icon}
-                />
-                <span
-                  className={styles.location__content__info__list__item__title}
-                >
-                  {item.title}
-                </span>
-              </button>
-            ))}
-          </div>
-          <ActionButton
-            type="outline"
-            className={styles.location__content__info__button}
-          >
-            Показать все
-          </ActionButton>
-        </div>
+        <InfrastructureDialog
+          selectedInfrastructure={selectedInfrastructure}
+          toggleInfrastructure={toggleInfrastructure}
+        />
+
+        <Infrastructure
+          selectedInfrastructure={selectedInfrastructure}
+          toggleInfrastructure={toggleInfrastructure}
+          className={styles.location__content__infrastructure}
+        />
       </div>
     </div>
   )

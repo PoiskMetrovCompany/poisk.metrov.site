@@ -1,10 +1,10 @@
-@import "@/utils/mixins";
+@use "@/utils/mixins" as mixins;
 
 .aboutObject {
-  @include adaptive-vertical-margin;
+  @include mixins.adaptive-vertical-margin;
 
   &__header {
-    @include adaptive-heading-margin;
+    @include mixins.adaptive-heading-margin;
   }
 
   &__content {
@@ -98,7 +98,7 @@
 
       @media screen and (width >= 1024px) and (width < 1440px) {
         gap: 12px;
-        width: 300px;
+        width: 296px;
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {

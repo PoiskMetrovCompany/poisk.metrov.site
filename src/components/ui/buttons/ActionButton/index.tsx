@@ -5,6 +5,7 @@ import styles from "./ActionButton.module.scss"
 interface ActionButtonProps {
   children: React.ReactNode
   className?: string
+  svgClassName?: string
   onClick?: () => void
   type?: "primary" | "secondary" | "outline" | "beige" | "gray"
   size?: "small" | "medium" | "large" | "tiny"
@@ -18,6 +19,7 @@ interface ActionButtonProps {
 const ActionButton = ({
   children,
   className,
+  svgClassName,
   onClick,
   type = "primary",
   size = "small",
@@ -54,7 +56,7 @@ const ActionButton = ({
           alt={svgAlt}
           width={svgWidth}
           height={svgHeight}
-          className={clsx(styles.actionButton_svg, {
+          className={clsx(styles.actionButton_svg, svgClassName, {
             [styles.actionButton_svg_discolored]: svgDiscolored,
           })}
         />
