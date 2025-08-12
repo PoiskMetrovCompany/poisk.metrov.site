@@ -31,8 +31,11 @@
 
   &_svg {
     margin-left: 30px;
-    filter: brightness(0) invert(1);
-    transition: transform 0.2s ease;
+
+    &_discolored {
+      filter: brightness(0) invert(1);
+      transition: transform 0.2s ease;
+    }
   }
 
   &:hover &_svg {
@@ -63,6 +66,15 @@
 
     &:hover {
       background-color: var(--color-border-gray);
+    }
+  }
+
+  &_gray {
+    color: var(--color-black);
+    background-color: var(--color-gray-white);
+
+    &:hover {
+      background-color: var(--color-border-gray-hover);
     }
   }
 

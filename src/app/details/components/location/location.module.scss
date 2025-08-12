@@ -1,8 +1,10 @@
+@import "@/utils/mixins";
+
 .location {
-  margin-bottom: 120px;
+  @include adaptive-vertical-margin;
 
   &__header {
-    margin-bottom: 40px;
+    @include adaptive-heading-margin;
   }
 
   &__content {
@@ -13,8 +15,25 @@
     &__map {
       overflow: hidden;
       width: 100%;
-      height: 620px;
+      height: 100%;
       border-radius: 32px;
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        height: 380px;
+      }
+
+      @media screen and (width < 768px) {
+        height: 300px;
+        border-radius: 24px;
+      }
+    }
+
+    &__buttonMobile {
+      display: none;
+
+      @media screen and (width < 768px) {
+        display: flex;
+      }
     }
 
     &__info {
@@ -78,6 +97,40 @@
           }
         }
       }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        height: 610px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        height: 487px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        height: 295px;
+      }
+
+      @media screen and (width < 768px) {
+        display: none;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media screen and (width < 768px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
   }
 }

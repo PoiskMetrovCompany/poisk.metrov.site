@@ -1,24 +1,10 @@
+@import "@/utils/mixins";
+
 .aboutObject {
-  margin: 120px 0;
+  @include adaptive-vertical-margin;
 
   &__header {
-    margin-bottom: 40px;
-
-    @media screen and (width >= 1440px) and (width < 1920px) {
-      margin-bottom: 32px;
-    }
-
-    @media screen and (width >= 1024px) and (width < 1440px) {
-      margin-bottom: 24px;
-    }
-
-    @media screen and (width >= 768px) and (width < 1024px) {
-      margin-bottom: 24px;
-    }
-
-    @media screen and (width < 768px) {
-      margin-bottom: 16px;
-    }
+    @include adaptive-heading-margin;
   }
 
   &__content {
@@ -70,6 +56,14 @@
           font-weight: 500;
           line-height: 130%;
           color: var(--color-text-black);
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 18px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 16px;
+          }
         }
 
         &_description {
@@ -79,6 +73,14 @@
           font-weight: 300;
           line-height: 150%;
           color: var(--color-text-gray);
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
         }
 
         @media screen and (width >= 768px) and (width < 1920px) {
@@ -96,14 +98,17 @@
 
       @media screen and (width >= 1024px) and (width < 1440px) {
         gap: 12px;
+        width: 300px;
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
         gap: 8px;
+        width: 300px;
       }
 
       @media screen and (width < 768px) {
         gap: 8px;
+        width: 100%;
       }
     }
 
@@ -112,7 +117,7 @@
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
-      gap: 56px 32px;
+      gap: 56px 20px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
@@ -123,21 +128,5 @@
       flex-direction: column;
       gap: 20px;
     }
-  }
-
-  @media screen and (width >= 1440px) and (width < 1920px) {
-    margin: 100px 0;
-  }
-
-  @media screen and (width >= 1024px) and (width < 1440px) {
-    margin: 80px 0;
-  }
-
-  @media screen and (width >= 768px) and (width < 1024px) {
-    margin: 64px 0;
-  }
-
-  @media screen and (width < 768px) {
-    margin: 64px 0;
   }
 }

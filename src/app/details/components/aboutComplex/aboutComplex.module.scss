@@ -1,8 +1,10 @@
+@import "@/utils/mixins";
+
 .aboutComplex {
-  margin: 120px 0;
+  @include adaptive-vertical-margin;
 
   &__header {
-    margin-bottom: 40px;
+    @include adaptive-heading-margin;
   }
 
   &__content {
@@ -11,9 +13,34 @@
     gap: 24px;
 
     &__text {
+      margin: 0;
       font-size: 18px;
       font-weight: 400;
       line-height: 150%;
+
+      &_desktop {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 150%;
+      }
+
+      @media screen and (width >= 768px) and (width < 1920px) {
+        font-size: 15px;
+
+        &_desktop {
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 150%;
+        }
+      }
+
+      @media screen and (width < 768px) {
+        font-size: 14px;
+
+        &_desktop {
+          display: none;
+        }
+      }
     }
 
     &__link {
@@ -25,6 +52,30 @@
       &:hover {
         text-decoration: underline;
       }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        font-size: 16px;
+      }
+
+      @media screen and (width < 1440px) {
+        font-size: 14px;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 16px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 12px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 12px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 8px;
     }
   }
 }

@@ -90,10 +90,20 @@ const Location = () => {
             selectedInfrastructure={selectedInfrastructure}
           />
         </div>
+        <ActionButton
+          type="gray"
+          className={styles.location__content__buttonMobile}
+          svgSrc={"/images/icons/settings.svg"}
+          svgWidth={24}
+          svgHeight={24}
+        >
+          Фильтры
+        </ActionButton>
         <div className={styles.location__content__info}>
           <div className={styles.location__content__info__header}>
             <Heading3>Инфраструктура</Heading3>
           </div>
+
           <div className={styles.location__content__info__list}>
             {INFRASTRUCTURE.map((item, index) => (
               <button

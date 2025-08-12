@@ -12,18 +12,16 @@ import AboutObjectSmall from "./components/aboutObjectSmall"
 import Documents from "./components/documents"
 
 const DetailsPage = () => {
-  const yandexApiUrl = `https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAP_KEY}&lang=ru_RU`
-
   return (
     <div className={styles.details}>
       <DetailsHeader />
       <Estate />
       <FlatList />
       <AboutObject />
-      {/* <AboutComplex /> */}
-      {/* <MapProvider apiUrl={yandexApiUrl}>
+      <AboutComplex />
+      <MapProvider>
         <Location />
-      </MapProvider> */}
+      </MapProvider>
       {/* <AboutObjectSmall /> */}
       {/* <ConstructionProgress /> */}
       {/* <Documents /> */}
