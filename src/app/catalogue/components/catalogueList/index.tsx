@@ -12,6 +12,7 @@ import PropertyCardList from "@/components/propertyCardList"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import GetCatalogue from "@/components/getCatalogue" // Импортируем новый компонент
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
+import NotFound from "@/components/notFound"
 
 const cards: IProperty[] = [
   {
@@ -111,6 +112,8 @@ const cards: IProperty[] = [
 type SortType = "cards" | "list"
 
 const CatalogueList = () => {
+  const [isEmpty, setIsEmpty] = useState(false) // Изменено на false для демонстрации
+
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
@@ -157,6 +160,17 @@ const CatalogueList = () => {
     )
     
     return result
+  }
+
+  // Если нет результатов поиска, показываем NotFound
+  if (isEmpty) {
+    return (
+      <NotFound
+        title="Подходящих вариантов нет"
+        description="Измените фильтры или подпишитесь на поиск — так вы не пропустите подходящие предложения"
+        buttonText="Сохранить поиск"
+      />
+    )
   }
 
   return (
