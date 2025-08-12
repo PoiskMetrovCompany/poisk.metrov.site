@@ -11,8 +11,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 64px 32px;
-
-    // justify-content: space-between;
     justify-content: flex-start;
 
     &__item {
@@ -125,7 +123,7 @@
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      gap: 40px 32px;
+      gap: 40px 75px;
     }
 
     @media screen and (width < 768px) {
