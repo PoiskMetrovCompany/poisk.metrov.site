@@ -10,8 +10,8 @@
   &__content {
     display: flex;
     flex-wrap: wrap;
-    gap: 64px 32px;
-    justify-content: space-between;
+    gap: 64px 240px;
+    align-items: flex-start;
 
     &__item {
       display: flex;
