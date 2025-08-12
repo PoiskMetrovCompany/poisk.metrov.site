@@ -124,6 +124,7 @@ const ClientTransferForm = () => {
           value={formData.phoneNumber}
           onChange={(value) => handleInputChange("phoneNumber", value)}
           name="phoneNumberTransfer"
+          type="phone"
           className={styles.w_50}
         />
       </FormRow>
@@ -168,6 +169,7 @@ const ClientTransferForm = () => {
           value={formData.clientPhoneNumber}
           onChange={(value) => handleInputChange("clientPhoneNumber", value)}
           name="clientPhoneNumber"
+          type="phone"
           className={styles.w_50}
         />
       </FormRow>

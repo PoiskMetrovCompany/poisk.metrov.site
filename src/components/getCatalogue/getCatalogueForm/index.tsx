@@ -61,6 +61,7 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
           onChange={(value) => handleInputChange("phoneNumber", value)}
           name="phone"
           prefix="+7"
+          type="phone"
           className={styles.w_50}
         />
       </FormRow>

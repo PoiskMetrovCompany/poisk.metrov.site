@@ -161,6 +161,7 @@ const FormSendSellApp = () => {
                     value = {formData.phoneNumber}
                     onChange={(value) => handleInputChange("phoneNumber", value)}
                     name="phoneNumber"
+                    type="phone"
                     className={styles.w_50}
                 />
             </FormRow>

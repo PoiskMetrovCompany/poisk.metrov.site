@@ -76,6 +76,7 @@ const ContactForm: FC = () => {
           value={formData.phone}
           onChange={(value) => handleInputChange("phone", value)}
           name="phone"
+          type="phone"
           className={styles.w_50}
         />
         <ArrowButton

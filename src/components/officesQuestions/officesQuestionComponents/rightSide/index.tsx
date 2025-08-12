@@ -74,6 +74,8 @@ const QuestionsForm: FC = () => {
                     onChange={(value) => handleInputChange("phoneNumber", value)}
                     value={formData.phoneNumber}
                     name="phoneNumberOffices"
+                    
+                    type="phone"
                     className={styles.w_50}
                 />
             </FormRow>
