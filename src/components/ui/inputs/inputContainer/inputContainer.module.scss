@@ -4,23 +4,36 @@
   width: 100%;
 
   &.big {
-    width: auto;
     flex-wrap: wrap;
+    width: auto;
     text-align: left;
   }
 
-  // Основные поля ввода
   &__input {
-    width: 100%;
-    height: 4rem; /* 64px */
-    border-radius: 1rem; /* 16px */
-    border: 1.5px solid rgba(210, 210, 210, 1);
-    padding-left: 0.875rem; /* 14px */
-    font-weight: 400;
-    font-size: 1rem; /* 16px */
-    line-height: 1.5;
-    transition: border-color 0.3s ease;
     box-sizing: border-box;
+    width: 100%;
+    height: 4rem;
+    padding-left: 0.875rem;
+    border: 1.5px solid rgb(210 210 210 / 100%);
+    border-radius: 1rem;
+
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      font-size: 18px;
+
+      @media (width <= 1440px) {
+        font-size: 16px;
+      }
+
+      @media (width <= 768px) {
+        font-size: 14px;
+      }
+    }
 
     &:focus {
       outline: none;
@@ -31,54 +44,62 @@
     }
 
     &[readonly] {
-      background: rgba(249, 249, 247, 1);
-      border: none;
       padding-top: 1rem;
+      border: none;
+      background: rgb(249 249 247 / 100%);
     }
   }
 
-  // Wrapper для инпута с префиксом
   &__wrapper {
     position: relative;
     display: flex;
     align-items: center;
   }
 
-  // Префикс (например +7 для телефона)
   &__prefix {
-    position: absolute;
-    left: 0.875rem;
-    z-index: 1;
-    color: #333;
-    font-weight: 400;
-    font-size: 1rem;
     pointer-events: none;
+
+    position: absolute;
+    z-index: 1;
+    left: 0.875rem;
+
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
   }
 
-  // Лейблы для полей
   &__label {
-    font-weight: 400;
-    font-size: 0.875rem; /* 14px */
-    line-height: 1.5;
     position: absolute;
     z-index: 2;
-    background-color: rgba(255, 255, 255, 1);
-    top: -0.6875rem; /* -10.5px */
-    left: 0.5rem; /* 8px */
-    padding: 0 0.3125rem; /* 0 5px */
+    top: -0.6875rem;
+    left: 0.5rem;
 
-    // Специальные стили для readonly полей
+    padding: 0 0.3125rem;
+
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    background-color: rgb(255 255 255 / 100%);
+
     &:has(+ .inputContainer__wrapper .inputContainer__input[readonly]),
     &:has(+ .inputContainer__input[readonly]) {
-      font-weight: 600;
+      top: 0;
       font-size: 16px;
-      top: 0px;
+      font-weight: 600;
       background: none;
+    }
+
+    @media (width <= 768px) {
+      font-size: 12px;
+    }
+
+    @media (width <= 570px) {
+      font-size: 11px;
     }
   }
 
-  // Когда есть префикс, сдвигаем padding
   &__wrapper:has(.inputContainer__prefix) .inputContainer__input {
-    padding-left: 3rem; /* Увеличиваем отступ для префикса */
+    padding-left: 3rem;
   }
 }
