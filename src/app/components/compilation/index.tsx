@@ -11,7 +11,7 @@ import Image from "next/image"
 import PromoCard from "./promoCard"
 
 const Compilation = () => {
-  // Моковые данные для карточек
+
   const flatCards = [
     {
       id: 1,

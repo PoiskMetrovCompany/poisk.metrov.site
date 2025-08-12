@@ -14,8 +14,10 @@ export default function Home() {
     <div className={styles.main}>
       <div className={styles.main__container}>
         <HeaderCards />
-        {/* <Favourites />
-        <Mortage />
+        {/* <Favourites /> */}
+         <Mortage />
+        {/* <Compilation /> */}
+        {/* <Mortage />
         <Compilation />
         <Work />
         <Partners />

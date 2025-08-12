@@ -114,13 +114,27 @@ const Favourites = () => {
       <div className={styles.favourites__content}>
         <Swiper
           modules={[Navigation]}
-          spaceBetween={20}
+          spaceBetween={40}
           slidesPerView={2}
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
           }}
           className={styles.swiper}
+          breakpoints={{
+            1024: {
+              slidesPerView: 2,
+              spaceBetween: 24,
+            },
+            1440: {
+              slidesPerView: 2,
+              spaceBetween: 32,
+            },
+            1920: {
+              slidesPerView: 2,
+              spaceBetween: 40,
+            },
+          }}
         >
           {cards.map((card) => (
             <SwiperSlide key={card.id} className={styles.swiper__slide}>

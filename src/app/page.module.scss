@@ -18,7 +18,8 @@
   @media (width <= 620px) {
     padding: 0 80px;
   }
-  @media (max-width: 470px) {
+
+  @media (width <= 470px) {
     padding: 0 30px;
   }
 }
