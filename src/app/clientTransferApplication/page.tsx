@@ -3,7 +3,7 @@ import ClientTransferApp from "@/components/clientTransferApp"
 import styles from "./clientTransferForm.module.scss"
 const ClientTransferForm = () =>{
     return(
-        <div className={styles.sellForm}>
+        <div className={styles.ClientTransferForm}>
             <ClientTransferApp/>
         </div>
     )
