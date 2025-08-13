@@ -20,8 +20,9 @@ export default function Home() {
         <Work />
         <Partners />
         <Rating />
-        {/* 
         <Download />
+        {/* 
+        
         <Selection /> */}
       </div>
     </div>
