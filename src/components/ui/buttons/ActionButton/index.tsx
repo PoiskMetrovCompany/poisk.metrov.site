@@ -7,7 +7,7 @@ interface ActionButtonProps {
   className?: string
   onClick?: () => void
   type?: "primary" | "secondary" | "outline" | "beige"
-  size?: "small" | "medium" | "large"
+  size?: "small" | "medium" | "large" | "tiny"
   svgSrc?: string
   svgAlt?: string
   svgWidth?: number
