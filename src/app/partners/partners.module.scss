@@ -1,0 +1,12 @@
+@use "@/utils/mixins" as mixins;
+
+.partners {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+
+  width: 100%;
+  margin-bottom: 120px;
+
+  @include mixins.adaptive-padding;
+}

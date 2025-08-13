@@ -7,7 +7,15 @@ interface ActionButtonProps {
   className?: string
   svgClassName?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline" | "beige" | "gray" | "whatsapp" | "telegram" | "disabled"
+  type?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "beige"
+    | "gray"
+    | "whatsapp"
+    | "telegram"
+    | "disabled"
   size?: "small" | "medium" | "large" | "tiny"
   svgSrc?: string
   svgAlt?: string
@@ -15,6 +23,7 @@ interface ActionButtonProps {
   svgWidth?: number
   svgHeight?: number
   svgDiscolored?: boolean
+  disabled?: boolean
 }
 
 const ActionButton = ({
@@ -30,6 +39,7 @@ const ActionButton = ({
   svgWidth = 16,
   svgHeight = 16,
   svgDiscolored = false,
+  disabled = false,
 }: ActionButtonProps) => {
   return (
     <button
@@ -43,7 +53,7 @@ const ActionButton = ({
           [styles.actionButton_gray]: type === "gray",
           [styles.actionButton_disabled]: type === "disabled",
           [styles.actionButton_whatsap]: type === "whatsapp",
-          [styles.actionButton_telegram]: type === "telegram"
+          [styles.actionButton_telegram]: type === "telegram",
         },
         {
           [styles.actionButton_small]: size === "small",
@@ -54,6 +64,7 @@ const ActionButton = ({
       )}
       onClick={onClick}
       style={buttonWidth ? { width: `${buttonWidth}px` } : undefined}
+      disabled={disabled}
     >
       {children}
       {svgSrc && (
