@@ -5,19 +5,22 @@ import styles from "./ActionButton.module.scss"
 interface ActionButtonProps {
   children: React.ReactNode
   className?: string
+  svgClassName?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline" | "beige" | "whatsapp" | "telegram" | "disabled"
-  size?: "small" | "medium" | "large"
+  type?: "primary" | "secondary" | "outline" | "beige" | "gray" | "whatsapp" | "telegram" | "disabled"
+  size?: "small" | "medium" | "large" | "tiny"
   svgSrc?: string
   svgAlt?: string
   buttonWidth?: number
   svgWidth?: number
   svgHeight?: number
+  svgDiscolored?: boolean
 }
 
 const ActionButton = ({
   children,
   className,
+  svgClassName,
   onClick,
   type = "primary",
   size = "small",
@@ -26,6 +29,7 @@ const ActionButton = ({
   buttonWidth,
   svgWidth = 16,
   svgHeight = 16,
+  svgDiscolored = false,
 }: ActionButtonProps) => {
   return (
     <button
@@ -36,6 +40,7 @@ const ActionButton = ({
           [styles.actionButton_secondary]: type === "secondary",
           [styles.actionButton_outline]: type === "outline",
           [styles.actionButton_beige]: type === "beige",
+          [styles.actionButton_gray]: type === "gray",
           [styles.actionButton_disabled]: type === "disabled",
           [styles.actionButton_whatsap]: type === "whatsapp",
           [styles.actionButton_telegram]: type === "telegram"
@@ -57,7 +62,9 @@ const ActionButton = ({
           alt={svgAlt}
           width={svgWidth}
           height={svgHeight}
-          className={styles.actionButton_svg}
+          className={clsx(styles.actionButton_svg, svgClassName, {
+            [styles.actionButton_svg_discolored]: svgDiscolored,
+          })}
         />
       )}
     </button>

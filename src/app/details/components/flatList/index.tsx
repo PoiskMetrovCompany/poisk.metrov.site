@@ -7,10 +7,12 @@ import LayoutList from "./layoutList"
 const FlatList = () => {
   return (
     <div className={styles.flatList}>
-      <div className={styles.flatList__header}>
+      <div className={styles.flatList__top}>
         <Heading2>Квартиры и цены</Heading2>
+
+        <Filter />
       </div>
-      <Filter />
+
       <LayoutList />
     </div>
   )

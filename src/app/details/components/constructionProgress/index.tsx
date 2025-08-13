@@ -45,8 +45,8 @@ const ConstructionProgress = () => {
       <div className={styles.constructionProgress__content}>
         <Swiper
           modules={[Navigation]}
-          spaceBetween={20}
-          slidesPerView={3}
+          slidesPerView={2}
+          spaceBetween={12}
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
@@ -54,11 +54,19 @@ const ConstructionProgress = () => {
           breakpoints={{
             768: {
               slidesPerView: 2,
-              spaceBetween: 15,
+              spaceBetween: 24,
             },
             1024: {
               slidesPerView: 3,
-              spaceBetween: 20,
+              spaceBetween: 24,
+            },
+            1440: {
+              slidesPerView: 3,
+              spaceBetween: 32,
+            },
+            1920: {
+              slidesPerView: 3,
+              spaceBetween: 40,
             },
           }}
           className={styles.swiper}

@@ -6,7 +6,7 @@ import NotFound from "@/components/notFound"
 
 const LayoutList = () => {
   const [openId, setOpenId] = useState<string[]>([])
-  const [isEmpty, setIsEmpty] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(false)
 
   if (isEmpty) {
     return (

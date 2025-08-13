@@ -1,4 +1,7 @@
+@use "@/utils/mixins" as mixins;
+
 .details {
   width: 100%;
-  padding: 0 120px;
+
+  @include mixins.adaptive-padding;
 }

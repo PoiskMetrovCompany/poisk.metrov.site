@@ -10,6 +10,7 @@ type IconButtonProps = {
   iconClassName?: string
   size?: "sm" | "md" | "lg" | "tiny"
   type?: "primary" | "secondary"
+  alt?: string
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -19,6 +20,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   iconClassName,
   size = "md",
   type = "primary",
+  alt,
 }) => {
   return (
     <button
@@ -40,7 +42,7 @@ const IconButton: React.FC<IconButtonProps> = ({
       >
         <Image
           src={iconLink}
-          alt="icon"
+          alt={alt || "icon"}
           fill
           className={styles.iconButton__iconImage}
         />

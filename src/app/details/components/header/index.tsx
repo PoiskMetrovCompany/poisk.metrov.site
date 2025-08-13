@@ -7,11 +7,11 @@ import IconImage from "@/components/ui/IconImage"
 const DetailsHeader = () => {
   return (
     <div className={styles.header}>
-      <div className={styles.header__title}>
-        <Heading1>ЖК Калининский квартал</Heading1>
-        {/* <Heading1>31.4 м², этаж 4</Heading1> */}
-      </div>
       <div className={styles.header__place}>
+        <div className={styles.header__place__title}>
+          <Heading1>ЖК Калининский квартал</Heading1>
+        </div>
+
         <div className={styles.header__place__text}>
           <h4 className={styles.header__place__text__title}>
             Микрорайон на набережной Оби
@@ -35,10 +35,10 @@ const DetailsHeader = () => {
             </div>
           </div>
         </div>
-        <div className={styles.header__place__buttons}>
-          <IconButton iconLink={"/images/icons/heart.svg"} />
-          <IconButton iconLink={"/images/icons/share.svg"} />
-        </div>
+      </div>
+      <div className={styles.header__buttons}>
+        <IconButton iconLink={"/images/icons/heart.svg"} />
+        <IconButton iconLink={"/images/icons/share.svg"} />
       </div>
     </div>
   )
