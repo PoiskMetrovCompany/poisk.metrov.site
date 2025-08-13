@@ -18,7 +18,8 @@ export default function Home() {
         <Mortage />
         <Compilation />
         <Work />
-        {/* <Partners />
+        <Partners />
+        {/* 
         <Rating />
         <Download />
         <Selection /> */}
