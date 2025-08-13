@@ -1,12 +1,14 @@
 "use client"
 
 import React, { useState } from "react"
+import clsx from "clsx"
 import { IFavouriteView } from "@/types/Favourites"
 import styles from "./favouritesList.module.scss"
 import NotFound from "@/components/notFound"
 import ListFilter from "../listFilter"
 import { IProperty } from "@/types/PropertyCard"
-import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard"
+import PropertyCard from "@/components/propertyCard"
+import FlatLayoutCard from "@/components/flatLayoutCard"
 
 interface IFavouritesListProps {
   selectedView: IFavouriteView
@@ -124,10 +126,28 @@ const FavoutiresList = ({ selectedView }: IFavouritesListProps) => {
   return (
     <div className={styles.favouritesList}>
       <ListFilter />
-      <div className={styles.favouritesList__list}>
-        {cards.map((card) => (
-          <PropertyCard key={card.id} property={card} image={card.image} />
-        ))}
+      <div
+        className={clsx(styles.favouritesList__list, {
+          [styles.favouritesList__list_complexes]: selectedView === "complexes",
+        })}
+      >
+        {selectedView === "layouts" &&
+          cards.map((card) => (
+            <PropertyCard
+              className={styles.favouritesList__list__card}
+              key={card.id}
+              property={card}
+              imageClassName={styles.favouritesList__list__image}
+              subtitleClassName={styles.favouritesList__list__card__subtitle}
+            />
+          ))}
+        {selectedView === "complexes" &&
+          [...Array(10)].map((_, index) => (
+            <FlatLayoutCard
+              listClassName={styles.favouritesList__list__flatList}
+              key={index}
+            />
+          ))}
       </div>
     </div>
   )

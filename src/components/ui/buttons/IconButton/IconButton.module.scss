@@ -164,4 +164,17 @@
     border: none;
     background-color: var(--color-beige);
   }
+
+  &_orange {
+    border: 1.5px solid var(--color-orange);
+    background-color: var(--color-orange);
+
+    &:hover {
+      background-color: var(--color-orange-hover);
+
+      .iconButton__icon {
+        filter: none;
+      }
+    }
+  }
 }
