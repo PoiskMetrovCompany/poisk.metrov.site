@@ -1,15 +1,15 @@
-"use client";
-import React, { FC } from "react";
-import styles from "../header.module.scss";
-import Image from "next/image";
-import clsx from "clsx";
+"use client"
+import React, { FC } from "react"
+import styles from "../header.module.scss"
+import Image from "next/image"
+import clsx from "clsx"
 
 interface IUserActionsProps {
-  favoritesCount?: number;
-  isLoggedIn?: boolean;
-  onFavoritesClick?: () => void;
-  onLoginClick?: () => void;
-  onMenuClick?: () => void;
+  favoritesCount?: number
+  isLoggedIn?: boolean
+  onFavoritesClick?: () => void
+  onLoginClick?: () => void
+  onMenuClick?: () => void
 }
 
 const UserActions: FC<IUserActionsProps> = ({
@@ -17,25 +17,25 @@ const UserActions: FC<IUserActionsProps> = ({
   isLoggedIn = false,
   onFavoritesClick,
   onLoginClick,
-  onMenuClick
+  onMenuClick,
 }) => {
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
-      onFavoritesClick();
+      onFavoritesClick()
     }
-  };
+  }
 
   const handleLoginClick = (): void => {
     if (onLoginClick) {
-      onLoginClick();
+      onLoginClick()
     }
-  };
+  }
 
   const handleMenuClick = (): void => {
     if (onMenuClick) {
-      onMenuClick();
+      onMenuClick()
     }
-  };
+  }
 
   return (
     <div className={styles.user_actions}>
@@ -56,7 +56,7 @@ const UserActions: FC<IUserActionsProps> = ({
         )}
         <span className={styles.user_actions__label}>Избранное</span>
       </button>
-      
+
       <button
         className={styles.user_actions__login}
         type="button"
@@ -73,7 +73,7 @@ const UserActions: FC<IUserActionsProps> = ({
           {isLoggedIn ? "Профиль" : "Войти"}
         </span>
       </button>
-      
+
       <button
         className={styles.user_actions__showMenu}
         type="button"
@@ -88,7 +88,7 @@ const UserActions: FC<IUserActionsProps> = ({
         />
       </button>
     </div>
-  );
+  )
 }
 
-export default UserActions;
+export default UserActions

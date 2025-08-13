@@ -3,6 +3,7 @@ import styles from "./page.module.scss"
 import H1 from "@/components/ui/heading1"
 import P from "@/components/ui/Paragragraph"
 import CustomLink from "@/components/ui/Link"
+import GetYourDreamFlat from "@/components/getYourDreamFlat"
 
 const AgreementPage = () => {
   return (
@@ -38,6 +39,7 @@ const AgreementPage = () => {
           номер телефона
         </P>
       </div>
+
     </div>
   )
 }
