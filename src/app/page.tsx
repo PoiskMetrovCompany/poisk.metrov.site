@@ -19,8 +19,8 @@ export default function Home() {
         <Compilation />
         <Work />
         <Partners />
-        {/* 
         <Rating />
+        {/* 
         <Download />
         <Selection /> */}
       </div>
