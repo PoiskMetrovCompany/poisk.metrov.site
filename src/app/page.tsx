@@ -21,9 +21,7 @@ export default function Home() {
         <Partners />
         <Rating />
         <Download />
-        {/* 
-        
-        <Selection /> */}
+        <Selection />
       </div>
     </div>
   )
