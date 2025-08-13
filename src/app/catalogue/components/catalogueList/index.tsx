@@ -9,6 +9,8 @@ import clsx from "clsx"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
+import GetYourDreamFlat from "@/components/getYourDreamFlat"
+import GetCatalogue from "@/components/getCatalogue" // Импортируем новый компонент
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
 
@@ -110,7 +112,7 @@ const cards: IProperty[] = [
 type SortType = "cards" | "list"
 
 const CatalogueList = () => {
-  const [isEmpty, setIsEmpty] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(false) // Изменено на false для демонстрации
 
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
@@ -123,6 +125,44 @@ const CatalogueList = () => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
 
+  const renderCardsWithDreamFlat = (): React.ReactNode[] => {
+    const result: React.ReactNode[] = []
+    
+    cards.forEach((card, index) => {
+      // Добавляем карточку недвижимости
+      if (selectedSorting === "cards") {
+        result.push(<PropertyCard key={card.id} property={card} />)
+      } else {
+        result.push(<PropertyCardList key={card.id} property={card} />)
+      }
+      
+      // Добавляем GetYourDreamFlat после второй карточки (индекс 1)
+      if (index === 1) {
+        result.push(
+          <div 
+            key={`dream-flat-${index}`} 
+            className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+          >
+            <GetYourDreamFlat />
+          </div>
+        )
+      }
+    })
+    
+    // Добавляем GetCatalogue после всех карточек
+    result.push(
+      <div 
+        key="get-catalogue" 
+        className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+      >
+        <GetCatalogue />
+      </div>
+    )
+    
+    return result
+  }
+
+  // Если нет результатов поиска, показываем NotFound
   if (isEmpty) {
     return (
       <NotFound
@@ -187,13 +227,7 @@ const CatalogueList = () => {
           selectedSorting === "list" && styles.catalogue__cards_list
         )}
       >
-        {cards.map((card) =>
-          selectedSorting === "cards" ? (
-            <PropertyCard key={card.id} property={card} />
-          ) : (
-            <PropertyCardList key={card.id} property={card} />
-          )
-        )}
+        {renderCardsWithDreamFlat()}
       </div>
     </div>
   )

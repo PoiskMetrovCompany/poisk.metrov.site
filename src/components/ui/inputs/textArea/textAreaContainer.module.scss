@@ -1,4 +1,4 @@
-.inputContainer {
+.textAreaContainer {
   position: relative;
   display: inline-block;
   width: 100%;
@@ -9,14 +9,16 @@
     text-align: left;
   }
 
-  &__input {
+  &__textarea {
     box-sizing: border-box;
     width: 100%;
-    height: 4rem;
+    height: 8rem; 
+    padding-top: 0.875rem;
     padding-left: 0.875rem;
     border: 1.5px solid rgb(210 210 210 / 100%);
     border-radius: 1rem;
 
+    font-family: inherit;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -53,7 +55,7 @@
   &__wrapper {
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: flex-start; // Изменено с center на flex-start для textarea
   }
 
   &__prefix {
@@ -61,6 +63,7 @@
 
     position: absolute;
     z-index: 1;
+    top: 0.875rem; // Добавлен top для правильного позиционирования с textarea
     left: 0.875rem;
 
     font-size: 1rem;
@@ -82,8 +85,8 @@
 
     background-color: rgb(255 255 255 / 100%);
 
-    &:has(+ .inputContainer__wrapper .inputContainer__input[readonly]),
-    &:has(+ .inputContainer__input[readonly]) {
+    &:has(+ .textAreaContainer__wrapper .textAreaContainer__textarea[readonly]),
+    &:has(+ .textAreaContainer__textarea[readonly]) {
       top: 0;
       font-size: 16px;
       font-weight: 600;
@@ -99,7 +102,7 @@
     }
   }
 
-  &__wrapper:has(.inputContainer__prefix) .inputContainer__input {
+  &__wrapper:has(.textAreaContainer__prefix) .textAreaContainer__textarea {
     padding-left: 3rem;
   }
 }

@@ -1,20 +1,20 @@
-"use client";
-import React, { FC, useState } from "react";
-import clsx from "clsx";
-import styles from "./contactForm.module.scss";
-import { FormRow } from "@/components/ui/forms/formRow/FormRow";
-import InputContainer from "@/components/ui/inputs/inputContainer";
-import ArrowButton from "@/components/ui/buttons/smallSubmitBtn";
-import CheckboxRow from "@/components/ui/checkbox/personalProcessing";
-import ActionButton from "@/components/ui/buttons/ActionButton";
-import { Form } from "radix-ui";
+"use client"
+import React, { FC, useState } from "react"
+import clsx from "clsx"
+import styles from "./contactForm.module.scss"
+import { FormRow } from "@/components/ui/forms/formRow/FormRow"
+import InputContainer from "@/components/ui/inputs/inputContainer"
+import ArrowButton from "@/components/ui/buttons/smallSubmitBtn"
+import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import { Form } from "radix-ui"
 
 interface ContactFormData {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  phone: string;
-  isAgreed: boolean;
+  lastName: string
+  firstName: string
+  middleName: string
+  phone: string
+  isAgreed: boolean
 }
 
 const ContactForm: FC = () => {
@@ -24,24 +24,24 @@ const ContactForm: FC = () => {
     middleName: "",
     phone: "",
     isAgreed: false,
-  });
+  })
 
   const handleInputChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleCheckboxChange = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, isAgreed: checked }));
-  };
+    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return;
+    if (!formData.isAgreed) return
 
-    console.log("Form submitted:", formData);
-  };
+    console.log("Form submitted:", formData)
+  }
 
   return (
-    <form className={styles.contactForm} >
+    <form className={styles.contactForm}>
       <FormRow className={clsx(styles.smallWrap)}>
         <InputContainer
           label="Ваша фамилия"
@@ -60,7 +60,7 @@ const ContactForm: FC = () => {
           className={styles.w_50}
         />
       </FormRow>
-      
+
       <FormRow className={clsx(styles.smallWrap)}>
         <InputContainer
           label="Ваше отчество"
@@ -70,38 +70,38 @@ const ContactForm: FC = () => {
           name="middleName"
           className={styles.w_50}
         />
-          <InputContainer
-            label="Телефон"
-            placeholder=""
-            value={formData.phone}
-            onChange={(value) => handleInputChange("phone", value)}
-            name="phone"
-            prefix="+7"
-            className={styles.w_50}
-          />
-          <ArrowButton
-            onClick={handleSubmit}
-            size="medium"
-            absolute = {true}
-            className={clsx(
-                !formData.isAgreed ? styles.contactForm__submitButton_disabled : "",
-                styles.position
-              )}
-          />
+        <InputContainer
+          label="Телефон"
+          placeholder="+7"
+          value={formData.phone}
+          onChange={(value) => handleInputChange("phone", value)}
+          name="phone"
+          type="phone"
+          className={styles.w_50}
+        />
+        <ArrowButton
+          onClick={handleSubmit}
+          size="medium"
+          absolute={true}
+          className={clsx(
+            !formData.isAgreed ? styles.contactForm__submitButton_disabled : "",
+            styles.position
+          )}
+        />
       </FormRow>
-              
+
       <FormRow>
-          <ActionButton
-            onClick={handleSubmit}
-            size="large"
-            type="primary"
-            svgWidth={28}
-            svgHeight={28}
-            className={clsx(styles.borderRadius, styles.hideOnDesktop)}
-            svgSrc="./svgFiles/nextArrow.svg"
-          >
-            Отправить
-          </ActionButton> 
+        <ActionButton
+          onClick={handleSubmit}
+          size="large"
+          type="primary"
+          svgWidth={28}
+          svgHeight={28}
+          className={clsx(styles.borderRadius, styles.hideOnDesktop)}
+          svgSrc="./svgFiles/nextArrow.svg"
+        >
+          Отправить
+        </ActionButton>
       </FormRow>
 
       <FormRow className={styles.mt_0} justifyContent="flex-start">
@@ -116,7 +116,7 @@ const ContactForm: FC = () => {
         />
       </FormRow>
     </form>
-  );
-};
+  )
+}
 
-export default ContactForm;
+export default ContactForm
