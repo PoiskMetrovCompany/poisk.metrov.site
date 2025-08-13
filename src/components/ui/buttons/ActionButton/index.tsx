@@ -6,8 +6,8 @@ interface ActionButtonProps {
   children: React.ReactNode
   className?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline" | "beige"
-  size?: "small" | "medium" | "large"
+  type?: "primary" | "secondary" | "outline" | "beige" | "outline-white"
+  size?: "small" | "medium" | "large" | "tiny"
   svgSrc?: string
   svgAlt?: string
   svgWidth?: number
@@ -34,6 +34,7 @@ const ActionButton = ({
           [styles.actionButton_secondary]: type === "secondary",
           [styles.actionButton_outline]: type === "outline",
           [styles.actionButton_beige]: type === "beige",
+          [styles.actionButton_outline_white]: type === "outline-white",
         },
         {
           [styles.actionButton_small]: size === "small",
@@ -46,8 +47,8 @@ const ActionButton = ({
     >
       {children}
       {svgSrc && (
-        <Image 
-          src={svgSrc} 
+        <Image
+          src={svgSrc}
           alt={svgAlt}
           width={svgWidth}
           height={svgHeight}

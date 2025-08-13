@@ -1,6 +1,15 @@
 .favouritesList {
+  display: flex;
   flex: 1;
-  background-color: white;
+  flex-direction: column;
+  gap: 40px;
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
 }
 
 .notFound {
