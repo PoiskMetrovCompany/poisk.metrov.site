@@ -2,6 +2,18 @@
   display: flex;
   gap: 16px;
   align-items: center;
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 12px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 12px;
+  }
+
+  @media screen and (width < 768px) {
+    display: none;
+  }
 }
 
 .pagination__container {
@@ -43,7 +55,7 @@
 
   &:disabled {
     cursor: not-allowed;
-    color: var(--color-border-gray);
+    color: var(--color-text-gray-light);
   }
 
   &:not(:disabled) {
@@ -57,6 +69,27 @@
 
   &:active:not(:disabled) {
     transform: translateY(1px);
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    width: 124px;
+    height: 32px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    width: 124px;
+    height: 32px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    width: 136px;
+    height: 40px;
+    padding: 12px;
+    font-size: 15px;
   }
 }
 
@@ -132,6 +165,24 @@
   &:active {
     transform: translateY(1px);
   }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    min-width: 46px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    min-width: 36px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    min-width: 36px;
+    height: 32px;
+    font-size: 13px;
+  }
 }
 
 .pagination__pages__link {
@@ -191,6 +242,24 @@
 
   &:active {
     transform: translateY(1px);
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    min-width: 46px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    min-width: 36px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    min-width: 36px;
+    height: 32px;
+    font-size: 13px;
   }
 }
 

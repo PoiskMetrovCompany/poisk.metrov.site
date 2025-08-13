@@ -1,0 +1,108 @@
+.textAreaContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  &.big {
+    flex-wrap: wrap;
+    width: auto;
+    text-align: left;
+  }
+
+  &__textarea {
+    box-sizing: border-box;
+    width: 100%;
+    height: 8rem; 
+    padding-top: 0.875rem;
+    padding-left: 0.875rem;
+    border: 1.5px solid rgb(210 210 210 / 100%);
+    border-radius: 1rem;
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      font-size: 18px;
+
+      @media (width <= 1440px) {
+        font-size: 16px;
+      }
+
+      @media (width <= 768px) {
+        font-size: 14px;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.big {
+      width: 100%;
+    }
+
+    &[readonly] {
+      padding-top: 1rem;
+      border: none;
+      background: rgb(249 249 247 / 100%);
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start; // Изменено с center на flex-start для textarea
+  }
+
+  &__prefix {
+    pointer-events: none;
+
+    position: absolute;
+    z-index: 1;
+    top: 0.875rem; // Добавлен top для правильного позиционирования с textarea
+    left: 0.875rem;
+
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+  }
+
+  &__label {
+    position: absolute;
+    z-index: 2;
+    top: -0.6875rem;
+    left: 0.5rem;
+
+    padding: 0 0.3125rem;
+
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    background-color: rgb(255 255 255 / 100%);
+
+    &:has(+ .textAreaContainer__wrapper .textAreaContainer__textarea[readonly]),
+    &:has(+ .textAreaContainer__textarea[readonly]) {
+      top: 0;
+      font-size: 16px;
+      font-weight: 600;
+      background: none;
+    }
+
+    @media (width <= 768px) {
+      font-size: 12px;
+    }
+
+    @media (width <= 570px) {
+      font-size: 11px;
+    }
+  }
+
+  &__wrapper:has(.textAreaContainer__prefix) .textAreaContainer__textarea {
+    padding-left: 3rem;
+  }
+}

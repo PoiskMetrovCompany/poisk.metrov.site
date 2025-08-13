@@ -1,0 +1,16 @@
+.mt_0 {
+  margin-top: 0;
+}
+
+.w_100 {
+  @media (width <= 570px) {
+    width: 100% !important; 
+    font-size: 13px;
+  }
+}
+
+.smallWrap {
+  @media (width <= 570px) {
+    flex-wrap: wrap;
+  }
+}

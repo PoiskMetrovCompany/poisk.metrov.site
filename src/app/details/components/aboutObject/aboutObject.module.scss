@@ -1,15 +1,17 @@
+@use "@/utils/mixins" as mixins;
+
 .aboutObject {
-  margin: 120px 0;
+  @include mixins.adaptive-vertical-margin;
 
   &__header {
-    margin-bottom: 40px;
+    @include mixins.adaptive-heading-margin;
   }
 
   &__content {
     display: flex;
     flex-wrap: wrap;
-    gap: 64px 32px;
-    justify-content: space-between;
+    gap: 64px 240px;
+    align-items: flex-start;
 
     &__item {
       display: flex;
@@ -22,6 +24,26 @@
       &__icon {
         width: 64px;
         height: 64px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          width: 56px;
+          height: 56px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          width: 48px;
+          height: 48px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (width < 768px) {
+          width: 40px;
+          height: 40px;
+        }
       }
 
       &__text {
@@ -34,15 +56,77 @@
           font-weight: 500;
           line-height: 130%;
           color: var(--color-text-black);
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 18px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 16px;
+          }
         }
 
         &_description {
+          margin: 0;
+
           font-size: 18px;
-          font-weight: 400;
+          font-weight: 300;
           line-height: 150%;
           color: var(--color-text-gray);
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
+        }
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          gap: 2px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 0;
         }
       }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 12px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 12px;
+        width: 296px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 8px;
+        width: 300px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 8px;
+        width: 100%;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 56px 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 56px 20px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 40px 32px;
+    }
+
+    @media screen and (width < 768px) {
+      flex-direction: column;
+      gap: 20px;
     }
   }
 }

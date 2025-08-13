@@ -1,0 +1,9 @@
+.mt_0{
+    margin-top: 0 !important;
+}
+.smallWrap{
+    @media (max-width: 570px) {
+        flex-wrap: wrap;
+    }
+}
+
