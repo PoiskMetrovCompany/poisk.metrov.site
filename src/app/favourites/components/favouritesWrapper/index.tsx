@@ -7,7 +7,7 @@ import FavouritesActions from "../favouritesActions"
 import { IFavouriteView } from "@/types/Favourites"
 
 const FavouritesWrapper = () => {
-  const [selectedView, setSelectedView] = useState<IFavouriteView>("list")
+  const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
   return (
     <div className={styles.favouritesWrapper}>
       <FavouritesActions
