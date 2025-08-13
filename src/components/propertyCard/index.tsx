@@ -10,16 +10,28 @@ import IconImage from "../ui/IconImage"
 
 interface IPropertyCardProps {
   property: IProperty
+  className?: string
+  imageClassName?: string
+  subtitleClassName?: string
 }
 
-const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
+const PropertyCard: FC<IPropertyCardProps> = ({
+  property,
+  className,
+  imageClassName,
+  subtitleClassName,
+}) => {
   const { title, price, subtitle, badge, metro, driveTime, specifications } =
     property
 
   return (
-    <article className={styles.property_card}>
+    <article className={clsx(styles.property_card, className)}>
       <div className={styles.property_card__image}>
-        <img src={property.image} alt={`Изображение ЖК ${title}`} />
+        <img
+          className={imageClassName}
+          src={property.image}
+          alt={`Изображение ЖК ${title}`}
+        />
         <div className={styles.property_card__badge}>
           <span>{badge.developer}</span>
           <span>{badge.period}</span>
@@ -43,7 +55,11 @@ const PropertyCard: FC<IPropertyCardProps> = ({ property }) => {
             styles.property_card__row_subtitle
           )}
         >
-          <div className={styles.property_card__subtitle}>{subtitle}</div>
+          <div
+            className={clsx(styles.property_card__subtitle, subtitleClassName)}
+          >
+            {subtitle}
+          </div>
           <div className={styles.property_card__location}>
             <span className={clsx(styles.property_card__location__item)}>
               <IconImage

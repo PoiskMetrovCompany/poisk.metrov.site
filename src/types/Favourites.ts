@@ -1,1 +1,1 @@
-export type IFavouriteView = "list" | "grid"
+export type IFavouriteView = "layouts" | "complexes"

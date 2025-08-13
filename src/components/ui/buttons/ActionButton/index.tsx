@@ -7,7 +7,16 @@ interface ActionButtonProps {
   className?: string
   svgClassName?: string
   onClick?: () => void
-  type?: "primary" | "secondary" | "outline" | "beige" | "gray" | "whatsapp" | "telegram" | "disabled"
+  type?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "beige"
+    | "outline-white"
+    | "gray"
+    | "whatsapp"
+    | "telegram"
+    | "disabled"
   size?: "small" | "medium" | "large" | "tiny"
   svgSrc?: string
   svgAlt?: string
@@ -40,15 +49,17 @@ const ActionButton = ({
           [styles.actionButton_secondary]: type === "secondary",
           [styles.actionButton_outline]: type === "outline",
           [styles.actionButton_beige]: type === "beige",
+          [styles.actionButton_outline_white]: type === "outline-white",
           [styles.actionButton_gray]: type === "gray",
           [styles.actionButton_disabled]: type === "disabled",
           [styles.actionButton_whatsap]: type === "whatsapp",
-          [styles.actionButton_telegram]: type === "telegram"
+          [styles.actionButton_telegram]: type === "telegram",
         },
         {
           [styles.actionButton_small]: size === "small",
           [styles.actionButton_medium]: size === "medium",
           [styles.actionButton_large]: size === "large",
+          [styles.actionButton_tiny]: size === "tiny",
         },
         className
       )}
