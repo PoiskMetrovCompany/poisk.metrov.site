@@ -10,10 +10,50 @@
   }
 
   @media screen and (width >= 768px) and (width < 1024px) {
-    padding: 0 20px;
+    padding: 0 40px;
   }
 
   @media screen and (width < 768px) {
     padding: 0 16px;
+  }
+}
+
+@mixin adaptive-vertical-margin {
+  margin: 120px 0;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    margin: 100px 0;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    margin: 80px 0;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    margin: 64px 0;
+  }
+
+  @media screen and (width < 768px) {
+    margin: 64px 0;
+  }
+}
+
+@mixin adaptive-heading-margin {
+  margin-bottom: 40px;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    margin-bottom: 32px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    margin-bottom: 24px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    margin-bottom: 24px;
+  }
+
+  @media screen and (width < 768px) {
+    margin-bottom: 16px;
   }
 }

@@ -16,9 +16,10 @@ export const MountedMapsContext = createContext<MountedMapsContextValue>({
   reactifyApi: null,
 })
 
+const yandexApiUrl = `https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAP_KEY}&lang=ru_RU`
+
 export const MapProvider: React.FC<{
   children?: React.ReactNode
-  apiUrl: string
 }> = (props) => {
   const [reactifyApi, setReactifyApi] = useState<ReactifyApi | null>(null)
 
@@ -27,7 +28,7 @@ export const MapProvider: React.FC<{
   return (
     <MountedMapsContext.Provider value={contextValue}>
       <Script
-        src={props.apiUrl}
+        src={yandexApiUrl}
         onLoad={async () => {
           const [ymaps3React] = await Promise.all([
             ymaps3.import("@yandex/ymaps3-reactify"),

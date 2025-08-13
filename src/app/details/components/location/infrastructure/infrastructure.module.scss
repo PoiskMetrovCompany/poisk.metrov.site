@@ -1,0 +1,235 @@
+.infrastructure {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: space-between;
+
+  width: 388px;
+  min-height: 620px;
+  padding: 32px;
+  border-radius: 32px;
+
+  background-color: var(--color-white);
+
+  &__buttonMobile {
+    display: none;
+    height: 48px;
+    font-size: 14px;
+
+    &__icon {
+      margin-right: 6px;
+      margin-left: 0;
+    }
+
+    @media screen and (width < 768px) {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__close {
+      display: none;
+
+      @media screen and (width < 768px) {
+        display: flex;
+      }
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__item {
+      cursor: pointer;
+
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      border: none;
+
+      background-color: transparent;
+
+      transition: all 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &__icon {
+        width: 48px;
+        height: 48px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          width: 32px;
+          height: 32px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          width: 32px;
+          height: 32px;
+        }
+
+        @media screen and (width < 768px) {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      &__title {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        color: var(--color-text-gray);
+
+        transition: color 0.2s ease;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          font-size: 16px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 13px;
+        }
+      }
+
+      &__active {
+        .location__content__info__list__item__title {
+          font-weight: 600;
+          color: var(--color-primary);
+        }
+
+        .location__content__info__list__item__icon {
+          filter: brightness(0) saturate(100%) invert(27%) sepia(51%)
+            saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+        }
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        width: 205px;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 16px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      flex-flow: row wrap;
+      gap: 16px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 16px;
+    }
+  }
+
+  &__button {
+    @media screen and (width < 1440px) {
+      height: 48px;
+      font-size: 14px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    width: 296px;
+    min-height: 610px;
+    padding: 24px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    width: 299px;
+    min-height: 487px;
+    padding: 20px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    width: 100%;
+    min-height: 295px;
+    padding: 20px;
+  }
+
+  @media screen and (width < 768px) {
+    width: 100%;
+    min-height: 492px;
+    padding: 16px;
+  }
+}
+
+.Overlay {
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+
+  background-color: var(--color-black);
+
+  animation: overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.Title {
+  display: none;
+}
+
+.Content {
+  position: fixed;
+  z-index: 2;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 328px;
+  height: 492px;
+
+  animation: content-show 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@keyframes overlay-show {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes content-show {
+  from {
+    transform: translate(-50%, -48%) scale(0.96);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}

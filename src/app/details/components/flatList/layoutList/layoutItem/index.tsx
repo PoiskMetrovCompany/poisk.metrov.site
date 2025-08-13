@@ -1,47 +1,74 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Accordion } from "radix-ui"
 import Image from "next/image"
 import clsx from "clsx"
 import styles from "./layoutItem.module.scss"
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import Pagination from "@/components/pagination"
+import IconImage from "@/components/ui/IconImage"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface ILayoutItemProps {
   isOpen: boolean
   name: string
 }
 
+const itemsPerPageByResolution = {
+  isDesktop: 8,
+  isLaptop: 6,
+  isTablet: 6,
+  isMobile: 4,
+  isSmallMobile: 2,
+}
+
 const LayoutItem = ({ isOpen, name }: ILayoutItemProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(30)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const { isDesktop, isLaptop, isTablet, isSmallMobile } = useScreenSize()
+
+  useEffect(() => {
+    const getItemsPerPage = () => {
+      if (isDesktop) return itemsPerPageByResolution.isDesktop
+      if (isLaptop) return itemsPerPageByResolution.isLaptop
+      if (isTablet) return itemsPerPageByResolution.isTablet
+      if (isSmallMobile) return itemsPerPageByResolution.isSmallMobile
+      return itemsPerPageByResolution.isMobile
+    }
+
+    setItemsPerPage(getItemsPerPage())
+  }, [isDesktop, isLaptop, isTablet, isSmallMobile])
 
   return (
     <Accordion.Item className={styles.Item} value={name}>
       <AccordionTrigger className={styles.layoutList__header}>
-        <span>Студии</span>
+        <span className={styles.layoutList__header__title}>
+          Студии{" "}
+          <b className={styles.layoutList__header__title__price}>
+            от 4 359 990 ₽
+          </b>
+        </span>
         <span>130 квартир</span>
         <span>от 24.9 м2</span>
         <span>
           от 4 359 990 ₽
-          <Image
+          <IconImage
             className={clsx(styles.arrow, isOpen && styles.arrow_open)}
-            src="/images/icons/arrow-top-price.svg"
+            iconLink="/images/icons/arrow-top-price.svg"
             alt="arrow-top"
-            width={24}
-            height={24}
           />
         </span>
       </AccordionTrigger>
       <AccordionContent className={styles.layoutList__wrapper}>
         <div className={styles.layoutList__content}>
-          <FlatLayoutCard />
-          <FlatLayoutCard />
-          <FlatLayoutCard />
-          <FlatLayoutCard />
+          {Array.from({ length: itemsPerPage }).map((_, index) => (
+            <FlatLayoutCard key={index} />
+          ))}
         </div>
         <Pagination
           totalPages={totalPages}
+          itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
