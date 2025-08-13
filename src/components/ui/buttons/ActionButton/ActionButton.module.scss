@@ -60,46 +60,62 @@
     }
   }
 
-  
   &_whatsap {
-    background: var(--color-whatsapp);
     min-width: 202px;
+    background: var(--color-whatsapp);
 
-    
-    @media (max-width: 1440px) {
+    @media (width <= 1440px) {
       font-size: 15px !important;
+
       img {
         width: 24px;
         height: 24px;
       }
     }
-    @media (max-width: 950px) {
+
+    @media (width <= 950px) {
       padding: 0;
     }
   }
 
-  &_disabled{
-    background: var(--color-gray);
-    color: var(--color-text-gray);
+  &_disabled {
     pointer-events: none;
+    color: var(--color-text-gray);
+    background: var(--color-gray);
   }
 
   &_telegram {
-    background: var(--color-telegram);
     min-width: 202px;
-    
-    @media (max-width: 1440px) {
+    background: var(--color-telegram);
+
+    @media (width <= 1440px) {
       font-size: 15px !important;
+
       img {
         width: 24px;
         height: 24px;
       }
     }
-    @media (max-width: 950px) {
+
+    @media (width <= 950px) {
       padding: 0;
     }
   }
 
+  &_outline_white {
+    border: 1.5px solid var(--color-gray-white);
+    border-radius: 16px;
+
+    color: var(--color-black);
+
+    background-color: white;
+
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: var(--color-border-gray-hover);
+    }
+  }
 
   &_beige {
     color: var(--color-black);

@@ -59,6 +59,7 @@ const ActionButton = ({
           [styles.actionButton_small]: size === "small",
           [styles.actionButton_medium]: size === "medium",
           [styles.actionButton_large]: size === "large",
+          [styles.actionButton_tiny]: size === "tiny",
         },
         className
       )}
