@@ -8,6 +8,7 @@ import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
 import Image from "next/image"
 
+import ActionButton from "@/components/ui/buttons/ActionButton"
 import RangeSlider from "@/components/ui/rangeSlider"
 import CatalogueFilters from "../catalogueFiltersNavbar"
 import Filters from "../filters"
@@ -136,6 +137,10 @@ const CatalogueList = () => {
     setShowFilters(false)
   }
 
+  const applyFilters = () => {
+    console.log("Фильтры применены")
+  }
+
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
@@ -179,7 +184,6 @@ const CatalogueList = () => {
       </div>
     )
 
-    // Добавляем компонент Selection после GetCatalogue
     result.push(
       <div
         key="selection"
@@ -231,17 +235,45 @@ const CatalogueList = () => {
           сохранить поиск
         </div>
       </div>
-      
+
       <div className={styles.catalogue__filtersNavbar}>
-        <CatalogueFilters onShowFilters={handleShowFilters} />
+        <CatalogueFilters 
+          onShowFilters={handleShowFilters}
+          onApplyFilters={applyFilters}
+        />
+        <div className={styles.catalogue__filtersNavbar__buttonsMobile}>
+          <ActionButton
+            type="primary"
+            onClick={applyFilters}
+            className={styles.catalogue__filtersNavbar__buttonsMobile__button}
+            size="medium"
+          >
+            Показать <span>12166 квартир</span>
+          </ActionButton>
+          <ActionButton
+            type="secondary"
+            onClick={handleShowFilters}
+            className={
+              styles.catalogue__filtersNavbar__buttonsMobile__button__filter
+            }
+            size="medium"
+            svgSrc="/images/icons/filters-orange.svg"
+            svgAlt="Показать фильтры"
+            svgWidth={26}
+            svgHeight={26}
+            svgClassName={styles.filterSvg}
+          >
+            <span className={styles.textFiltersMobile}>Все фильтры</span>
+          </ActionButton>
+        </div>
       </div>
-      
+
       {showFilters && (
         <div className={styles.catalogue__filters}>
           <Filters onClose={handleCloseFilters} />
         </div>
       )}
-      
+
       <div className={styles.catalogue__header}>
         <Heading3>Найдено 102 ЖК из 182</Heading3>
         {isLaptop && (

@@ -1,5 +1,5 @@
 .w_50 {
-    width: 50% !important;
+  width: 50% !important;
 }
 
 .hideOnDesktop {
@@ -8,49 +8,49 @@
   }
 }
 
-
-.contactForm__phoneGroup{
-    width: 50%;
-}
-.mt_0{
-    margin-top: 0 !important;
-}
-.contactForm{
-    width: 50%;
-}
-.position{
-    top: 2px;
-    right: -70px;
-}
-.borderRadius{
-    border-radius: 16px !important;
+.contactForm__phoneGroup {
+  width: 50%;
 }
 
-@media (max-width: 1024px) {
-    .borderRadius{
-        display: none;
-    }
-    .contactForm{
-        width: 60%;
-    }
+.mt_0 {
+  margin-top: 0 !important;
 }
 
-@media (max-width: 768px) {
-    .w_50{
-        width: 100% !important;
-    }
-    .smallWrap{
-        flex-wrap: wrap;
-    }
+.contactForm {
+  width: 50%;
 }
 
-@media (max-width: 680px) {
-    .contactForm{
-        width: 100%;
-    }
+.position {
+  top: 2px;
+  right: -70px;
 }
 
+.borderRadius {
+  border-radius: 16px !important;
+}
 
-    
+@media (width <= 1024px) {
+  .borderRadius {
+    display: none;
+  }
 
+  .contactForm {
+    width: 60%;
+  }
+}
 
+@media (width <= 768px) {
+  .w_50 {
+    width: 100% !important;
+  }
+
+  .smallWrap {
+    flex-wrap: wrap;
+  }
+}
+
+@media (width <= 680px) {
+  .contactForm {
+    width: 100%;
+  }
+}
