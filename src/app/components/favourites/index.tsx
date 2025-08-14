@@ -108,45 +108,76 @@ const cards: IProperty[] = [
 const Favourites = () => {
   return (
     <div className={styles.favourites}>
-      <Heading2 className={styles.favourites__header}>
-        Лучшие предложения
-      </Heading2>
+      <div className={styles.favourites__header}>
+        <Heading2 className={styles.favourites__header__title}>
+          Лучшие предложения
+        </Heading2>
+        <div className={styles.favourites__header__button}>
+          <ActionButton className={styles.favourites__header__button__action}>
+            Перейти в каталог
+          </ActionButton>
+        </div>
+      </div>
       <div className={styles.favourites__content}>
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={20}
-          slidesPerView={2}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
-          className={styles.swiper}
-        >
-          {cards.map((card) => (
-            <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              <PropertyCard property={card} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className={styles.swiperContainer}>
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={40}
+            slidesPerView={2}
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            className={styles.swiper}
+            breakpoints={{
+              1024: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+              },
+              1440: {
+                slidesPerView: 2,
+                spaceBetween: 32,
+              },
+              1920: {
+                slidesPerView: 2,
+                spaceBetween: 40,
+              },
+            }}
+          >
+            {cards.map((card) => (
+              <SwiperSlide key={card.id} className={styles.swiper__slide}>
+                <PropertyCard property={card} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
-        <div
-          className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
-        >
-          <div className={styles.navigationButton__icon}>
-            <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+          <div
+            className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+            </div>
+          </div>
+          <div
+            className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-right"
+                fill
+                className={styles.navigationButton__icon__icon_next}
+              />
+            </div>
           </div>
         </div>
-        <div
-          className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
-        >
-          <div className={styles.navigationButton__icon}>
-            <Image
-              src="/images/icons/arrow-slider.svg"
-              alt="arrow-right"
-              fill
-              className={styles.navigationButton__icon__icon_next}
-            />
-          </div>
+
+        <div className={styles.mobileCards}>
+          {cards.slice(0, 2).map((card) => (
+            <div key={card.id} className={styles.mobileCards__item}>
+              <PropertyCard property={card} />
+            </div>
+          ))}
         </div>
       </div>
 

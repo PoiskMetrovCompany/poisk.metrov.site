@@ -3,6 +3,33 @@
 
   &__header {
     margin-bottom: 40px;
+
+    &__h2 {
+      @media (width <= 1440px) {
+        font-size: 22px !important;
+      }
+
+      @media (width <= 1024px) {
+        font-size: 20px !important;
+      }
+    }
+
+    &__navigation {
+      display: none;
+
+      @media (width <= 768px) {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+      }
+    }
+
+    @media (width <= 768px) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
   }
 
   &__content {
@@ -17,7 +44,7 @@
 
   &__slide {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
   }
 }
@@ -61,12 +88,53 @@
   }
 }
 
+.navigationButtonMobile {
+  @media (width <= 768px) {
+    position: static !important;
+    transform: none !important;
+
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+
+    .navigationButton__icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  @media (width > 768px) {
+    display: none !important;
+  }
+}
+
+
+.navigationButtonDesktop {
+  @media (width <= 768px) {
+    display: none !important;
+  }
+}
+
 .navigationButtonPrev {
   left: 0;
   transform: translateX(-50%) translateY(-22.5px);
+
+  &.navigationButtonMobile {
+    @media (width <= 768px) {
+      left: auto;
+      transform: none;
+    }
+  }
 }
 
 .navigationButtonNext {
   right: 0;
   transform: translateX(50%) translateY(-22.5px);
+
+  &.navigationButtonMobile {
+    @media (width <= 768px) {
+      right: auto;
+      transform: none;
+    }
+  }
 }

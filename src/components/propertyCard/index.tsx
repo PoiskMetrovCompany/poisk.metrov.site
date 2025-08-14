@@ -110,7 +110,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
 
         <div className={styles.property_card__actions}>
           <ActionButton
-            size="tiny"
+            size="small"
             className={styles.property_card__actions__button}
           >
             Каталог
@@ -118,7 +118,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           <ActionButton
             className={styles.property_card__actions__button}
             type="outline"
-            size="tiny"
+            size="small"
           >
             Подробнее
           </ActionButton>
