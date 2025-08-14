@@ -116,7 +116,6 @@
     }
   }
 
-
   &_beige {
     color: var(--color-black);
     background-color: var(--color-beige);
@@ -191,6 +190,16 @@
       height: 40px;
       padding: 0;
       font-size: 12px;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--color-text-gray);
+    background: var(--color-gray);
+
+    &:hover {
+      background-color: var(--color-gray);
     }
   }
 }

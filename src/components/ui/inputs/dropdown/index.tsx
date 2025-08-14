@@ -7,16 +7,29 @@ import Image from "next/image"
 import clsx from "clsx"
 
 interface DropdownProps {
+  className?: string
+  label?: string
   items: { label: string; value: string }[]
   placeholder: string
   value: string
   onChange: (value: string) => void
 }
 
-const Dropdown = ({ items, placeholder, value, onChange }: DropdownProps) => {
+const Dropdown = ({
+  className,
+  items,
+  placeholder,
+  value,
+  onChange,
+  label,
+}: DropdownProps) => {
   return (
     <Select.Root value={value} onValueChange={onChange}>
-      <Select.Trigger className={styles.dropdown} aria-label="Food">
+      <Select.Trigger
+        className={clsx(styles.dropdown, className)}
+        aria-label="Food"
+      >
+        {label && <legend className={styles.label}>{label}</legend>}
         <Select.Value placeholder={placeholder} className={styles.value} />
         <Select.Icon className={styles.Icon}>
           <Image
@@ -83,12 +96,12 @@ const SelectItem = React.forwardRef(
       >
         <Select.ItemText>{children}</Select.ItemText>
         <Select.ItemIndicator className={styles.ItemIndicator}>
-          <Image
+          {/* <Image
             src="/images/icons/check.svg"
             alt="check"
             width={12}
             height={12}
-          />
+          /> */}
         </Select.ItemIndicator>
       </Select.Item>
     )
