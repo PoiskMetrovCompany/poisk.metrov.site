@@ -99,6 +99,7 @@ const ContactForm: FC = () => {
           svgHeight={28}
           className={clsx(styles.borderRadius, styles.hideOnDesktop)}
           svgSrc="./svgFiles/nextArrow.svg"
+          svgDiscolored={true}
         >
           Отправить
         </ActionButton>

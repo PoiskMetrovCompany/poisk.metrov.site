@@ -405,6 +405,10 @@
 
     &__button {
       flex: 1;
+
+      @media (width <= 470px) {
+        flex: 0.5;
+      }
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {

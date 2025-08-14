@@ -24,6 +24,7 @@ interface ActionButtonProps {
   svgWidth?: number
   svgHeight?: number
   svgDiscolored?: boolean
+  disabled?: boolean
 }
 
 const ActionButton = ({
@@ -39,6 +40,7 @@ const ActionButton = ({
   svgWidth = 16,
   svgHeight = 16,
   svgDiscolored = false,
+  disabled = false,
 }: ActionButtonProps) => {
   return (
     <button
@@ -65,6 +67,7 @@ const ActionButton = ({
       )}
       onClick={onClick}
       style={buttonWidth ? { width: `${buttonWidth}px` } : undefined}
+      disabled={disabled}
     >
       {children}
       {svgSrc && (

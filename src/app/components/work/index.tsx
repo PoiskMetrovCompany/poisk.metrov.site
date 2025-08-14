@@ -31,7 +31,31 @@ const workContent = [
 const Work = () => {
   return (
     <div className={styles.work}>
-      <Heading2>Как мы работаем?</Heading2>
+      <div className={styles.work__header}>
+        <Heading2 className={styles.work__header__h2}>Как мы работаем?</Heading2>
+        <div className={styles.work__header__navigation}>
+          <div
+            className={`swiper-button-prev-work ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonMobile}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+            </div>
+          </div>
+          <div
+            className={`swiper-button-next-work ${styles.navigationButton} ${styles.navigationButtonNext} ${styles.navigationButtonMobile}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-right"
+                fill
+                className={styles.navigationButton__icon__icon_next}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.work__content}>
         <Swiper
           modules={[Navigation]}
@@ -65,16 +89,15 @@ const Work = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-
         <div
-          className={`swiper-button-prev-work ${styles.navigationButton} ${styles.navigationButtonPrev}`}
+          className={`swiper-button-prev-work ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonDesktop}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
           </div>
         </div>
         <div
-          className={`swiper-button-next-work ${styles.navigationButton} ${styles.navigationButtonNext}`}
+          className={`swiper-button-next-work ${styles.navigationButton} ${styles.navigationButtonNext} ${styles.navigationButtonDesktop}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image
