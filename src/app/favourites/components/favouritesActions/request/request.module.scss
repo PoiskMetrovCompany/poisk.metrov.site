@@ -57,6 +57,12 @@
     }
   }
 
+  &__button {
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: fit-content;
+    }
+  }
+
   @media screen and (width >= 1440px) and (width < 1920px) {
     gap: 20px;
     padding: 24px;
@@ -70,6 +76,7 @@
 
   @media screen and (width >= 768px) and (width < 1024px) {
     gap: 16px;
+    align-items: start;
     padding: 20px 24px;
   }
 

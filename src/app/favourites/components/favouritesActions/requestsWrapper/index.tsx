@@ -2,10 +2,24 @@ import React from "react"
 import styles from "./requestsWrapper.module.scss"
 import Request from "../request"
 import SelectLayout from "../selectLayout"
+import clsx from "clsx"
 
-const RequestsWrapper = () => {
+interface IRequestsWrapperProps {
+  isHiddenMobile?: boolean
+  isHiddenDesktop?: boolean
+}
+
+const RequestsWrapper = ({
+  isHiddenMobile,
+  isHiddenDesktop,
+}: IRequestsWrapperProps) => {
   return (
-    <div className={styles.requestsWrapper}>
+    <div
+      className={clsx(styles.requestsWrapper, {
+        [styles.requestsWrapper__hidden_mobile]: isHiddenMobile,
+        [styles.requestsWrapper__hidden_desktop]: isHiddenDesktop,
+      })}
+    >
       <SelectLayout />
       <Request
         title="Оставьте заявку и наш брокер поможет вам с выбором"

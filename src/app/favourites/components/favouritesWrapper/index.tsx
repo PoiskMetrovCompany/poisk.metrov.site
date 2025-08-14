@@ -5,6 +5,7 @@ import styles from "./favouritesWrapper.module.scss"
 import FavouritesList from "../favouritesList"
 import FavouritesActions from "../favouritesActions"
 import { IFavouriteView } from "@/types/Favourites"
+import RequestsWrapper from "../favouritesActions/requestsWrapper"
 
 const FavouritesWrapper = () => {
   const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
@@ -15,6 +16,7 @@ const FavouritesWrapper = () => {
         setSelectedView={setSelectedView}
       />
       <FavouritesList selectedView={selectedView} />
+      <RequestsWrapper isHiddenDesktop />
     </div>
   )
 }

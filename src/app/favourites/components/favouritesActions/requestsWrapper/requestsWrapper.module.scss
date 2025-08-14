@@ -3,6 +3,20 @@
   flex-direction: column;
   gap: 32px;
 
+  &__hidden {
+    &_mobile {
+      @media screen and (width < 1440px) {
+        display: none !important;
+      }
+    }
+
+    &_desktop {
+      @media screen and (width >= 1440px) {
+        display: none !important;
+      }
+    }
+  }
+
   @media screen and (width >= 1440px) and (width < 1920px) {
     gap: 24px;
   }

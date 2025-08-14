@@ -21,7 +21,7 @@ const FavouritesActions = ({
         selectedView={selectedView}
         setSelectedView={setSelectedView}
       />
-      <RequestsWrapper />
+      <RequestsWrapper isHiddenMobile={true} />
     </div>
   )
 }
