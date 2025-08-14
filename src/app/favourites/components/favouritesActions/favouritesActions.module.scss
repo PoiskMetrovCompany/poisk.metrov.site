@@ -1,6 +1,8 @@
 .favouritesActions {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   width: 440px;
-  background-color: white;
 
   @media screen and (width >= 1440px) and (width < 1920px) {
     width: 356px;
