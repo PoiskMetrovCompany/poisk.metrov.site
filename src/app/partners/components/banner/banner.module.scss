@@ -56,7 +56,8 @@
 
     &_mobile {
       @media screen and (width < 768px) {
-        display: block;
+        display: block !important;
+        width: 95% !important;
       }
     }
 

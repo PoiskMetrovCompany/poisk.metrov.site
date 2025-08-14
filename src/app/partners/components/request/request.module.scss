@@ -68,6 +68,10 @@
 
         &__dropdown {
           grid-column: 1 / 3;
+
+          @media screen and (width < 768px) {
+            grid-column: 1 / 2;
+          }
         }
 
         @media screen and (width >= 1440px) and (width < 1920px) {
