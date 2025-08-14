@@ -25,6 +25,18 @@
 
     width: 870px;
     height: 100%;
+
+    @media (width <= 768px) {
+      right: -200px;
+      width: 600px;
+      opacity: 0.7;
+    }
+
+    @media (width <= 480px) {
+      right: -250px;
+      width: 500px;
+      opacity: 0.5;
+    }
   }
 
   &__content {
@@ -47,6 +59,28 @@
         line-height: 130%;
         color: var(--color-black);
         text-align: center;
+
+        @media (width <= 1920px) {
+          font-size: 24px;
+        }
+
+        @media (width <= 1440px) {
+          font-size: 20px;
+        }
+
+        @media (width <= 768px) {
+          font-size: 24px;
+          line-height: 120%;
+        }
+
+        @media (width <= 480px) {
+          font-size: 20px;
+          line-height: 115%;
+        }
+
+        @media (width <= 360px) {
+          font-size: 18px;
+        }
       }
 
       &__description {
@@ -57,6 +91,33 @@
         line-height: 120%;
         color: var(--color-text-gray);
         text-align: center;
+
+        @media (width <= 1920px) {
+          font-size: 20px;
+        }
+
+        @media (width <= 1440px) {
+          font-size: 18px;
+        }
+
+        @media (width <= 768px) {
+          font-size: 16px;
+          line-height: 140%;
+        }
+
+        @media (width <= 480px) {
+          font-size: 14px;
+          line-height: 130%;
+        }
+      }
+
+      @media (width <= 768px) {
+        gap: 20px;
+        width: 100%;
+      }
+
+      @media (width <= 480px) {
+        gap: 16px;
       }
     }
 
@@ -64,6 +125,53 @@
       width: 508px;
       height: 72px;
       font-weight: 400;
+
+      @media (width <= 1920px) {
+        font-size: 15px;
+      }
+
+      @media (width <= 768px) {
+        width: 100%;
+        max-width: 320px;
+        height: 56px;
+        font-size: 16px;
+      }
+
+      @media (width <= 480px) {
+        max-width: 280px;
+        height: 48px;
+        font-size: 14px;
+      }
+
+      @media (width <= 360px) {
+        max-width: 240px;
+        height: 44px;
+      }
     }
+
+    @media (width <= 768px) {
+      gap: 32px;
+      width: 100%;
+      max-width: 100%;
+      padding: 0 20px;
+    }
+
+    @media (width <= 480px) {
+      gap: 24px;
+      padding: 0 16px;
+    }
+  }
+
+  @media (width <= 768px) {
+    height: auto;
+    min-height: 320px;
+    margin-bottom: 80px;
+    padding: 40px 20px;
+    border-radius: 20px;
+  }
+
+  @media (width <= 480px) {
+    margin-bottom: 60px;
+    padding: 32px 16px;
   }
 }
