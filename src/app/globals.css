@@ -25,7 +25,6 @@ button {
   background-color: transparent;
 }
 
-/* Скрываем стандартные кнопки Swiper */
 .swiper-button-disabled {
   cursor: not-allowed;
   opacity: 0.5;

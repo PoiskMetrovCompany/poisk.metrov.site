@@ -1,0 +1,20 @@
+.filtersButton {
+  cursor: pointer;
+
+  padding: 16px 40px;
+  border: 1.5px solid var(--color-border-gray-light);
+  border-radius: 16px;
+
+  font-size: 15px;
+  color: inherit;
+
+  background-color: transparent;
+
+  transition: all 0.2s ease;
+}
+
+.filtersButton_active {
+  border-color: var(--color-orange);
+  color: var(--color-white);
+  background-color: var(--color-orange);
+}

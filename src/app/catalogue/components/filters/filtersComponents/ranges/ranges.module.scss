@@ -1,0 +1,16 @@
+.catalogue {
+  &__filters {
+    &__container {
+      &__range {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-top: 32px;
+      }
+    }
+  }
+}
+
+.whiteLabel {
+  background-color: var(--color-white) !important;
+}
