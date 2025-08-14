@@ -75,6 +75,8 @@ const cards: IProperty[] = [
       { type: "2-комн. кв", price: "от 9,8 млн ₽" },
       { type: "3-комн. кв", price: "от 12,5 млн ₽" },
       { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
+      { type: "5+ комн. кв", price: "от 24,8 млн ₽" },
+      { type: "6+ комн. кв", price: "от 36,8 млн ₽" },
     ],
     description: [
       { type: "Срок сдачи", status: "Сдан — IV 2028" },
@@ -139,6 +141,7 @@ const FavoutiresList = ({ selectedView }: IFavouritesListProps) => {
               property={card}
               imageClassName={styles.favouritesList__list__image}
               subtitleClassName={styles.favouritesList__list__card__subtitle}
+              listClassName={styles.favouritesList__list__card__specifications}
             />
           ))}
         {selectedView === "complexes" &&

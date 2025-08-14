@@ -17,31 +17,134 @@
     &_complexes {
       grid-template-columns: repeat(3, 1fr);
       gap: 40px;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px;
+      }
+
+      @media screen and (width < 768px) {
+        grid-template-columns: repeat(1, 1fr) !important;
+        gap: 16px;
+      }
     }
 
     &__image {
-      height: 430px !important;
+      @media screen and (width >= 1920px) {
+        height: 430px !important;
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        height: 334px !important;
+      }
+
+      // @media screen and (width >= 1024px) and (width < 1440px) {
+      //   width: 100%;
+      // }
+
+      // @media screen and (width >= 768px) and (width < 1024px) {
+      //   width: 100%;
+      // }
+
+      // @media screen and (width < 768px) {
+      //   width: 100%;
+      // }
     }
 
     &__card {
-      height: 555px !important;
-
       &:hover .favouritesList__list__image {
-        height: 186px !important;
+        @media screen and (width >= 1920px) {
+          height: 186px !important;
+        }
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          height: 140px !important;
+        }
+      }
+
+      &__specifications {
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          gap: 8px 40px !important;
+        }
+      }
+
+      @media screen and (width >= 1920px) {
+        height: 555px !important;
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        height: 445px !important;
       }
     }
 
     &__card__subtitle {
-      overflow: hidden;
-      width: 228px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @media screen and (width >= 1024px) {
+        overflow: hidden;
+        width: 228px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        width: 132px;
+      }
     }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 24px;
+    }
+
+    @media screen and (width < 768px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 32px;
+  }
+
+  @media screen and (width < 1440px) {
+    gap: 16px;
   }
 }
 
 .notFound {
   @media screen and (width >= 1440px) {
     flex: 1;
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    margin-bottom: 0 !important;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    margin-bottom: 0 !important;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    margin-bottom: 0 !important;
+  }
+
+  @media screen and (width < 768px) {
+    margin-bottom: 0 !important;
   }
 }

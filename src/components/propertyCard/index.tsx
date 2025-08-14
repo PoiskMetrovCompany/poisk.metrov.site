@@ -13,6 +13,7 @@ interface IPropertyCardProps {
   className?: string
   imageClassName?: string
   subtitleClassName?: string
+  listClassName?: string
 }
 
 const PropertyCard: FC<IPropertyCardProps> = ({
@@ -20,6 +21,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   className,
   imageClassName,
   subtitleClassName,
+  listClassName,
 }) => {
   const { title, price, subtitle, badge, metro, driveTime, specifications } =
     property
@@ -83,7 +85,12 @@ const PropertyCard: FC<IPropertyCardProps> = ({
         <div className={styles.property_card__divider}></div>
 
         <div className={styles.property_card__specifications}>
-          <div className={styles.property_card__specifications__list}>
+          <div
+            className={clsx(
+              styles.property_card__specifications__list,
+              listClassName
+            )}
+          >
             {specifications.map((spec, index) => (
               <div
                 key={index}
@@ -110,7 +117,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
 
         <div className={styles.property_card__actions}>
           <ActionButton
-            size="small"
+            size="tiny"
             className={styles.property_card__actions__button}
           >
             Каталог
@@ -118,7 +125,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           <ActionButton
             className={styles.property_card__actions__button}
             type="outline"
-            size="small"
+            size="tiny"
           >
             Подробнее
           </ActionButton>
