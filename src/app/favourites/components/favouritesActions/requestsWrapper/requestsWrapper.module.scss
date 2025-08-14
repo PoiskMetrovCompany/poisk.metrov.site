@@ -1,0 +1,23 @@
+.requestsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 24px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 16px;
+  }
+
+  @media screen and (width < 768px) {
+    gap: 12px;
+  }
+}

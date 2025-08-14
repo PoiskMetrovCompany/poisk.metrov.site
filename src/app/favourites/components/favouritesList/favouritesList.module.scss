@@ -17,6 +17,25 @@
     &_complexes {
       grid-template-columns: repeat(3, 1fr);
       gap: 40px;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      @media screen and (width < 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
     }
 
     &__image {
@@ -37,6 +56,32 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 24px;
+    }
+
+    @media screen and (width < 768px) {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 32px;
+  }
+
+  @media screen and (width < 1440px) {
+    gap: 16px;
   }
 }
 
