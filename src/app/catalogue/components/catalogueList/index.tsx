@@ -22,6 +22,26 @@ import Selection from "@/app/components/selection"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
 
+const useLockScroll = (lock: boolean) => {
+  useEffect(() => {
+    if (lock) {
+      const scrollY = window.scrollY
+      
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      const scrollY = document.body.style.top
+
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      
+      window.scrollTo(0, parseInt(scrollY || '0') * -1)
+    }
+  }, [lock])
+}
+
 const cards: IProperty[] = [
   {
     id: 1,
@@ -125,6 +145,9 @@ const CatalogueList = () => {
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
+  // Блокируем скролл когда открыты фильтры
+  useLockScroll(showFilters)
+
   const handleSorting = (sort: SortType) => {
     setSelectedSorting(sort)
   }
@@ -139,11 +162,22 @@ const CatalogueList = () => {
 
   const applyFilters = () => {
     console.log("Фильтры применены")
+    setShowFilters(false) // Закрываем фильтры при применении
   }
 
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
+
+  // Cleanup для случая размонтирования компонента с открытыми фильтрами
+  useEffect(() => {
+    return () => {
+      // Восстанавливаем скролл при размонтировании компонента
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+    }
+  }, [])
 
   const renderCardsWithDreamFlat = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
