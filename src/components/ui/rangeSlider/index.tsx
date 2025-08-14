@@ -1,5 +1,4 @@
 "use client"
-
 import React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import clsx from "clsx"
@@ -15,7 +14,7 @@ type SliderProps = {
   onValueChange?: (values: number[]) => void
 }
 
-const RangeSlider = React.forwardRef(
+const RangeSlider = React.forwardRef<HTMLDivElement, SliderProps>(
   (
     {
       className,
@@ -26,7 +25,7 @@ const RangeSlider = React.forwardRef(
       value,
       onValueChange,
       ...props
-    }: SliderProps,
+    },
     ref
   ) => {
     const initialValue = Array.isArray(value) ? value : [min, max]
@@ -46,7 +45,7 @@ const RangeSlider = React.forwardRef(
 
     return (
       <SliderPrimitive.Root
-        ref={ref as React.RefObject<HTMLDivElement>}
+        ref={ref}
         min={min}
         max={max}
         step={step}
@@ -59,17 +58,6 @@ const RangeSlider = React.forwardRef(
           <SliderPrimitive.Range className={styles.range} />
         </SliderPrimitive.Track>
         {localValues.map((value, index) => (
-          //   <React.Fragment key={index}>
-          //   <div
-          //     className={styles.valueLabel}
-          //     style={{
-          //       left: `calc(${((value - min) / (max - min)) * 100}% + 0px)`,
-          //     }}
-          //   >
-          //     <span>{formatLabel ? formatLabel(value) : value}</span>
-          //   </div>
-          //   <SliderPrimitive.Thumb className={styles.thumb} />
-          // </React.Fragment>
           <SliderPrimitive.Thumb key={index} className={styles.thumb} />
         ))}
       </SliderPrimitive.Root>

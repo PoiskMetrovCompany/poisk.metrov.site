@@ -1,0 +1,23 @@
+.catalogue {
+  &__filters {
+    &__container {
+      &__buttonsSection {
+        width: 100%;
+
+        &__filterButtons {
+          margin-top: 32px;
+
+          &__buttonRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-start;
+
+            margin-top: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+

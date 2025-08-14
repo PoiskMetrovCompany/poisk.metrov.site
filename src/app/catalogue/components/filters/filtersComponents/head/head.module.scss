@@ -1,0 +1,29 @@
+.catalogue {
+  &__filters {
+    &__container {
+      &__head {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 32px;
+
+        &__text {
+          font-size: 15px;
+        }
+
+        &__link {
+          cursor: pointer;
+
+          display: flex;
+          gap: 5px;
+          align-items: center;
+
+          width: 87px;
+
+          font-size: 13px;
+          color: var(--color-blue);
+        }
+      }
+    }
+  }
+}
