@@ -35,7 +35,7 @@ export const PassportSection: FC<PassportSectionProps> = ({
       </FormRow>
       <FormRow className="justify-space-between">
         <div className="input-container w-49">
-          <label htmlFor="passwordSeriaNumber" className="formLabel">Серия и номер</label>
+          <label htmlFor="passwordSeriaNumber" className="formLabel required">Серия и номер</label>
           <input
             style={{width: '100%'}}
             type="text"
@@ -48,7 +48,7 @@ export const PassportSection: FC<PassportSectionProps> = ({
           />
         </div>
         <div className="input-container w-49">
-          <label htmlFor="dateOfIssue" className="formLabel">Дата выдачи</label>
+          <label htmlFor="dateOfIssue" className="formLabel required">Дата выдачи</label>
           <input
             style={{width: '100%'}}
             type="text"
@@ -65,6 +65,7 @@ export const PassportSection: FC<PassportSectionProps> = ({
         <FormInput
           label="Кем выдан"
           name="issuedBy"
+          required={true}
           placeholder="ОФУМС России"
           value={formData.issuedBy || ''}
           onChange={(value) => onFormDataChange('issuedBy', value)}
@@ -75,6 +76,7 @@ export const PassportSection: FC<PassportSectionProps> = ({
         <FormInput
           label="Адрес постоянной регистрации"
           name="adressOfPermanentReg"
+          required={true}
           placeholder="Адрес постоянной регистрации"
           value={formData.adressOfPermanentReg || ''}
           onChange={(value) => onFormDataChange('adressOfPermanentReg', value)}

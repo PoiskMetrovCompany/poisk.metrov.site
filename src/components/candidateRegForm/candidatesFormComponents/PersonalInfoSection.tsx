@@ -70,11 +70,15 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     return `${digits.slice(0, 3)} ${digits.slice(3, 6)}`;
   };
 
+  const formatINN = (value: string) => {
+    return value.replace(/\D/g, '');
+  };
+
   return (
     <>
       <FormRow>
         <div className="input-container">
-          <label htmlFor="Vacancy" className="formLabel">Вакансия</label>
+          <label htmlFor="Vacancy" className="formLabel required">Вакансия</label>
           <CustomSelect
             options={vacancyOptions}
             placeholder="Выберите вакансию, на которую подаетесь"
@@ -114,7 +118,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
 
       <FormRow>
         <div className="input-container">
-          <label htmlFor="City" className="formLabel">Город работы</label>
+          <label htmlFor="City" className="formLabel required">Город работы</label>
           <CustomSelect
             options={cityOptions}
             placeholder="Выберите город в котором хотите работать"
@@ -138,6 +142,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
         <FormInput
           label="ФИО"
           name="FIO"
+          required={true}
           placeholder="Иванов Иван Иванович"
           value={formData.FIO || ''}
           onChange={(value) => onFormDataChange('FIO', formatNameInput(value))}
@@ -171,67 +176,60 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       )}
 
       <FormRow className="justify-space-between">
-        <div className="input-container w-49">
-          <label htmlFor="birthDate" className="formLabel">Дата рождения</label>
-          <input
-            style={{width: '100%'}}
-            type="text"
-            name="birthDate"
-            className="formInput"
-            placeholder="01.01.1990"
-            maxLength={10}
-            value={formData.birthDate || ''}
-            onChange={(e) => onFormDataChange('birthDate', formatDateInput(e.target.value))}
-          />
-        </div>
+        <FormInput
+          label="Дата рождения"
+          name="birthDate"
+          required={true}
+          type="text"
+          placeholder="01.01.1990"
+          maxLength={10}
+          value={formData.birthDate || ''}
+          onChange={(value) => onFormDataChange('birthDate', formatDateInput(value))}
+          containerClassName="input-container w-49"
+        />
 
-        <div className="input-container w-49">
-          <label htmlFor="birthPlace" className="formLabel">Место рождения</label>
-          <input
-            style={{width: '100%'}}
-            type="text"
-            name="birthPlace"
-            className="formInput"
-            placeholder="Страна, город"
-            value={formData.birthPlace || ''}
-            onChange={(e) => onFormDataChange('birthPlace', e.target.value)}
-          />
-        </div>
+        <FormInput
+          label="Место рождения"
+          name="birthPlace"
+          required={true}
+          type="text"
+          placeholder="Страна, город"
+          value={formData.birthPlace || ''}
+          onChange={(value) => onFormDataChange('birthPlace', value)}
+          containerClassName="input-container w-49"
+        />
       </FormRow>
 
       <FormRow className="justify-space-between">
-        <div className="input-container w-49">
-          <label htmlFor="mobileNumber" className="formLabel">Мобильный телефон</label>
-          <input
-            style={{width: '100%'}}
-            type="text"
-            name="mobileNumber"
-            className="formInput"
-            placeholder="+7 (905) 123-45-67"
-            maxLength={18}
-            value={formData.mobileNumber || ''}
-            onChange={(e) => onFormDataChange('mobileNumber', formatMobilePhone(e.target.value))}
-          />
-        </div>
+        <FormInput
+          label="Мобильный телефон"
+          name="mobileNumber"
+          required={true}
+          type="text"
+          placeholder="+7 (905) 123-45-67"
+          maxLength={18}
+          value={formData.mobileNumber || ''}
+          onChange={(value) => onFormDataChange('mobileNumber', formatMobilePhone(value))}
+          containerClassName="input-container w-49"
+        />
 
-        <div className="input-container w-49">
-          <label htmlFor="domesticNumber" className="formLabel">Домашний телефон</label>
-          <input
-            style={{width: '100%'}}
-            type="text"
-            name="domesticNumber"
-            className="formInput"
-            placeholder="999 999"
-            maxLength={7}
-            value={formData.domesticNumber || ''}
-            onChange={(e) => onFormDataChange('domesticNumber', formatHomePhone(e.target.value))}
-          />
-        </div>
+        <FormInput
+          label="Домашний телефон"
+          name="domesticNumber"
+          required={true}
+          type="text"
+          placeholder="999 999"
+          maxLength={7}
+          value={formData.domesticNumber || ''}
+          onChange={(value) => onFormDataChange('domesticNumber', formatHomePhone(value))}
+          containerClassName="input-container w-49"
+        />
       </FormRow>
 
       <FormRow className="justify-space-between">
         <FormInput
           label="E-mail"
+          required={true}
           name="email"
           type="email"
           placeholder="example@gmail.com"
@@ -241,22 +239,17 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           className="formInput"
         />
 
-        <div className="input-container w-49">
-          <label htmlFor="INN" className="formLabel">ИНН</label>
-          <input
-            style={{width: '100%'}}
-            type="tel"
-            name="INN"
-            className="formInput"
-            placeholder="123456789012"
-            maxLength={12}
-            value={formData.INN || ''}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, '');
-              onFormDataChange('INN', value);
-            }}
-          />
-        </div>
+        <FormInput
+          label="ИНН"
+          required={true}
+          name="INN"
+          type="tel"
+          placeholder="123456789012"
+          maxLength={12}
+          value={formData.INN || ''}
+          onChange={(value) => onFormDataChange('INN', formatINN(value))}
+          containerClassName="input-container w-49"
+        />
       </FormRow>
     </>
   );

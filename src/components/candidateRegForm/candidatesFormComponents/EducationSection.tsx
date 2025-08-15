@@ -107,7 +107,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
         <p style={{marginTop: 0}}>Добавьте информацию о пройденных курсах повышения квалификации</p>
       </FormRow>
 
-      <FormRow className="justify-flex-start">
+      <FormRow className="justify-flex-start required">
         <p style={{marginTop: 0, marginLeft: "0.4375rem", color: "rgba(24, 24, 23, 1)"}}>
           2. Какой ваш профессиональный опыт?
         </p>
@@ -122,7 +122,6 @@ export const EducationSection: FC<EducationSectionProps> = ({
         />
       </FormRow>
 
-      {/* Добавляем таблицу профессионального опыта при выборе "Опыт есть" */}
       {selectedProfessionalExperience === 'Опыт есть' && (
         <WorkExperienceTable formData={formData} setFormData={setFormData} />
       )}

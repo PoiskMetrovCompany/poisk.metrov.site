@@ -21,7 +21,6 @@ import { SuccessMessage } from "./candidatesFormComponents/successMessage";
 import HeaderFormSmall from "./header";
 
 const CandidateForm: FC = () => {
-  // Состояния для управления видимостью блоков
   const [surnameChanged, setSurnameChanged] = useState(true);
   const [haveChildren, setHaveChildren] = useState(true);
   const [haveFamilyMembers, setHaveFamilyMembers] = useState(true);
@@ -43,39 +42,31 @@ const CandidateForm: FC = () => {
   const [courseCounter, setCourseCounter] = useState(1);
   const [additionalCourseTables, setAdditionalCourseTables] = useState<number[]>([]);
 
-  // Массивы для хранения дополнительных таблиц
   const [additionalRelativeTables, setAdditionalRelativeTables] = useState<number[]>([]);
   const [additionalChildrenTables, setAdditionalChildrenTables] = useState<number[]>([]);
 
-  // Состояния для образования
   const [educationCounter, setEducationCounter] = useState(1);
   const [additionalEducationTables, setAdditionalEducationTables] = useState<number[]>([]);
 
-  // Новые состояния для API данных
   const [vacancyOptions, setVacancyOptions] = useState<string[]>([]);
   const [isLoadingVacancies, setIsLoadingVacancies] = useState(true);
   const [vacancyError, setVacancyError] = useState('');
 
-  // Состояния для семейного положения из API
   const [maritalStatusApiOptions, setMaritalStatusApiOptions] = useState<string[]>([]);
   const [isLoadingMaritalStatuses, setIsLoadingMaritalStatuses] = useState(true);
   const [maritalStatusError, setMaritalStatusError] = useState('');
 
-  // Состояния для отправки формы
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const [selectedProfessionalExperience, setSelectedProfessionalExperience] = useState('Нет опыта');
 
-  //Состояния для селекта города
   const [selectedCity, setSelectedCity] = useState('');
   const [showCityOptions, setShowCityOptions] = useState(false);
 
-  // Централизованное состояние для данных формы
   const [formData, setFormData] = useState<Record<string, any>>({});
 
-  // Функция для получения токена из cookie
   const getAccessTokenFromCookie = (): string | null => {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
@@ -87,7 +78,6 @@ const CandidateForm: FC = () => {
     return null;
   };
 
-  // Функция для форматирования даты из dd.mm.yyyy в yyyy-mm-dd
   const formatDateForDatabase = (dateString: string): string | null => {
     if (!dateString || dateString.trim() === '') {
       return null;
@@ -234,7 +224,6 @@ const CandidateForm: FC = () => {
     return familyMembers.length > 0 ? familyMembers : null;
   };
 
-  // Функция для загрузки вакансий из API
   const loadVacancies = async () => {
     try {
       setIsLoadingVacancies(true);
@@ -332,13 +321,11 @@ const CandidateForm: FC = () => {
     }
   };
 
-  // Загружаем вакансии при монтировании компонента
   useEffect(() => {
     loadVacancies();
     loadMaritalStatuses();
   }, []);
 
-  // Используем данные из API если они загружены, иначе статичные варианты
   const maritalStatusOptions = maritalStatusApiOptions.length > 0 ? maritalStatusApiOptions : [
     'Не женат/Не замужем',
     'Женат/Замужем',
@@ -349,7 +336,6 @@ const CandidateForm: FC = () => {
 
   const cityOptions = ['Новосибирск', 'Санкт-Петербург'];
 
-  // Функция для закрытия всех select'ов при клике вне их
   useEffect(() => {
     const handleClickOutside = () => {
       setShowVacancyOptions(false);
@@ -396,7 +382,6 @@ const CandidateForm: FC = () => {
     setAdditionalCourseTables(prev => [...prev, newCounter]);
   };
 
-  // Функция для получения ключа семейного положения
   const getMaritalStatusKey = (selectedTitle: string): string => {
     if ((window as any).maritalStatusData) {
       const status = (window as any).maritalStatusData.find((s: any) => s.title === selectedTitle);
@@ -405,7 +390,6 @@ const CandidateForm: FC = () => {
     return '';
   };
 
-  // Функция для разделения ФИО
   const splitFullName = (fullName: string) => {
     const parts = fullName.trim().split(/\s+/);
     return {
@@ -415,7 +399,6 @@ const CandidateForm: FC = () => {
     };
   };
 
-  // Функция для разделения серии и номера паспорта
   const splitPassportData = (passportSeriaNumber: string) => {
     const parts = passportSeriaNumber.replace(/\s+/g, ' ').trim().split(' ');
     return {
@@ -424,7 +407,6 @@ const CandidateForm: FC = () => {
     };
   };
 
-  // Функция для разделения адреса на страну и город
   const splitBirthPlace = (birthPlace: string) => {
     if (!birthPlace) return { country: '', city: '' };
 
@@ -435,7 +417,6 @@ const CandidateForm: FC = () => {
     };
   };
 
-  // Функция для отправки формы
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
@@ -621,7 +602,7 @@ const CandidateForm: FC = () => {
 
               <FormRow>
                 <div className="input-container">
-                  <label htmlFor="maritalStatus" className="formLabel">Семейное положение</label>
+                  <label htmlFor="maritalStatus" className="formLabel required">Семейное положение</label>
                   <CustomSelect
                     options={maritalStatusOptions}
                     placeholder="Выберите ваше семейное положение"

@@ -27,7 +27,7 @@ export const FormInput: FC<FormInputProps> = ({
 }) => {
   return (
     <div className={containerClassName}>
-      <label htmlFor={name} className="formLabel">
+      <label htmlFor={name} className={`formLabel ${required ? 'required' : ''}`}>
         {label}
       </label>
       <input

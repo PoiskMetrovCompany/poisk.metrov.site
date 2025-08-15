@@ -63,7 +63,7 @@ const SpouseTable: FC<ISpouseTableProps> = ({ formData, setFormData, isVisible }
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
       <table className="inputTable">
-        <caption className="tableLabel">
+        <caption className="tableLabel required">
           Данные супруга(-и)
         </caption>
         <tbody>
