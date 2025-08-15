@@ -1,8 +1,5 @@
-"use client"
-import React, { FC } from "react"
-import styles from "./inputContainer.module.scss"
-import clsx from "clsx"
-
+import React from "react"
+import styles from "./input.module.scss"
 interface InputContainerProps {
   label: string
   placeholder: string
@@ -10,26 +7,16 @@ interface InputContainerProps {
   onChange: (value: string) => void
   name: string
   type?: "text" | "phone" | "date" | string
-  prefix?: string
-  required?: boolean
-  disabled?: boolean
-  className?: string
-  labelClassName?: string
 }
 
-const InputContainer: FC<InputContainerProps> = ({
+const Input = ({
   label,
   placeholder,
   value,
   onChange,
   name,
   type = "text",
-  prefix,
-  required = false,
-  disabled = false,
-  className,
-  labelClassName,
-}) => {
+}: InputContainerProps) => {
   const formatPhoneNumber = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
 
@@ -97,31 +84,18 @@ const InputContainer: FC<InputContainerProps> = ({
   }
 
   return (
-    <div className={clsx(styles.inputContainer, className)}>
-      <label
-        htmlFor={name}
-        className={clsx(styles.inputContainer__label, labelClassName)}
-      >
-        {label}
-      </label>
-      <div className={styles.inputContainer__wrapper}>
-        {prefix && (
-          <span className={styles.inputContainer__prefix}>{prefix}</span>
-        )}
-        <input
-          type="text"
-          id={name}
-          name={name}
-          className={styles.inputContainer__input}
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => handleInputChange(e.target.value)}
-          required={required}
-          disabled={disabled}
-        />
-      </div>
-    </div>
+    <fieldset className={styles.input}>
+      <legend className={styles.input__legend}>{label}</legend>
+      <input
+        className={styles.input__field}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => handleInputChange(e.target.value)}
+        name={name}
+        type="text"
+      />
+    </fieldset>
   )
 }
 
-export default InputContainer
+export default Input
