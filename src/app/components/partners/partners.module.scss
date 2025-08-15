@@ -15,12 +15,18 @@
   }
 
   &__logos {
-    display: grid;
-    grid-template-columns: repeat(15, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 24px;
 
+    &__row {
+      display: flex;
+      gap: 24px;
+      width: 100%;
+    }
+
     &__item {
-      grid-column: auto / span 3;
+      flex: 1;
 
       height: 200px;
       border-radius: 40px;
@@ -30,38 +36,29 @@
       background-position: center;
 
       &__small {
-        max-width: 316px;
-        max-height: 200px;
-        background-size: 90%;
+        background-size: 60%;
 
         @media (width <= 1440px) {
-          max-width: 176px;
           max-height: 124px;
         }
 
         @media (width <= 1024px) {
-          max-width: 163px;
           max-height: 100px;
         }
       }
 
       &__big {
-        max-width: 544px;
-        height: 200px;
-        background-size: 40%;
+        background-size: 30%;
 
         @media (width <= 1920px) {
-          max-width: 413px;
           max-height: 124px;
         }
 
         @media (width <= 1440px) {
-          max-width: 304px;
           max-height: 124px;
         }
 
         @media (width <= 1024px) {
-          max-width: 221px;
           max-height: 100px;
         }
       }
@@ -69,10 +66,6 @@
       @media (width <= 1440px) {
         border-radius: 20px;
       }
-    }
-
-    &__item:nth-child(n + 6):nth-child(-n + 8) {
-      grid-column: auto / span 5;
     }
 
     @media (width <= 768px) {
