@@ -86,6 +86,14 @@
     font-weight: 400;
     color: var(--color-black);
     text-align: left;
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 12px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 12px;
+    }
   }
 
   &__linkText {
