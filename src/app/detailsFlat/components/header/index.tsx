@@ -9,7 +9,9 @@ const DetailsHeader = () => {
     <div className={styles.header}>
       <div className={styles.header__place}>
         <div className={styles.header__place__title}>
-          <Heading1>1-комнатная квартира в ЖК Калининский квартал, 31.4 м², этаж 4</Heading1>
+          <Heading1>
+            1-комнатная квартира в ЖК Калининский квартал, 31.4 м², этаж 4
+          </Heading1>
         </div>
 
         <div className={styles.header__place__text}>
@@ -31,7 +33,7 @@ const DetailsHeader = () => {
                 alt="location"
                 className={styles.header__place__text__distance__item__icon}
               />
-              <span>25 минут</span>
+              <span className={styles.header__place__text__distance__item__span}>25 минут</span>
             </div>
           </div>
         </div>
