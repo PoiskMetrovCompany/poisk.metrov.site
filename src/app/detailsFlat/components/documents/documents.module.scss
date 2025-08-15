@@ -1,0 +1,108 @@
+@use "@/utils/mixins" as mixins;
+
+.documents {
+  @include mixins.adaptive-vertical-margin;
+
+  &__header {
+    @include mixins.adaptive-heading-margin;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 326px;
+
+    &__item {
+      display: flex;
+      flex-shrink: 0;
+      gap: 16px;
+      align-items: center;
+
+      // width: 677px;
+      min-height: 128px;
+      border-bottom: 1px solid #d2d2d2;
+
+      &__icon {
+        width: 64px;
+        height: 64px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          width: 56px;
+          height: 56px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          width: 48px;
+          height: 48px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (width < 768px) {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      &__text {
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 130%;
+        color: var(--color-black);
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          font-size: 18px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          font-size: 18px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          font-size: 18px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 16px;
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 12px;
+
+        // width: 624px;
+        min-height: 104px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 12px;
+        width: 460px;
+        min-height: 80px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 8px;
+        width: 460px;
+        min-height: 64px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 8px;
+        width: 100%;
+        min-height: 64px;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 0 32px;
+    }
+
+    @media screen and (width < 1440px) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

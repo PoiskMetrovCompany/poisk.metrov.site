@@ -9,7 +9,12 @@ import FlatLayoutCard from "@/components/flatLayoutCard"
 import Image from "next/image"
 import PromoCard from "./promoCard"
 
-const Compilation = () => {
+interface compilationProps {
+  header: string
+  hasPromoCard: boolean
+}
+
+const Compilation = ({ header, hasPromoCard }: compilationProps) => {
   const flatCards = [
     {
       id: 1,
@@ -64,15 +69,17 @@ const Compilation = () => {
   return (
     <div className={styles.compilation}>
       <div className={styles.compilation__header}>
-        <Heading2 className={styles.compilation__header__h2}>
-          Подборка квартир
-        </Heading2>
+        <Heading2 className={styles.compilation__header__h2}>{header}</Heading2>
         <div className={styles.compilation__header__navigation}>
           <div
             className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonMobile}`}
           >
             <div className={styles.navigationButton__icon}>
-              <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-left"
+                fill
+              />
             </div>
           </div>
           <div
@@ -89,7 +96,7 @@ const Compilation = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={styles.compilation__content}>
         <Swiper
           modules={[Navigation]}
@@ -117,7 +124,7 @@ const Compilation = () => {
         >
           {flatCards.map((card) => (
             <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              {card.id === 3 ? <PromoCard /> : <FlatLayoutCard />}
+              {card.id === 3 && hasPromoCard === true ? <PromoCard /> : <FlatLayoutCard />}
             </SwiperSlide>
           ))}
         </Swiper>
