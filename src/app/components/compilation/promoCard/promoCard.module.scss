@@ -27,7 +27,7 @@
     }
   }
 
-  @media (width <= 1920px) {
+  @media (width < 1920px) {
     min-height: 557px;
   }
 
