@@ -12,7 +12,7 @@
 
   font-family: var(--font-onest);
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 150%;
   color: var(--color-text-gray);
 
@@ -22,6 +22,32 @@
 
   &:hover {
     border-color: var(--color-border-gray-hover);
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    height: 64px;
+    padding: 19px 24px;
+    font-size: 16px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    height: 56px;
+    padding: 17px 24px;
+    font-size: 16px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    height: 48px;
+    padding: 17px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  @media screen and (width < 768px) {
+    height: 48px;
+    padding: 17px 24px;
+    border-radius: 12px;
+    font-size: 14px;
   }
 }
 
@@ -40,6 +66,32 @@
   color: var(--color-black);
 
   background-color: white;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    left: 16px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    left: 16px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    top: -11px;
+    left: 14px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  @media screen and (width < 768px) {
+    top: -10px;
+    left: 14px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
 }
 
 .Trigger {
