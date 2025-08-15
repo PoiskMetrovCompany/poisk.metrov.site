@@ -15,9 +15,12 @@
 
             margin-top: 8px;
           }
+
+          @media (width <= 1024px) {
+            margin-top: 24px;
+          }
         }
       }
     }
   }
 }
-

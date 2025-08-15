@@ -1,64 +1,79 @@
-
 .checkboxRow {
   display: flex;
+  gap: 0.75rem; // 12px
   align-items: center;
   justify-content: flex-start;
-  gap: 0.75rem; // 12px
-  font-family: Arial, sans-serif;
-  font-size: 0.875rem; // 14px
-  line-height: 1.4;
+
   margin-top: 1.25rem; // 20px
 
   &__customCheckbox {
-    position: relative;
-    display: inline-block;
-    margin-top: 0.125rem; // 2px
-    margin-left: 0.4375rem; // 7px
     cursor: pointer;
+
+    position: relative;
+
+    display: inline-block;
+
+    margin-top: 0.3rem;
+    margin-left: 0.4375rem; // 7px
   }
 
   &__input {
-    position: absolute;
-    opacity: 0;
     cursor: pointer;
-    height: 0;
+
+    position: absolute;
+
     width: 0;
+    height: 0;
+
+    opacity: 0;
   }
 
   // Кастомная галочка
   &__checkmark {
     position: relative;
+
     display: inline-block;
+
     width: 1.5rem;
     height: 1.5rem;
-    background: #ffffff;
     border: 2px solid #ddd;
     border-radius: 0.375rem; // 6px
+
+    background: #fff;
+
     transition: all 0.5s ease-in-out;
 
-    &:after {
+    &::after {
       content: "";
+
       position: absolute;
-      display: none;
-      left: 0.375rem; // 6px
       top: 0.125rem; // 2px
+      left: 0.375rem; // 6px
+      transform: rotate(45deg);
+
+      display: none;
+
       width: 0.375rem; // 6px
       height: 0.625rem; // 10px
       border: solid white;
       border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
+    }
+
+    @media screen and (width < 1920px) {
+      width: 20px;
+      height: 20px;
     }
   }
 
   &__customCheckbox:hover &__checkmark {
-    border-color: #EC7D3F;
+    border-color: #ec7d3f;
   }
 
   // Состояние когда чекбокс выбран
   &__input:checked + &__checkmark {
-    background: #EC7D3F;
+    background: #ec7d3f;
 
-    &:after {
+    &::after {
       display: block;
     }
   }
@@ -66,14 +81,19 @@
   // Лейбл с текстом
   &__label {
     cursor: pointer;
-    color: #333;
-    text-align: left;
+
+    font-size: 14px;
     font-weight: 400;
-    font-size: 14px
+    color: var(--color-black);
+    text-align: left;
   }
 
   &__linkText {
-    color: #ff6b35;
     font-weight: normal;
+    color: #ff6b35;
+  }
+
+  @media screen and (width < 1920px) {
+    margin-top: 16px;
   }
 }

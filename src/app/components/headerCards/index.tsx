@@ -62,7 +62,7 @@ const HeaderCards = () => {
           </div>
         </div>
         <Button type="beige" className={styles.headerCards__percent__button}>
-          Подробнее
+          Узнать об ипотеке
         </Button>
       </div>
       <div className={styles.headerCards__firstCard}>
@@ -77,7 +77,7 @@ const HeaderCards = () => {
           />
         </div>
         <Button type="beige" className={styles.headerCards__firstCard__button}>
-          Подробнее
+          Оставить заявку
         </Button>
       </div>
     </div>

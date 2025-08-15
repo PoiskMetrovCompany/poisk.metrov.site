@@ -5,7 +5,7 @@ import IconImage from "@/components/ui/IconImage"
 
 const partnersLogos = [
   "akvilon",
-  "arsenal",
+  "arsenal", 
   "cds",
   "fsk",
   "glorax",
@@ -26,6 +26,13 @@ const Partners = () => {
     if (index >= 8 && index <= 12) return 'small';
     return 'small';
   }
+
+  const desktopRows = [
+    partnersLogos.slice(0, 5),   
+    partnersLogos.slice(5, 8), 
+    partnersLogos.slice(8, 13), 
+  ]
+
   const mobileRows = [
     partnersLogos.slice(0, 3),
     partnersLogos.slice(3, 5),
@@ -41,19 +48,26 @@ const Partners = () => {
       </Heading2>
       
       <div className={styles.partners__logos}>
-        {partnersLogos.map((logo, index) => (
-          <div
-            className={`${styles.partners__logos__item} ${styles[`partners__logos__item__${getItemSize(index)}`]}`}
-            key={index}
-            style={{ backgroundImage: `url(/images/partners/${logo}.webp)` }}
-          />
+        {desktopRows.map((row, rowIndex) => (
+          <div key={rowIndex} className={styles.partners__logos__row}>
+            {row.map((logo, index) => {
+              const globalIndex = partnersLogos.indexOf(logo);
+              return (
+                <div
+                  className={`${styles.partners__logos__item} ${styles[`partners__logos__item__${getItemSize(globalIndex)}`]}`}
+                  key={globalIndex}
+                  style={{ backgroundImage: `url(/images/partners/${logo}.webp)` }}
+                />
+              );
+            })}
+          </div>
         ))}
       </div>
 
       <div className={styles.partners__logosMobile}>
         {mobileRows.map((row, rowIndex) => (
-          <div 
-            key={rowIndex} 
+          <div
+            key={rowIndex}
             className={`${styles.partners__logosMobile__row} ${
               row.length === 2 ? styles.partners__logosMobile__row_two : styles.partners__logosMobile__row_three
             }`}

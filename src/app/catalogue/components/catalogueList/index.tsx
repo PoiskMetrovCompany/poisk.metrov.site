@@ -8,6 +8,7 @@ import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
 import Image from "next/image"
 
+import ActionButton from "@/components/ui/buttons/ActionButton"
 import RangeSlider from "@/components/ui/rangeSlider"
 import CatalogueFilters from "../catalogueFiltersNavbar"
 import Filters from "../filters"
@@ -20,6 +21,26 @@ import Selection from "@/app/components/selection"
 
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
+
+const useLockScroll = (lock: boolean) => {
+  useEffect(() => {
+    if (lock) {
+      const scrollY = window.scrollY
+      
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      const scrollY = document.body.style.top
+
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      
+      window.scrollTo(0, parseInt(scrollY || '0') * -1)
+    }
+  }, [lock])
+}
 
 const cards: IProperty[] = [
   {
@@ -124,6 +145,9 @@ const CatalogueList = () => {
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
+  // Блокируем скролл когда открыты фильтры
+  useLockScroll(showFilters)
+
   const handleSorting = (sort: SortType) => {
     setSelectedSorting(sort)
   }
@@ -136,9 +160,24 @@ const CatalogueList = () => {
     setShowFilters(false)
   }
 
+  const applyFilters = () => {
+    console.log("Фильтры применены")
+    setShowFilters(false) // Закрываем фильтры при применении
+  }
+
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
+
+  // Cleanup для случая размонтирования компонента с открытыми фильтрами
+  useEffect(() => {
+    return () => {
+      // Восстанавливаем скролл при размонтировании компонента
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+    }
+  }, [])
 
   const renderCardsWithDreamFlat = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
@@ -179,7 +218,6 @@ const CatalogueList = () => {
       </div>
     )
 
-    // Добавляем компонент Selection после GetCatalogue
     result.push(
       <div
         key="selection"
@@ -231,17 +269,45 @@ const CatalogueList = () => {
           сохранить поиск
         </div>
       </div>
-      
+
       <div className={styles.catalogue__filtersNavbar}>
-        <CatalogueFilters onShowFilters={handleShowFilters} />
+        <CatalogueFilters 
+          onShowFilters={handleShowFilters}
+          onApplyFilters={applyFilters}
+        />
+        <div className={styles.catalogue__filtersNavbar__buttonsMobile}>
+          <ActionButton
+            type="primary"
+            onClick={applyFilters}
+            className={styles.catalogue__filtersNavbar__buttonsMobile__button}
+            size="medium"
+          >
+            Показать <span>12166 квартир</span>
+          </ActionButton>
+          <ActionButton
+            type="secondary"
+            onClick={handleShowFilters}
+            className={
+              styles.catalogue__filtersNavbar__buttonsMobile__button__filter
+            }
+            size="medium"
+            svgSrc="/images/icons/filters-orange.svg"
+            svgAlt="Показать фильтры"
+            svgWidth={26}
+            svgHeight={26}
+            svgClassName={styles.filterSvg}
+          >
+            <span className={styles.textFiltersMobile}>Все фильтры</span>
+          </ActionButton>
+        </div>
       </div>
-      
+
       {showFilters && (
         <div className={styles.catalogue__filters}>
           <Filters onClose={handleCloseFilters} />
         </div>
       )}
-      
+
       <div className={styles.catalogue__header}>
         <Heading3>Найдено 102 ЖК из 182</Heading3>
         {isLaptop && (

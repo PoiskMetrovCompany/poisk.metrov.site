@@ -11,6 +11,15 @@
   background-color: transparent;
 
   transition: all 0.2s ease;
+
+  @media (width <= 1024px) {
+    padding: 14px 32px;
+    font-size: 13px;
+  }
+
+  @media (width <= 768px) {
+    padding: 10px 20px;
+  }
 }
 
 .filtersButton_active {
