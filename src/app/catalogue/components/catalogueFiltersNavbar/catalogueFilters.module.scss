@@ -24,6 +24,22 @@
           width: 168px;
           font-size: 18px;
           color: var(--color-text-gray);
+
+          @media (width <= 1920px) {
+            font-size: 15px;
+          }
+
+          @media (width <= 1440px) {
+            width: 110px;
+          }
+        }
+
+        @media (width <= 768px) {
+          display: none;
+        }
+
+        @media (width <= 1090px) {
+          padding-left: 0;
         }
       }
 
@@ -36,24 +52,91 @@
           width: 324px;
           border: none;
           outline: none;
+
+          @media (width <= 1440px) {
+            width: 263px;
+          }
         }
 
         input:focus {
           border: none;
+          color: var(--color-black);
           outline: none;
-          color: var(--color-black)
         }
 
         &__text {
           font-size: 18px;
           color: var(--color-text-gray);
+
+          @media (width <= 1920px) {
+            font-size: 15px;
+          }
         }
       }
 
-      &__buttons {
+      &__buttonsDesktop {
         display: flex;
         gap: 16px;
+
+        span {
+          @media (width <= 1920px) {
+            display: none;
+          }
+        }
+
+        &__button {
+          width: 306px;
+
+          &__filter {
+            width: 255px;
+
+            @media (width <= 1920px) {
+              width: 206px;
+              padding: 0;
+              font-size: 15px;
+            }
+
+            @media (width <= 1440px) {
+              width: 173px;
+
+              svg {
+                width: 15px;
+                height: 15px;
+              }
+            }
+          }
+
+          @media (width <= 1920px) {
+            width: 136px;
+            font-size: 15px;
+          }
+
+          @media (width <= 1440px) {
+            width: 112px;
+          }
+        }
+
+        @media (width <= 1090px) {
+          display: none;
+        }
+      }
+
+      @media (width <= 1090px) {
+        padding: 24px;
       }
     }
+  }
+}
+
+.filterSvg {
+  @media (width <= 1920px) {
+    width: 22;
+    height: 22;
+  }
+
+  @media (width <= 1440px) {
+    width: 18px;
+    height: 18px;
+    margin-left: 10px;
   }
 }

@@ -6,6 +6,7 @@ import ActionButton from "@/components/ui/buttons/ActionButton"
 
 interface CatalogueFiltersProps {
   onShowFilters: () => void
+  onApplyFilters: () => void
 }
 
 const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
@@ -50,26 +51,25 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
           className={styles.catalogue__filters__container__search__text}
         />
       </div>
-      <div className={styles.catalogue__filters__container__buttons}>
+      <div className={styles.catalogue__filters__container__buttonsDesktop}>
         <ActionButton
           type="primary"
           onClick={applyFilters}
-          className={styles.catalogue__filters__container__buttons__button}
+          className={styles.catalogue__filters__container__buttonsDesktop__button}
           size="medium"
-          buttonWidth={306}
         >
-          Показать 12166 квартир
+          Показать <span>12166 квартир</span>
         </ActionButton>
         <ActionButton
           type="secondary"
           onClick={onShowFilters}
-          className={styles.catalogue__filters__container__buttons__button}
+          className={styles.catalogue__filters__container__buttonsDesktop__button__filter}
           size="medium"
-          buttonWidth={255}
           svgSrc="/images/icons/filters-orange.svg"
           svgAlt="Показать фильтры"
           svgWidth={26}
           svgHeight={26}
+          svgClassName={styles.filterSvg}
         >
           Все фильтры
         </ActionButton>
