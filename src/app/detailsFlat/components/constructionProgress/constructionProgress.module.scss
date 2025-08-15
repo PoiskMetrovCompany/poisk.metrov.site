@@ -1,0 +1,202 @@
+@use "@/utils/mixins" as mixins;
+
+.constructionProgress {
+  @include mixins.adaptive-vertical-margin;
+
+  &__header {
+    @include mixins.adaptive-heading-margin;
+  }
+
+  &__content {
+    position: relative;
+    margin: 0 auto;
+  }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+
+  &__slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.imageCard {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &__imageWrapper {
+    position: relative;
+
+    overflow: hidden;
+
+    aspect-ratio: 533 / 360;
+    width: 100%;
+    border-radius: 32px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      aspect-ratio: 405 / 282;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      aspect-ratio: 299 / 210;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      aspect-ratio: 332 / 210;
+    }
+
+    @media screen and (width < 768px) {
+      aspect-ratio: 160 / 125;
+      border-radius: 24px;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__date {
+    margin-top: 16px;
+
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 130%;
+    color: var(--color-black);
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      margin-top: 12px;
+      font-size: 18px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    @media screen and (width < 768px) {
+      margin-top: 8px;
+      font-size: 16px;
+    }
+  }
+}
+
+.navigationButton {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+
+  background: var(--color-white);
+  box-shadow: 0 0 16px 0 rgb(0 0 0 / 4%);
+
+  transition: all 0.3s ease;
+
+  &::after {
+    display: none;
+  }
+
+  &__icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+
+    &__icon_next {
+      transform: rotate(180deg);
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 24px;
+      height: 24px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &:hover {
+    background: var(--color-beige);
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    width: 56px;
+    height: 56px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    width: 48px;
+    height: 48px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    width: 48px;
+    height: 48px;
+  }
+
+  @media screen and (width < 768px) {
+    display: none;
+  }
+}
+
+.navigationButtonPrev {
+  left: 0;
+  transform: translateX(-50%) translateY(-22.5px);
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    transform: translateX(-50%) translateY(-12.5px);
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    transform: translateX(-50%) translateY(-12.5px);
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    transform: translateX(-50%) translateY(-12.5px);
+  }
+}
+
+.navigationButtonNext {
+  right: 0;
+  transform: translateX(50%) translateY(-22.5px);
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    transform: translateX(50%) translateY(-12.5px);
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    transform: translateX(50%) translateY(-12.5px);
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    transform: translateX(50%) translateY(-12.5px);
+  }
+}
