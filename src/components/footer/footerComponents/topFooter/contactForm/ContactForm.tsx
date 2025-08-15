@@ -95,8 +95,8 @@ const ContactForm: FC = () => {
           onClick={handleSubmit}
           size="large"
           type="primary"
-          svgWidth={28}
-          svgHeight={28}
+          svgWidth={20}
+          svgHeight={20}
           className={clsx(styles.borderRadius, styles.hideOnDesktop)}
           svgSrc="./svgFiles/nextArrow.svg"
           svgDiscolored={true}

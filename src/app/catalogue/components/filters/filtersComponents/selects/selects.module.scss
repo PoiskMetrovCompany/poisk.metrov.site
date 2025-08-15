@@ -1,0 +1,16 @@
+.catalogue {
+  &__filters {
+    &__container {
+      &__selects {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  }
+}
+
+.colorSelect {
+  font-weight: 400;
+  color: var(--color-text-gray) !important;
+}

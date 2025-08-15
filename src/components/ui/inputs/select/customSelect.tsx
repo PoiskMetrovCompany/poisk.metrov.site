@@ -1,7 +1,7 @@
 "use client";
 import React, { FC } from "react";
 import styles from "./customSelect.module.scss";
-
+import clsx from "clsx";
 interface ICustomSelectProps {
     label?: string;
     options: string[];
@@ -13,6 +13,7 @@ interface ICustomSelectProps {
     onSelect: (option: string) => void;
     isLoading?: boolean;
     error?: string;
+    className?: string;
 }
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -23,18 +24,19 @@ const CustomSelect: FC<ICustomSelectProps> = ({
     show,
     onToggle,
     onSelect,
+    className,
     isLoading = false,
     error = ''
 }) => (
-    <div className={styles.customSelectWrapper}>
+    <div className={clsx(styles.customSelectWrapper, className)}>
         {label && (
             <label className={styles.selectLabel}>
                 {label}
             </label>
         )}
-        <div className={styles.customSelect}>
+        <div className={clsx(styles.customSelect)}>
             <div
-                className={`${styles.selectSelected} ${show ? styles.selectArrowActive : ''}`}
+                className={`${clsx(styles.selectSelected, className)} ${show ? styles.selectArrowActive : ''}`}
                 onClick={(e) => {
                     e.stopPropagation();
                     if (!isLoading) {

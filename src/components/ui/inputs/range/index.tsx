@@ -1,16 +1,60 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styles from "./range.module.scss"
 import RangeSlider from "@/components/ui/rangeSlider"
+import clsx from "clsx"
 
-const Range = () => {
-  const [priceRange, setPriceRange] = useState([4, 15])
+interface RangeProps {
+  title?: string
+  min: number
+  max: number
+  step: number
+  value?: [number, number]
+  className?: string
+  onValueChange?: (value: [number, number]) => void
+  formatLabel?: (value: number) => string
+}
 
-  const formatPrice = (value: number) => `${value}`
+const Range: React.FC<RangeProps> = ({
+  title = "Стоимость, млн ₽",
+  min,
+  max,
+  step,
+  className,
+  value,
+  onValueChange,
+  formatLabel = (value: number) => `${value}`
+}) => {
+  const [internalRange, setInternalRange] = useState<[number, number]>(
+    value || [min, max]
+  )
+
+  useEffect(() => {
+    if (value) {
+      setInternalRange(value)
+    }
+  }, [value])
+
+  const handleRangeChange = (newRange: [number, number]) => {
+    setInternalRange(newRange)
+    onValueChange?.(newRange)
+  }
+
+  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMin = Number(e.target.value)
+    const newRange: [number, number] = [newMin, internalRange[1]]
+    handleRangeChange(newRange)
+  }
+
+  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMax = Number(e.target.value)
+    const newRange: [number, number] = [internalRange[0], newMax]
+    handleRangeChange(newRange)
+  }
 
   return (
-    <div className={styles.range}>
-      <legend className={styles.range__title}>Стоимость, млн ₽</legend>
+    <div className={clsx(styles.range, className)}>
+      <legend className={clsx(styles.range__title, className)}>{title}</legend>
       <div className={styles.range__input}>
         <div className={styles.range__input__display}>
           <div className={styles.range__input__display__value}>
@@ -19,11 +63,12 @@ const Range = () => {
             </span>
             <input
               className={styles.range__input__display__value__count}
-              value={priceRange[0]}
+              value={internalRange[0]}
               type="number"
-              onChange={(e) =>
-                setPriceRange([Number(e.target.value), priceRange[1]])
-              }
+              min={min}
+              max={max}
+              step={step}
+              onChange={handleMinInputChange}
             />
           </div>
           <span className={styles.range__input__display__separator}>—</span>
@@ -33,22 +78,23 @@ const Range = () => {
             </span>
             <input
               className={styles.range__input__display__value__count}
-              value={priceRange[1]}
+              value={internalRange[1]}
               type="number"
-              onChange={(e) =>
-                setPriceRange([priceRange[0], Number(e.target.value)])
-              }
+              min={min}
+              max={max}
+              step={step}
+              onChange={handleMaxInputChange}
             />
           </div>
         </div>
         <RangeSlider
           className={styles.range__slider}
-          min={4}
-          max={15}
-          step={1}
-          value={priceRange}
-          onValueChange={setPriceRange}
-          formatLabel={formatPrice}
+          min={min}
+          max={max}
+          step={step}
+          value={internalRange}
+          onValueChange={(values) => handleRangeChange(values as [number, number])}
+          formatLabel={formatLabel}
         />
       </div>
     </div>

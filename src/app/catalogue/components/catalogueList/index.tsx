@@ -3,14 +3,21 @@
 import React, { useEffect, useState } from "react"
 import styles from "./catalogueList.module.scss"
 import Heading3 from "@/components/ui/heading3"
+import Heading2 from "@/components/ui/heading2"
 import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+import Image from "next/image"
 
+import RangeSlider from "@/components/ui/rangeSlider"
+import CatalogueFilters from "../catalogueFiltersNavbar"
+import Filters from "../filters"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
-import GetCatalogue from "@/components/getCatalogue" // Импортируем новый компонент
+import GetCatalogue from "@/components/getCatalogue"
+import Selection from "@/app/components/selection"
+
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
 
@@ -112,13 +119,21 @@ const cards: IProperty[] = [
 type SortType = "cards" | "list"
 
 const CatalogueList = () => {
-  const [isEmpty, setIsEmpty] = useState(false) // Изменено на false для демонстрации
-
+  const [isEmpty, setIsEmpty] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const { isLaptop } = useScreenSize(0)
 
   const handleSorting = (sort: SortType) => {
     setSelectedSorting(sort)
+  }
+
+  const handleShowFilters = () => {
+    setShowFilters(true)
+  }
+
+  const handleCloseFilters = () => {
+    setShowFilters(false)
   }
 
   useEffect(() => {
@@ -127,42 +142,60 @@ const CatalogueList = () => {
 
   const renderCardsWithDreamFlat = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
-    
+
     cards.forEach((card, index) => {
-      // Добавляем карточку недвижимости
       if (selectedSorting === "cards") {
         result.push(<PropertyCard key={card.id} property={card} />)
       } else {
         result.push(<PropertyCardList key={card.id} property={card} />)
       }
-      
-      // Добавляем GetYourDreamFlat после второй карточки (индекс 1)
+
       if (index === 1) {
         result.push(
-          <div 
-            key={`dream-flat-${index}`} 
-            className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+          <div
+            key={`dream-flat-${index}`}
+            className={
+              selectedSorting === "cards"
+                ? styles.catalogue__cards__fullWidth
+                : undefined
+            }
           >
             <GetYourDreamFlat />
           </div>
         )
       }
     })
-    
-    // Добавляем GetCatalogue после всех карточек
+
     result.push(
-      <div 
-        key="get-catalogue" 
-        className={selectedSorting === "cards" ? styles.catalogue__cards__fullWidth : undefined}
+      <div
+        key="get-catalogue"
+        className={
+          selectedSorting === "cards"
+            ? styles.catalogue__cards__fullWidth
+            : undefined
+        }
       >
         <GetCatalogue />
       </div>
     )
-    
+
+    // Добавляем компонент Selection после GetCatalogue
+    result.push(
+      <div
+        key="selection"
+        className={
+          selectedSorting === "cards"
+            ? styles.catalogue__cards__fullWidth
+            : undefined
+        }
+      >
+        <Selection />
+      </div>
+    )
+
     return result
   }
 
-  // Если нет результатов поиска, показываем NotFound
   if (isEmpty) {
     return (
       <NotFound
@@ -175,6 +208,40 @@ const CatalogueList = () => {
 
   return (
     <div className={styles.catalogue}>
+      <div className={styles.catalogue__choose}>
+        <div className={styles.catalogue__choose__livingSet}>
+          <Heading2>
+            Подобрать <span> Жилой комплекс</span>
+          </Heading2>
+          <Image
+            src="images/icons/chevron-down-orange.svg"
+            alt="Нажмите, чтобы раскрыть"
+            width={16}
+            height={16}
+          />
+        </div>
+
+        <div className={styles.catalogue__choose__favorite}>
+          <Image
+            src="/images/icons/heartOrange.svg"
+            alt="Сохранить поиск"
+            width={26}
+            height={26}
+          />
+          сохранить поиск
+        </div>
+      </div>
+      
+      <div className={styles.catalogue__filtersNavbar}>
+        <CatalogueFilters onShowFilters={handleShowFilters} />
+      </div>
+      
+      {showFilters && (
+        <div className={styles.catalogue__filters}>
+          <Filters onClose={handleCloseFilters} />
+        </div>
+      )}
+      
       <div className={styles.catalogue__header}>
         <Heading3>Найдено 102 ЖК из 182</Heading3>
         {isLaptop && (
