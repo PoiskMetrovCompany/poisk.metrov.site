@@ -10,6 +10,7 @@ import { MapProvider } from "@/providers/map-provider"
 import AboutObjectSmall from "./components/aboutObjectSmall"
 import Documents from "./components/documents"
 import { IAboutObjectItem } from "@/types/Object"
+import Compilation from "../components/compilation"
 
 const aboutObjectItems: IAboutObjectItem[] = [
   {
@@ -80,6 +81,10 @@ const DetailsPage = () => {
       <AboutObjectSmall items={aboutObjectItemsSmall} />
       <ConstructionProgress />
       <Documents />
+      <Compilation
+        header="Похожие квартиры"
+        hasPromoCard = {false}
+      />
     </div>
   )
 }

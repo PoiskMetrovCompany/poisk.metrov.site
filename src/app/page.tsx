@@ -16,7 +16,7 @@ export default function Home() {
         <HeaderCards />
         <Favourites />
         <Mortage />
-        <Compilation />
+        <Compilation header="Подборка квартир" hasPromoCard={true} />
         <Work />
         <Partners />
         <Rating />
