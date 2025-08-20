@@ -39,6 +39,7 @@
       border-radius: 2px;
       background-color: var(--color-text-gray-light);
       width: 72px;
+      user-select: none;
 
       @media screen and (width < 1920px) {
         width: 64px;
