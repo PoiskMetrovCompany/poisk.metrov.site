@@ -39,6 +39,15 @@ const CandidateForm: FC = () => {
   const [childrenCounter, setChildrenCounter] = useState(1)
 
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
+  const [childrenErrors, setChildrenErrors] = useState({})
+
+  const [relativesErrors, setRelativesErrors] = useState<
+    Record<string, boolean>
+  >({})
+
+  const [workExperienceErrors, setWorkExperienceErrors] = useState<
+    Record<string, boolean>
+  >({})
 
   const [courseCounter, setCourseCounter] = useState(1)
   const [additionalCourseTables, setAdditionalCourseTables] = useState<
@@ -168,6 +177,111 @@ const CandidateForm: FC = () => {
     setFormErrors(errors)
   }
 
+  const validateRelativesTables = (): boolean => {
+    const errors: Record<string, boolean> = {}
+    let isValid = true
+
+    // Проверяем первую таблицу (index = 1)
+    const requiredFields1 = [
+      "FIORelative1",
+      "dateOfBirthRelative1",
+      "phoneNumberRelative1",
+      "placeOfStudyRelative1",
+    ]
+
+    requiredFields1.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        errors[field] = true
+        isValid = false
+      }
+    })
+
+    // Проверяем дополнительные таблицы
+    additionalRelativeTables.forEach((index) => {
+      const requiredFields = [
+        `FIORelative${index}`,
+        `dateOfBirthRelative${index}`,
+        `phoneNumberRelative${index}`,
+        `placeOfStudyRelative${index}`,
+      ]
+
+      requiredFields.forEach((field) => {
+        if (!formData[field] || formData[field].trim() === "") {
+          errors[field] = true
+          isValid = false
+        }
+      })
+    })
+
+    setRelativesErrors(errors)
+    return isValid
+  }
+
+  const validateChildrenTables = () => {
+    const errors = {}
+    let isValid = true
+
+    // Список всех индексов таблиц (базовая + дополнительные)
+    const allIndexes = [1, ...additionalChildrenTables]
+
+    allIndexes.forEach((index) => {
+      // Обязательные поля для каждой таблицы
+      const requiredFields = [
+        `FIOChildren${index}`,
+        `dateOfBirthChildren${index}`,
+        `phoneNumberChildren${index}`,
+        `placeOfStudyChildren${index}`,
+      ]
+
+      requiredFields.forEach((fieldName) => {
+        const fieldValue = formData[fieldName]
+
+        if (!fieldValue || fieldValue.trim() === "") {
+          errors[fieldName] = true
+          isValid = false
+        }
+      })
+    })
+
+    setChildrenErrors(errors)
+    return isValid
+  }
+
+  const validateWorkExperienceTable = (): boolean => {
+    // Проверяем только если выбран "Опыт есть"
+    if (selectedProfessionalExperience !== "Опыт есть") {
+      return true
+    }
+
+    const errors: Record<string, boolean> = {}
+    let isValid = true
+
+    const requiredFields = [
+      "companyName",
+      "companyPhone",
+      "companyActivity",
+      "companyAddress",
+      "position",
+      "salary",
+      "hireDate",
+      "dismissalDate",
+      "dismissalReason",
+      "referenceContact",
+    ]
+
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        errors[field] = true
+        isValid = false
+      }
+    })
+
+    setWorkExperienceErrors(errors)
+    return isValid
+  }
+
+
+  
   const handleVacancyChange = (value: string) => {
     setSelectedVacancy(value)
     validateFieldOnChange("selectedVacancy", value)
@@ -209,54 +323,69 @@ const CandidateForm: FC = () => {
     return isValid
   }
 
-  const validatePersonalInfoSection = (): boolean => {
-    const requiredFields = [
-      "FIO",
-      "birthDate",
-      "birthPlace",
-      "mobileNumber",
-      "domesticNumber",
-      "email",
-      "INN",
-    ]
-
-    const errors: Record<string, boolean> = { ...formErrors } // Сохраняем существующие ошибки
-    let isValid = true
-
-    requiredFields.forEach((field) => {
-      if (!formData[field] || formData[field].trim() === "") {
-        errors[field] = true
-        isValid = false
-      } else {
-        errors[field] = false
-      }
-    })
-
-    // Дополнительные проверки для селектов
-    if (!selectedVacancy || selectedVacancy.trim() === "") {
-      errors.selectedVacancy = true
-      isValid = false
-    } else {
-      errors.selectedVacancy = false
-    }
-
-    if (!selectedCity || selectedCity.trim() === "") {
-      errors.selectedCity = true
-      isValid = false
-    } else {
-      errors.selectedCity = false
-    }
-
-    if (goingToROP && (!selectedROP || selectedROP.trim() === "")) {
-      errors.selectedROP = true
-      isValid = false
-    } else {
-      errors.selectedROP = false
-    }
-
-    setFormErrors(errors)
-    return isValid
+  const validatePersonalInfoSection = () => {
+  const newErrors: Record<string, boolean> = {}
+  
+  // Проверяем вакансию
+  if (!selectedVacancy || selectedVacancy.trim() === '') {
+    newErrors.selectedVacancy = true
   }
+  
+  // Проверяем город
+  if (!selectedCity || selectedCity.trim() === '') {
+    newErrors.selectedCity = true
+  }
+  
+  // Проверяем РОПа только если выбран "Я иду к РОПу"
+  if (goingToROP && (!selectedROP || selectedROP.trim() === '')) {
+    newErrors.selectedROP = true
+  }
+  
+  // Проверяем ФИО
+  if (!formData.FIO || formData.FIO.trim() === '') {
+    newErrors.FIO = true
+  }
+  
+  // Проверяем дату рождения
+  if (!formData.birthDate || formData.birthDate.trim() === '' || formData.birthDate.length < 10) {
+    newErrors.birthDate = true
+  }
+  
+  // Проверяем место рождения
+  if (!formData.birthPlace || formData.birthPlace.trim() === '') {
+    newErrors.birthPlace = true
+  }
+  
+  // Проверяем мобильный телефон
+  if (!formData.mobileNumber || formData.mobileNumber.trim() === '' || formData.mobileNumber.length < 18) {
+    newErrors.mobileNumber = true
+  }
+  
+  // Проверяем домашний телефон
+  if (!formData.domesticNumber || formData.domesticNumber.trim() === '') {
+    newErrors.domesticNumber = true
+  }
+  
+  // Проверяем email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!formData.email || formData.email.trim() === '' || !emailRegex.test(formData.email)) {
+    newErrors.email = true
+  }
+  
+  // Проверяем ИНН (должен быть 10 или 12 цифр)
+  if (!formData.INN || formData.INN.trim() === '' || (formData.INN.length !== 10 && formData.INN.length !== 12)) {
+    newErrors.INN = true
+  }
+  
+  // Обновляем состояние ошибок
+  setFormErrors(prev => ({
+    ...prev,
+    ...newErrors
+  }))
+  
+  // Возвращаем true если ошибок нет
+  return Object.keys(newErrors).length === 0
+}
 
   const formatDateForDatabase = (dateString: string): string | null => {
     if (!dateString || dateString.trim() === "") {
@@ -669,10 +798,26 @@ const CandidateForm: FC = () => {
     }
   }
 
+  const handleChildrenFieldChange = (fieldName, value) => {
+    // Обновляем formData
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
+
+    // Если поле заполнено, убираем ошибку
+    if (value && value.trim() !== "" && childrenErrors[fieldName]) {
+      setChildrenErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldName]
+        return newErrors
+      })
+    }
+  }
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true)
       setSubmitError("")
+      setChildrenErrors({}) // Очищаем предыдущие ошибки детей
+      setRelativesErrors({}) // Очищаем предыдущие ошибки родственников
+      setWorkExperienceErrors({}) // Очищаем предыдущие ошибки опыта работы
 
       // Валидация PersonalInfo секции
       const isPersonalInfoValid = validatePersonalInfoSection()
@@ -680,8 +825,25 @@ const CandidateForm: FC = () => {
       // Валидация паспортных данных
       const isPassportValid = validatePassportSection()
 
-      // Проверяем обе валидации
-      if (!isPersonalInfoValid || !isPassportValid) {
+      // Валидация таблиц детей (только если есть дети)
+      const isChildrenValid = haveChildren ? validateChildrenTables() : true
+
+      // Валидация таблиц родственников (только если есть родственники)
+      const isRelativesValid = haveFamilyMembers
+        ? validateRelativesTables()
+        : true
+
+      // Валидация опыта работы (только если выбран "Опыт есть")
+      const isWorkExperienceValid = validateWorkExperienceTable()
+
+      // Проверяем все валидации
+      if (
+        !isPersonalInfoValid ||
+        !isPassportValid ||
+        !isChildrenValid ||
+        !isRelativesValid ||
+        !isWorkExperienceValid
+      ) {
         let errorMessage = "Пожалуйста, заполните все обязательные поля:"
         const errorSections = []
 
@@ -691,6 +853,18 @@ const CandidateForm: FC = () => {
 
         if (!isPassportValid) {
           errorSections.push("паспортные данные")
+        }
+
+        if (!isChildrenValid) {
+          errorSections.push("данные детей")
+        }
+
+        if (!isRelativesValid) {
+          errorSections.push("данные родственников")
+        }
+
+        if (!isWorkExperienceValid) {
+          errorSections.push("опыт работы")
         }
 
         setSubmitError(`${errorMessage} ${errorSections.join(", ")}`)
@@ -820,7 +994,7 @@ const CandidateForm: FC = () => {
           setSubmitError(result.message || "Ошибка при отправке анкеты")
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Ошибка при отправке анкеты:", error)
       setSubmitError("Ошибка соединения с сервером")
     } finally {
@@ -886,6 +1060,7 @@ const CandidateForm: FC = () => {
                 additionalCourseTables={additionalCourseTables}
                 onAddEducationTable={addEducationTable}
                 onAddCourseTable={addCourseTable}
+                workExperienceErrors={workExperienceErrors} // Передаем ошибки
               />
 
               {/* Паспортные данные */}
@@ -944,8 +1119,9 @@ const CandidateForm: FC = () => {
                   <ChildrenTable
                     index={1}
                     formData={formData}
-                    setFormData={setFormData}
+                    setFormData={handleChildrenFieldChange}
                     requiredFields={[""]}
+                    errors={childrenErrors}
                   />
 
                   {additionalChildrenTables.map((index) => (
@@ -953,7 +1129,8 @@ const CandidateForm: FC = () => {
                       key={index}
                       index={index}
                       formData={formData}
-                      setFormData={setFormData}
+                      setFormData={handleChildrenFieldChange}
+                      errors={childrenErrors}
                     />
                   ))}
 
@@ -1008,14 +1185,16 @@ const CandidateForm: FC = () => {
                     formData={formData}
                     setFormData={setFormData}
                     requiredFields={[""]}
+                    errors={relativesErrors}
                   />
 
                   {additionalRelativeTables.map((index) => (
                     <RelativeTable
-                      key={index}
-                      index={index}
+                      index={1}
                       formData={formData}
                       setFormData={setFormData}
+                      requiredFields={[""]}
+                      errors={relativesErrors}
                     />
                   ))}
 

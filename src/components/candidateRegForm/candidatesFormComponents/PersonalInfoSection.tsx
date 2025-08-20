@@ -9,9 +9,9 @@ interface PersonalInfoSectionProps {
   formData: Record<string, any>
   onFormDataChange: (name: string, value: string) => void
   selectedVacancy: string
-  setSelectedVacancy: (value: string) => void // Изменили тип
+  setSelectedVacancy: React.Dispatch<React.SetStateAction<string>>
   selectedCity: string
-  setSelectedCity: (value: string) => void // Изменили тип
+  setSelectedCity: React.Dispatch<React.SetStateAction<string>>
   vacancyOptions: string[]
   cityOptions: string[]
   isLoadingVacancies: boolean
@@ -22,7 +22,7 @@ interface PersonalInfoSectionProps {
   goingToROP: boolean
   setGoingToROP: React.Dispatch<React.SetStateAction<boolean>>
   selectedROP: string
-  setSelectedROP: (value: string) => void // Изменили тип
+  setSelectedROP: React.Dispatch<React.SetStateAction<string>>
   ropOptions: string[]
   errors?: Record<string, boolean> 
 }
@@ -86,6 +86,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     return value.replace(/\D/g, "")
   }
 
+  // Проверяем наличие ошибки для селектов
+  const isVacancyError = errors.selectedVacancy || false
+  const isCityError = errors.selectedCity || false
+  const isROPError = errors.selectedROP || false
+
   return (
     <>
       <FormRow>
@@ -97,8 +102,12 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             value={selectedVacancy}
             onChange={setSelectedVacancy}
             isLoading={isLoadingVacancies}
-            error={vacancyError}
+            error={vacancyError || (isVacancyError ? "Поле обязательно для заполнения" : "")}
             required={true}
+            style={{
+              borderColor: isVacancyError ? '#e74c3c' : undefined,
+              borderWidth: isVacancyError ? '1.5px' : undefined
+            }}
           />
           {vacancyError && (
             <div
@@ -121,6 +130,14 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
               </button>
             </div>
           )}
+          {isVacancyError && !vacancyError && (
+            <div
+              className="error-message"
+              style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
+            >
+              Поле обязательно для заполнения
+            </div>
+          )}
         </div>
       </FormRow>
 
@@ -133,7 +150,20 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             value={selectedCity}
             onChange={setSelectedCity}
             required={true}
+            error={isCityError ? "Поле обязательно для заполнения" : ""}
+            style={{
+              borderColor: isCityError ? '#e74c3c' : undefined,
+              borderWidth: isCityError ? '1.5px' : undefined
+            }}
           />
+          {isCityError && (
+            <div
+              className="error-message"
+              style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
+            >
+              Поле обязательно для заполнения
+            </div>
+          )}
         </div>
       </FormRow>
 
@@ -172,7 +202,20 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
                 value={selectedROP}
                 onChange={setSelectedROP}
                 required={true}
+                error={isROPError ? "Поле обязательно для заполнения" : ""}
+                style={{
+                  borderColor: isROPError ? '#e74c3c' : undefined,
+                  borderWidth: isROPError ? '1.5px' : undefined
+                }}
               />
+              {isROPError && (
+                <div
+                  className="error-message"
+                  style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
+                >
+                  Поле обязательно для заполнения
+                </div>
+              )}
             </div>
           </FormRow>
         </div>
@@ -190,8 +233,8 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           required={true}
           placeholder="Иванов Иван Иванович"
           value={formData.FIO || ""}
-          error={errors.FIO} // Передаем ошибку
           onChange={(value) => onFormDataChange("FIO", formatNameInput(value))}
+          error={errors.FIO || false}
         />
       </FormRow>
 
@@ -230,11 +273,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="01.01.1990"
           maxLength={10}
           value={formData.birthDate || ""}
-          error={errors.birthDate} // Передаем ошибку
           onChange={(value) =>
             onFormDataChange("birthDate", formatDateInput(value))
           }
           containerClassName="input-container w-49"
+          error={errors.birthDate || false}
         />
 
         <FormInput
@@ -244,9 +287,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="text"
           placeholder="Страна, город"
           value={formData.birthPlace || ""}
-          error={errors.birthPlace} // Передаем ошибку
           onChange={(value) => onFormDataChange("birthPlace", value)}
           containerClassName="input-container w-49"
+          error={errors.birthPlace || false}
         />
       </FormRow>
 
@@ -259,11 +302,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="+7 (905) 123-45-67"
           maxLength={18}
           value={formData.mobileNumber || ""}
-          error={errors.mobileNumber} // Передаем ошибку
           onChange={(value) =>
             onFormDataChange("mobileNumber", formatMobilePhone(value))
           }
           containerClassName="input-container w-49"
+          error={errors.mobileNumber || false}
         />
 
         <FormInput
@@ -274,11 +317,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="999 999"
           maxLength={7}
           value={formData.domesticNumber || ""}
-          error={errors.domesticNumber} // Передаем ошибку
           onChange={(value) =>
             onFormDataChange("domesticNumber", formatHomePhone(value))
           }
           containerClassName="input-container w-49"
+          error={errors.domesticNumber || false}
         />
       </FormRow>
 
@@ -290,10 +333,10 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="email"
           placeholder="example@gmail.com"
           value={formData.email || ""}
-          error={errors.email} // Передаем ошибку
           onChange={(value) => onFormDataChange("email", value)}
           containerClassName="input-container w-49"
           className="formInput"
+          error={errors.email || false}
         />
 
         <FormInput
@@ -304,9 +347,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="123456789012"
           maxLength={12}
           value={formData.INN || ""}
-          error={errors.INN} // Передаем ошибку
           onChange={(value) => onFormDataChange("INN", formatINN(value))}
           containerClassName="input-container w-49"
+          error={errors.INN || false}
         />
       </FormRow>
     </>

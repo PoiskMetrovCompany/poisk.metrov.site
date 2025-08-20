@@ -5,12 +5,14 @@ interface IWorkExperienceTableProps {
   formData: Record<string, any>;
   setFormData: (updater: (prev: Record<string, any>) => Record<string, any>) => void;
   requiredFields?: string[]; 
+  errors?: Record<string, boolean>; // Добавляем пропс для ошибок
 }
 
 const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({ 
   formData, 
   setFormData, 
-  requiredFields = [] 
+  requiredFields = [],
+  errors = {} // Значение по умолчанию
 }) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, '');
@@ -57,6 +59,11 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
     return requiredFields.includes(fieldName);
   };
 
+  // Функция для проверки наличия ошибки у поля
+  const hasError = (fieldName: string): boolean => {
+    return Boolean(errors[fieldName]);
+  };
+
   const renderInputWithRequired = (
     name: string, 
     placeholder: string, 
@@ -65,6 +72,7 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
     maxLength?: number
   ) => {
     const required = isRequired(name);
+    const error = hasError(name);
     
     return (
       <div className="custom-input-container">
@@ -76,9 +84,16 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
           onChange={onChange}
           required={required}
           maxLength={maxLength}
-          className={value ? 'has-value' : ''}
+          className={`${value ? 'has-value' : ''} ${error ? 'error' : ''}`}
+          style={{
+            borderColor: error ? '#e74c3c' : undefined,
+            borderWidth: error ? '1.5px' : undefined,
+          }}
         />
-        <label htmlFor={name} className={`custom-placeholder ${required ? 'required' : ''}`}>
+        <label 
+          htmlFor={name} 
+          className={`custom-placeholder ${required ? 'required' : ''} ${error ? 'error' : ''}`}
+        >
           {placeholder}
           {required && <span className="required-star"> *</span>}
         </label>
@@ -99,7 +114,11 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
         </caption>
         <tbody>
           <tr>
-            <td style={{borderTopLeftRadius: '16px', borderTopRightRadius: 0}}>
+            <td style={{
+              borderTopLeftRadius: '16px', 
+              borderTopRightRadius: 0,
+              borderColor: hasError('companyName') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'companyName',
                 'Полное наименование предприятия',
@@ -107,7 +126,11 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
                 (e) => handleInputChange('companyName', e.target.value)
               )}
             </td>
-            <td style={{borderTopRightRadius: '16px', borderTopLeftRadius: 0 }}>
+            <td style={{
+              borderTopRightRadius: '16px', 
+              borderTopLeftRadius: 0,
+              borderColor: hasError('companyPhone') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'companyPhone',
                 'Телефон предприятия',
@@ -121,7 +144,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td colSpan={2} style={{
+              borderColor: hasError('companyActivity') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'companyActivity',
                 'Сфера деятельности предприятия',
@@ -131,7 +156,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td colSpan={2} style={{
+              borderColor: hasError('companyAddress') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'companyAddress',
                 'Адрес предприятия',
@@ -141,7 +168,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={{
+              borderColor: hasError('position') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'position',
                 'Должность',
@@ -149,7 +178,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
                 (e) => handleInputChange('position', e.target.value)
               )}
             </td>
-            <td>
+            <td style={{
+              borderColor: hasError('salary') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'salary',
                 'Уровень заработной платы',
@@ -159,7 +190,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={{
+              borderColor: hasError('hireDate') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'hireDate',
                 'Дата приема (месяц, год)',
@@ -168,7 +201,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
                 10
               )}
             </td>
-            <td>
+            <td style={{
+              borderColor: hasError('dismissalDate') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'dismissalDate',
                 'Дата увольнения (месяц, год)',
@@ -179,7 +214,9 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td colSpan={2} style={{
+              borderColor: hasError('dismissalReason') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'dismissalReason',
                 'Причина увольнения',
@@ -189,7 +226,11 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td colSpan={2} style={{borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px'}}>
+            <td colSpan={2} style={{
+              borderBottomLeftRadius: '16px', 
+              borderBottomRightRadius: '16px',
+              borderColor: hasError('referenceContact') ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 'referenceContact',
                 'ФИО и номер телефона лица, к которому можно обратиться за рекомендацией',

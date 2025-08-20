@@ -6,13 +6,15 @@ interface IRelativeTableProps {
   formData: Record<string, any>;
   setFormData: (updater: (prev: Record<string, any>) => Record<string, any>) => void;
   requiredFields?: string[]; 
+  errors?: Record<string, boolean>; // Добавляем пропс для ошибок
 }
 
 const RelativeTable: FC<IRelativeTableProps> = ({ 
   index, 
   formData, 
   setFormData, 
-  requiredFields = [] 
+  requiredFields = [],
+  errors = {} // Значение по умолчанию
 }) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, '');
@@ -74,6 +76,11 @@ const RelativeTable: FC<IRelativeTableProps> = ({
     return requiredFields.includes(fieldName) || isAlwaysRequired;
   };
 
+  // Функция для проверки наличия ошибки у поля
+  const hasError = (fieldName: string): boolean => {
+    return Boolean(errors[fieldName]);
+  };
+
   const renderInputWithRequired = (
     name: string, 
     placeholder: string, 
@@ -82,6 +89,7 @@ const RelativeTable: FC<IRelativeTableProps> = ({
     maxLength?: number
   ) => {
     const required = isRequired(name);
+    const error = hasError(name);
     
     return (
       <div className="custom-input-container">
@@ -93,9 +101,16 @@ const RelativeTable: FC<IRelativeTableProps> = ({
           onChange={onChange}
           required={required}
           maxLength={maxLength}
-          className={value ? 'has-value' : ''}
+          className={`${value ? 'has-value' : ''} ${error ? 'error' : ''}`}
+          style={{
+            borderColor: error ? '#e74c3c' : undefined,
+            borderWidth: error ? '1.5px' : undefined,
+          }}
         />
-        <label htmlFor={name} className={`custom-placeholder ${required ? 'required' : ''}`}>
+        <label 
+          htmlFor={name} 
+          className={`custom-placeholder ${required ? 'required' : ''} ${error ? 'error' : ''}`}
+        >
           {placeholder}
           {required && <span className="required-star"> *</span>}
         </label>
@@ -116,7 +131,14 @@ const RelativeTable: FC<IRelativeTableProps> = ({
         </caption>
         <tbody>
           <tr>
-            <td colSpan={2} style={{borderTopLeftRadius: '16px', borderTopRightRadius: '16px'}}>
+            <td 
+              colSpan={2} 
+              style={{
+                borderTopLeftRadius: '16px', 
+                borderTopRightRadius: '16px',
+                borderColor: hasError(`FIORelative${index}`) ? '#e74c3c' : undefined,
+              }}
+            >
               {renderInputWithRequired(
                 `FIORelative${index}`,
                 'Степень родства, ФИО члена семьи',
@@ -129,7 +151,9 @@ const RelativeTable: FC<IRelativeTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={{
+              borderColor: hasError(`dateOfBirthRelative${index}`) ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 `dateOfBirthRelative${index}`,
                 'Дата рождения',
@@ -138,7 +162,9 @@ const RelativeTable: FC<IRelativeTableProps> = ({
                 10
               )}
             </td>
-            <td>
+            <td style={{
+              borderColor: hasError(`phoneNumberRelative${index}`) ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 `phoneNumberRelative${index}`,
                 'Номер телефона',
@@ -149,7 +175,9 @@ const RelativeTable: FC<IRelativeTableProps> = ({
             </td>
           </tr>
           <tr>
-            <td>
+            <td style={{
+              borderColor: hasError(`placeOfStudyRelative${index}`) ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 `placeOfStudyRelative${index}`,
                 'Место учебы/работы, рабочий телефон',
@@ -157,7 +185,10 @@ const RelativeTable: FC<IRelativeTableProps> = ({
                 (e) => handleInputChange(`placeOfStudyRelative${index}`, e.target.value)
               )}
             </td>
-            <td style={{borderBottomRightRadius: '16px'}}>
+            <td style={{
+              borderBottomRightRadius: '16px',
+              borderColor: hasError(`placeOfLivingRelative${index}`) ? '#e74c3c' : undefined,
+            }}>
               {renderInputWithRequired(
                 `placeOfLivingRelative${index}`,
                 'Место проживания',
