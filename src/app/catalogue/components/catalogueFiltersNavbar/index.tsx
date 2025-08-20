@@ -3,6 +3,8 @@ import styles from "./catalogueFilters.module.scss"
 import clsx from "clsx"
 import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import IconImage from "@/components/ui/IconImage"
+import IconButton from "@/components/ui/buttons/IconButton"
 
 interface CatalogueFiltersProps {
   onShowFilters: () => void
@@ -16,54 +18,57 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
 
   return (
     <div className={styles.catalogue__filters__container}>
-      <div className={styles.catalogue__filters__container__select}>
-        <div className={styles.catalogue__filters__container__select__text}>
-          Кол-во комнат
+      <div className={styles.catalogue__filters__container__inputs}>
+        <div className={styles.catalogue__filters__container__select}>
+          <div className={styles.catalogue__filters__container__select__text}>
+            Цена
+          </div>
+          <IconImage
+            className={styles.catalogue__filters__container__select__icon}
+            iconLink="/images/icons/arrow-down-gray.svg"
+            alt="arrow-price"
+          />
         </div>
-        <Image
-          src="/images/icons/arrow-down-gray.svg"
-          alt="Нажмите, чтобы выбрать колличество комнат"
-          width={12}
-          height={6}
-        />
-      </div>
-      <div className={styles.catalogue__filters__container__select}>
-        <div className={styles.catalogue__filters__container__select__text}>
-          Цена
+
+        <div className={styles.catalogue__filters__container__search}>
+          <IconImage
+            className={styles.catalogue__filters__container__search__icon}
+            iconLink="/images/icons/search-gray.svg"
+            alt="search-arrow"
+          />
+          <input
+            type="text"
+            placeholder="Район, метро, улица, ЖК, застройщик"
+            className={styles.catalogue__filters__container__search__text}
+          />
         </div>
-        <Image
-          src="/images/icons/arrow-down-gray.svg"
-          alt="Нажмите, чтобы выбрать колличество комнат"
-          width={12}
-          height={6}
-        />
-      </div>
-      <div className={styles.catalogue__filters__container__search}>
-        <Image
-          src="/images/icons/search.svg"
-          alt="Введите название ключевых слов для поиска"
-          width={20}
-          height={20}
-        />
-        <input
-          type="text"
-          placeholder="Район, метро, улица, ЖК, застройщик"
-          className={styles.catalogue__filters__container__search__text}
-        />
       </div>
       <div className={styles.catalogue__filters__container__buttonsDesktop}>
         <ActionButton
           type="primary"
           onClick={applyFilters}
-          className={styles.catalogue__filters__container__buttonsDesktop__button}
+          className={
+            styles.catalogue__filters__container__buttonsDesktop__button__show
+          }
           size="medium"
         >
-          Показать <span>12166 квартир</span>
+          Показать 12166 квартир
         </ActionButton>
-        <ActionButton
+        <IconButton
+          iconLink="/images/icons/filters-orange.svg"
+          onClick={onShowFilters}
+          className={
+            styles.catalogue__filters__container__buttonsDesktop__button__filter
+          }
+          size="md"
+          type="orange-light"
+        />
+        {/* <ActionButton
           type="secondary"
           onClick={onShowFilters}
-          className={styles.catalogue__filters__container__buttonsDesktop__button__filter}
+          className={
+            styles.catalogue__filters__container__buttonsDesktop__button__filter
+          }
           size="medium"
           svgSrc="/images/icons/filters-orange.svg"
           svgAlt="Показать фильтры"
@@ -71,8 +76,8 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
           svgHeight={26}
           svgClassName={styles.filterSvg}
         >
-          Все фильтры
-        </ActionButton>
+          {" "}
+        </ActionButton> */}
       </div>
     </div>
   )

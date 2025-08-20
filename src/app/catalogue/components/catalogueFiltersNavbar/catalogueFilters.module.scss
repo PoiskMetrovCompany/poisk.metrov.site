@@ -5,10 +5,16 @@
       align-items: center;
       justify-content: space-between;
 
+      height: 96px;
       padding: 12px;
       border-radius: 80px;
 
       background: var(--color-white);
+
+      &__inputs {
+        display: flex;
+        gap: 16px;
+      }
 
       &__select {
         display: flex;
@@ -16,13 +22,17 @@
         align-items: center;
         justify-content: space-between;
 
-        padding-right: 22px;
-        padding-left: 24px;
+        width: 240px;
+        height: 24px;
+        padding-right: 16px;
+        padding-left: 16px;
         border-right: 2px solid var(--color-gray-white);
+        border-left: 2px solid var(--color-gray-white);
 
         &__text {
-          width: 168px;
+          padding-left: 24px;
           font-size: 18px;
+          font-weight: 400;
           color: var(--color-text-gray);
 
           @media (width <= 1920px) {
@@ -32,6 +42,12 @@
           @media (width <= 1440px) {
             width: 110px;
           }
+        }
+
+        &__icon {
+          width: 12px;
+          height: 8px;
+          margin-right: 16px;
         }
 
         @media (width <= 768px) {
@@ -46,7 +62,15 @@
       &__search {
         display: flex;
         gap: 10px;
+        align-items: center;
         justify-content: space-between;
+
+        margin-left: 24px;
+
+        &__icon {
+          width: 24px;
+          height: 24px;
+        }
 
         input {
           width: 324px;
@@ -66,6 +90,8 @@
 
         &__text {
           font-size: 18px;
+          font-weight: 400;
+          line-height: 150%;
           color: var(--color-text-gray);
 
           @media (width <= 1920px) {
@@ -85,34 +111,11 @@
         }
 
         &__button {
-          width: 306px;
-
-          &__filter {
-            width: 255px;
-
-            @media (width <= 1920px) {
-              width: 206px;
-              padding: 0;
-              font-size: 15px;
-            }
-
-            @media (width <= 1440px) {
-              width: 173px;
-
-              svg {
-                width: 15px;
-                height: 15px;
-              }
-            }
-          }
-
-          @media (width <= 1920px) {
-            width: 136px;
-            font-size: 15px;
-          }
-
-          @media (width <= 1440px) {
-            width: 112px;
+          &__show {
+            flex: 1;
+            font-size: 18px !important;
+            font-weight: 400 !important;
+            line-height: 150%;
           }
         }
 
