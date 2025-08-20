@@ -1,0 +1,181 @@
+.slider {
+  position: relative;
+
+  overflow: hidden;
+
+  width: 677px;
+  height: 790px;
+  border-radius: 32px;
+
+  background: #fff;
+  box-shadow: 0 0 26px 0 rgb(34 32 32 / 10%);
+
+  &__navigation {
+    position: absolute;
+    z-index: 10;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+
+    width: 40%;
+
+    &__item {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background-color: var(--color-border-gray);
+
+      &.active {
+        background-color: var(--color-orange);
+      }
+    }
+
+    @media (width <= 1024px) {
+      bottom: 20px;
+    }
+  }
+
+  &__swiper {
+    width: 100%;
+    height: 100%;
+
+    &__slide {
+      width: 100%;
+      height: 100%;
+
+      background-image: url("/images/temporary/promo-house.png");
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+
+        height: 100%;
+        padding: 32px;
+
+        &__info {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          &__title {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 130%;
+            color: var(--color-beige);
+          }
+
+          &__description {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &__text {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              &__road {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+
+                &__item {
+                  display: flex;
+                  gap: 8px;
+                  align-items: center;
+
+                  &__icon {
+                    width: 24px;
+                    height: 24px;
+                  }
+
+                  &__text {
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 150%;
+                    color: var(--color-border-gray-light);
+                  }
+                }
+              }
+
+              &__price {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 150%;
+                color: var(--color-border-gray-light);
+              }
+            }
+
+            &__button {
+              height: 56px;
+              padding: 17px 32px;
+              border-radius: 40px;
+
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 150%;
+              color: var(--color-black);
+
+              background-color: var(--color-border-gray);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__navigationButton {
+    cursor: pointer;
+
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+
+    background: var(--color-white);
+    box-shadow: 0 0 16px 0 rgb(0 0 0 / 4%);
+
+    transition: all 0.3s ease;
+
+    &::after {
+      display: none;
+    }
+
+    &__icon {
+      position: relative;
+      width: 28px;
+      height: 28px;
+
+      &__icon_next {
+        transform: rotate(180deg);
+      }
+    }
+
+    &:hover {
+      background: var(--color-beige);
+    }
+  }
+
+  &__navigationButtonPrev {
+    left: 32px;
+  }
+
+  &__navigationButtonNext {
+    right: 32px;
+  }
+}
