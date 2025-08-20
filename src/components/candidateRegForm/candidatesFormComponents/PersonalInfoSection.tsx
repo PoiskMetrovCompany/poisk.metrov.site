@@ -1,27 +1,30 @@
-import React, { FC } from "react";
-import { FormRow } from "./FormRow";
-import { FormInput } from "./FormInput";
-import { RadioGroup } from "./RadioGroup";
-import CustomSelect from "../CustomSelect";
+import React, { FC } from "react"
+import { FormRow } from "./FormRow"
+import { FormInput } from "./FormInput"
+import { RadioGroup } from "./RadioGroup"
+import CustomSelect from "@/components/ui/inputs/select/customSelect"
+import { SectionHeader } from "./SectionHeader"
 
 interface PersonalInfoSectionProps {
-  formData: Record<string, any>;
-  onFormDataChange: (name: string, value: string) => void;
-  selectedVacancy: string;
-  setSelectedVacancy: React.Dispatch<React.SetStateAction<string>>;
-  selectedCity: string;
-  setSelectedCity: React.Dispatch<React.SetStateAction<string>>;
-  vacancyOptions: string[];
-  cityOptions: string[];
-  showVacancyOptions: boolean;
-  setShowVacancyOptions: React.Dispatch<React.SetStateAction<boolean>>;
-  showCityOptions: boolean;
-  setShowCityOptions: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoadingVacancies: boolean;
-  vacancyError: string;
-  loadVacancies: () => void;
-  surnameChanged: boolean;
-  setSurnameChanged: React.Dispatch<React.SetStateAction<boolean>>;
+  formData: Record<string, any>
+  onFormDataChange: (name: string, value: string) => void
+  selectedVacancy: string
+  setSelectedVacancy: (value: string) => void // Изменили тип
+  selectedCity: string
+  setSelectedCity: (value: string) => void // Изменили тип
+  vacancyOptions: string[]
+  cityOptions: string[]
+  isLoadingVacancies: boolean
+  vacancyError: string
+  loadVacancies: () => void
+  surnameChanged: boolean
+  setSurnameChanged: React.Dispatch<React.SetStateAction<boolean>>
+  goingToROP: boolean
+  setGoingToROP: React.Dispatch<React.SetStateAction<boolean>>
+  selectedROP: string
+  setSelectedROP: (value: string) => void // Изменили тип
+  ropOptions: string[]
+  errors?: Record<string, boolean> 
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
@@ -33,80 +36,85 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   setSelectedCity,
   vacancyOptions,
   cityOptions,
-  showVacancyOptions,
-  setShowVacancyOptions,
-  showCityOptions,
-  setShowCityOptions,
   isLoadingVacancies,
   vacancyError,
   loadVacancies,
   surnameChanged,
   setSurnameChanged,
+  goingToROP,
+  setGoingToROP,
+  selectedROP,
+  setSelectedROP,
+  ropOptions,
+  errors = {}, 
 }) => {
   const formatNameInput = (value: string) => {
-    return value.replace(/[^а-яёА-ЯЁ\s]/g, '');
-  };
+    return value.replace(/[^а-яёА-ЯЁ\s]/g, "")
+  }
 
   const formatDateInput = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`;
-    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`;
-  };
+    const digits = value.replace(/\D/g, "")
+    if (digits.length <= 2) return digits
+    if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`
+    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`
+  }
 
   const formatMobilePhone = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length === 0) return '';
-    if (digits.length <= 1) return `+7 (${digits}`;
-    if (digits.length <= 4) return `+7 (${digits.slice(1)}`;
-    if (digits.length <= 7) return `+7 (${digits.slice(1, 4)}) ${digits.slice(4)}`;
-    if (digits.length <= 9) return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-    return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}`;
-  };
+    const digits = value.replace(/\D/g, "")
+    if (digits.length === 0) return ""
+    if (digits.length <= 1) return `+7 (${digits}`
+    if (digits.length <= 4) return `+7 (${digits.slice(1)}`
+    if (digits.length <= 7)
+      return `+7 (${digits.slice(1, 4)}) ${digits.slice(4)}`
+    if (digits.length <= 9)
+      return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(
+        7
+      )}`
+    return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(
+      7,
+      9
+    )}-${digits.slice(9, 11)}`
+  }
 
   const formatHomePhone = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 3) return digits;
-    return `${digits.slice(0, 3)} ${digits.slice(3, 6)}`;
-  };
+    const digits = value.replace(/\D/g, "")
+    if (digits.length <= 3) return digits
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)}`
+  }
 
   const formatINN = (value: string) => {
-    return value.replace(/\D/g, '');
-  };
+    return value.replace(/\D/g, "")
+  }
 
   return (
     <>
       <FormRow>
         <div className="input-container">
-          <label htmlFor="Vacancy" className="formLabel required">Вакансия</label>
           <CustomSelect
+            label="Вакансия"
             options={vacancyOptions}
             placeholder="Выберите вакансию, на которую подаетесь"
             value={selectedVacancy}
-            show={showVacancyOptions}
+            onChange={setSelectedVacancy}
             isLoading={isLoadingVacancies}
             error={vacancyError}
-            onToggle={() => {
-              setShowVacancyOptions(!showVacancyOptions);
-              setShowCityOptions(false);
-            }}
-            onSelect={(option) => {
-              setSelectedVacancy(option);
-              setShowVacancyOptions(false);
-            }}
+            required={true}
           />
           {vacancyError && (
-            <div className="error-message" style={{ marginTop: '5px', fontSize: '14px', color: '#e74c3c' }}>
+            <div
+              className="error-message"
+              style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
+            >
               {vacancyError}
               <button
                 onClick={loadVacancies}
                 style={{
-                  marginLeft: '10px',
-                  background: 'none',
-                  border: 'none',
-                  color: '#3498db',
-                  cursor: 'pointer',
-                  textDecoration: 'underline'
+                  marginLeft: "10px",
+                  background: "none",
+                  border: "none",
+                  color: "#3498db",
+                  cursor: "pointer",
+                  textDecoration: "underline",
                 }}
               >
                 Повторить
@@ -118,34 +126,72 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
 
       <FormRow>
         <div className="input-container">
-          <label htmlFor="City" className="formLabel required">Город работы</label>
           <CustomSelect
+            label="Город работы"
             options={cityOptions}
             placeholder="Выберите город в котором хотите работать"
             value={selectedCity}
-            show={showCityOptions}
-            isLoading={false}
-            error=""
-            onToggle={() => {
-              setShowCityOptions(!showCityOptions);
-              setShowVacancyOptions(false);
-            }}
-            onSelect={(option) => {
-              setSelectedCity(option);
-              setShowCityOptions(false);
-            }}
+            onChange={setSelectedCity}
+            required={true}
           />
         </div>
       </FormRow>
 
+      <FormRow className="justify-flex-start required">
+        <p
+          style={{
+            marginTop: 0,
+            marginLeft: "0.4375rem",
+            color: "rgba(24, 24, 23, 1)",
+          }}
+        >
+          Вы идете в команду РОПа или в административный состав?
+        </p>
+      </FormRow>
+
+      <FormRow className="justify-flex-start" style={{ marginTop: 0 }}>
+        <RadioGroup
+          name="goingToROP"
+          value={goingToROP}
+          onChange={setGoingToROP}
+          options={[
+            { value: true, label: "Я иду к РОПу" },
+            { value: false, label: "Я буду работать в админ составе" },
+          ]}
+        />
+      </FormRow>
+
+      {goingToROP && (
+        <div className="toggle-block" style={{ width: "100%" }}>
+          <FormRow>
+            <div className="input-container">
+              <CustomSelect
+                label="Выберите РОПа в команду которого вы идете"
+                options={ropOptions}
+                placeholder="Выберите РОП"
+                value={selectedROP}
+                onChange={setSelectedROP}
+                required={true}
+              />
+            </div>
+          </FormRow>
+        </div>
+      )}
+
+      <SectionHeader
+        title="Сведенья о вас"
+        subtitle="Мы не передаём эти данные третьим лицам и используем их только для целей адаптации и сопровождения кандидатов"
+      />
+      
       <FormRow>
         <FormInput
           label="ФИО"
           name="FIO"
           required={true}
           placeholder="Иванов Иван Иванович"
-          value={formData.FIO || ''}
-          onChange={(value) => onFormDataChange('FIO', formatNameInput(value))}
+          value={formData.FIO || ""}
+          error={errors.FIO} // Передаем ошибку
+          onChange={(value) => onFormDataChange("FIO", formatNameInput(value))}
         />
       </FormRow>
 
@@ -153,8 +199,8 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
         <RadioGroup
           name="surnameChanged"
           options={[
-            { value: true, label: 'Я менял(-а) фамилию' },
-            { value: false, label: 'Я не менял(-а) фамилию' }
+            { value: true, label: "Я менял(-а) фамилию" },
+            { value: false, label: "Я не менял(-а) фамилию" },
           ]}
           value={surnameChanged}
           onChange={setSurnameChanged}
@@ -162,14 +208,14 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       </FormRow>
 
       {surnameChanged && (
-        <div className="toggle-block" style={{width: '100%'}}>
+        <div className="toggle-block" style={{ width: "100%" }}>
           <FormRow>
             <FormInput
               label="Причина изменения фамилии"
               name="reasonOfChange"
               placeholder="Опишите, почему поменяли фамилию"
-              value={formData.reasonOfChange || ''}
-              onChange={(value) => onFormDataChange('reasonOfChange', value)}
+              value={formData.reasonOfChange || ""}
+              onChange={(value) => onFormDataChange("reasonOfChange", value)}
             />
           </FormRow>
         </div>
@@ -183,8 +229,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="text"
           placeholder="01.01.1990"
           maxLength={10}
-          value={formData.birthDate || ''}
-          onChange={(value) => onFormDataChange('birthDate', formatDateInput(value))}
+          value={formData.birthDate || ""}
+          error={errors.birthDate} // Передаем ошибку
+          onChange={(value) =>
+            onFormDataChange("birthDate", formatDateInput(value))
+          }
           containerClassName="input-container w-49"
         />
 
@@ -194,8 +243,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           required={true}
           type="text"
           placeholder="Страна, город"
-          value={formData.birthPlace || ''}
-          onChange={(value) => onFormDataChange('birthPlace', value)}
+          value={formData.birthPlace || ""}
+          error={errors.birthPlace} // Передаем ошибку
+          onChange={(value) => onFormDataChange("birthPlace", value)}
           containerClassName="input-container w-49"
         />
       </FormRow>
@@ -208,8 +258,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="text"
           placeholder="+7 (905) 123-45-67"
           maxLength={18}
-          value={formData.mobileNumber || ''}
-          onChange={(value) => onFormDataChange('mobileNumber', formatMobilePhone(value))}
+          value={formData.mobileNumber || ""}
+          error={errors.mobileNumber} // Передаем ошибку
+          onChange={(value) =>
+            onFormDataChange("mobileNumber", formatMobilePhone(value))
+          }
           containerClassName="input-container w-49"
         />
 
@@ -220,8 +273,11 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="text"
           placeholder="999 999"
           maxLength={7}
-          value={formData.domesticNumber || ''}
-          onChange={(value) => onFormDataChange('domesticNumber', formatHomePhone(value))}
+          value={formData.domesticNumber || ""}
+          error={errors.domesticNumber} // Передаем ошибку
+          onChange={(value) =>
+            onFormDataChange("domesticNumber", formatHomePhone(value))
+          }
           containerClassName="input-container w-49"
         />
       </FormRow>
@@ -233,8 +289,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           name="email"
           type="email"
           placeholder="example@gmail.com"
-          value={formData.email || ''}
-          onChange={(value) => onFormDataChange('email', value)}
+          value={formData.email || ""}
+          error={errors.email} // Передаем ошибку
+          onChange={(value) => onFormDataChange("email", value)}
           containerClassName="input-container w-49"
           className="formInput"
         />
@@ -246,11 +303,14 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           type="tel"
           placeholder="123456789012"
           maxLength={12}
-          value={formData.INN || ''}
-          onChange={(value) => onFormDataChange('INN', formatINN(value))}
+          value={formData.INN || ""}
+          error={errors.INN} // Передаем ошибку
+          onChange={(value) => onFormDataChange("INN", formatINN(value))}
           containerClassName="input-container w-49"
         />
       </FormRow>
     </>
-  );
-};
+  )
+}
+
+export default PersonalInfoSection

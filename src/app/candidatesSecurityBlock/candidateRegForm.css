@@ -223,7 +223,6 @@ form {
   background: none;
 }
 
-/* Лейблы для полей */
 .formLabel {
   position: absolute;
   z-index: 2;
@@ -239,14 +238,102 @@ form {
   background-color: rgb(255 255 255 / 100%);
 }
 
-.required::after{
-    content: "  *";
-    color: #f13131
+.required::after {
+  content: "  *";
+  color: #f13131 !important;
 }
 
-.required label::after{
-    content: " *";
-    color: #f13131
+.required label::after {
+  content: " *";
+  color: #f13131 !important;
+}
+
+.formInput.error {
+  border-color: #e74c3c !important;
+  border-width: 1.5px;
+}
+
+.formInput.error:focus {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgb(231 76 60 / 20%);
+}
+
+/* Анимация для подсветки ошибок */
+.formInput {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Стили для текста ошибки (если понадобится в будущем) */
+.error-message {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #e74c3c;
+}
+
+/* Стили для обязательных полей с ошибками */
+.formLabel.required.error::after {
+  content: " *";
+  color: #e74c3c !important;
+}
+
+.custom-input-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.custom-input-container input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+
+  font-size: 1rem;
+
+  background: transparent;
+}
+
+.custom-input-container input:focus {
+  outline: none;
+}
+
+.custom-placeholder {
+  pointer-events: none;
+
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+
+  overflow: hidden;
+
+  max-width: calc(100% - 20px);
+
+  font-size: 1rem;
+  color: #999;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  transition: all 0.3s ease;
+}
+
+.custom-input-container input:focus + .custom-placeholder,
+.custom-input-container input.has-value + .custom-placeholder {
+  transform: translateY(-50%) scale(0.8);
+  opacity: 0;
+}
+
+.custom-placeholder .required-star {
+  position: relative;
+  font-weight: bold;
+  color: #f13131;
+}
+
+.custom-placeholder.required .required-star {
+  position: absolute;
+  margin-left: 4px;
 }
 
 /* ==============================================

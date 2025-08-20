@@ -11,6 +11,7 @@ interface FormInputProps {
   className?: string;
   containerClassName?: string;
   required?: boolean;
+  error?: boolean; // Добавляем проп для ошибки
 }
 
 export const FormInput: FC<FormInputProps> = ({
@@ -24,22 +25,30 @@ export const FormInput: FC<FormInputProps> = ({
   className = "formInput big",
   containerClassName = "input-container",
   required = false,
+  error = false,
 }) => {
   return (
     <div className={containerClassName}>
-      <label htmlFor={name} className={`formLabel ${required ? 'required' : ''}`}>
+      <label 
+        htmlFor={name} 
+        className={`formLabel ${required ? 'required' : ''} ${error ? 'error' : ''}`}
+      >
         {label}
       </label>
       <input
         type={type}
         name={name}
         id={name}
-        className={className}
+        className={`${className} ${error ? 'error' : ''}`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         required={required}
+        style={{
+          borderColor: error ? '#e74c3c' : undefined,
+          borderWidth: error ? '1.5px' : undefined
+        }}
       />
     </div>
   );

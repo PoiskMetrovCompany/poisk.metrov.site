@@ -5,9 +5,15 @@ interface IRelativeTableProps {
   index: number;
   formData: Record<string, any>;
   setFormData: (updater: (prev: Record<string, any>) => Record<string, any>) => void;
+  requiredFields?: string[]; 
 }
 
-const RelativeTable: FC<IRelativeTableProps> = ({ index, formData, setFormData }) => {
+const RelativeTable: FC<IRelativeTableProps> = ({ 
+  index, 
+  formData, 
+  setFormData, 
+  requiredFields = [] 
+}) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length <= 2) {
@@ -25,7 +31,7 @@ const RelativeTable: FC<IRelativeTableProps> = ({ index, formData, setFormData }
     if (numbers.length > 0 && numbers[0] !== '7') {
       formattedNumbers = '7' + numbers;
     }
-    
+
     if (formattedNumbers.length <= 1) {
       return '+7';
     } else if (formattedNumbers.length <= 4) {
@@ -57,6 +63,46 @@ const RelativeTable: FC<IRelativeTableProps> = ({ index, formData, setFormData }
     handleInputChange(name, formattedValue);
   };
 
+  const isRequired = (fieldName: string): boolean => {
+    // Обязательные типы полей независимо от индекса (все кроме места проживания)
+    const alwaysRequiredTypes = ['FIORelative', 'dateOfBirthRelative', 'phoneNumberRelative', 'placeOfStudyRelative'];
+    
+    // Проверяем, содержит ли название поля один из обязательных типов
+    const isAlwaysRequired = alwaysRequiredTypes.some(type => fieldName.startsWith(type));
+    
+    // Поле обязательно, если оно в списке requiredFields или является всегда обязательным типом
+    return requiredFields.includes(fieldName) || isAlwaysRequired;
+  };
+
+  const renderInputWithRequired = (
+    name: string, 
+    placeholder: string, 
+    value: string, 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    maxLength?: number
+  ) => {
+    const required = isRequired(name);
+    
+    return (
+      <div className="custom-input-container">
+        <input
+          type="text"
+          name={name}
+          id={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          className={value ? 'has-value' : ''}
+        />
+        <label htmlFor={name} className={`custom-placeholder ${required ? 'required' : ''}`}>
+          {placeholder}
+          {required && <span className="required-star"> *</span>}
+        </label>
+      </div>
+    );
+  };
+
   return (
     <div className="formRow table-container" style={{
       opacity: 1,
@@ -65,62 +111,59 @@ const RelativeTable: FC<IRelativeTableProps> = ({ index, formData, setFormData }
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
       <table className="inputTable">
-        <caption className="tableLabel required">Данные члена семьи</caption>
+        <caption className={`tableLabel ${requiredFields.length > 0 ? 'required' : 'required'}`}>
+          Данные члена семьи
+        </caption>
         <tbody>
           <tr>
-            <td colSpan={2}>
-              <input
-                type="text"
-                name={`FIORelative${index}`}
-                placeholder="Степень родства, ФИО члена семьи"
-                value={formData[`FIORelative${index}`] || ''}
-                onChange={(e) => {
+            <td colSpan={2} style={{borderTopLeftRadius: '16px', borderTopRightRadius: '16px'}}>
+              {renderInputWithRequired(
+                `FIORelative${index}`,
+                'Степень родства, ФИО члена семьи',
+                formData[`FIORelative${index}`] || '',
+                (e) => {
                   const formattedValue = formatNameInput(e.target.value);
                   handleInputChange(`FIORelative${index}`, formattedValue);
-                }}
-              />
+                }
+              )}
             </td>
           </tr>
           <tr>
             <td>
-              <input
-                type="text"
-                name={`dateOfBirthRelative${index}`}
-                placeholder="01.01.1990"
-                maxLength={10}
-                value={formData[`dateOfBirthRelative${index}`] || ''}
-                onChange={(e) => handleDateChange(`dateOfBirthRelative${index}`, e.target.value)}
-              />
+              {renderInputWithRequired(
+                `dateOfBirthRelative${index}`,
+                'Дата рождения',
+                formData[`dateOfBirthRelative${index}`] || '',
+                (e) => handleDateChange(`dateOfBirthRelative${index}`, e.target.value),
+                10
+              )}
             </td>
             <td>
-              <input
-                type="text"
-                name={`phoneNumberRelative${index}`}
-                placeholder="+7 (905) 123-45-67"
-                maxLength={18}
-                value={formData[`phoneNumberRelative${index}`] || ''}
-                onChange={(e) => handlePhoneChange(`phoneNumberRelative${index}`, e.target.value)}
-              />
+              {renderInputWithRequired(
+                `phoneNumberRelative${index}`,
+                'Номер телефона',
+                formData[`phoneNumberRelative${index}`] || '',
+                (e) => handlePhoneChange(`phoneNumberRelative${index}`, e.target.value),
+                18
+              )}
             </td>
           </tr>
           <tr>
             <td>
-              <input
-                type="text"
-                name={`placeOfStudyRelative${index}`}
-                placeholder="Место учебы/работы, рабочий телефон"
-                value={formData[`placeOfStudyRelative${index}`] || ''}
-                onChange={(e) => handleInputChange(`placeOfStudyRelative${index}`, e.target.value)}
-              />
+              {renderInputWithRequired(
+                `placeOfStudyRelative${index}`,
+                'Место учебы/работы, рабочий телефон',
+                formData[`placeOfStudyRelative${index}`] || '',
+                (e) => handleInputChange(`placeOfStudyRelative${index}`, e.target.value)
+              )}
             </td>
-            <td>
-              <input
-                type="text"
-                name={`placeOfLivingRelative${index}`}
-                placeholder="Место проживания"
-                value={formData[`placeOfLivingRelative${index}`] || ''}
-                onChange={(e) => handleInputChange(`placeOfLivingRelative${index}`, e.target.value)}
-              />
+            <td style={{borderBottomRightRadius: '16px'}}>
+              {renderInputWithRequired(
+                `placeOfLivingRelative${index}`,
+                'Место проживания',
+                formData[`placeOfLivingRelative${index}`] || '',
+                (e) => handleInputChange(`placeOfLivingRelative${index}`, e.target.value)
+              )}
             </td>
           </tr>
         </tbody>

@@ -134,3 +134,47 @@
     font-size: 11px;
   }
 }
+
+.required::after {
+  content: "  *";
+  color: #f13131 !important;
+}
+
+.required label::after {
+  content: " *";
+  color: #f13131 !important;
+}
+
+.error {
+  border-color: #e74c3c !important;
+  border-width: 1.5px;
+}
+
+.error:focus {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgb(231 76 60 / 20%);
+}
+
+.errorMessage {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #e74c3c;
+}
+
+.disabled {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.customSelectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+
+// Стили для обязательных полей с ошибками
+.selectLabel.required.error::after {
+  content: " *";
+  color: #e74c3c !important;
+}

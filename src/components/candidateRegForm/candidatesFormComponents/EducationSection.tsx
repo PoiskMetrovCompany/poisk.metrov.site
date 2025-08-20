@@ -123,7 +123,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
       </FormRow>
 
       {selectedProfessionalExperience === 'Опыт есть' && (
-        <WorkExperienceTable formData={formData} setFormData={setFormData} />
+        <WorkExperienceTable formData={formData} setFormData={setFormData} requiredFields={["companyName", "companyPhone", "companyActivity", "companyAddress", "position", "salary", "hireDate", "dismissalDate", "dismissalReason"]}/>
       )}
     </>
   );
