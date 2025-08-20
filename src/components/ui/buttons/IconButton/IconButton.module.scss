@@ -2,16 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border: 1.5px solid var(--color-border-gray);
   border-radius: 50%;
-
   font-family: var(--font-onest);
-
   background-color: var(--color-white);
-
   transition: all 0.3s ease;
 
   &_sm {
@@ -147,7 +143,7 @@
   }
 
   &:hover {
-    border: 1.5px solid var(--color-orange);
+    // border: 1.5px solid var(--color-orange);
 
     .iconButton__icon {
       filter: brightness(0) saturate(100%) invert(48%) sepia(79%)

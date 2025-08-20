@@ -1,58 +1,79 @@
 import styles from "./menuSlider.module.scss"
 import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation, Pagination, Autoplay } from "swiper/modules"
+import { Navigation, Autoplay } from "swiper/modules"
 import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
 import IconImage from "@/components/ui/IconImage"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import clsx from "clsx"
+import type { Swiper as SwiperType } from "swiper"
 
 const images = [
   {
     imageLink: "/images/temporary/people.png",
-    title: "ЖК «Astra Marine на набережной»",
-    metro: "Октябрьская",
-    car: "25 минут",
+    title: "ЖК «Astra Marine на набережной1»",
+    metro: "Октябрьская1",
+    car: "25 минут1",
     price: "от 30,35 млн ₽",
   },
   {
     imageLink: "/images/temporary/people.png",
-    title: "ЖК «Astra Marine на набережной»",
-    metro: "Октябрьская",
-    car: "25 минут",
+    title: "ЖК «Astra Marine на набережной2»",
+    metro: "Октябрьская2",
+    car: "25 минут2",
     price: "от 30,35 млн ₽",
   },
   {
     imageLink: "/images/temporary/people.png",
-    title: "ЖК «Astra Marine на набережной»",
-    metro: "Октябрьская",
-    car: "25 минут",
+    title: "ЖК «Astra Marine на набережной3»",
+    metro: "Октябрьская3",
+    car: "25 минут3",
     price: "от 30,35 млн ₽",
   },
 ]
 
-const MenuSlider = () => {
+interface IMenuSliderProps {
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+}
+
+const MenuSlider = ({ onClick }: IMenuSliderProps) => {
   const [activeSlide, setActiveSlide] = useState(0)
+  const [animationKey, setAnimationKey] = useState(0)
+  const swiperRef = useRef<SwiperType | null>(null)
 
   const handleNavigationClick = (index: number) => {
     setActiveSlide(index)
+    setAnimationKey((prev) => prev + 1)
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(index)
+    }
   }
 
+  const handleSlideChange = (swiper: SwiperType) => {
+    setActiveSlide(swiper.realIndex)
+    setAnimationKey((prev) => prev + 1)
+  }
+
+  useEffect(() => {
+    setAnimationKey((prev) => prev + 1)
+  }, [])
+
   return (
-    <div className={styles.slider}>
+    <div className={styles.slider} onClick={onClick}>
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[Navigation, Autoplay]}
         spaceBetween={0}
         slidesPerView={1}
         navigation={{
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         }}
-        pagination={{ clickable: true }}
-        // autoplay={{ delay: 3000, disableOnInteraction: false }}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
         loop={true}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper
+        }}
+        onSlideChange={handleSlideChange}
         className={styles.slider__swiper}
       >
         {images.map((image, index) => (
@@ -62,7 +83,7 @@ const MenuSlider = () => {
                 <h1
                   className={styles.slider__swiper__slide__content__info__title}
                 >
-                  {images[activeSlide].title}
+                  {image.title}
                 </h1>
                 <div
                   className={
@@ -96,7 +117,7 @@ const MenuSlider = () => {
                             styles.slider__swiper__slide__content__info__description__text__road__item__text
                           }
                         >
-                          {images[activeSlide].metro}
+                          {image.metro}
                         </span>
                       </div>
 
@@ -117,7 +138,7 @@ const MenuSlider = () => {
                             styles.slider__swiper__slide__content__info__description__text__road__item__text
                           }
                         >
-                          {images[activeSlide].car}
+                          {image.car}
                         </span>
                       </div>
                     </div>
@@ -126,7 +147,7 @@ const MenuSlider = () => {
                         styles.slider__swiper__slide__content__info__description__text__price
                       }
                     >
-                      {images[activeSlide].price}
+                      {image.price}
                     </span>
                   </div>
                   <button
@@ -146,7 +167,9 @@ const MenuSlider = () => {
       <div className={styles.slider__navigation}>
         {images.map((_, index) => (
           <div
-            key={index}
+            key={`${index}-${
+              activeSlide === index ? animationKey : "inactive"
+            }`}
             className={clsx(styles.slider__navigation__item, {
               [styles.slider__navigation__item__active]: activeSlide === index,
             })}
@@ -159,7 +182,12 @@ const MenuSlider = () => {
         className={`swiper-button-prev ${styles.slider__navigationButton} ${styles.slider__navigationButtonPrev}`}
       >
         <div className={styles.slider__navigationButton__icon}>
-          <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+          <Image
+            className={styles.slider__navigationButton__icon__image}
+            src="/images/icons/arrow-slider.svg"
+            alt="arrow-left"
+            fill
+          />
         </div>
       </div>
       <div

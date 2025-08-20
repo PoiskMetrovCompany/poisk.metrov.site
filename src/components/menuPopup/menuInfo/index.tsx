@@ -3,6 +3,7 @@ import ActionButton from "@/components/ui/buttons/ActionButton"
 import clsx from "clsx"
 import IconImage from "@/components/ui/IconImage"
 import styles from "./menuInfo.module.scss"
+import Link from "next/link"
 
 enum tabType {
   residentialComplex = "ЖК",
@@ -11,11 +12,15 @@ enum tabType {
   houses = "Дома",
 }
 
-const MenuInfo = () => {
+interface IMenuInfoProps {
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+}
+
+const MenuInfo = ({ onClick }: IMenuInfoProps) => {
   const [selectedType, setSelectedType] = useState(tabType.residentialComplex)
 
   return (
-    <div className={styles.info}>
+    <div className={styles.info} onClick={onClick}>
       <div className={styles.info__content}>
         <div className={styles.info__content__switcher}>
           {Object.values(tabType).map((type) => (
@@ -35,7 +40,8 @@ const MenuInfo = () => {
         <div className={styles.info__content__statistics}>
           <div className={styles.info__content__statistics__general}>
             {[...new Array(3)].map((_, index) => (
-              <div
+              <Link
+                href="/"
                 className={styles.info__content__statistics__general__item}
                 key={index}
               >
@@ -72,13 +78,14 @@ const MenuInfo = () => {
                     46 проектов
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
           <div className={styles.info__content__statistics__cards}>
             {[...new Array(6)].map((_, index) => (
-              <div
+              <Link
+                href="/"
                 className={styles.info__content__statistics__cards__item}
                 key={index}
               >
@@ -109,7 +116,7 @@ const MenuInfo = () => {
                     11 548 предложений
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
