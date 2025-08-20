@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import styles from "./ranges.module.scss"
 import Range from "@/components/ui/inputs/range"
+import RangeInput from "../../rangeInput"
 
 interface FilterRangesProps {
   // Данные формы для ranges
@@ -14,70 +15,94 @@ interface FilterRangesProps {
     kitchenAreaMin: number
     kitchenAreaMax: number
   }
-  
-  // Обработчики изменения ranges
-  handlePriceRangeChange: (range: [number, number]) => void
-  handleFloorRangeChange: (range: [number, number]) => void
-  handleFlatAreaRangeChange: (range: [number, number]) => void
-  handleKitchenAreaRangeChange: (range: [number, number]) => void
+
+  // Обработчик изменения ranges
+  handleRangeChange: (
+    field: "price" | "floor" | "flatArea" | "kitchenArea",
+    range: [number, number]
+  ) => void
 }
 
 const FilterRanges: FC<FilterRangesProps> = ({
   formData,
-  handlePriceRangeChange,
-  handleFloorRangeChange,
-  handleFlatAreaRangeChange,
-  handleKitchenAreaRangeChange,
+  handleRangeChange,
 }) => {
+  const rangeConfigs = [
+    {
+      field: "price",
+      title: "Стоимость, млн ₽",
+      min: 4,
+      max: 15,
+      step: 1,
+      value: [formData.priceMin, formData.priceMax],
+      formatLabel: (value: number) => `${value}`,
+    },
+    {
+      field: "floor",
+      title: "Этаж",
+      min: 1,
+      max: 30,
+      step: 1,
+      value: [formData.floorMin, formData.floorMax],
+      formatLabel: (value: number) => `${value}`,
+    },
+    {
+      field: "flatArea",
+      title: "Площадь квартиры, м²",
+      min: 20,
+      max: 200,
+      step: 5,
+      value: [formData.flatAreaMin, formData.flatAreaMax],
+      formatLabel: (value: number) => `${value}м²`,
+    },
+    {
+      field: "kitchenArea",
+      title: "Площадь кухни, м²",
+      min: 5,
+      max: 30,
+      step: 1,
+      value: [formData.kitchenAreaMin, formData.kitchenAreaMax],
+      formatLabel: (value: number) => `${value}м²`,
+    },
+  ]
+
   return (
     <div className={styles.catalogue__filters__container__range}>
-      {/* Стоимость */}
-      <Range
-        title="Стоимость, млн ₽"
-        min={4}
-        max={15}
-        step={1}
-        value={[formData.priceMin, formData.priceMax]}
-        onValueChange={handlePriceRangeChange}
-        formatLabel={(value) => `${value}`}
-        className={styles.whiteLabel}
-      />
-
-      {/* Этаж */}
-      <Range
-        title="Этаж"
-        min={1}
-        max={30}
-        step={1}
-        value={[formData.floorMin, formData.floorMax]}
-        onValueChange={handleFloorRangeChange}
-        formatLabel={(value) => `${value}`}
-        className={styles.whiteLabel}
-      />
-
-      {/* Площадь квартиры */}
-      <Range
-        title="Площадь квартиры, м²"
-        min={20}
-        max={200}
-        step={5}
-        value={[formData.flatAreaMin, formData.flatAreaMax]}
-        onValueChange={handleFlatAreaRangeChange}
-        formatLabel={(value) => `${value}м²`}
-        className={styles.whiteLabel}
-      />
-
-      {/* Площадь кухни */}
-      <Range
-        title="Площадь кухни, м²"
-        min={5}
-        max={30}
-        step={1}
-        value={[formData.kitchenAreaMin, formData.kitchenAreaMax]}
-        onValueChange={handleKitchenAreaRangeChange}
-        formatLabel={(value) => `${value}м²`}
-        className={styles.whiteLabel}
-      />
+      {rangeConfigs.map(
+        ({ field, title, min, max, step, value, formatLabel }) => (
+          <div
+            key={field}
+            className={styles.catalogue__filters__container__range__filterRange}
+          >
+            <div
+              className={
+                styles.catalogue__filters__container__range__filterRange__header
+              }
+            >
+              {title}
+            </div>
+            <div
+              className={
+                styles.catalogue__filters__container__range__filterRange__content
+              }
+            >
+              <RangeInput
+                value={value as [number, number]}
+                onValueChange={(range) =>
+                  handleRangeChange(
+                    field as "price" | "floor" | "flatArea" | "kitchenArea",
+                    range as [number, number]
+                  )
+                }
+                // fromValue={"0"}
+                // setFromValue={() => {}}
+                // toValue={"0"}
+                // setToValue={() => {}}
+              />
+            </div>
+          </div>
+        )
+      )}
     </div>
   )
 }
