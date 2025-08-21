@@ -80,8 +80,8 @@ article p {
   width: 100%;
   height: auto;
   min-height: auto;
-  padding-bottom: 1.5rem;
   margin-bottom: 40px;
+  padding-bottom: 1.5rem;
 }
 
 /* Типография карточек */
@@ -348,9 +348,10 @@ form {
   width: 21rem; /* 336px */
   height: 4rem; /* 64px */
   margin-top: 1.25rem; /* 20px */
+  margin-bottom: 48px;
   border: none;
   border-radius: 2.5rem; /* 40px */
-  margin-bottom: 48px;
+
   font-size: 1rem; /* 16px */
 
   transition: background ease-in-out 0.3s;
@@ -1453,9 +1454,30 @@ input[type="checkbox"] + label {
   color: rgb(73 73 73 / 100%);
 }
 
+.city-selector {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  margin-left: 0.5rem;
+  padding: 2px 4px; /* небольшие отступы для лучшего UX */
+  border-radius: 4px;
+
+  transition: background-color 0.2s ease;
+}
+
+.city-selector:hover {
+  background-color: rgb(236 125 63 / 10%); /* легкий фон при hover */
+}
+
+.city-selector:hover span {
+  color: rgb(220 100 50); /* изменение цвета текста при hover */
+}
+
 #city span {
   width: max-content;
-  margin-left: 0.5rem;
+  margin-right: 4px; /* небольшой отступ между текстом и стрелкой */
   color: rgb(236 125 63 / 100%);
 }
 
@@ -1908,9 +1930,6 @@ input[type="checkbox"] + label {
   transition: background-color 0.2s ease;
 }
 
-#selectCity:hover {
-  background-color: rgb(0 0 0 / 5%);
-}
 
 #city svg {
   margin-left: 6px;
@@ -2205,7 +2224,6 @@ input[type="checkbox"] + label {
   .center-card.big {
     width: 100%;
     padding: 1rem 1.5rem;
-
   }
 
   /* Адаптивность для полей формы */
@@ -2544,7 +2562,7 @@ input[type="checkbox"] + label {
   border-radius: 16px;
 
   font-size: 14px;
+  color: #f13131;
 
   background: #fee;
-  color: #F13131
 }
