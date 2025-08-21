@@ -25,3 +25,56 @@ export interface IProperty {
   description: IDescription[]
   image: string
 }
+
+interface IPropertyCardGeneral {
+  builder: string
+  image: string
+  constructionCompletionDate: string
+  typeOfProperty: string
+  houseType: string
+  housingClass: string
+  sections: number
+  floors: string
+}
+
+interface IPropertyCardLocation {
+  district: string
+  metro: string
+}
+
+interface IPropertyCardConveniences {
+  elevators: string
+  parking: string
+  storerooms: string
+  wheelchair: string
+  territory: string
+}
+
+interface IPropertyCardApartments {
+  total: number
+  forSale: number
+  footage: string
+  finishing: string
+  ceilings: number
+}
+
+interface IPropertyCardCost {
+  oneRoom: string
+  twoRooms: string
+  threeRooms: string
+  fourRooms: string
+  fiveRooms: string
+  penthouses: string
+}
+
+export interface IPropertyCardFull {
+  id: number
+  image: string
+  title: string
+  address: string
+  general: IPropertyCardGeneral
+  location: IPropertyCardLocation
+  conveniences: IPropertyCardConveniences
+  apartments: IPropertyCardApartments
+  cost: IPropertyCardCost
+}
