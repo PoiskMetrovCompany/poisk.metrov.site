@@ -26,9 +26,11 @@ export interface IProperty {
   image: string
 }
 
-interface IPropertyCardGeneral {
-  builder: string
-  image: string
+export interface IPropertyCardGeneral {
+  builder: {
+    name: string
+    image: string
+  }
   constructionCompletionDate: string
   typeOfProperty: string
   houseType: string
@@ -37,12 +39,12 @@ interface IPropertyCardGeneral {
   floors: string
 }
 
-interface IPropertyCardLocation {
+export interface IPropertyCardLocation {
   district: string
   metro: string
 }
 
-interface IPropertyCardConveniences {
+export interface IPropertyCardConveniences {
   elevators: string
   parking: string
   storerooms: string
@@ -50,7 +52,7 @@ interface IPropertyCardConveniences {
   territory: string
 }
 
-interface IPropertyCardApartments {
+export interface IPropertyCardApartments {
   total: number
   forSale: number
   footage: string
@@ -58,7 +60,7 @@ interface IPropertyCardApartments {
   ceilings: number
 }
 
-interface IPropertyCardCost {
+export interface IPropertyCardCost {
   oneRoom: string
   twoRooms: string
   threeRooms: string
