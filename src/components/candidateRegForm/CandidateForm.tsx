@@ -74,11 +74,12 @@ const CandidateForm: FC = () => {
   const [isLoadingVacancies, setIsLoadingVacancies] = useState(true)
   const [vacancyError, setVacancyError] = useState("")
 
+  const [maritalStatusError, setMaritalStatusError] = useState(false)
+  const [cityError, setCityError] = useState(false)
   const [maritalStatusApiOptions, setMaritalStatusApiOptions] = useState<
     string[]
   >([])
   const [isLoadingMaritalStatuses, setIsLoadingMaritalStatuses] = useState(true)
-  const [maritalStatusError, setMaritalStatusError] = useState("")
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
@@ -198,7 +199,27 @@ const CandidateForm: FC = () => {
     setChildrenErrors(errors)
     return isValid
   }
+  const validateSelectFields = () => {
+    let isValid = true
 
+    // Проверка семейного положения
+    if (!selectedMaritalStatus) {
+      setMaritalStatusError(true)
+      isValid = false
+    } else {
+      setMaritalStatusError(false)
+    }
+
+    // Проверка города работы
+    if (!selectedCity) {
+      setCityError(true)
+      isValid = false
+    } else {
+      setCityError(false)
+    }
+
+    return isValid
+  }
   const validateWorkExperienceTable = (): boolean => {
     // Проверяем только если выбран "Опыт есть"
     if (selectedProfessionalExperience !== "Опыт есть") {
@@ -234,6 +255,7 @@ const CandidateForm: FC = () => {
 
   const validatePersonalInfoSection = () => {
     const errors: Record<string, boolean> = {}
+
     const requiredFields = [
       { key: "FIO", value: formData.FIO },
       { key: "birthDate", value: formData.birthDate },
@@ -244,6 +266,16 @@ const CandidateForm: FC = () => {
       { key: "INN", value: formData.INN },
     ]
 
+    const requiredSelects = [
+      { key: "selectedVacancy", value: selectedVacancy },
+      { key: "selectedCity", value: selectedCity },
+    ]
+
+    if (goingToROP) {
+      requiredSelects.push({ key: "selectedROP", value: selectedROP })
+    }
+
+    // Проверяем обычные поля
     requiredFields.forEach((field) => {
       if (!field.value || field.value.trim() === "") {
         errors[field.key] = true
@@ -252,11 +284,20 @@ const CandidateForm: FC = () => {
       }
     })
 
+    requiredSelects.forEach((select) => {
+      if (!select.value || select.value.trim() === "") {
+        errors[select.key] = true
+      } else {
+        errors[select.key] = false
+      }
+    })
+
     setValidationErrors(errors)
     setTriggerValidation(true)
 
     return !Object.values(errors).some((hasError) => hasError)
   }
+
   const validatePassportSection = (): boolean => {
     const requiredFields = [
       "passwordSeriaNumber",
@@ -706,34 +747,28 @@ const CandidateForm: FC = () => {
     try {
       setIsSubmitting(true)
       setSubmitError("")
-      setChildrenErrors({}) // Очищаем предыдущие ошибки детей
-      setRelativesErrors({}) // Очищаем предыдущие ошибки родственников
-      setWorkExperienceErrors({}) // Очищаем предыдущие ошибки опыта работы
+      setChildrenErrors({})
+      setRelativesErrors({})
+      setWorkExperienceErrors({})
 
-      // Валидация персональной информации
       const isPersonalInfoValid = validatePersonalInfoSection()
-
-      // Валидация паспортных данных
       const isPassportValid = validatePassportSection()
-
-      // Валидация таблиц детей (только если есть дети)
       const isChildrenValid = haveChildren ? validateChildrenTables() : true
-
-      // Валидация таблиц родственников (только если есть родственники)
       const isRelativesValid = haveFamilyMembers
         ? validateRelativesTables()
         : true
-
-      // Валидация опыта работы (только если выбран "Опыт есть")
       const isWorkExperienceValid = validateWorkExperienceTable()
 
-      // Проверяем все валидации
+      // Добавьте эту строку
+      const isSelectFieldsValid = validateSelectFields()
+
       if (
         !isPersonalInfoValid ||
         !isPassportValid ||
         !isChildrenValid ||
         !isRelativesValid ||
-        !isWorkExperienceValid
+        !isWorkExperienceValid ||
+        !isSelectFieldsValid // Добавьте эту проверку
       ) {
         let errorMessage = "Пожалуйста, заполните все обязательные поля:"
         const errorSections = []
@@ -758,6 +793,10 @@ const CandidateForm: FC = () => {
           errorSections.push("опыт работы")
         }
 
+        if (!isSelectFieldsValid) {
+          errorSections.push("обязательные поля выбора")
+        }
+
         setSubmitError(`${errorMessage} ${errorSections.join(", ")}`)
         setIsSubmitting(false)
         return
@@ -765,25 +804,22 @@ const CandidateForm: FC = () => {
 
       setTriggerValidation(false)
       setValidationErrors({})
-      // Разделяем ФИО
+      setMaritalStatusError(false) 
+      setCityError(false) 
       const nameData = splitFullName(formData.FIO || "")
 
-      // Разделяем паспортные данные
       const passportData = splitPassportData(formData.passwordSeriaNumber || "")
 
-      // Разделяем место рождения
       const birthPlaceData = splitBirthPlace(formData.birthPlace)
 
-      // Собираем данные детей и членов семьи
       const childrenData = collectChildrenData()
       const familyMembersData = collectFamilyMembersData()
 
-      // Формируем данные для API
       const apiData = {
         vacancies_key: getVacancyKey(selectedVacancy),
         marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
         rop_key: goingToROP ? getROPKey(selectedROP) : null,
-        status: "active", // По умолчанию
+        status: "active",
         first_name: nameData.first_name,
         last_name: nameData.last_name,
         middle_name: nameData.middle_name,

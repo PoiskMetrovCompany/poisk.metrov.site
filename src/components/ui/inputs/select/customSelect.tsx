@@ -10,11 +10,11 @@ interface ICustomSelectProps {
   value: string
   onChange?: (value: string) => void
   isLoading?: boolean
-  error?: string
+  error?: string | boolean 
   className?: string
   disabled?: boolean
   required?: boolean
-  style?: React.CSSProperties // Добавляем поддержку style
+  style?: React.CSSProperties
 }
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -28,10 +28,14 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   error = "",
   disabled = false,
   required = false,
-  style, // Добавляем style в деструктуризацию
+  style, 
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
+
+  // Определяем есть ли ошибка валидации
+  const hasValidationError = typeof error === 'boolean' ? error : false
+  const errorMessage = typeof error === 'string' ? error : ''
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -72,7 +76,6 @@ const CustomSelect: FC<ICustomSelectProps> = ({
     e.preventDefault()
     e.stopPropagation()
 
-    // Убираем проверку на error - позволяем открывать даже при ошибке
     if (!isLoading && !disabled) {
       setIsOpen(!isOpen)
     }
@@ -87,22 +90,24 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 
   const getDisplayValue = () => {
     if (isLoading) return "Загрузка..."
-    if (error && !value) return "Ошибка загрузки" // Показываем ошибку только если нет выбранного значения
+    if (errorMessage && !value) return "Ошибка загрузки" 
     return value || placeholder
   }
 
-  // Исправляем условие показа dropdown - убираем проверку на error
   const shouldShowDropdown = !isLoading && isOpen && options.length > 0
 
   return (
     <div
       className={clsx(styles.customSelectWrapper, className)}
       ref={selectRef}
-      style={style} // Применяем переданные стили
+      style={style} 
     >
       {label && (
         <label
-          className={clsx(styles.selectLabel, { [styles.required]: required })}
+          className={clsx(styles.selectLabel, { 
+            [styles.required]: required,
+            [styles.error]: hasValidationError  // Добавляем класс ошибки для label
+          })}
         >
           {label}
         </label>
@@ -112,7 +117,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
           className={clsx(styles.selectSelected, {
             [styles.selectArrowActive]: isOpen,
             [styles.disabled]: disabled || isLoading,
-            [styles.error]: !!error,
+            [styles.error]: !!errorMessage || hasValidationError,  
           })}
           onClick={handleToggle}
           role="button"
@@ -128,6 +133,8 @@ const CustomSelect: FC<ICustomSelectProps> = ({
           style={{
             opacity: isLoading || disabled ? 0.6 : 1,
             cursor: isLoading || disabled ? "not-allowed" : "pointer",
+            borderColor: hasValidationError ? '#e74c3c' : undefined,
+            borderWidth: hasValidationError ? '1.5px' : undefined
           }}
         >
           {getDisplayValue()}
@@ -163,7 +170,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
         )}
       </div>
 
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
     </div>
   )
 }
