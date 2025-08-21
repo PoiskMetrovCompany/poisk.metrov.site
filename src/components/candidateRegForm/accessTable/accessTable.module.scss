@@ -1,0 +1,136 @@
+.tableContainer {
+  overflow-x: auto;
+
+  width: 100%;
+  padding: 20px;
+  border-radius: 12px;
+
+  background: #fff;
+}
+
+.accessTable {
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    tr {
+      th {
+        padding: 18px 24px;
+
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--color-text-gray);
+        text-align: left;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      height: 30px;
+      border-bottom: 2px solid var(--color-gray);
+
+      td {
+        height: 30px;
+        padding: 18px 24px;
+
+        font-size: 14px;
+        font-weight: 300;
+        color: #494949;
+        text-align: left;
+      }
+
+      .name {
+        font-weight: 400;
+        color: #181817;
+      }
+
+      .password {
+        cursor: pointer;
+
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.4;
+        letter-spacing: 2px;
+
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          font-size: 14px;
+          font-weight: 400;
+        }
+      }
+
+      .controls {
+        width: 120px;
+        min-width: 120px;
+        text-align: center;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.editBtn,
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.editBtn {
+  background-color: var(--color-beige);
+}
+
+.deleteBtn {
+  background-color: #ec7d3f33;
+}
+
+.custom-input-container {
+  position: relative;
+  height: 72px;
+
+  input {
+    width: 100%;
+    height: 72px;
+    padding: 24px 16px 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    background: transparent;
+    outline: none;
+
+    &.has-value + label,
+    &:focus + label {
+      top: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+  }
+
+  .custom-placeholder {
+    pointer-events: none;
+
+    position: absolute;
+    top: 24px;
+    left: 16px;
+
+    font-size: 14px;
+    color: #999;
+
+    transition: all 0.2s ease;
+  }
+}
