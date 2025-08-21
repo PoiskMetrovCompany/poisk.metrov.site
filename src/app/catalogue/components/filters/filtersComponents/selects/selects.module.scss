@@ -4,7 +4,34 @@
       &__selects {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 24px;
+
+        .selectItem {
+          display: flex;
+          gap: 120px;
+          align-items: center;
+
+          .selectLabel {
+            flex-shrink: 0;
+            width: 205px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+          }
+
+          .selectField {
+            flex: 1;
+          }
+
+          @media (width <= 1024px) {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+
+            .selectLabel {
+              width: 100%;
+            }
+          }
+        }
       }
     }
   }

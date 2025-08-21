@@ -1,31 +1,34 @@
-import React, { FC, useState } from "react";
-import clsx from "clsx";
-import styles from "./filtersButton.module.scss";
+import React, { FC, useState } from "react"
+import clsx from "clsx"
+import styles from "./filtersButton.module.scss"
+import IconImage from "../../IconImage"
 
 interface FiltersButtonProps {
-  text: string;
-  isActive?: boolean;
-  onClick?: () => void;
-  className?: string;
+  text: string
+  iconLink?: string
+  isActive?: boolean
+  onClick?: () => void
+  className?: string
 }
 
 const FiltersButton: FC<FiltersButtonProps> = ({
   text,
+  iconLink,
   isActive = false,
   onClick,
-  className
+  className,
 }) => {
-  const [internalActive, setInternalActive] = useState(false);
-  
-  const active = isActive || internalActive;
-  
+  const [internalActive, setInternalActive] = useState(false)
+
+  const active = isActive || internalActive
+
   const handleClick = () => {
     if (onClick) {
-      onClick();
+      onClick()
     } else {
-      setInternalActive(!internalActive);
+      setInternalActive(!internalActive)
     }
-  };
+  }
 
   return (
     <button
@@ -38,9 +41,16 @@ const FiltersButton: FC<FiltersButtonProps> = ({
       )}
       onClick={handleClick}
     >
+      {iconLink && (
+        <IconImage
+          iconLink={iconLink}
+          alt="icon"
+          className={styles.filtersButton__icon}
+        />
+      )}
       {text}
     </button>
-  );
-};
+  )
+}
 
-export default FiltersButton;
+export default FiltersButton

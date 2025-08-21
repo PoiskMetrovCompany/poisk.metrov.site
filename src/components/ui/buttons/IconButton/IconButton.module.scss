@@ -173,4 +173,18 @@
       }
     }
   }
+
+  &_orangeLight {
+    border: none;
+    background-color: rgb(236 125 63 / 20%);
+
+    &:hover {
+      border: none;
+      background-color: rgb(228 98 25 / 20%);
+
+      .iconButton__icon {
+        filter: none;
+      }
+    }
+  }
 }
