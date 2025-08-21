@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import styles from "./purchaseFilters.module.scss"
+import styles from "./filterBlocks.module.scss"
 import FiltersButton from "@/components/ui/buttons/FiltersButton"
 import {
   PAYMENT_METHOD_OPTIONS,
@@ -8,6 +8,7 @@ import {
   DOWN_PAYMENT_OPTIONS,
   MORTGAGE_PROGRAMS_OPTIONS,
 } from "../../types"
+import Heading3 from "@/components/ui/heading3"
 
 interface PurchaseFiltersProps {
   formData: {
@@ -33,15 +34,17 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
   handleMultiSelect,
 }) => {
   return (
-    <div className={styles.purchaseFilters}>
-      <div className={styles.purchaseFilters__title}>Покупка</div>
+    <div className={styles.filterBlock}>
+      <div className={styles.filterBlock__title}>
+        <Heading3 className={styles.filterBlock__title__heading}>
+          Покупка
+        </Heading3>
+      </div>
 
       {/* Способ оплаты */}
-      <div className={styles.purchaseFilters__section}>
-        <div className={styles.purchaseFilters__section__label}>
-          Способ оплаты
-        </div>
-        <div className={styles.purchaseFilters__section__options}>
+      <div className={styles.filterBlock__section}>
+        <div className={styles.filterBlock__section__label}>Способ оплаты</div>
+        <div className={styles.filterBlock__section__options}>
           {PAYMENT_METHOD_OPTIONS.map((option) => (
             <FiltersButton
               key={option}
@@ -54,9 +57,9 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
       </div>
 
       {/* Ипотека */}
-      <div className={styles.purchaseFilters__section}>
-        <div className={styles.purchaseFilters__section__label}>Ипотека</div>
-        <div className={styles.purchaseFilters__section__options}>
+      <div className={styles.filterBlock__section}>
+        <div className={styles.filterBlock__section__label}>Ипотека</div>
+        <div className={styles.filterBlock__section__options}>
           {MORTGAGE_TYPE_OPTIONS.map((option) => (
             <FiltersButton
               key={option}
@@ -69,9 +72,9 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
       </div>
 
       {/* Рассрочка */}
-      <div className={styles.purchaseFilters__section}>
-        <div className={styles.purchaseFilters__section__label}>Рассрочка</div>
-        <div className={styles.purchaseFilters__section__options}>
+      <div className={styles.filterBlock__section}>
+        <div className={styles.filterBlock__section__label}>Рассрочка</div>
+        <div className={styles.filterBlock__section__options}>
           {INSTALLMENT_PERIOD_OPTIONS.map((option) => (
             <FiltersButton
               key={option}
@@ -84,11 +87,11 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
       </div>
 
       {/* Первоначальный взнос */}
-      <div className={styles.purchaseFilters__section}>
-        <div className={styles.purchaseFilters__section__label}>
+      <div className={styles.filterBlock__section}>
+        <div className={styles.filterBlock__section__label}>
           Первоначальный взнос
         </div>
-        <div className={styles.purchaseFilters__section__options}>
+        <div className={styles.filterBlock__section__options}>
           {DOWN_PAYMENT_OPTIONS.map((option) => (
             <FiltersButton
               key={option}
@@ -101,11 +104,11 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
       </div>
 
       {/* Ипотечные программы */}
-      <div className={styles.purchaseFilters__section}>
-        <div className={styles.purchaseFilters__section__label}>
+      <div className={styles.filterBlock__section}>
+        <div className={styles.filterBlock__section__label}>
           Ипотечные программы
         </div>
-        <div className={styles.purchaseFilters__section__options}>
+        <div className={styles.filterBlock__section__options}>
           {MORTGAGE_PROGRAMS_OPTIONS.map((option) => (
             <FiltersButton
               key={option}

@@ -6,26 +6,26 @@ import RangeInput from "../../rangeInput"
 interface FilterRangesProps {
   // Данные формы для ranges
   formData: {
-    priceMin: number
-    priceMax: number
-    floorMin: number
-    floorMax: number
-    flatAreaMin: number
-    flatAreaMax: number
-    kitchenAreaMin: number
-    kitchenAreaMax: number
+    priceMin: number | null
+    priceMax: number | null
+    floorMin: number | null
+    floorMax: number | null
+    flatAreaMin: number | null
+    flatAreaMax: number | null
+    kitchenAreaMin: number | null
+    kitchenAreaMax: number | null
   }
 
   // Обработчик изменения ranges
-  handleRangeChange: (
+  handleRangeInputChange: (
     field: "price" | "floor" | "flatArea" | "kitchenArea",
-    range: [number, number]
+    range: [number | null, number | null]
   ) => void
 }
 
 const FilterRanges: FC<FilterRangesProps> = ({
   formData,
-  handleRangeChange,
+  handleRangeInputChange,
 }) => {
   const rangeConfigs = [
     {
@@ -87,17 +87,13 @@ const FilterRanges: FC<FilterRangesProps> = ({
               }
             >
               <RangeInput
-                value={value as [number, number]}
+                value={value as [number | null, number | null]}
                 onValueChange={(range) =>
-                  handleRangeChange(
+                  handleRangeInputChange(
                     field as "price" | "floor" | "flatArea" | "kitchenArea",
-                    range as [number, number]
+                    range
                   )
                 }
-                // fromValue={"0"}
-                // setFromValue={() => {}}
-                // toValue={"0"}
-                // setToValue={() => {}}
               />
             </div>
           </div>

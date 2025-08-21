@@ -7,17 +7,17 @@ export interface FiltersFormData {
   metro: string
 
   // Диапазоны
-  priceMin: number
-  priceMax: number
-  floorMin: number
-  floorMax: number
-  flatAreaMin: number
-  flatAreaMax: number
-  livingAreaMin: number
-  livingAreaMax: number
+  priceMin: number | null
+  priceMax: number | null
+  floorMin: number | null
+  floorMax: number | null
+  flatAreaMin: number | null
+  flatAreaMax: number | null
+  livingAreaMin: number | null
+  livingAreaMax: number | null
   ceilingHeight: string[]
-  floorsInBuildingMin: number
-  floorsInBuildingMax: number
+  floorsInBuildingMin: number | null
+  floorsInBuildingMax: number | null
 
   // Кнопки фильтров
   rooms: string[]
@@ -32,6 +32,7 @@ export interface FiltersFormData {
   buildingType: string[]
   completionDate: string[]
   metroDistance: string[]
+  metroTransportType: string
   elevator: string[]
   parking: string[]
   security: string[]
@@ -170,6 +171,8 @@ export const METRO_DISTANCE_OPTIONS = [
   "20 мин",
   "30 мин",
 ]
+
+export const METRO_TRANSPORT_TYPE_OPTIONS = ["Пешком", "Транспортом"]
 
 export const ELEVATOR_OPTIONS = ["Пассажирский", "Грузовой"]
 

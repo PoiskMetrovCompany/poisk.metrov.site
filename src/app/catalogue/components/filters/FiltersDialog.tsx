@@ -3,11 +3,12 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import styles from "./filters.module.scss"
 import ActionButton from "@/components/ui/buttons/ActionButton"
-import FiltersHeader from "./filtersComponents/head"
-import ApartmentFilters from "./filtersComponents/apartmentFilters"
-import ComplexFilters from "./filtersComponents/complexFilters"
-import PurchaseFilters from "./filtersComponents/purchaseFilters"
+
 import { useFiltersForm } from "./useFiltersForm"
+import ApartmentFilters from "./filtersComponents/flitersBlocks/apartmentFilters"
+import ComplexFilters from "./filtersComponents/flitersBlocks/complexFilters"
+import PurchaseFilters from "./filtersComponents/flitersBlocks/purchaseFilters"
+import IconImage from "@/components/ui/IconImage"
 
 interface FiltersDialogProps {
   open: boolean
@@ -19,21 +20,14 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
     form,
     formData,
 
-    // Состояния показа опций селектов
-    showOptions,
-
-    // Рефы
-    refs,
-
     // Функции
     resetFilters,
-
-    // Универсальные обработчики
-    handleSelectToggle,
-    handleSelectChange,
+    getActiveFiltersCount,
     handleRangeChange,
+    handleRangeInputChange,
     handleMultiSelect,
     handleApartmentsSelect,
+    handleMetroTransportTypeSelect,
   } = useFiltersForm()
 
   const handleApplyFilters = () => {
@@ -57,10 +51,11 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
           <Dialog.Title asChild>
             <VisuallyHidden>Фильтры поиска недвижимости</VisuallyHidden>
           </Dialog.Title>
+
           <div className={styles.catalogue__filters__container}>
-            <div className={styles.catalogue__filters__container__head}>
+            {/* <div className={styles.catalogue__filters__container__head}>
               <FiltersHeader onClose={handleClose} onReset={resetFilters} />
-            </div>
+            </div> */}
 
             {/* Блок "Квартира" */}
             <ApartmentFilters
@@ -84,7 +79,8 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
               }}
               handleMultiSelect={handleMultiSelect}
               handleApartmentsSelect={handleApartmentsSelect}
-              handleRangeChange={handleRangeChange}
+              handleRangeInputChange={handleRangeInputChange}
+              onCloseDialog={handleClose}
             />
 
             {/* Блок "Жилой комплекс" */}
@@ -94,6 +90,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
                 builder: formData.builder || [],
                 completionDate: formData.completionDate || [],
                 metroDistance: formData.metroDistance || [],
+                metroTransportType: formData.metroTransportType || "",
                 elevator: formData.elevator || [],
                 floorsInBuildingMin: formData.floorsInBuildingMin,
                 floorsInBuildingMax: formData.floorsInBuildingMax,
@@ -101,7 +98,8 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
                 security: formData.security || [],
               }}
               handleMultiSelect={handleMultiSelect}
-              handleRangeChange={handleRangeChange}
+              handleMetroTransportTypeSelect={handleMetroTransportTypeSelect}
+              handleRangeInputChange={handleRangeInputChange}
             />
 
             {/* Блок "Покупка" */}
@@ -117,9 +115,52 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
             />
 
             <div className={styles.catalogue__filters__container__showFlats}>
-              <ActionButton onClick={handleApplyFilters}>
-                Показать 11714 квартир
-              </ActionButton>
+              <button
+                className={
+                  styles.catalogue__filters__container__showFlats__save
+                }
+              >
+                <IconImage
+                  iconLink="/images/icons/heartOrange.svg"
+                  alt="Сохранить поиск"
+                  className={
+                    styles.catalogue__filters__container__showFlats__save__icon
+                  }
+                />
+                Сохранить поиск
+              </button>
+
+              <div
+                className={
+                  styles.catalogue__filters__container__showFlats__buttons
+                }
+              >
+                <ActionButton
+                  type="gray"
+                  className={
+                    styles.catalogue__filters__container__showFlats__buttons__clear
+                  }
+                  onClick={resetFilters}
+                >
+                  Сбросить фильтры{" "}
+                  <span
+                    className={
+                      styles.catalogue__filters__container__showFlats__buttons__clear__count
+                    }
+                  >
+                    {getActiveFiltersCount()}
+                  </span>
+                </ActionButton>
+                <ActionButton
+                  className={
+                    styles.catalogue__filters__container__showFlats__buttons__apply
+                  }
+                  onClick={handleApplyFilters}
+                  type="primary"
+                >
+                  Показать 12166 предложений
+                </ActionButton>
+              </div>
             </div>
           </div>
         </Dialog.Content>

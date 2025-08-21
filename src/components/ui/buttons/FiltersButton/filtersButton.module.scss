@@ -2,7 +2,7 @@
   cursor: pointer;
 
   display: flex;
-  gap: 16px;
+  gap: 8px;
   align-items: center;
   justify-content: center;
 
@@ -19,7 +19,17 @@
 
   background-color: transparent;
 
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    border: 1px solid var(--color-border-gray-hover);
+    background: var(--color-gray-0);
+  }
 
   @media (width <= 1024px) {
     padding: 14px 32px;
@@ -32,7 +42,17 @@
 }
 
 .filtersButton_active {
-  border-color: var(--color-orange);
-  color: var(--color-white);
-  background-color: var(--color-orange);
+  border: 1px solid var(--orange-orange-10010, rgb(236 125 63 / 10%));
+  color: var(--color-orange);
+  background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
+
+  .filtersButton__icon {
+    filter: brightness(0) saturate(100%) invert(50%) sepia(100%) saturate(2878%)
+      hue-rotate(346deg) brightness(104%) contrast(97%);
+  }
+
+  &:hover {
+    border: 1px solid var(--orange-orange-10010, rgb(236 125 63 / 10%));
+    background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
+  }
 }

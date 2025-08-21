@@ -183,7 +183,8 @@
     background-color: rgb(236 125 63 / 20%);
 
     &:hover {
-      background-color: var(--color-orange-hover);
+      border: none;
+      background-color: rgb(228 98 25 / 20%);
 
       .iconButton__icon {
         filter: none;

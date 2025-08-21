@@ -5,6 +5,8 @@ import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconImage from "@/components/ui/IconImage"
 import IconButton from "@/components/ui/buttons/IconButton"
+import PriceDropdown from "../filters/priceDropdown"
+import SearchDropdown from "../filters/searchDropdown"
 
 interface CatalogueFiltersProps {
   onShowFilters: () => void
@@ -16,32 +18,19 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
     console.log("Фильтры применены")
   }
 
+  const handlePriceChange = (range: [number, number]) => {
+    console.log("Диапазон цен изменен:", range)
+  }
+
+  const handleSearchChange = (value: string) => {
+    console.log("Поисковый запрос:", value)
+  }
+
   return (
     <div className={styles.catalogue__filters__container}>
       <div className={styles.catalogue__filters__container__inputs}>
-        <div className={styles.catalogue__filters__container__select}>
-          <div className={styles.catalogue__filters__container__select__text}>
-            Цена
-          </div>
-          <IconImage
-            className={styles.catalogue__filters__container__select__icon}
-            iconLink="/images/icons/arrow-down-gray.svg"
-            alt="arrow-price"
-          />
-        </div>
-
-        <div className={styles.catalogue__filters__container__search}>
-          <IconImage
-            className={styles.catalogue__filters__container__search__icon}
-            iconLink="/images/icons/search-gray.svg"
-            alt="search-arrow"
-          />
-          <input
-            type="text"
-            placeholder="Район, метро, улица, ЖК, застройщик"
-            className={styles.catalogue__filters__container__search__text}
-          />
-        </div>
+        <PriceDropdown onPriceChange={handlePriceChange} />
+        <SearchDropdown onSearchChange={handleSearchChange} />
       </div>
       <div className={styles.catalogue__filters__container__buttonsDesktop}>
         <ActionButton

@@ -6,7 +6,6 @@ import Heading3 from "@/components/ui/heading3"
 import Heading2 from "@/components/ui/heading2"
 import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
-import Image from "next/image"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import RangeSlider from "@/components/ui/rangeSlider"
@@ -18,6 +17,7 @@ import PropertyCardList from "@/components/propertyCardList"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import GetCatalogue from "@/components/getCatalogue"
 import Selection from "@/app/components/selection"
+import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
 
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
@@ -123,6 +123,8 @@ const CatalogueList = () => {
   const [isEmpty, setIsEmpty] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
+  const [selectedPropertyType, setSelectedPropertyType] =
+    useState("Жилой комплекс")
   const { isLaptop } = useScreenSize(0)
 
   const handleSorting = (sort: SortType) => {
@@ -212,24 +214,23 @@ const CatalogueList = () => {
       <div className={styles.catalogue__choose}>
         <div className={styles.catalogue__choose__livingSet}>
           <Heading2>
-            Подобрать <span> Жилой комплекс</span>
+            Подобрать{" "}
+            <PropertyTypeSelect
+              defaultValue={selectedPropertyType}
+              onValueChange={setSelectedPropertyType}
+              placeholder="Выберите тип недвижимости"
+              className="inlineSelect"
+            />
           </Heading2>
-          <Image
-            src="images/icons/chevron-down-orange.svg"
-            alt="Нажмите, чтобы раскрыть"
-            width={16}
-            height={16}
-          />
         </div>
 
         <div className={styles.catalogue__choose__favorite}>
-          <Image
-            src="/images/icons/heartOrange.svg"
+          <IconImage
+            iconLink="/images/icons/heartOrange.svg"
             alt="Сохранить поиск"
-            width={26}
-            height={26}
+            className={styles.catalogue__choose__favorite__icon}
           />
-          сохранить поиск
+          Сохранить поиск
         </div>
       </div>
 

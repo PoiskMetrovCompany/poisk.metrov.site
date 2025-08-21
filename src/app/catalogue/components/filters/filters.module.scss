@@ -2,12 +2,72 @@
   &__filters {
     &__container {
       width: 100%;
-      padding: 24px 40px;
+      padding: 0 32px 32px;
       background: var(--color-white);
 
       &__showFlats {
+        display: flex;
+        gap: 120px;
         width: 100%;
-        margin-top: 64px;
+        margin-top: 32px;
+
+        &__save {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+
+          width: 205px;
+
+          font-size: 18px;
+          font-weight: 500;
+          font-style: normal;
+          line-height: 150%;
+          color: var(--color-orange);
+
+          &__icon {
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        &__buttons {
+          display: flex;
+          flex: 1;
+          gap: 12px;
+
+          &__clear {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0 34px !important;
+
+            &__count {
+              display: flex;
+              gap: 10px;
+              align-items: center;
+              justify-content: center;
+
+              min-width: 28px;
+              height: 28px;
+              padding: 10px 6px;
+              border-radius: 50px;
+
+              font-size: 12px;
+              font-weight: 500;
+              font-style: normal;
+              line-height: 150%;
+              color: #fff;
+
+              background: var(--color-orange);
+            }
+          }
+
+          &__apply {
+            padding: 0 34px !important;
+          }
+        }
       }
     }
   }
