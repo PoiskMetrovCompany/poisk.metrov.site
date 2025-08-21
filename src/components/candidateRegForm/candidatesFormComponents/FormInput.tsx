@@ -1,17 +1,17 @@
-import React, { FC } from "react";
+import React, { FC } from "react"
 
 interface FormInputProps {
-  label: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-  value: string;
-  onChange: (value: string) => void;
-  maxLength?: number;
-  className?: string;
-  containerClassName?: string;
-  required?: boolean;
-  error?: boolean;
+  label: string
+  name: string
+  type?: string
+  placeholder?: string
+  value: string
+  onChange: (value: string) => void
+  maxLength?: number
+  className?: string
+  containerClassName?: string
+  required?: boolean
+  error?: boolean
 }
 
 export const FormInput: FC<FormInputProps> = ({
@@ -29,9 +29,11 @@ export const FormInput: FC<FormInputProps> = ({
 }) => {
   return (
     <div className={containerClassName}>
-      <label 
-        htmlFor={name} 
-        className={`formLabel ${required ? 'required' : ''} ${error ? 'error' : ''}`}
+      <label
+        htmlFor={name}
+        className={`formLabel ${required ? "required" : ""} ${
+          error ? "error" : ""
+        }`}
       >
         {label}
       </label>
@@ -39,17 +41,31 @@ export const FormInput: FC<FormInputProps> = ({
         type={type}
         name={name}
         id={name}
-        className={`${className} ${error ? 'error' : ''}`}
+        className={`${className} ${error ? "error" : ""}`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         required={required}
         style={{
-          borderColor: error ? '#e74c3c' : undefined,
-          borderWidth: error ? '1.5px' : undefined
+          borderColor: error ? "#e74c3c" : undefined,
+          borderWidth: error ? "1.5px" : undefined,
         }}
       />
+      {error && (
+        <div
+          style={{
+            color: "#e74c3c",
+            fontSize: "14px",
+            textAlign: "left",
+            marginTop: "5px",
+            marginLeft: "32px",
+            fontWeight: "400",
+          }}
+        >
+          Обязательно для заполнения
+        </div>
+      )}
     </div>
-  );
-};
+  )
+}

@@ -112,6 +112,21 @@ const ChildrenTable: FC<IChildrenTableProps> = ({
     return Boolean(errors[fieldName])
   }
 
+  // Функция для проверки наличия ошибок в обязательных полях таблицы
+  const hasRequiredFieldsErrors = (): boolean => {
+    const fieldsToCheck = [
+      `FIOChildren${index}`,
+      `dateOfBirthChildren${index}`,
+      `phoneNumberChildren${index}`,
+      `placeOfStudyChildren${index}`,
+      `placeOfLivingChildren${index}`,
+    ]
+
+    return fieldsToCheck.some(
+      (fieldName) => isRequired(fieldName) && hasError(fieldName)
+    )
+  }
+
   const renderInputWithRequired = (
     name: string,
     placeholder: string,
@@ -152,122 +167,140 @@ const ChildrenTable: FC<IChildrenTableProps> = ({
   }
 
   return (
-    <div
-      className="formRow table-container"
-      style={{
-        opacity: 1,
-        transform: "translateY(0)",
-        maxHeight: "220px",
-        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
-    >
-      <table className="inputTable">
-        <caption
-          className={`tableLabel ${
-            requiredFields.length > 0 ? "required" : ""
-          }`}
+    <div>
+      <div
+        className="formRow table-container"
+        style={{
+          opacity: 1,
+          transform: "translateY(0)",
+          maxHeight: "220px",
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <table className="inputTable">
+          <caption
+            className={`tableLabel ${
+              requiredFields.length > 0 ? "required" : ""
+            }`}
+          >
+            Данные совершеннолетнего ребенка
+          </caption>
+          <tbody>
+            <tr>
+              <td
+                colSpan={2}
+                style={{
+                  borderTopLeftRadius: "16px",
+                  borderTopRightRadius: "16px",
+                  borderColor: hasError(`FIOChildren${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `FIOChildren${index}`,
+                  "ФИО ребенка",
+                  formData[`FIOChildren${index}`] || "",
+                  (e) => {
+                    const formattedValue = formatNameInput(e.target.value)
+                    handleInputChange(`FIOChildren${index}`, formattedValue)
+                  }
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  borderColor: hasError(`dateOfBirthChildren${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `dateOfBirthChildren${index}`,
+                  "Дата рождения",
+                  formData[`dateOfBirthChildren${index}`] || "",
+                  (e) =>
+                    handleDateChange(
+                      `dateOfBirthChildren${index}`,
+                      e.target.value
+                    ),
+                  10
+                )}
+              </td>
+              <td
+                className={errors[`phoneNumberChildren${index}`] ? "error" : ""}
+              >
+                {renderInputWithRequired(
+                  `phoneNumberChildren${index}`,
+                  "Номер телефона",
+                  formData[`phoneNumberChildren${index}`] || "",
+                  (e) =>
+                    handlePhoneChange(
+                      `phoneNumberChildren${index}`,
+                      e.target.value
+                    )
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  borderColor: hasError(`placeOfStudyChildren${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `placeOfStudyChildren${index}`,
+                  "Место учебы/работы, рабочий телефон",
+                  formData[`placeOfStudyChildren${index}`] || "",
+                  (e) =>
+                    handleInputChange(
+                      `placeOfStudyChildren${index}`,
+                      e.target.value
+                    )
+                )}
+              </td>
+              <td
+                className="place-of-living-cell"
+                style={{
+                  borderBottomRightRadius: "16px",
+                  borderColor: hasError(`placeOfLivingChildren${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `placeOfLivingChildren${index}`,
+                  "Место проживания",
+                  formData[`placeOfLivingChildren${index}`] || "",
+                  (e) =>
+                    handleInputChange(
+                      `placeOfLivingChildren${index}`,
+                      e.target.value
+                    )
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {hasRequiredFieldsErrors() && (
+        <div
+          style={{
+            color: "#e74c3c",
+            fontSize: "14px",
+            marginTop: "5px",
+            fontWeight: "400",
+            textAlign: "left",
+            marginLeft: "32px",
+          }}
         >
-          Данные совершеннолетнего ребенка
-        </caption>
-        <tbody>
-          <tr>
-            <td
-              colSpan={2}
-              style={{
-                borderTopLeftRadius: "16px",
-                borderTopRightRadius: "16px",
-                borderColor: hasError(`FIOChildren${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `FIOChildren${index}`,
-                "ФИО ребенка",
-                formData[`FIOChildren${index}`] || "",
-                (e) => {
-                  const formattedValue = formatNameInput(e.target.value)
-                  handleInputChange(`FIOChildren${index}`, formattedValue)
-                }
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={{
-                borderColor: hasError(`dateOfBirthChildren${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `dateOfBirthChildren${index}`,
-                "Дата рождения",
-                formData[`dateOfBirthChildren${index}`] || "",
-                (e) =>
-                  handleDateChange(
-                    `dateOfBirthChildren${index}`,
-                    e.target.value
-                  ),
-                10
-              )}
-            </td>
-            <td
-              className={errors[`phoneNumberChildren${index}`] ? "error" : ""}
-            >
-               {renderInputWithRequired(
-                `phoneNumberChildren${index}`,
-                "Номер телефона",
-                formData[`FIOChildren${index}`] || "",
-                (e) => {
-                  const formattedValue = formatNameInput(e.target.value)
-                  handleInputChange(`FIOChildren${index}`, formattedValue)
-                }
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={{
-                borderColor: hasError(`placeOfStudyChildren${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `placeOfStudyChildren${index}`,
-                "Место учебы/работы, рабочий телефон",
-                formData[`placeOfStudyChildren${index}`] || "",
-                (e) =>
-                  handleInputChange(
-                    `placeOfStudyChildren${index}`,
-                    e.target.value
-                  )
-              )}
-            </td>
-            <td
-            className="place-of-living-cell"
-              style={{
-                borderBottomRightRadius: "16px",
-                borderColor: hasError(`placeOfLivingChildren${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `placeOfLivingChildren${index}`,
-                "Место проживания",
-                formData[`placeOfLivingChildren${index}`] || "",
-                (e) =>
-                  handleInputChange(
-                    `placeOfLivingChildren${index}`,
-                    e.target.value
-                  )
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          Обязательно для заполнения
+        </div>
+      )}
     </div>
   )
 }
