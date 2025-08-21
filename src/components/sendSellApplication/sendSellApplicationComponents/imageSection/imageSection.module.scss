@@ -1,0 +1,27 @@
+.sendSellApp {
+  &__container {
+    &__image {
+      min-height: 464px;
+      margin-bottom: 120px;
+      padding: 92px;
+      border-radius: 40px;
+
+      background-image: url("/images/sendAppSell.webp");
+      background-repeat: no-repeat;
+      background-position: 30% 47%;
+      background-size: cover;
+
+      &__text {
+        font-size: 40px;
+        font-weight: 500;
+      }
+
+      &__button {
+        &__send {
+          max-width: 243px;
+          margin-top: 32px;
+        }
+      }
+    }
+  }
+}

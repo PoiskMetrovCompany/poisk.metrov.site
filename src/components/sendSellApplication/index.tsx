@@ -2,25 +2,16 @@
 import React, { FC } from "react"
 import styles from "./sendApplication.module.scss"
 import ActionButton from "../ui/buttons/ActionButton"
-import FormSendSellApp from "./rightSide"
+import FormSendSellApp from "./sendSellApplicationComponents/rightSide"
+import ImageSell from "./sendSellApplicationComponents/imageSection"
+import ListSection from "./sendSellApplicationComponents/listSection"
+
 
 const SendSellApplication: FC = () => {
   return (
     <div>
-      <div className={styles.sendSellApp__container__image}>
-        <div className={styles.sendSellApp__container__image__text}>
-          Хотите продать свою недвижимость?
-        </div>
-        <div className={styles.sendSellApp__container__image__button}>
-          <ActionButton
-            type="primary"
-            size="medium"
-            className={styles.sendSellApp__container__image__button__send}
-          >
-            Оставить заявку
-          </ActionButton>
-        </div>
-      </div>
+      <ImageSell/>
+      <ListSection/>
       <div className={styles.sendSellApp}>
         <div className={styles.sendSellApp__container}>
           <div className={styles.sendSellApp__leftSide}>
@@ -31,7 +22,10 @@ const SendSellApplication: FC = () => {
           </div>
         </div>
       </div>
+
+
     </div>
+
   )
 }
 

@@ -1,0 +1,52 @@
+.sendSellApp {
+  &__container {
+    &__rightSide {
+      flex: 1;
+
+      &__list {
+        &__item {
+          display: flex;
+          gap: 66px;
+          justify-content: flex-end;
+          height: 65px;
+
+          &__number {
+            position: relative;
+            padding-left: 20px;
+            font-size: 18px;
+            margin-top: 6px;
+
+            &::before {
+              content: "";
+
+              position: absolute;
+              top: 70%;
+              left: 81%;
+              transform: translateY(-50%);
+
+              width: 2px;
+              height: 40px;
+
+              background-color: #ddd;
+            }
+          }
+
+          &__text {
+            &__header {
+              font-size: 28px;
+              font-weight: 500;
+
+            }
+
+            &__title {
+              margin-top: 12px;
+              font-size: 18px;
+              font-weight: 400;
+              color: var(--color-text-gray);
+            }
+          }
+        }
+      }
+    }
+  }
+}
