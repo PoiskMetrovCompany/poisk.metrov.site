@@ -2536,3 +2536,14 @@ input[type="checkbox"] + label {
 .inputTable tr:last-child td:last-child {
   border-bottom-right-radius: 1rem; /* 16px */
 }
+
+.errorMessage {
+  width: 100%;
+  padding: 10.5 0;
+  border-radius: 16px;
+
+  font-size: 14px;
+
+  background: #fee;
+  color: #F13131
+}

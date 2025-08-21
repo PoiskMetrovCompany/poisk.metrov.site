@@ -38,6 +38,8 @@ const CandidateForm: FC = () => {
   const [relativeCounter, setRelativeCounter] = useState(1)
   const [childrenCounter, setChildrenCounter] = useState(1)
 
+  const [hasError, setHasError] = useState(false)
+
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
   const [childrenErrors, setChildrenErrors] = useState({})
   const [validationErrors, setValidationErrors] = useState<
@@ -770,42 +772,16 @@ const CandidateForm: FC = () => {
         !isWorkExperienceValid ||
         !isSelectFieldsValid // Добавьте эту проверку
       ) {
-        let errorMessage = "Пожалуйста, заполните все обязательные поля:"
-        const errorSections = []
-
-        if (!isPersonalInfoValid) {
-          errorSections.push("персональная информация")
-        }
-
-        if (!isPassportValid) {
-          errorSections.push("паспортные данные")
-        }
-
-        if (!isChildrenValid) {
-          errorSections.push("данные детей")
-        }
-
-        if (!isRelativesValid) {
-          errorSections.push("данные родственников")
-        }
-
-        if (!isWorkExperienceValid) {
-          errorSections.push("опыт работы")
-        }
-
-        if (!isSelectFieldsValid) {
-          errorSections.push("обязательные поля выбора")
-        }
-
-        setSubmitError(`${errorMessage} ${errorSections.join(", ")}`)
         setIsSubmitting(false)
+        setHasError(true)
         return
       }
 
       setTriggerValidation(false)
       setValidationErrors({})
-      setMaritalStatusError(false) 
-      setCityError(false) 
+      setMaritalStatusError(false)
+      setHasError(false)
+      setCityError(false)
       const nameData = splitFullName(formData.FIO || "")
 
       const passportData = splitPassportData(formData.passwordSeriaNumber || "")
@@ -1273,6 +1249,14 @@ const CandidateForm: FC = () => {
                     </div>
                   </FormRow>
                 </div>
+              )}
+              {hasError && (
+                <FormRow>
+                  <div className="errorMessage">
+                    У вас есть незаполненные обязательные поля. Для отправки
+                    анкеты заполните их и повторите попытку заново
+                  </div>
+                </FormRow>
               )}
 
               <div
