@@ -1190,7 +1190,6 @@ input[type="checkbox"] + label {
   text-align: left;
 }
 
-/* Добавить специфичные ширины для столбцов */
 .candidatesTable th:nth-child(1) {
   width: 10px;
 }
