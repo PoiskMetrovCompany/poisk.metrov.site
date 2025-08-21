@@ -34,11 +34,11 @@
     content: "";
 
     position: absolute;
-    top: 1.5rem; 
-    right: 1.5rem; 
+    top: 1.5rem;
+    right: 1.5rem;
     transform: rotate(45deg);
 
-    width: 0.45rem; 
+    width: 0.45rem;
     height: 0.45rem;
     border: solid #818181;
     border-width: 0 2px 2px 0;
@@ -58,6 +58,10 @@
   @media (width <= 1024px) {
     font-size: 13px;
   }
+
+    @media (width <= 768px) {
+      font-size: 10.5px;
+    }
 }
 
 .selectItems {
@@ -100,6 +104,11 @@
     @media (width <= 1024px) {
       font-size: 13px;
     }
+
+    @media (width <= 768px) {
+      font-size: 10.5px;
+    }
+
   }
 }
 
@@ -171,7 +180,6 @@
   position: relative;
   width: 100%;
 }
-
 
 // Стили для обязательных полей с ошибками
 .selectLabel.required.error::after {
