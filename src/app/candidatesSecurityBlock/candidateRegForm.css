@@ -319,13 +319,14 @@ form {
   white-space: nowrap;
 
   transition: all 0.3s ease;
-  @media (max-width: 768px) {
+
+  @media (width <= 768px) {
     font-size: 10.5px;
   }
 }
 
-.textLeft{
-  @media (max-width: 768px) {
+.textLeft {
+  @media (width <= 768px) {
     text-align: left;
   }
 }
@@ -1190,29 +1191,32 @@ input[type="checkbox"] + label {
   text-align: left;
 }
 
-/* Добавить специфичные ширины для столбцов */
 .candidatesTable th:nth-child(1) {
-  width: 50px;
+  width: 10px;
 }
 
 .candidatesTable th:nth-child(2) {
-  width: 25%;
+  width: 20%;
 }
 
 .candidatesTable th:nth-child(3) {
-  width: 20%;
+  width: 12%;
 }
 
 .candidatesTable th:nth-child(4) {
-  width: 20%;
+  width: 18%;
 }
 
 .candidatesTable th:nth-child(5) {
-  width: 15%;
+  width: 20%;
 }
 
 .candidatesTable th:nth-child(6) {
-  width: 100px;
+  width: 15%;
+}
+
+.candidatesTable th:nth-child(7) {
+  width: 120px;
 }
 
 .candidatesTable tr {
@@ -1270,6 +1274,16 @@ input[type="checkbox"] + label {
   height: 1.2rem;
 }
 
+.deleteBtn {
+  margin-right: 12px;
+  padding: 10px 24px;
+  border-radius: 16px;
+
+  color: #f13131;
+
+  background: #ffd8d8;
+}
+
 .downloadBtn {
   color: rgb(236 125 63 / 50%);
   background: rgb(236 125 63 / 20%);
@@ -1302,8 +1316,23 @@ input[type="checkbox"] + label {
 }
 
 #checked {
-  color: rgb(15 141 19 / 100%);
+  color: сrgb(15 141 19 / 100%);
   background: rgb(228 248 228 / 100%);
+}
+
+#startWorking {
+  color: rgb(44 83 45);
+  background-color: rgb(151 215 153);
+}
+
+#accepted {
+  color: #c51af0;
+  background-color: #fae5ff;
+}
+
+#not{
+  background: #EBEBEB;
+  color: #EBEBEB;
 }
 
 #needRevision {
@@ -1392,12 +1421,12 @@ input[type="checkbox"] + label {
   }
 }
 
-.smallNone{
+.smallNone {
   padding: 0 5px;
 }
 
-@media (max-width: 1024px) {
-  .smallNone{
+@media (width <= 1024px) {
+  .smallNone {
     display: none;
   }
 }
@@ -1418,7 +1447,6 @@ input[type="checkbox"] + label {
   position: relative;
   display: flex;
   border-radius: 25px;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
 }
 
 /* Основная кнопка скачивания */
@@ -1428,7 +1456,7 @@ input[type="checkbox"] + label {
   min-width: 100px;
   padding: 12px 24px;
   border: none;
-  border-radius: 25px 0 0 25px;
+  border-radius: 16px 0 0 16px;
 
   font-size: 16px;
   font-weight: 500;
@@ -1457,7 +1485,7 @@ input[type="checkbox"] + label {
   padding: 12px 20px;
   border: none;
   border-left: 2px solid rgb(255 255 255 / 20%);
-  border-radius: 0 25px 25px 0;
+  border-radius: 0 16px 16px 0;
 
   font-size: 16px;
   font-weight: 500;
@@ -2590,7 +2618,8 @@ input[type="checkbox"] + label {
   color: #f13131;
 
   background: #fee;
-  @media (max-width: 768px) {
+
+  @media (width <= 768px) {
     font-size: 12px;
   }
 }
