@@ -1,4 +1,7 @@
 .propertyCardComparison {
+  padding-right: 32px;
+  border-right: 1px solid var(--color-gray-white);
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -88,6 +91,39 @@
             font-weight: 500;
             line-height: 150%;
             color: var(--color-black);
+
+            &__complex {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              &__icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                object-fit: cover;
+              }
+
+              &__info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                &__name {
+                  font-size: 18px;
+                  font-weight: 500;
+                  line-height: 150%;
+                  color: var(--color-black);
+                }
+
+                &__time {
+                  font-size: 14px;
+                  font-weight: 300;
+                  line-height: 150%;
+                  color: var(--color-text-gray);
+                }
+              }
+            }
           }
         }
       }

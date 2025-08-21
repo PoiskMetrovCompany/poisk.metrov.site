@@ -8,7 +8,7 @@ const PropertyCardData: IPropertyCardFull = {
   general: {
     builder: {
       name: "ГК Брусника",
-      image: "/images/buildingCarousel/buidingExpandImg.webp",
+      image: "/images/temporary/brusnika.png",
     },
     constructionCompletionDate: "Сдан – IV 2028",
     typeOfProperty: "Жилая",
@@ -19,7 +19,11 @@ const PropertyCardData: IPropertyCardFull = {
   },
   location: {
     district: "Микрорайон на набережной Оби",
-    metro: "Октябрьская",
+    metro: {
+      name: "Октябрьская",
+      image: "/images/icons/car.svg",
+      time: "25 минут",
+    },
   },
   conveniences: {
     elevators: "4 грузовых",
@@ -56,7 +60,7 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       ...PropertyCardData.general,
       builder: {
         name: "ГК Стройинвест",
-        image: "/images/buildingCarousel/buidingExpandImg.webp",
+        image: "/images/temporary/brusnika.png",
       },
       constructionCompletionDate: "Сдан – II 2029",
       sections: 3,
@@ -64,7 +68,11 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
     },
     location: {
       district: "Центральный район",
-      metro: "Площадь Ленина",
+      metro: {
+        name: "Площадь Ленина",
+        image: "/images/icons/car.svg",
+        time: "25 минут",
+      },
     },
     cost: {
       oneRoom: "7,2",
@@ -84,7 +92,7 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       ...PropertyCardData.general,
       builder: {
         name: "ГК Домстрой",
-        image: "/images/buildingCarousel/buidingExpandImg.webp",
+        image: "/images/temporary/brusnika.png",
       },
       constructionCompletionDate: "Сдан – III 2028",
       sections: 4,
@@ -92,7 +100,11 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
     },
     location: {
       district: "Заельцовский район",
-      metro: "Заельцовская",
+      metro: {
+        name: "Заельцовская",
+        image: "/images/icons/car.svg",
+        time: "25 минут",
+      },
     },
     cost: {
       oneRoom: "5,8",
@@ -112,7 +124,7 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       ...PropertyCardData.general,
       builder: {
         name: "ГК Новый дом",
-        image: "/images/buildingCarousel/buidingExpandImg.webp",
+        image: "/images/temporary/brusnika.png",
       },
       constructionCompletionDate: "Сдан – I 2029",
       sections: 6,
@@ -120,7 +132,11 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
     },
     location: {
       district: "Калининский район",
-      metro: "Калининская",
+      metro: {
+        name: "Калининская",
+        image: "/images/icons/car.svg",
+        time: "25 минут",
+      },
     },
     cost: {
       oneRoom: "6,1",
@@ -140,7 +156,7 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       ...PropertyCardData.general,
       builder: {
         name: "ГК Академстрой",
-        image: "/images/buildingCarousel/buidingExpandImg.webp",
+        image: "/images/temporary/brusnika.png",
       },
       constructionCompletionDate: "Сдан – V 2028",
       sections: 7,
@@ -148,7 +164,11 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
     },
     location: {
       district: "Советский район",
-      metro: "Гагаринская",
+      metro: {
+        name: "Гагаринская",
+        image: "/images/icons/car.svg",
+        time: "25 минут",
+      },
     },
     cost: {
       oneRoom: "7,5",

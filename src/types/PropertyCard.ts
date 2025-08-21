@@ -41,7 +41,11 @@ export interface IPropertyCardGeneral {
 
 export interface IPropertyCardLocation {
   district: string
-  metro: string
+  metro: {
+    name: string
+    image: string
+    time: string
+  }
 }
 
 export interface IPropertyCardConveniences {

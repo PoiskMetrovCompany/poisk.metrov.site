@@ -21,6 +21,86 @@ interface PropertyCardComparisonProps {
 const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   data = PropertyCardData,
 }) => {
+  // Функция для рендеринга значения в зависимости от типа
+  const renderValue = (key: string, value: unknown): React.ReactNode => {
+    // Обработка builder
+    if (
+      key === "builder" &&
+      typeof value === "object" &&
+      value !== null &&
+      "name" in value &&
+      "image" in value
+    ) {
+      const builderValue = value as { name: string; image: string }
+      return (
+        <div
+          className={
+            styles.propertyCardComparison__content__block__list__item__value__complex
+          }
+        >
+          <span>{builderValue.name}</span>
+          <IconImage
+            iconLink={builderValue.image}
+            alt={builderValue.name}
+            className={
+              styles.propertyCardComparison__content__block__list__item__value__complex__icon
+            }
+          />
+        </div>
+      )
+    }
+
+    // Обработка metro
+    if (
+      key === "metro" &&
+      typeof value === "object" &&
+      value !== null &&
+      "name" in value &&
+      "image" in value &&
+      "time" in value
+    ) {
+      const metroValue = value as { name: string; image: string; time: string }
+      return (
+        <div
+          className={
+            styles.propertyCardComparison__content__block__list__item__value__complex
+          }
+        >
+          <IconImage
+            iconLink={metroValue.image}
+            alt={metroValue.name}
+            className={
+              styles.propertyCardComparison__content__block__list__item__value__complex__icon
+            }
+          />
+          <div
+            className={
+              styles.propertyCardComparison__content__block__list__item__value__complex__info
+            }
+          >
+            <span
+              className={
+                styles.propertyCardComparison__content__block__list__item__value__complex__info__name
+              }
+            >
+              {metroValue.name}
+            </span>
+            <span
+              className={
+                styles.propertyCardComparison__content__block__list__item__value__complex__info__time
+              }
+            >
+              {metroValue.time}
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    // Обычное строковое значение
+    return <span>{String(value)}</span>
+  }
+
   return (
     <div className={styles.propertyCardComparison}>
       <div className={styles.propertyCardComparison__content}>
@@ -74,13 +154,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                     ]
                   }
                 </span>
-                <span
+                <div
                   className={
                     styles.propertyCardComparison__content__block__list__item__value
                   }
                 >
-                  {typeof value === "object" ? value.name : value}
-                </span>
+                  {renderValue(key, value)}
+                </div>
               </li>
             ))}
           </ul>
@@ -110,13 +190,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                     ]
                   }
                 </span>
-                <span
+                <div
                   className={
                     styles.propertyCardComparison__content__block__list__item__value
                   }
                 >
-                  {value}
-                </span>
+                  {renderValue(key, value)}
+                </div>
               </li>
             ))}
           </ul>
@@ -146,13 +226,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                     ]
                   }
                 </span>
-                <span
+                <div
                   className={
                     styles.propertyCardComparison__content__block__list__item__value
                   }
                 >
-                  {value}
-                </span>
+                  {renderValue(key, value)}
+                </div>
               </li>
             ))}
           </ul>
@@ -182,13 +262,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                     ]
                   }
                 </span>
-                <span
+                <div
                   className={
                     styles.propertyCardComparison__content__block__list__item__value
                   }
                 >
-                  {value}
-                </span>
+                  {renderValue(key, value)}
+                </div>
               </li>
             ))}
           </ul>
@@ -218,13 +298,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                     ]
                   }
                 </span>
-                <span
+                <div
                   className={
                     styles.propertyCardComparison__content__block__list__item__value
                   }
                 >
                   от {value} млн ₽
-                </span>
+                </div>
               </li>
             ))}
           </ul>

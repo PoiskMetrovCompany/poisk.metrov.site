@@ -11,6 +11,7 @@ type IconButtonProps = {
   size?: "sm" | "md" | "lg" | "tiny"
   type?: "primary" | "secondary" | "orange"
   alt?: string
+  disabled?: boolean
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -21,6 +22,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   size = "md",
   type = "primary",
   alt,
+  disabled = false,
 }) => {
   return (
     <button
@@ -32,8 +34,10 @@ const IconButton: React.FC<IconButtonProps> = ({
         [styles.iconButton_primary]: type === "primary",
         [styles.iconButton_secondary]: type === "secondary",
         [styles.iconButton_orange]: type === "orange",
+        [styles.iconButton_disabled]: disabled,
       })}
       onClick={onClick}
+      disabled={disabled}
     >
       <div
         className={clsx(styles.iconButton__icon, iconClassName, {
