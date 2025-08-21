@@ -1192,27 +1192,31 @@ input[type="checkbox"] + label {
 
 /* Добавить специфичные ширины для столбцов */
 .candidatesTable th:nth-child(1) {
-  width: 50px;
+  width: 10px;
 }
 
 .candidatesTable th:nth-child(2) {
-  width: 25%;
+  width: 20%;
 }
 
 .candidatesTable th:nth-child(3) {
-  width: 20%;
+  width: 12%;
 }
 
 .candidatesTable th:nth-child(4) {
-  width: 20%;
+  width: 18%;
 }
 
 .candidatesTable th:nth-child(5) {
-  width: 15%;
+  width: 20%;
 }
 
 .candidatesTable th:nth-child(6) {
-  width: 100px;
+  width: 15%;
+}
+
+.candidatesTable th:nth-child(7) {
+  width: 120px;
 }
 
 .candidatesTable tr {
@@ -1268,6 +1272,14 @@ input[type="checkbox"] + label {
 .candidatesTable button img {
   width: 1.2rem;
   height: 1.2rem;
+}
+
+.deleteBtn{
+  background: #FFD8D8;
+  color: #F13131;
+  padding: 10px 24px;
+  border-radius: 16px;
+  margin-right: 12px;
 }
 
 .downloadBtn {
@@ -1418,7 +1430,6 @@ input[type="checkbox"] + label {
   position: relative;
   display: flex;
   border-radius: 25px;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
 }
 
 /* Основная кнопка скачивания */
@@ -1428,7 +1439,7 @@ input[type="checkbox"] + label {
   min-width: 100px;
   padding: 12px 24px;
   border: none;
-  border-radius: 25px 0 0 25px;
+  border-radius: 16px 0 0 16px;
 
   font-size: 16px;
   font-weight: 500;
@@ -1457,7 +1468,7 @@ input[type="checkbox"] + label {
   padding: 12px 20px;
   border: none;
   border-left: 2px solid rgb(255 255 255 / 20%);
-  border-radius: 0 25px 25px 0;
+  border-radius: 0 16px 16px 0;
 
   font-size: 16px;
   font-weight: 500;

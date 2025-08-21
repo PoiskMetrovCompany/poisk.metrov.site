@@ -9,6 +9,7 @@ import Image from "next/image";
 interface Candidate {
   id: string;
   name: string;
+  rop: string;
   datetime: string;
   vacancy: string;
   status: string;
@@ -392,6 +393,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         const transformedCandidates = data.attributes.data.map((candidate: any) => ({
             id: candidate.id,
             name: `${candidate.last_name} ${candidate.first_name} ${candidate.middle_name || ''}`.trim(),
+            rop: 'Маликова Е.',
             datetime: formatDateTime(candidate.created_at || new Date().toISOString()),
             vacancy: candidate.vacancy?.attributes?.title || 'Не указана',
             status: candidate.status || 'Не определен',
@@ -417,11 +419,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         console.error('Ошибка при загрузке кандидатов:', err);
         console.log('Используем mock-данные для разработки');
         
-        // Mock данные
         const mockCandidates = [
         {
             id: '1',
             name: 'Иванов Иван Иванович',
+            rop: 'Маликова Е.',
             datetime: '15.01.2025 14:30',
             vacancy: 'Frontend разработчик',
             status: 'Новая анкета',
@@ -433,6 +435,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         {
             id: '2',
             name: 'Петров Петр Петрович',
+            rop: 'Маликова Е.',
             datetime: '14.01.2025 10:15',
             vacancy: 'Backend разработчик',
             status: 'Проверен',
@@ -444,6 +447,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         {
             id: '3',
             name: 'Сидорова Анна Михайловна',
+            rop: 'Маликова Е.',
             datetime: '13.01.2025 16:45',
             vacancy: 'UI/UX дизайнер',
             status: 'Нужна доработка',
@@ -455,6 +459,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         {
             id: '4',
             name: 'Козлов Алексей Владимирович',
+            rop: 'Маликова Е.',
             datetime: '12.01.2025 09:20',
             vacancy: 'Project Manager',
             status: 'Отклонен',
@@ -519,14 +524,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   };
 
     useEffect(() => {
-    // Для разработки считаем пользователя авторизованным
     setIsAuthorized(true);
     
     if (filteredData) {
-        // Если есть отфильтрованные данные, используем их
         const transformedCandidates = filteredData.attributes.data.map((candidate: any) => ({
         id: candidate.id,
         name: `${candidate.last_name} ${candidate.first_name} ${candidate.middle_name || ''}`.trim(),
+        rop: 'Маликова Е.',
         datetime: formatDateTime(candidate.created_at || new Date().toISOString()),
         vacancy: candidate.vacancy?.attributes?.title || 'Не указана',
         status: candidate.status || 'Не определен',
@@ -574,7 +578,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isFormatDropdownOpen]);
 
-  // Если пользователь не авторизован, не рендерим компонент (произойдет редирект)
   if (!isAuthorized) {
     return null;
   }
@@ -617,6 +620,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             <tr style={{border: '0'}}>
               <th></th>
               <th>ФИО Кандидата</th>
+              <th>РОП</th>
               <th>Дата и время</th>
               <th>Вакансия</th>
               <th style={{textAlign: 'right', paddingRight: '30px'}}>Статус</th>
@@ -644,6 +648,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                   </label>
                 </td>
                 <td>{candidate.name}</td>
+                <td>{candidate.rop}</td>
                 <td>{candidate.datetime}</td>
                 <td>{candidate.vacancy}</td>
                 <td style={{display: 'flex', justifyContent: 'flex-end', marginRight: '20px'}}>
@@ -728,6 +733,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
               </button>
             </div>
             <div className="download-button-group right-side">
+
+              <button className="deleteBtn">Удалить</button>
               <button
                 className="download-btn primary"
                 onClick={handleDownload}
