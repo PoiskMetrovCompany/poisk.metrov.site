@@ -8,7 +8,7 @@ interface IRelativeTableProps {
     updater: (prev: Record<string, any>) => Record<string, any>
   ) => void
   requiredFields?: string[]
-  errors?: Record<string, boolean> // Добавляем пропс для ошибок
+  errors?: Record<string, boolean>
 }
 
 const RelativeTable: FC<IRelativeTableProps> = ({
@@ -16,7 +16,7 @@ const RelativeTable: FC<IRelativeTableProps> = ({
   formData,
   setFormData,
   requiredFields = [],
-  errors = {}, // Значение по умолчанию
+  errors = {},
 }) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, "")
@@ -92,7 +92,6 @@ const RelativeTable: FC<IRelativeTableProps> = ({
   }
 
   const isRequired = (fieldName: string): boolean => {
-    // Обязательные типы полей независимо от индекса (все кроме места проживания)
     const alwaysRequiredTypes = [
       "FIORelative",
       "dateOfBirthRelative",
@@ -100,18 +99,29 @@ const RelativeTable: FC<IRelativeTableProps> = ({
       "placeOfStudyRelative",
     ]
 
-    // Проверяем, содержит ли название поля один из обязательных типов
     const isAlwaysRequired = alwaysRequiredTypes.some((type) =>
       fieldName.startsWith(type)
     )
 
-    // Поле обязательно, если оно в списке requiredFields или является всегда обязательным типом
     return requiredFields.includes(fieldName) || isAlwaysRequired
   }
 
-  // Функция для проверки наличия ошибки у поля
   const hasError = (fieldName: string): boolean => {
     return Boolean(errors[fieldName])
+  }
+
+  const hasRequiredFieldsErrors = (): boolean => {
+    const fieldsToCheck = [
+      `FIORelative${index}`,
+      `dateOfBirthRelative${index}`,
+      `phoneNumberRelative${index}`,
+      `placeOfStudyRelative${index}`,
+      `placeOfLivingRelative${index}`
+    ]
+    
+    return fieldsToCheck.some(fieldName => 
+      isRequired(fieldName) && hasError(fieldName)
+    )
   }
 
   const renderInputWithRequired = (
@@ -154,129 +164,144 @@ const RelativeTable: FC<IRelativeTableProps> = ({
   }
 
   return (
-    <div
-      className="formRow table-container"
-      style={{
-        opacity: 1,
-        transform: "translateY(0)",
-        maxHeight: "220px",
-        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
-    >
-      <table className="inputTable">
-        <caption
-          className={`tableLabel ${
-            requiredFields.length > 0 ? "required" : "required"
-          }`}
-        >
-          Данные члена семьи
-        </caption>
-        <tbody>
-          <tr>
-            <td
-              colSpan={2}
-              style={{
-                borderTopLeftRadius: "16px",
-                borderTopRightRadius: "16px",
-                borderColor: hasError(`FIORelative${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `FIORelative${index}`,
-                "Степень родства, ФИО члена семьи",
-                formData[`FIORelative${index}`] || "",
-                (e) => {
-                  const formattedValue = formatNameInput(e.target.value)
-                  handleInputChange(`FIORelative${index}`, formattedValue)
-                }
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={{
-                borderColor: hasError(`dateOfBirthRelative${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `dateOfBirthRelative${index}`,
-                "Дата рождения",
-                formData[`dateOfBirthRelative${index}`] || "",
-                (e) =>
-                  handleDateChange(
-                    `dateOfBirthRelative${index}`,
-                    e.target.value
-                  ),
-                10
-              )}
-            </td>
-            <td
-              className={hasError(`phoneNumberRelative${index}`) ? "error" : ""}
-              style={{
-                borderColor: hasError(`phoneNumberRelative${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `phoneNumberRelative${index}`,
-                "Номер телефона",
-                formData[`phoneNumberRelative${index}`] || "",
-                (e) =>
-                  handlePhoneChange(
-                    `phoneNumberRelative${index}`,
-                    e.target.value
-                  ),
-                18
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={{
-                borderColor: hasError(`placeOfStudyRelative${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `placeOfStudyRelative${index}`,
-                "Место учебы/работы, рабочий телефон",
-                formData[`placeOfStudyRelative${index}`] || "",
-                (e) =>
-                  handleInputChange(
-                    `placeOfStudyRelative${index}`,
-                    e.target.value
-                  )
-              )}
-            </td>
-            <td
-              className="place-of-living-cell"
-              style={{
-                borderBottomRightRadius: "16px",
-                borderColor: hasError(`placeOfLivingRelative${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
-            >
-              {renderInputWithRequired(
-                `placeOfLivingRelative${index}`,
-                "Место проживания",
-                formData[`placeOfLivingRelative${index}`] || "",
-                (e) =>
-                  handleInputChange(
-                    `placeOfLivingRelative${index}`,
-                    e.target.value
-                  )
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div>
+      <div
+        className="formRow table-container"
+        style={{
+          opacity: 1,
+          transform: "translateY(0)",
+          maxHeight: "220px",
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <table className="inputTable">
+          <caption
+            className={`tableLabel ${
+              requiredFields.length > 0 ? "required" : "required"
+            }`}
+          >
+            Данные члена семьи
+          </caption>
+          <tbody>
+            <tr>
+              <td
+                colSpan={2}
+                style={{
+                  borderTopLeftRadius: "16px",
+                  borderTopRightRadius: "16px",
+                  borderColor: hasError(`FIORelative${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `FIORelative${index}`,
+                  "Степень родства, ФИО члена семьи",
+                  formData[`FIORelative${index}`] || "",
+                  (e) => {
+                    const formattedValue = formatNameInput(e.target.value)
+                    handleInputChange(`FIORelative${index}`, formattedValue)
+                  }
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  borderColor: hasError(`dateOfBirthRelative${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `dateOfBirthRelative${index}`,
+                  "Дата рождения",
+                  formData[`dateOfBirthRelative${index}`] || "",
+                  (e) =>
+                    handleDateChange(
+                      `dateOfBirthRelative${index}`,
+                      e.target.value
+                    ),
+                  10
+                )}
+              </td>
+              <td
+                className={hasError(`phoneNumberRelative${index}`) ? "error" : ""}
+                style={{
+                  borderColor: hasError(`phoneNumberRelative${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `phoneNumberRelative${index}`,
+                  "Номер телефона",
+                  formData[`phoneNumberRelative${index}`] || "",
+                  (e) =>
+                    handlePhoneChange(
+                      `phoneNumberRelative${index}`,
+                      e.target.value
+                    ),
+                  18
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  borderColor: hasError(`placeOfStudyRelative${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `placeOfStudyRelative${index}`,
+                  "Место учебы/работы, рабочий телефон",
+                  formData[`placeOfStudyRelative${index}`] || "",
+                  (e) =>
+                    handleInputChange(
+                      `placeOfStudyRelative${index}`,
+                      e.target.value
+                    )
+                )}
+              </td>
+              <td
+                className="place-of-living-cell"
+                style={{
+                  borderBottomRightRadius: "16px",
+                  borderColor: hasError(`placeOfLivingRelative${index}`)
+                    ? "#e74c3c"
+                    : undefined,
+                }}
+              >
+                {renderInputWithRequired(
+                  `placeOfLivingRelative${index}`,
+                  "Место проживания",
+                  formData[`placeOfLivingRelative${index}`] || "",
+                  (e) =>
+                    handleInputChange(
+                      `placeOfLivingRelative${index}`,
+                      e.target.value
+                    )
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      {hasRequiredFieldsErrors() && (
+        <div style={{
+          color: '#e74c3c',
+          fontSize: '14px',
+          marginTop: '5px',
+          fontWeight: '400',
+          textAlign: "left",
+          marginLeft: "32px",
+        }}>
+          Обязательно для заполнения
+        </div>
+      )}
     </div>
   )
 }

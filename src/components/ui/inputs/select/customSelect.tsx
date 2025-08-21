@@ -172,6 +172,21 @@ const CustomSelect: FC<ICustomSelectProps> = ({
       {errorMessage && (
         <div className={styles.errorMessage}>{errorMessage}</div>
       )}
+
+      {hasValidationError && !errorMessage && (
+        <div
+          style={{
+            color: "#e74c3c",
+            fontSize: "14px",
+            marginTop: "5px",
+            fontWeight: "400",
+            textAlign: "left",
+            marginLeft: "32px",
+          }}
+        >
+          Обязательно для заполнения
+        </div>
+      )}
     </div>
   )
 }

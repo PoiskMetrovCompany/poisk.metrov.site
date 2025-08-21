@@ -1,13 +1,13 @@
-import React, { FC } from "react";
-import { FormRow } from "./FormRow";
-import { FormInput } from "./FormInput";
+import React, { FC } from "react"
+import { FormRow } from "./FormRow"
+import { FormInput } from "./FormInput"
 
 interface PassportSectionProps {
-  formData: Record<string, any>;
-  onFormDataChange: (name: string, value: string) => void;
-  onDateChange: (name: string, value: string) => void;
-  onPassportChange: (name: string, value: string) => void;
-  errors?: Record<string, boolean>; // Добавляем проп для ошибок
+  formData: Record<string, any>
+  onFormDataChange: (name: string, value: string) => void
+  onDateChange: (name: string, value: string) => void
+  onPassportChange: (name: string, value: string) => void
+  errors?: Record<string, boolean> // Добавляем проп для ошибок
 }
 
 export const PassportSection: FC<PassportSectionProps> = ({
@@ -18,62 +18,54 @@ export const PassportSection: FC<PassportSectionProps> = ({
   errors = {},
 }) => {
   const formatDateInput = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`;
-    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`;
-  };
+    const digits = value.replace(/\D/g, "")
+    if (digits.length <= 2) return digits
+    if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`
+    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`
+  }
 
   const formatPassportInput = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 4) return digits;
-    return `${digits.slice(0, 4)} ${digits.slice(4, 10)}`;
-  };
+    const digits = value.replace(/\D/g, "")
+    if (digits.length <= 4) return digits
+    return `${digits.slice(0, 4)} ${digits.slice(4, 10)}`
+  }
 
   return (
     <>
-      <FormRow style={{marginTop: '50px'}}>
+      <FormRow style={{ marginTop: "50px" }}>
         <h3>Паспортные данные</h3>
       </FormRow>
-      
+
       <FormRow className="justify-space-between">
-        <div className="input-container w-49">
-          <label htmlFor="passwordSeriaNumber" className="formLabel required">
-            Серия и номер
-          </label>
-          <input
-            style={{
-              width: '100%',
-              borderColor: errors.passwordSeriaNumber ? '#e74c3c' : '#d2d2d2'
-            }}
-            type="text"
-            name="passwordSeriaNumber"
-            className="formInput"
-            placeholder="1234 567890"
-            maxLength={11}
-            value={formData.passwordSeriaNumber || ''}
-            onChange={(e) => onPassportChange('passwordSeriaNumber', formatPassportInput(e.target.value))}
-          />
-        </div>
-        
-        <div className="input-container w-49">
-          <label htmlFor="dateOfIssue" className="formLabel required">
-            Дата выдачи
-          </label>
-          <input
-            style={{
-              width: '100%',
-              borderColor: errors.dateOfIssue ? '#e74c3c' : '#d2d2d2'
-            }}
-            type="text"
-            name="dateOfIssue"
-            className="formInput"
-            placeholder="01.01.1990"
-            maxLength={10}
-            value={formData.dateOfIssue || ''}
-            onChange={(e) => onDateChange('dateOfIssue', formatDateInput(e.target.value))}
-          />
-        </div>
+        <FormInput
+          label="Серия и номер"
+          name="passwordSeriaNumber"
+          required={true}
+          placeholder="1234 567890"
+          maxLength={11}
+          value={formData.passwordSeriaNumber || ""}
+          onChange={(value) =>
+            onPassportChange("passwordSeriaNumber", formatPassportInput(value))
+          }
+          className="formInput"
+          containerClassName="input-container w-49"
+          error={errors.passwordSeriaNumber}
+        />
+
+        <FormInput
+          label="Дата выдачи"
+          name="dateOfIssue"
+          required={true}
+          placeholder="01.01.1990"
+          maxLength={10}
+          value={formData.dateOfIssue || ""}
+          onChange={(value) =>
+            onDateChange("dateOfIssue", formatDateInput(value))
+          }
+          className="formInput"
+          containerClassName="input-container w-49"
+          error={errors.dateOfIssue}
+        />
       </FormRow>
 
       <FormRow>
@@ -82,8 +74,8 @@ export const PassportSection: FC<PassportSectionProps> = ({
           name="issuedBy"
           required={true}
           placeholder="ОФУМС России"
-          value={formData.issuedBy || ''}
-          onChange={(value) => onFormDataChange('issuedBy', value)}
+          value={formData.issuedBy || ""}
+          onChange={(value) => onFormDataChange("issuedBy", value)}
           className="formInput"
           error={errors.issuedBy}
         />
@@ -95,8 +87,8 @@ export const PassportSection: FC<PassportSectionProps> = ({
           name="adressOfPermanentReg"
           required={true}
           placeholder="Адрес постоянной регистрации"
-          value={formData.adressOfPermanentReg || ''}
-          onChange={(value) => onFormDataChange('adressOfPermanentReg', value)}
+          value={formData.adressOfPermanentReg || ""}
+          onChange={(value) => onFormDataChange("adressOfPermanentReg", value)}
           className="formInput"
           error={errors.adressOfPermanentReg}
         />
@@ -107,8 +99,8 @@ export const PassportSection: FC<PassportSectionProps> = ({
           label="Адрес временной регистрации"
           name="adressOfTemporaryReg"
           placeholder="Адрес временной регистрации"
-          value={formData.adressOfTemporaryReg || ''}
-          onChange={(value) => onFormDataChange('adressOfTemporaryReg', value)}
+          value={formData.adressOfTemporaryReg || ""}
+          onChange={(value) => onFormDataChange("adressOfTemporaryReg", value)}
           className="formInput"
         />
       </FormRow>
@@ -118,13 +110,13 @@ export const PassportSection: FC<PassportSectionProps> = ({
           label="Адрес фактического проживания"
           name="adressOfFactialLiving"
           placeholder="Адрес фактического проживания"
-          value={formData.adressOfFactialLiving || ''}
-          onChange={(value) => onFormDataChange('adressOfFactialLiving', value)}
+          value={formData.adressOfFactialLiving || ""}
+          onChange={(value) => onFormDataChange("adressOfFactialLiving", value)}
           className="formInput"
           required={true}
           error={errors.adressOfFactialLiving}
         />
       </FormRow>
     </>
-  );
-};
+  )
+}

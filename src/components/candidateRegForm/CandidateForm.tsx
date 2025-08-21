@@ -39,6 +39,7 @@ const CandidateForm: FC = () => {
   const [childrenCounter, setChildrenCounter] = useState(1)
 
   const [hasError, setHasError] = useState(false)
+  const [spouseErrors, setSpouseErrors] = useState<Record<string, boolean>>({})
 
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
   const [childrenErrors, setChildrenErrors] = useState({})
@@ -255,6 +256,43 @@ const CandidateForm: FC = () => {
     return isValid
   }
 
+  const validateSpouseTable = (): boolean => {
+    if (selectedMaritalStatus !== "Состою в зарегистрированном браке") {
+      return true
+    }
+
+    const errors: Record<string, boolean> = {}
+    let isValid = true
+
+    const requiredFields = [
+      "FIOSuprug",
+      "dateOfBirthTable",
+      "phoneNumberTable",
+      "placeOfStudy",
+    ]
+
+    requiredFields.forEach((field) => {
+      if (!formData[field] || formData[field].trim() === "") {
+        errors[field] = true
+        isValid = false
+      }
+    })
+
+    setSpouseErrors(errors)
+    return isValid
+  }
+
+  const handleSpouseFieldChange = (fieldName: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
+
+    if (value && value.trim() !== "" && spouseErrors[fieldName]) {
+      setSpouseErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldName]
+        return newErrors
+      })
+    }
+  }
   const validatePersonalInfoSection = () => {
     const errors: Record<string, boolean> = {}
 
@@ -752,6 +790,7 @@ const CandidateForm: FC = () => {
       setChildrenErrors({})
       setRelativesErrors({})
       setWorkExperienceErrors({})
+      setSpouseErrors({}) // Добавьте сброс ошибок супруга
 
       const isPersonalInfoValid = validatePersonalInfoSection()
       const isPassportValid = validatePassportSection()
@@ -760,8 +799,7 @@ const CandidateForm: FC = () => {
         ? validateRelativesTables()
         : true
       const isWorkExperienceValid = validateWorkExperienceTable()
-
-      // Добавьте эту строку
+      const isSpouseValid = validateSpouseTable() // Добавьте валидацию супруга
       const isSelectFieldsValid = validateSelectFields()
 
       if (
@@ -770,7 +808,8 @@ const CandidateForm: FC = () => {
         !isChildrenValid ||
         !isRelativesValid ||
         !isWorkExperienceValid ||
-        !isSelectFieldsValid // Добавьте эту проверку
+        !isSpouseValid || // Добавьте проверку супруга
+        !isSelectFieldsValid
       ) {
         setIsSubmitting(false)
         setHasError(true)
@@ -915,7 +954,6 @@ const CandidateForm: FC = () => {
           ) : (
             <div className="center-card big">
               <SectionHeader title="Данные о вакансии" />
-
               <PersonalInfoSection
                 formData={formData}
                 onFormDataChange={handleFormDataChange}
@@ -938,7 +976,6 @@ const CandidateForm: FC = () => {
                 validationErrors={validationErrors}
                 triggerValidation={triggerValidation}
               />
-
               {/* Образование и профессиональный опыт */}
               <EducationSection
                 selectedEducationLevel={selectedEducationLevel}
@@ -955,7 +992,6 @@ const CandidateForm: FC = () => {
                 onAddCourseTable={addCourseTable}
                 workExperienceErrors={workExperienceErrors} // Передаем ошибки
               />
-
               {/* Паспортные данные */}
               <PassportSection
                 formData={formData}
@@ -964,13 +1000,11 @@ const CandidateForm: FC = () => {
                 onPassportChange={handleFormDataChange}
                 errors={formErrors}
               />
-
               {/* Состав семьи */}
               <SectionHeader
                 title="Состав семьи"
                 subtitle="Заполните эти данные, чтобы мы могли предложить вам подходящие условия"
               />
-
               <FormRow>
                 <div className="input-container">
                   <CustomSelect
@@ -985,17 +1019,15 @@ const CandidateForm: FC = () => {
                   />
                 </div>
               </FormRow>
-
               <SpouseTable
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={handleSpouseFieldChange} 
                 isVisible={
                   selectedMaritalStatus === "Состою в зарегистрированном браке"
                 }
+                errors={spouseErrors} 
               />
-
               <SectionHeader title="1. Дети старше 18 лет" />
-
               <FormRow justifyContent="flex-start" style={{ marginTop: 0 }}>
                 <RadioGroup<boolean>
                   name="haveChildren"
@@ -1050,9 +1082,7 @@ const CandidateForm: FC = () => {
                   </FormRow>
                 </div>
               )}
-
               <SectionHeader title="2. Члены семьи старше 18 лет" />
-
               <FormRow justifyContent="flex-start" style={{ marginTop: 0 }}>
                 <RadioGroup<boolean>
                   name="haveFamilyMembers"
@@ -1070,7 +1100,6 @@ const CandidateForm: FC = () => {
                   ]}
                 />
               </FormRow>
-
               {haveFamilyMembers && (
                 <div className="toggle-block" style={{ width: "100%" }}>
                   <RelativeTable
@@ -1114,13 +1143,11 @@ const CandidateForm: FC = () => {
                   </FormRow>
                 </div>
               )}
-
               {/* Юридический статус */}
               <SectionHeader
                 title="Юридический статус"
                 subtitle="Ответьте на следующие вопросы, которые помогут нам оценить ваше соответствие вакансии"
               />
-
               <FormRow justifyContent="flex-start">
                 <p
                   style={{
@@ -1133,7 +1160,6 @@ const CandidateForm: FC = () => {
                   1. Являетесь ли военнообязанным(-ой)?
                 </p>
               </FormRow>
-
               <FormRow justifyContent="flex-start" style={{ marginTop: 0 }}>
                 <RadioGroup<boolean>
                   name="militaryDuty"
@@ -1145,7 +1171,6 @@ const CandidateForm: FC = () => {
                   ]}
                 />
               </FormRow>
-
               <FormRow
                 justifyContent="flex-start"
                 style={{ marginTop: "50px" }}
@@ -1161,7 +1186,6 @@ const CandidateForm: FC = () => {
                   2. Привлекались ли вы когда-либо к уголовной ответственности?
                 </p>
               </FormRow>
-
               <FormRow justifyContent="flex-start" style={{ marginTop: "0" }}>
                 <RadioGroup<boolean>
                   name="criminalResponsibility"
@@ -1173,7 +1197,6 @@ const CandidateForm: FC = () => {
                   ]}
                 />
               </FormRow>
-
               {criminalResponsibility && (
                 <div className="toggle-block" style={{ width: "100%" }}>
                   <FormRow>
@@ -1196,7 +1219,6 @@ const CandidateForm: FC = () => {
                   </FormRow>
                 </div>
               )}
-
               <FormRow
                 justifyContent="flex-start"
                 style={{ marginTop: "50px" }}
@@ -1212,7 +1234,6 @@ const CandidateForm: FC = () => {
                   3. Являетесь ли вы (со-)учредителем юридического лица?
                 </p>
               </FormRow>
-
               <FormRow justifyContent="flex-start" style={{ marginTop: "0" }}>
                 <RadioGroup<boolean>
                   name="legalEntity"
@@ -1224,7 +1245,6 @@ const CandidateForm: FC = () => {
                   ]}
                 />
               </FormRow>
-
               {legalEntity && (
                 <div className="toggle-block" style={{ width: "100%" }}>
                   <FormRow>
@@ -1253,16 +1273,21 @@ const CandidateForm: FC = () => {
               {hasError && (
                 <FormRow>
                   <div className="errorMessage">
-                    У вас есть незаполненные обязательные поля. 
-                    <span className="smallNone">Для отправки
-                    анкеты заполните их и повторите попытку заново</span>
+                    У вас есть незаполненные обязательные поля.
+                    <span className="smallNone">
+                      Для отправки анкеты заполните их и повторите попытку
+                      заново
+                    </span>
                   </div>
                 </FormRow>
               )}
-
               <div
                 className="checkboxRow"
-                style={{ maxWidth: "none", alignItems: "center", marginTop: "48px" }}
+                style={{
+                  maxWidth: "none",
+                  alignItems: "center",
+                  marginTop: "48px",
+                }}
               >
                 <label className="custom-checkbox" htmlFor="personalData">
                   <input
@@ -1279,7 +1304,6 @@ const CandidateForm: FC = () => {
                   <span>своих персональных данных</span>
                 </label>
               </div>
-
               <FormRow style={{ marginTop: "0px" }}>
                 <button
                   className={
@@ -1293,7 +1317,6 @@ const CandidateForm: FC = () => {
                   {isSubmitting ? "Отправка..." : "Отправить анкету"}
                 </button>
               </FormRow>
-
               {submitError && (
                 <FormRow>
                   <div
