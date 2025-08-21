@@ -24,7 +24,6 @@ interface PersonalInfoSectionProps {
   selectedROP: string
   setSelectedROP: React.Dispatch<React.SetStateAction<string>>
   ropOptions: string[]
-  errors?: Record<string, boolean> 
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
@@ -46,7 +45,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   selectedROP,
   setSelectedROP,
   ropOptions,
-  errors = {}, 
 }) => {
   const formatNameInput = (value: string) => {
     return value.replace(/[^а-яёА-ЯЁ\s]/g, "")
@@ -86,10 +84,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     return value.replace(/\D/g, "")
   }
 
-  // Проверяем наличие ошибки для селектов
-  const isVacancyError = errors.selectedVacancy || false
-  const isCityError = errors.selectedCity || false
-  const isROPError = errors.selectedROP || false
 
   return (
     <>
@@ -102,12 +96,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             value={selectedVacancy}
             onChange={setSelectedVacancy}
             isLoading={isLoadingVacancies}
-            error={vacancyError || (isVacancyError ? "Поле обязательно для заполнения" : "")}
             required={true}
-            style={{
-              borderColor: isVacancyError ? '#e74c3c' : undefined,
-              borderWidth: isVacancyError ? '1.5px' : undefined
-            }}
           />
           {vacancyError && (
             <div
@@ -130,14 +119,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
               </button>
             </div>
           )}
-          {isVacancyError && !vacancyError && (
-            <div
-              className="error-message"
-              style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
-            >
-              Поле обязательно для заполнения
-            </div>
-          )}
         </div>
       </FormRow>
 
@@ -150,20 +131,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             value={selectedCity}
             onChange={setSelectedCity}
             required={true}
-            error={isCityError ? "Поле обязательно для заполнения" : ""}
-            style={{
-              borderColor: isCityError ? '#e74c3c' : undefined,
-              borderWidth: isCityError ? '1.5px' : undefined
-            }}
           />
-          {isCityError && (
-            <div
-              className="error-message"
-              style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
-            >
-              Поле обязательно для заполнения
-            </div>
-          )}
         </div>
       </FormRow>
 
@@ -202,20 +170,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
                 value={selectedROP}
                 onChange={setSelectedROP}
                 required={true}
-                error={isROPError ? "Поле обязательно для заполнения" : ""}
-                style={{
-                  borderColor: isROPError ? '#e74c3c' : undefined,
-                  borderWidth: isROPError ? '1.5px' : undefined
-                }}
               />
-              {isROPError && (
-                <div
-                  className="error-message"
-                  style={{ marginTop: "5px", fontSize: "14px", color: "#e74c3c" }}
-                >
-                  Поле обязательно для заполнения
-                </div>
-              )}
             </div>
           </FormRow>
         </div>
@@ -234,7 +189,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="Иванов Иван Иванович"
           value={formData.FIO || ""}
           onChange={(value) => onFormDataChange("FIO", formatNameInput(value))}
-          error={errors.FIO || false}
         />
       </FormRow>
 
@@ -277,7 +231,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("birthDate", formatDateInput(value))
           }
           containerClassName="input-container w-49"
-          error={errors.birthDate || false}
         />
 
         <FormInput
@@ -289,7 +242,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           value={formData.birthPlace || ""}
           onChange={(value) => onFormDataChange("birthPlace", value)}
           containerClassName="input-container w-49"
-          error={errors.birthPlace || false}
         />
       </FormRow>
 
@@ -306,7 +258,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("mobileNumber", formatMobilePhone(value))
           }
           containerClassName="input-container w-49"
-          error={errors.mobileNumber || false}
         />
 
         <FormInput
@@ -321,7 +272,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("domesticNumber", formatHomePhone(value))
           }
           containerClassName="input-container w-49"
-          error={errors.domesticNumber || false}
         />
       </FormRow>
 
@@ -336,7 +286,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           onChange={(value) => onFormDataChange("email", value)}
           containerClassName="input-container w-49"
           className="formInput"
-          error={errors.email || false}
         />
 
         <FormInput
@@ -349,7 +298,6 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           value={formData.INN || ""}
           onChange={(value) => onFormDataChange("INN", formatINN(value))}
           containerClassName="input-container w-49"
-          error={errors.INN || false}
         />
       </FormRow>
     </>

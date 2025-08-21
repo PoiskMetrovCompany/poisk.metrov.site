@@ -127,55 +127,6 @@ const CandidateForm: FC = () => {
     return null
   }
 
-  const validateFieldOnChange = (fieldName: string, value: string) => {
-    const errors = { ...formErrors }
-
-    // Проверяем обязательные поля PersonalInfo секции
-    const personalInfoRequiredFields = [
-      "FIO",
-      "birthDate",
-      "birthPlace",
-      "mobileNumber",
-      "domesticNumber",
-      "email",
-      "INN",
-    ]
-
-    if (personalInfoRequiredFields.includes(fieldName)) {
-      if (!value || value.trim() === "") {
-        errors[fieldName] = true
-      } else {
-        errors[fieldName] = false
-      }
-    }
-
-    // Проверяем селекты
-    if (fieldName === "selectedVacancy") {
-      if (!value || value.trim() === "") {
-        errors.selectedVacancy = true
-      } else {
-        errors.selectedVacancy = false
-      }
-    }
-
-    if (fieldName === "selectedCity") {
-      if (!value || value.trim() === "") {
-        errors.selectedCity = true
-      } else {
-        errors.selectedCity = false
-      }
-    }
-
-    if (fieldName === "selectedROP" && goingToROP) {
-      if (!value || value.trim() === "") {
-        errors.selectedROP = true
-      } else {
-        errors.selectedROP = false
-      }
-    }
-
-    setFormErrors(errors)
-  }
 
   const validateRelativesTables = (): boolean => {
     const errors: Record<string, boolean> = {}
@@ -221,11 +172,9 @@ const CandidateForm: FC = () => {
     const errors = {}
     let isValid = true
 
-    // Список всех индексов таблиц (базовая + дополнительные)
     const allIndexes = [1, ...additionalChildrenTables]
 
     allIndexes.forEach((index) => {
-      // Обязательные поля для каждой таблицы
       const requiredFields = [
         `FIOChildren${index}`,
         `dateOfBirthChildren${index}`,
@@ -279,25 +228,7 @@ const CandidateForm: FC = () => {
     setWorkExperienceErrors(errors)
     return isValid
   }
-
-
   
-  const handleVacancyChange = (value: string) => {
-    setSelectedVacancy(value)
-    validateFieldOnChange("selectedVacancy", value)
-  }
-
-  // Обновленная функция для setSelectedCity
-  const handleCityChange = (value: string) => {
-    setSelectedCity(value)
-    validateFieldOnChange("selectedCity", value)
-  }
-
-  // Обновленная функция для setSelectedROP
-  const handleROPChange = (value: string) => {
-    setSelectedROP(value)
-    validateFieldOnChange("selectedROP", value)
-  }
   const validatePassportSection = (): boolean => {
     const requiredFields = [
       "passwordSeriaNumber",
@@ -323,69 +254,7 @@ const CandidateForm: FC = () => {
     return isValid
   }
 
-  const validatePersonalInfoSection = () => {
-  const newErrors: Record<string, boolean> = {}
-  
-  // Проверяем вакансию
-  if (!selectedVacancy || selectedVacancy.trim() === '') {
-    newErrors.selectedVacancy = true
-  }
-  
-  // Проверяем город
-  if (!selectedCity || selectedCity.trim() === '') {
-    newErrors.selectedCity = true
-  }
-  
-  // Проверяем РОПа только если выбран "Я иду к РОПу"
-  if (goingToROP && (!selectedROP || selectedROP.trim() === '')) {
-    newErrors.selectedROP = true
-  }
-  
-  // Проверяем ФИО
-  if (!formData.FIO || formData.FIO.trim() === '') {
-    newErrors.FIO = true
-  }
-  
-  // Проверяем дату рождения
-  if (!formData.birthDate || formData.birthDate.trim() === '' || formData.birthDate.length < 10) {
-    newErrors.birthDate = true
-  }
-  
-  // Проверяем место рождения
-  if (!formData.birthPlace || formData.birthPlace.trim() === '') {
-    newErrors.birthPlace = true
-  }
-  
-  // Проверяем мобильный телефон
-  if (!formData.mobileNumber || formData.mobileNumber.trim() === '' || formData.mobileNumber.length < 18) {
-    newErrors.mobileNumber = true
-  }
-  
-  // Проверяем домашний телефон
-  if (!formData.domesticNumber || formData.domesticNumber.trim() === '') {
-    newErrors.domesticNumber = true
-  }
-  
-  // Проверяем email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!formData.email || formData.email.trim() === '' || !emailRegex.test(formData.email)) {
-    newErrors.email = true
-  }
-  
-  // Проверяем ИНН (должен быть 10 или 12 цифр)
-  if (!formData.INN || formData.INN.trim() === '' || (formData.INN.length !== 10 && formData.INN.length !== 12)) {
-    newErrors.INN = true
-  }
-  
-  // Обновляем состояние ошибок
-  setFormErrors(prev => ({
-    ...prev,
-    ...newErrors
-  }))
-  
-  // Возвращаем true если ошибок нет
-  return Object.keys(newErrors).length === 0
-}
+
 
   const formatDateForDatabase = (dateString: string): string | null => {
     if (!dateString || dateString.trim() === "") {
@@ -413,8 +282,7 @@ const CandidateForm: FC = () => {
 
   const handleFormDataChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
-    // Добавить валидацию при изменении поля
-    validateFieldOnChange(name, value)
+
   }
 
   const collectEducationData = () => {
@@ -819,9 +687,6 @@ const CandidateForm: FC = () => {
       setRelativesErrors({}) // Очищаем предыдущие ошибки родственников
       setWorkExperienceErrors({}) // Очищаем предыдущие ошибки опыта работы
 
-      // Валидация PersonalInfo секции
-      const isPersonalInfoValid = validatePersonalInfoSection()
-
       // Валидация паспортных данных
       const isPassportValid = validatePassportSection()
 
@@ -838,7 +703,6 @@ const CandidateForm: FC = () => {
 
       // Проверяем все валидации
       if (
-        !isPersonalInfoValid ||
         !isPassportValid ||
         !isChildrenValid ||
         !isRelativesValid ||
@@ -846,10 +710,6 @@ const CandidateForm: FC = () => {
       ) {
         let errorMessage = "Пожалуйста, заполните все обязательные поля:"
         const errorSections = []
-
-        if (!isPersonalInfoValid) {
-          errorSections.push("личная информация")
-        }
 
         if (!isPassportValid) {
           errorSections.push("паспортные данные")
@@ -1028,9 +888,7 @@ const CandidateForm: FC = () => {
                 formData={formData}
                 onFormDataChange={handleFormDataChange}
                 selectedVacancy={selectedVacancy}
-                setSelectedVacancy={handleVacancyChange}
                 selectedCity={selectedCity}
-                setSelectedCity={handleCityChange}
                 vacancyOptions={vacancyOptions}
                 cityOptions={cityOptions}
                 isLoadingVacancies={isLoadingVacancies}
@@ -1041,9 +899,7 @@ const CandidateForm: FC = () => {
                 goingToROP={goingToROP}
                 setGoingToROP={setGoingToROP}
                 selectedROP={selectedROP}
-                setSelectedROP={handleROPChange}
                 ropOptions={ropOptions}
-                errors={formErrors}
               />
 
               {/* Образование и профессиональный опыт */}
