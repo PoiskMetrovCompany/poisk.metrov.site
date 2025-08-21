@@ -80,6 +80,7 @@ article p {
   width: 100%;
   height: auto;
   min-height: auto;
+  margin-bottom: 40px;
   padding-bottom: 1.5rem;
 }
 
@@ -91,7 +92,7 @@ article p {
 
 .center-card p {
   /* 16px */
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
   color: rgb(129 129 129 / 100%);
@@ -159,7 +160,7 @@ form {
   margin: 0;
   margin-top: 1.25rem; /* 20px */
 
-  font-size: 1.125rem; /* 18px */
+  font-size: 1rem;
   font-weight: 400;
   color: #818181;
   text-align: center;
@@ -206,9 +207,10 @@ form {
 }
 
 .formInput[readonly] {
-  padding-top: 1rem;
+  padding-top: 1.6rem;
   border: none;
   background: rgb(249 249 247 / 100%);
+  min-height: 5.2rem;
 }
 
 .inputTable input[readonly] {
@@ -217,7 +219,7 @@ form {
 }
 
 .formLabel:has(+ .formInput[readonly]) {
-  top: 0;
+  top: 10px;
   font-size: 16px;
   font-weight: 600;
   background: none;
@@ -347,6 +349,7 @@ form {
   width: 21rem; /* 336px */
   height: 4rem; /* 64px */
   margin-top: 1.25rem; /* 20px */
+  margin-bottom: 24px;
   border: none;
   border-radius: 2.5rem; /* 40px */
 
@@ -402,7 +405,7 @@ form {
 .filterButton {
   cursor: pointer;
 
-  margin: 1.25rem; /* 20px */
+  margin: 0.375rem; /* 20px */
   padding: 0.5rem 1rem; /* 8px 16px */
   border: none;
   border-radius: 1.5rem; /* 24px */
@@ -538,7 +541,6 @@ form {
   display: block;
 }
 
-/* Кастомные радиокнопки */
 .custom-radio {
   cursor: pointer;
 
@@ -551,7 +553,7 @@ form {
   margin-top: 1.125rem; /* 2px */
   margin-left: 0.4375rem; /* 7px */
 
-  font-size: 1.125rem; /* 18px */
+  font-size: 1rem;
   color: rgb(129 129 129 / 100%);
 }
 
@@ -1453,9 +1455,30 @@ input[type="checkbox"] + label {
   color: rgb(73 73 73 / 100%);
 }
 
+.city-selector {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  margin-left: 0.5rem;
+  padding: 2px 4px; /* небольшие отступы для лучшего UX */
+  border-radius: 4px;
+
+  transition: background-color 0.2s ease;
+}
+
+.city-selector:hover {
+  background-color: rgb(236 125 63 / 10%); /* легкий фон при hover */
+}
+
+.city-selector:hover span {
+  color: rgb(220 100 50); /* изменение цвета текста при hover */
+}
+
 #city span {
   width: max-content;
-  margin-left: 0.5rem;
+  margin-right: 4px; /* небольшой отступ между текстом и стрелкой */
   color: rgb(236 125 63 / 100%);
 }
 
@@ -1607,7 +1630,7 @@ input[type="checkbox"] + label {
 
 #line {
   width: 100%;
-  margin-top: 1rem;
+  margin: 0.5rem 0; 
   border-bottom: 1px solid rgb(210 210 210 / 100%);
 }
 
@@ -1623,7 +1646,6 @@ input[type="checkbox"] + label {
 .navArea {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 
   min-width: 200px;
   padding: 1.5rem;
@@ -1681,7 +1703,7 @@ input[type="checkbox"] + label {
   border: none;
   border-radius: 20px;
 
-  font-size: 18px;
+  font-size: 14px;
   color: rgb(197 128 31 / 100%);
 
   background: rgb(248 248 232 / 100%);
@@ -1745,7 +1767,7 @@ input[type="checkbox"] + label {
 
   padding: 12px 20px;
 
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
 
   transition: background-color 0.15s ease;
@@ -1908,9 +1930,6 @@ input[type="checkbox"] + label {
   transition: background-color 0.2s ease;
 }
 
-#selectCity:hover {
-  background-color: rgb(0 0 0 / 5%);
-}
 
 #city svg {
   margin-left: 6px;
@@ -2543,7 +2562,7 @@ input[type="checkbox"] + label {
   border-radius: 16px;
 
   font-size: 14px;
+  color: #f13131;
 
   background: #fee;
-  color: #F13131
 }

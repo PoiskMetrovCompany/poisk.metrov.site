@@ -1261,7 +1261,7 @@ const CandidateForm: FC = () => {
 
               <div
                 className="checkboxRow"
-                style={{ maxWidth: "none", alignItems: "center" }}
+                style={{ maxWidth: "none", alignItems: "center", marginTop: "48px" }}
               >
                 <label className="custom-checkbox" htmlFor="personalData">
                   <input
