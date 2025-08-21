@@ -81,6 +81,7 @@ article p {
   height: auto;
   min-height: auto;
   padding-bottom: 1.5rem;
+  margin-bottom: 40px;
 }
 
 /* Типография карточек */
@@ -91,7 +92,7 @@ article p {
 
 .center-card p {
   /* 16px */
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
   color: rgb(129 129 129 / 100%);
@@ -349,7 +350,7 @@ form {
   margin-top: 1.25rem; /* 20px */
   border: none;
   border-radius: 2.5rem; /* 40px */
-
+  margin-bottom: 48px;
   font-size: 1rem; /* 16px */
 
   transition: background ease-in-out 0.3s;
@@ -2204,6 +2205,7 @@ input[type="checkbox"] + label {
   .center-card.big {
     width: 100%;
     padding: 1rem 1.5rem;
+
   }
 
   /* Адаптивность для полей формы */

@@ -33,7 +33,6 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
 
-  // Определяем есть ли ошибка валидации
   const hasValidationError = typeof error === 'boolean' ? error : false
   const errorMessage = typeof error === 'string' ? error : ''
 
@@ -106,7 +105,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
         <label
           className={clsx(styles.selectLabel, { 
             [styles.required]: required,
-            [styles.error]: hasValidationError  // Добавляем класс ошибки для label
+            [styles.error]: hasValidationError  
           })}
         >
           {label}
