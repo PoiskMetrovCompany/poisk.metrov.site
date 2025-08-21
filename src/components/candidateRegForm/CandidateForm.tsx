@@ -40,6 +40,10 @@ const CandidateForm: FC = () => {
 
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
   const [childrenErrors, setChildrenErrors] = useState({})
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, boolean>
+  >({})
+  const [triggerValidation, setTriggerValidation] = useState(false)
 
   const [relativesErrors, setRelativesErrors] = useState<
     Record<string, boolean>
@@ -126,7 +130,6 @@ const CandidateForm: FC = () => {
     }
     return null
   }
-
 
   const validateRelativesTables = (): boolean => {
     const errors: Record<string, boolean> = {}
@@ -228,7 +231,32 @@ const CandidateForm: FC = () => {
     setWorkExperienceErrors(errors)
     return isValid
   }
-  
+
+  const validatePersonalInfoSection = () => {
+    const errors: Record<string, boolean> = {}
+    const requiredFields = [
+      { key: "FIO", value: formData.FIO },
+      { key: "birthDate", value: formData.birthDate },
+      { key: "birthPlace", value: formData.birthPlace },
+      { key: "mobileNumber", value: formData.mobileNumber },
+      { key: "domesticNumber", value: formData.domesticNumber },
+      { key: "email", value: formData.email },
+      { key: "INN", value: formData.INN },
+    ]
+
+    requiredFields.forEach((field) => {
+      if (!field.value || field.value.trim() === "") {
+        errors[field.key] = true
+      } else {
+        errors[field.key] = false
+      }
+    })
+
+    setValidationErrors(errors)
+    setTriggerValidation(true)
+
+    return !Object.values(errors).some((hasError) => hasError)
+  }
   const validatePassportSection = (): boolean => {
     const requiredFields = [
       "passwordSeriaNumber",
@@ -253,8 +281,6 @@ const CandidateForm: FC = () => {
     setFormErrors(errors)
     return isValid
   }
-
-
 
   const formatDateForDatabase = (dateString: string): string | null => {
     if (!dateString || dateString.trim() === "") {
@@ -282,7 +308,6 @@ const CandidateForm: FC = () => {
 
   const handleFormDataChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
-
   }
 
   const collectEducationData = () => {
@@ -667,10 +692,8 @@ const CandidateForm: FC = () => {
   }
 
   const handleChildrenFieldChange = (fieldName, value) => {
-    // Обновляем formData
     setFormData((prev) => ({ ...prev, [fieldName]: value }))
 
-    // Если поле заполнено, убираем ошибку
     if (value && value.trim() !== "" && childrenErrors[fieldName]) {
       setChildrenErrors((prev) => {
         const newErrors = { ...prev }
@@ -686,6 +709,9 @@ const CandidateForm: FC = () => {
       setChildrenErrors({}) // Очищаем предыдущие ошибки детей
       setRelativesErrors({}) // Очищаем предыдущие ошибки родственников
       setWorkExperienceErrors({}) // Очищаем предыдущие ошибки опыта работы
+
+      // Валидация персональной информации
+      const isPersonalInfoValid = validatePersonalInfoSection()
 
       // Валидация паспортных данных
       const isPassportValid = validatePassportSection()
@@ -703,6 +729,7 @@ const CandidateForm: FC = () => {
 
       // Проверяем все валидации
       if (
+        !isPersonalInfoValid ||
         !isPassportValid ||
         !isChildrenValid ||
         !isRelativesValid ||
@@ -710,6 +737,10 @@ const CandidateForm: FC = () => {
       ) {
         let errorMessage = "Пожалуйста, заполните все обязательные поля:"
         const errorSections = []
+
+        if (!isPersonalInfoValid) {
+          errorSections.push("персональная информация")
+        }
 
         if (!isPassportValid) {
           errorSections.push("паспортные данные")
@@ -732,19 +763,8 @@ const CandidateForm: FC = () => {
         return
       }
 
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        // Имитируем успешную отправку для режима без токена
-        console.log("Токен доступа не найден, имитируем успешную отправку")
-        setTimeout(() => {
-          setSubmitSuccess(true)
-          console.log("Mock отправка анкеты выполнена успешно")
-          setIsSubmitting(false)
-        }, 1000)
-        return
-      }
-
+      setTriggerValidation(false)
+      setValidationErrors({})
       // Разделяем ФИО
       const nameData = splitFullName(formData.FIO || "")
 
@@ -888,7 +908,9 @@ const CandidateForm: FC = () => {
                 formData={formData}
                 onFormDataChange={handleFormDataChange}
                 selectedVacancy={selectedVacancy}
+                setSelectedVacancy={setSelectedVacancy}
                 selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
                 vacancyOptions={vacancyOptions}
                 cityOptions={cityOptions}
                 isLoadingVacancies={isLoadingVacancies}
@@ -899,7 +921,10 @@ const CandidateForm: FC = () => {
                 goingToROP={goingToROP}
                 setGoingToROP={setGoingToROP}
                 selectedROP={selectedROP}
+                setSelectedROP={setSelectedROP}
                 ropOptions={ropOptions}
+                validationErrors={validationErrors}
+                triggerValidation={triggerValidation}
               />
 
               {/* Образование и профессиональный опыт */}

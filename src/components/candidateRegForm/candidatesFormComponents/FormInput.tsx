@@ -11,7 +11,7 @@ interface FormInputProps {
   className?: string;
   containerClassName?: string;
   required?: boolean;
-  error?: boolean; // Добавляем проп для ошибки
+  error?: boolean;
 }
 
 export const FormInput: FC<FormInputProps> = ({

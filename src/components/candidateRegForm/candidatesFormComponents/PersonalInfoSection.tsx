@@ -24,6 +24,9 @@ interface PersonalInfoSectionProps {
   selectedROP: string
   setSelectedROP: React.Dispatch<React.SetStateAction<string>>
   ropOptions: string[]
+  // Добавляем новые пропсы для валидации
+  validationErrors: Record<string, boolean>
+  triggerValidation: boolean
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
@@ -45,6 +48,8 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   selectedROP,
   setSelectedROP,
   ropOptions,
+  validationErrors,
+  triggerValidation,
 }) => {
   const formatNameInput = (value: string) => {
     return value.replace(/[^а-яёА-ЯЁ\s]/g, "")
@@ -84,6 +89,10 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     return value.replace(/\D/g, "")
   }
 
+  // Функция для проверки есть ли ошибка у конкретного поля
+  const hasError = (fieldName: string) => {
+    return triggerValidation && validationErrors[fieldName]
+  }
 
   return (
     <>
@@ -189,6 +198,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           placeholder="Иванов Иван Иванович"
           value={formData.FIO || ""}
           onChange={(value) => onFormDataChange("FIO", formatNameInput(value))}
+          error={hasError('FIO')}
         />
       </FormRow>
 
@@ -231,6 +241,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("birthDate", formatDateInput(value))
           }
           containerClassName="input-container w-49"
+          error={hasError('birthDate')}
         />
 
         <FormInput
@@ -242,6 +253,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           value={formData.birthPlace || ""}
           onChange={(value) => onFormDataChange("birthPlace", value)}
           containerClassName="input-container w-49"
+          error={hasError('birthPlace')}
         />
       </FormRow>
 
@@ -258,6 +270,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("mobileNumber", formatMobilePhone(value))
           }
           containerClassName="input-container w-49"
+          error={hasError('mobileNumber')}
         />
 
         <FormInput
@@ -272,6 +285,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
             onFormDataChange("domesticNumber", formatHomePhone(value))
           }
           containerClassName="input-container w-49"
+          error={hasError('domesticNumber')}
         />
       </FormRow>
 
@@ -286,6 +300,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           onChange={(value) => onFormDataChange("email", value)}
           containerClassName="input-container w-49"
           className="formInput"
+          error={hasError('email')}
         />
 
         <FormInput
@@ -298,6 +313,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
           value={formData.INN || ""}
           onChange={(value) => onFormDataChange("INN", formatINN(value))}
           containerClassName="input-container w-49"
+          error={hasError('INN')}
         />
       </FormRow>
     </>
