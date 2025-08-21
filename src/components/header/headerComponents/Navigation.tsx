@@ -1,32 +1,65 @@
-"use client";
-import React, { FC } from "react";
-import styles from "../header.module.scss";
+"use client"
+import React, { useCallback, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import styles from "../header.module.scss"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface INavItem {
-  text: string;
-  href: string;
+  text: string
+  href: string
+  onClick?: (href: string) => void
 }
 
-const Navigation: FC = () => {
+interface INavigationProps {
+  onCatalogClick: () => void
+}
+
+const Navigation = ({ onCatalogClick }: INavigationProps) => {
+  const { isLaptop } = useScreenSize()
+  const router = useRouter()
+
+  const catalogClick = (href: string) => {
+    if (isLaptop) {
+      onCatalogClick()
+    } else {
+      router.push(href)
+    }
+  }
+
+  const navigationClick = useCallback(
+    (item: INavItem) => {
+      if (item.onClick) {
+        item.onClick(item.href)
+      } else {
+        router.push(item.href)
+      }
+    },
+    [router]
+  )
+
   const navItems: INavItem[] = [
-    { text: "Каталог недвижимости", href: "/catalog" },
+    { text: "Каталог недвижимости", href: "/catalog", onClick: catalogClick },
     { text: "Продать", href: "/sell" },
-    { text: "Ипотека", href: "/mortgage" }
-  ];
+    { text: "Ипотека", href: "/mortgage" },
+  ]
 
   return (
     <nav className={styles.navigation}>
       <ul className={styles.navigation__list}>
         {navItems.map((item, index) => (
           <li key={index} className={styles.navigation__item}>
-            <button className={styles.navigation__button} type="button">
+            <button
+              className={styles.navigation__button}
+              type="button"
+              onClick={() => navigationClick(item)}
+            >
               {item.text}
             </button>
           </li>
         ))}
       </ul>
     </nav>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation

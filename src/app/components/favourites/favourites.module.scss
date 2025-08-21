@@ -113,22 +113,17 @@
 
 .navigationButton {
   cursor: pointer;
-
   position: absolute;
   z-index: 10;
   top: 50%;
   transform: translateY(-50%);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border-radius: 50%;
-
   background: var(--color-white);
-
   transition: all 0.3s ease;
 
   &::after {
@@ -146,7 +141,10 @@
   }
 
   &:hover {
-    background: var(--color-beige);
+    .navigationButton__icon {
+      filter: brightness(0) saturate(100%) invert(27%) sepia(51%)
+        saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+    }
   }
 }
 
