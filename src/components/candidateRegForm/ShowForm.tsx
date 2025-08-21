@@ -809,7 +809,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
               </div>
             </div>
             <p
-              style={{position: 'absolute', top: '-2.7rem', left: '0', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer'}}
+              style={{position: 'absolute', top: '-3.7rem', left: '0', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer'}}
               onClick={() => setSelectedVacancyKey(null)}
             >
               <Image 
@@ -828,14 +828,14 @@ const ShowForm: React.FC<ShowFormProps> = ({ vacancyKey, setSelectedVacancyKey, 
                   candidateData.birth_date ? `${new Date().getFullYear() - new Date(candidateData.birth_date).getFullYear()} лет` : ''
                 ].filter(Boolean).join(',    ')}
               </h3>
-              <p>Дата подачи</p>
+              <p style={{fontSize: "16px"}}>Дата подачи</p>
             </div>
             <span id="line"></span>
-            <div className="formRow justify-space-between">
+            <div className="formRow justify-space-between" style={{marginTop: "0rem"}}>
               <h4 style={{width: 'auto', display: 'flex', alignItems: 'center', marginTop: '0'}}>
                 {candidateData.vacancy?.attributes?.title || 'Вакансия не указана'}
               </h4>
-              <p>{formatDate(candidateData.created_at)}</p>
+              <p style={{fontSize: "16px"}}>{formatDate(candidateData.created_at)}</p>
             </div>
 
             {candidateData.reason_for_changing_surnames && (
