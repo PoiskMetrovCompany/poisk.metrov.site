@@ -213,22 +213,16 @@ const ChildrenTable: FC<IChildrenTableProps> = ({
               )}
             </td>
             <td
-              style={{
-                borderColor: hasError(`phoneNumberChildren${index}`)
-                  ? "#e74c3c"
-                  : undefined,
-              }}
+              className={errors[`phoneNumberChildren${index}`] ? "error" : ""}
             >
-              {renderInputWithRequired(
+               {renderInputWithRequired(
                 `phoneNumberChildren${index}`,
                 "Номер телефона",
-                formData[`phoneNumberChildren${index}`] || "",
-                (e) =>
-                  handlePhoneChange(
-                    `phoneNumberChildren${index}`,
-                    e.target.value
-                  ),
-                18
+                formData[`FIOChildren${index}`] || "",
+                (e) => {
+                  const formattedValue = formatNameInput(e.target.value)
+                  handleInputChange(`FIOChildren${index}`, formattedValue)
+                }
               )}
             </td>
           </tr>
@@ -252,6 +246,7 @@ const ChildrenTable: FC<IChildrenTableProps> = ({
               )}
             </td>
             <td
+            className="place-of-living-cell"
               style={{
                 borderBottomRightRadius: "16px",
                 borderColor: hasError(`placeOfLivingChildren${index}`)

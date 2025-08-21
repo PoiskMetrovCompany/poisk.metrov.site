@@ -147,7 +147,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       </FormRow>
 
       <FormRow className="justify-flex-start required">
-        <p
+        <p className="textLeft"
           style={{
             marginTop: 0,
             marginLeft: "0.4375rem",

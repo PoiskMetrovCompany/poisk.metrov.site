@@ -207,10 +207,10 @@ form {
 }
 
 .formInput[readonly] {
+  min-height: 5.2rem;
   padding-top: 1.6rem;
   border: none;
   background: rgb(249 249 247 / 100%);
-  min-height: 5.2rem;
 }
 
 .inputTable input[readonly] {
@@ -319,6 +319,15 @@ form {
   white-space: nowrap;
 
   transition: all 0.3s ease;
+  @media (max-width: 768px) {
+    font-size: 10.5px;
+  }
+}
+
+.textLeft{
+  @media (max-width: 768px) {
+    text-align: left;
+  }
 }
 
 .custom-input-container input:focus + .custom-placeholder,
@@ -707,21 +716,21 @@ input[type="checkbox"] + label {
   transition: border-color 0.3s ease;
 }
 
-.inputTable td:not(:first-child) {
-  border-left: none;
-}
-
 .inputTable tr:not(:first-child) td {
   border-top: none;
 }
 
-.inputTable tr:first-child td {
-  border-top-left-radius: 1rem; /* 16px */
-  border-top-right-radius: 1rem; /* 16px */
+.inputTable td.error {
+  border: 1px solid #e74c3c !important;
+  border-top: none !important;
 }
 
 .inputTable tr:last-child td:first-child {
-  border-bottom-left-radius: 1rem; /* 16px */
+  border-bottom-left-radius: 1rem;
+
+  @media (width <= 768px) {
+    border-bottom-left-radius: 0 !important;
+  }
 }
 
 .inputTable tr:last-child td:last-child {
@@ -1368,8 +1377,29 @@ input[type="checkbox"] + label {
   border-bottom-right-radius: 16px;
 }
 
-.paginationBtn:not(:first-child) {
-  border-left: none;
+@media (width <= 768px) {
+  .place-of-living-cell {
+    border-right: none !important;
+    border-left: none !important;
+  }
+
+  .noRadius {
+    border-top-right-radius: 0 !important;
+  }
+
+  .yesRadius {
+    border-top-right-radius: 1rem !important;
+  }
+}
+
+.smallNone{
+  padding: 0 5px;
+}
+
+@media (max-width: 1024px) {
+  .smallNone{
+    display: none;
+  }
 }
 
 .paginationBtn:hover {
@@ -1630,7 +1660,7 @@ input[type="checkbox"] + label {
 
 #line {
   width: 100%;
-  margin: 0.5rem 0; 
+  margin: 0.5rem 0;
   border-bottom: 1px solid rgb(210 210 210 / 100%);
 }
 
@@ -1929,7 +1959,6 @@ input[type="checkbox"] + label {
   border-radius: 4px;
   transition: background-color 0.2s ease;
 }
-
 
 #city svg {
   margin-left: 6px;
@@ -2437,7 +2466,7 @@ input[type="checkbox"] + label {
   }
 }
 
-@media screen and (width <= 450px) {
+@media screen and (width <= 768px) {
   /* Изменяем структуру таблицы на мобильных */
   .inputTable {
     display: block;
@@ -2471,7 +2500,6 @@ input[type="checkbox"] + label {
     box-sizing: border-box;
     width: 100% !important;
     padding: 1rem;
-    border: none;
     border-bottom: 1.5px solid #d2d2d2;
   }
 
@@ -2489,7 +2517,6 @@ input[type="checkbox"] + label {
     width: 100%;
     min-height: 2.5rem;
     padding: 0.75rem 0;
-    border: none;
 
     font-size: 0.9375rem;
     line-height: 1.5;
@@ -2535,8 +2562,6 @@ input[type="checkbox"] + label {
 .inputTable td.error {
   z-index: 1;
   border-color: #e74c3c !important;
-  outline: 1px solid #e74c3c !important;
-  outline-offset: -1px !important;
 }
 
 /* Округление углов */
@@ -2565,4 +2590,7 @@ input[type="checkbox"] + label {
   color: #f13131;
 
   background: #fee;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 }
