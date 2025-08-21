@@ -60,11 +60,11 @@ const ConfirmationModal: FC<ConfirmationModalProps> = ({
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
         }}
       >
-        <h3 style={{ marginBottom: "1rem", color: "#333" }}>
+        <h3 style={{ marginBottom: "1rem", color: "#333", textAlign: "center" }}>
           {header}
         </h3>
         
-        <p style={{ marginBottom: "2rem", color: "#666" }}>
+        <p style={{ marginBottom: "2rem", color: "#666", textAlign: "center" }}>
           {title}
         </p>
         

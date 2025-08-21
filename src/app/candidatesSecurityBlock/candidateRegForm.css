@@ -319,13 +319,14 @@ form {
   white-space: nowrap;
 
   transition: all 0.3s ease;
-  @media (max-width: 768px) {
+
+  @media (width <= 768px) {
     font-size: 10.5px;
   }
 }
 
-.textLeft{
-  @media (max-width: 768px) {
+.textLeft {
+  @media (width <= 768px) {
     text-align: left;
   }
 }
@@ -1273,12 +1274,14 @@ input[type="checkbox"] + label {
   height: 1.2rem;
 }
 
-.deleteBtn{
-  background: #FFD8D8;
-  color: #F13131;
+.deleteBtn {
+  margin-right: 12px;
   padding: 10px 24px;
   border-radius: 16px;
-  margin-right: 12px;
+
+  color: #f13131;
+
+  background: #ffd8d8;
 }
 
 .downloadBtn {
@@ -1313,8 +1316,23 @@ input[type="checkbox"] + label {
 }
 
 #checked {
-  color: rgb(15 141 19 / 100%);
+  color: сrgb(15 141 19 / 100%);
   background: rgb(228 248 228 / 100%);
+}
+
+#startWorking {
+  color: rgb(44 83 45);
+  background-color: rgb(151 215 153);
+}
+
+#accepted {
+  color: #c51af0;
+  background-color: #fae5ff;
+}
+
+#not{
+  background: #EBEBEB;
+  color: #EBEBEB;
 }
 
 #needRevision {
@@ -1403,12 +1421,12 @@ input[type="checkbox"] + label {
   }
 }
 
-.smallNone{
+.smallNone {
   padding: 0 5px;
 }
 
-@media (max-width: 1024px) {
-  .smallNone{
+@media (width <= 1024px) {
+  .smallNone {
     display: none;
   }
 }
@@ -2600,7 +2618,8 @@ input[type="checkbox"] + label {
   color: #f13131;
 
   background: #fee;
-  @media (max-width: 768px) {
+
+  @media (width <= 768px) {
     font-size: 12px;
   }
 }
