@@ -538,7 +538,6 @@ form {
   display: block;
 }
 
-/* Кастомные радиокнопки */
 .custom-radio {
   cursor: pointer;
 
@@ -551,7 +550,7 @@ form {
   margin-top: 1.125rem; /* 2px */
   margin-left: 0.4375rem; /* 7px */
 
-  font-size: 1.125rem; /* 18px */
+  font-size: 1rem;
   color: rgb(129 129 129 / 100%);
 }
 
