@@ -4,9 +4,16 @@ import React, { FC } from "react";
 interface IWorkExperienceTableProps {
   formData: Record<string, any>;
   setFormData: (updater: (prev: Record<string, any>) => Record<string, any>) => void;
+  requiredFields?: string[]; 
+  errors?: Record<string, boolean>; // Добавляем пропс для ошибок
 }
 
-const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({ formData, setFormData }) => {
+const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({ 
+  formData, 
+  setFormData, 
+  requiredFields = [],
+  errors = {} // Значение по умолчанию
+}) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length <= 2) {
@@ -48,6 +55,52 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({ formData, setFormD
     handleInputChange(name, formattedValue);
   };
 
+  const isRequired = (fieldName: string): boolean => {
+    return requiredFields.includes(fieldName);
+  };
+
+  // Функция для проверки наличия ошибки у поля
+  const hasError = (fieldName: string): boolean => {
+    return Boolean(errors[fieldName]);
+  };
+
+  const renderInputWithRequired = (
+    name: string, 
+    placeholder: string, 
+    value: string, 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    maxLength?: number
+  ) => {
+    const required = isRequired(name);
+    const error = hasError(name);
+    
+    return (
+      <div className="custom-input-container">
+        <input
+          type="text"
+          name={name}
+          id={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          className={`${value ? 'has-value' : ''} ${error ? 'error' : ''}`}
+          style={{
+            borderColor: error ? '#e74c3c' : undefined,
+            borderWidth: error ? '1.5px' : undefined,
+          }}
+        />
+        <label 
+          htmlFor={name} 
+          className={`custom-placeholder ${required ? 'required' : ''} ${error ? 'error' : ''}`}
+        >
+          {placeholder}
+          {required && <span className="required-star"> *</span>}
+        </label>
+      </div>
+    );
+  };
+
   return (
     <div className="formRow" id="workTable" style={{
       opacity: 1,
@@ -56,118 +109,134 @@ const WorkExperienceTable: FC<IWorkExperienceTableProps> = ({ formData, setFormD
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
       <table className="inputTable" style={{height: 'auto', minHeight: '350px'}}>
-        <caption className="tableLabel">
+        <caption className={`tableLabel ${requiredFields.length > 0 ? 'required' : ''}`}>
           Данные о последнем месте работы
         </caption>
         <tbody>
           <tr>
-            <td style={{borderTopLeftRadius: '16px', borderTopRightRadius: 0}}>
-              <input
-                type="text"
-                name="companyName"
-                placeholder="Полное наименование предприятия"
-                value={formData.companyName || ''}
-                onChange={(e) => handleInputChange('companyName', e.target.value)}
-              />
+            <td style={{
+              borderTopLeftRadius: '16px', 
+              borderTopRightRadius: 0,
+              borderColor: hasError('companyName') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'companyName',
+                'Полное наименование предприятия',
+                formData.companyName || '',
+                (e) => handleInputChange('companyName', e.target.value)
+              )}
             </td>
-            <td style={{borderTopRightRadius: '16px', borderTopLeftRadius: 0 }}>
-              <input
-                type="text"
-                name="companyPhone"
-                placeholder="Телефон предприятия"
-                maxLength={18}
-                value={formData.companyPhone || ''}
-                onChange={(e) => {
+            <td style={{
+              borderTopRightRadius: '16px', 
+              borderTopLeftRadius: 0,
+              borderColor: hasError('companyPhone') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'companyPhone',
+                'Телефон предприятия',
+                formData.companyPhone || '',
+                (e) => {
                   const formattedValue = formatMobilePhone(e.target.value);
                   handleInputChange('companyPhone', formattedValue);
-                }}
-              />
+                },
+                18
+              )}
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
-              <input
-                type="text"
-                name="companyActivity"
-                placeholder="Сфера деятельности предприятия"
-                value={formData.companyActivity || ''}
-                onChange={(e) => handleInputChange('companyActivity', e.target.value)}
-              />
+            <td colSpan={2} style={{
+              borderColor: hasError('companyActivity') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'companyActivity',
+                'Сфера деятельности предприятия',
+                formData.companyActivity || '',
+                (e) => handleInputChange('companyActivity', e.target.value)
+              )}
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
-              <input
-                type="text"
-                name="companyAddress"
-                placeholder="Адрес предприятия"
-                value={formData.companyAddress || ''}
-                onChange={(e) => handleInputChange('companyAddress', e.target.value)}
-              />
+            <td colSpan={2} style={{
+              borderColor: hasError('companyAddress') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'companyAddress',
+                'Адрес предприятия',
+                formData.companyAddress || '',
+                (e) => handleInputChange('companyAddress', e.target.value)
+              )}
             </td>
           </tr>
           <tr>
-            <td>
-              <input
-                type="text"
-                name="position"
-                placeholder="Должность"
-                value={formData.position || ''}
-                onChange={(e) => handleInputChange('position', e.target.value)}
-              />
+            <td style={{
+              borderColor: hasError('position') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'position',
+                'Должность',
+                formData.position || '',
+                (e) => handleInputChange('position', e.target.value)
+              )}
             </td>
-            <td>
-              <input
-                type="text"
-                name="salary"
-                placeholder="Уровень заработной платы"
-                value={formData.salary || ''}
-                onChange={(e) => handleInputChange('salary', e.target.value)}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input
-                type="text"
-                name="hireDate"
-                placeholder="Дата приема (месяц, год)"
-                maxLength={10}
-                value={formData.hireDate || ''}
-                onChange={(e) => handleDateChange('hireDate', e.target.value)}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="dismissalDate"
-                placeholder="Дата увольнения (месяц, год)"
-                maxLength={10}
-                value={formData.dismissalDate || ''}
-                onChange={(e) => handleDateChange('dismissalDate', e.target.value)}
-              />
+            <td style={{
+              borderColor: hasError('salary') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'salary',
+                'Уровень заработной платы',
+                formData.salary || '',
+                (e) => handleInputChange('salary', e.target.value)
+              )}
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
-              <input
-                type="text"
-                name="dismissalReason"
-                placeholder="Причина увольнения"
-                value={formData.dismissalReason || ''}
-                onChange={(e) => handleInputChange('dismissalReason', e.target.value)}
-              />
+            <td style={{
+              borderColor: hasError('hireDate') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'hireDate',
+                'Дата приема (месяц, год)',
+                formData.hireDate || '',
+                (e) => handleDateChange('hireDate', e.target.value),
+                10
+              )}
+            </td>
+            <td style={{
+              borderColor: hasError('dismissalDate') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'dismissalDate',
+                'Дата увольнения (месяц, год)',
+                formData.dismissalDate || '',
+                (e) => handleDateChange('dismissalDate', e.target.value),
+                10
+              )}
             </td>
           </tr>
           <tr>
-            <td colSpan={2} style={{borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px'}}>
-              <input
-                type="text"
-                name="referenceContact"
-                placeholder="ФИО и номер телефона лица, к которому можно обратиться за рекомендацией"
-                value={formData.referenceContact || ''}
-                onChange={(e) => handleInputChange('referenceContact', e.target.value)}
-              />
+            <td colSpan={2} style={{
+              borderColor: hasError('dismissalReason') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'dismissalReason',
+                'Причина увольнения',
+                formData.dismissalReason || '',
+                (e) => handleInputChange('dismissalReason', e.target.value)
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{
+              borderBottomLeftRadius: '16px', 
+              borderBottomRightRadius: '16px',
+              borderColor: hasError('referenceContact') ? '#e74c3c' : undefined,
+            }}>
+              {renderInputWithRequired(
+                'referenceContact',
+                'ФИО и номер телефона лица, к которому можно обратиться за рекомендацией',
+                formData.referenceContact || '',
+                (e) => handleInputChange('referenceContact', e.target.value)
+              )}
             </td>
           </tr>
         </tbody>

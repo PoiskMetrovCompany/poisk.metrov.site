@@ -5,9 +5,15 @@ interface ISpouseTableProps {
   formData: Record<string, any>;
   setFormData: (updater: (prev: Record<string, any>) => Record<string, any>) => void;
   isVisible: boolean;
+  requiredFields?: string[];
 }
 
-const SpouseTable: FC<ISpouseTableProps> = ({ formData, setFormData, isVisible }) => {
+const SpouseTable: FC<ISpouseTableProps> = ({ 
+  formData, 
+  setFormData, 
+  isVisible, 
+  requiredFields = [] 
+}) => {
   const formatDate = (value: string): string => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length <= 2) {
@@ -53,6 +59,43 @@ const SpouseTable: FC<ISpouseTableProps> = ({ formData, setFormData, isVisible }
     handleInputChange(name, formattedValue);
   };
 
+  const isRequired = (fieldName: string): boolean => {
+    // Обязательные поля супруга (все кроме места проживания)
+    const alwaysRequiredFields = ['FIOSuprug', 'dateOfBirthTable', 'phoneNumberTable', 'placeOfStudy'];
+    
+    // Поле обязательно, если оно в списке requiredFields или является всегда обязательным
+    return requiredFields.includes(fieldName) || alwaysRequiredFields.includes(fieldName);
+  };
+
+  const renderInputWithRequired = (
+    name: string, 
+    placeholder: string, 
+    value: string, 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    maxLength?: number
+  ) => {
+    const required = isRequired(name);
+    
+    return (
+      <div className="custom-input-container">
+        <input
+          type="text"
+          name={name}
+          id={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          className={value ? 'has-value' : ''}
+        />
+        <label htmlFor={name} className={`custom-placeholder ${required ? 'required' : ''}`}>
+          {placeholder}
+          {required && <span className="required-star"> *</span>}
+        </label>
+      </div>
+    );
+  };
+
   if (!isVisible) return null;
 
   return (
@@ -63,61 +106,56 @@ const SpouseTable: FC<ISpouseTableProps> = ({ formData, setFormData, isVisible }
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
       <table className="inputTable">
-        <caption className="tableLabel">
+        <caption className="tableLabel required">
           Данные супруга(-и)
         </caption>
         <tbody>
           <tr>
-            <td colSpan={2}>
-              <input
-                type="text"
-                name="FIOSuprug"
-                placeholder="ФИО супруга(-и)"
-                value={formData.FIOSuprug || ''}
-                onChange={(e) => handleInputChange('FIOSuprug', e.target.value)}
-              />
+            <td colSpan={2} style={{borderTopLeftRadius: '16px', borderTopRightRadius: '16px'}}>
+              {renderInputWithRequired(
+                'FIOSuprug',
+                'ФИО супруга(-и)',
+                formData.FIOSuprug || '',
+                (e) => handleInputChange('FIOSuprug', e.target.value)
+              )}
             </td>
           </tr>
           <tr>
             <td>
-              <input
-                type="text"
-                name="dateOfBirthTable"
-                placeholder="01.01.1990"
-                maxLength={10}
-                value={formData.dateOfBirthTable || ''}
-                onChange={(e) => handleDateChange('dateOfBirthTable', e.target.value)}
-              />
+              {renderInputWithRequired(
+                'dateOfBirthTable',
+                'Дата рождения',
+                formData.dateOfBirthTable || '',
+                (e) => handleDateChange('dateOfBirthTable', e.target.value),
+                10
+              )}
             </td>
             <td>
-              <input
-                type="text"
-                name="phoneNumberTable"
-                placeholder="+7 (905) 123-45-67"
-                maxLength={18}
-                value={formData.phoneNumberTable || ''}
-                onChange={(e) => handlePhoneChange('phoneNumberTable', e.target.value)}
-              />
+              {renderInputWithRequired(
+                'phoneNumberTable',
+                'Номер телефона',
+                formData.phoneNumberTable || '',
+                (e) => handlePhoneChange('phoneNumberTable', e.target.value),
+                18
+              )}
             </td>
           </tr>
           <tr>
-            <td>
-              <input
-                type="text"
-                name="placeOfStudy"
-                placeholder="Место учебы/работы, рабочий телефон"
-                value={formData.placeOfStudy || ''}
-                onChange={(e) => handleInputChange('placeOfStudy', e.target.value)}
-              />
+            <td style={{borderBottomLeftRadius: '16px'}}>
+              {renderInputWithRequired(
+                'placeOfStudy',
+                'Место учебы/работы, рабочий телефон',
+                formData.placeOfStudy || '',
+                (e) => handleInputChange('placeOfStudy', e.target.value)
+              )}
             </td>
-            <td>
-              <input
-                type="text"
-                name="placeOfLiving"
-                placeholder="Место проживания"
-                value={formData.placeOfLiving || ''}
-                onChange={(e) => handleInputChange('placeOfLiving', e.target.value)}
-              />
+            <td style={{borderBottomRightRadius: '16px'}}>
+              {renderInputWithRequired(
+                'placeOfLiving',
+                'Место проживания',
+                formData.placeOfLiving || '',
+                (e) => handleInputChange('placeOfLiving', e.target.value)
+              )}
             </td>
           </tr>
         </tbody>
