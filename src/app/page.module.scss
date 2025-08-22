@@ -1,25 +1,29 @@
+@use "@/utils/mixins" as mixins;
+
 .main {
   width: 100%;
-  padding: 0 120px;
+
+  @include mixins.adaptive-padding;
 
   &__container {
     display: flex;
     flex-direction: column;
   }
 
-  @media (width <= 1440px) {
-    padding: 0 70px;
-  }
+  // padding: 0 120px;
+  // @media (width <= 1440px) {
+  //   padding: 0 70px;
+  // }
 
-  @media (width <= 1250px) {
-    padding: 0 40px;
-  }
+  // @media (width <= 1250px) {
+  //   padding: 0 40px;
+  // }
 
-  @media (width <= 620px) {
-    padding: 0 30px;
-  }
+  // @media (width <= 620px) {
+  //   padding: 0 30px;
+  // }
 
-  @media (width <= 470px) {
-    padding: 0 16px;
-  }
+  // @media (width <= 470px) {
+  //   padding: 0 16px;
+  // }
 }

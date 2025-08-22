@@ -1,15 +1,23 @@
-"use client";
-import React, { FC } from "react";
-import styles from "./header.module.scss";
-import TopBar from "./headerComponents/TopBar";
-import MainBar from "./headerComponents/MainBar";
+"use client"
+import React, { useState } from "react"
+import styles from "./header.module.scss"
+import TopBar from "./headerComponents/TopBar"
+import MainBar from "./headerComponents/MainBar"
+import MenuPopup from "../menuPopup"
 
-const Header: FC = () => {
+const Header = () => {
+  const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false)
   return (
-    <header className={styles.header}>
-      <TopBar />
-      <MainBar />
-    </header>
-  );
-};
-export default Header;
+    <>
+      <MenuPopup
+        isOpen={isMenuPopupOpen}
+        onClose={() => setIsMenuPopupOpen(false)}
+      />
+      <header className={styles.header}>
+        <TopBar />
+        <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
+      </header>
+    </>
+  )
+}
+export default Header

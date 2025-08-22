@@ -14,6 +14,7 @@ interface InputContainerProps {
   required?: boolean
   disabled?: boolean
   className?: string
+  labelClassName?: string
 }
 
 const InputContainer: FC<InputContainerProps> = ({
@@ -27,6 +28,7 @@ const InputContainer: FC<InputContainerProps> = ({
   required = false,
   disabled = false,
   className,
+  labelClassName,
 }) => {
   const formatPhoneNumber = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
@@ -96,7 +98,10 @@ const InputContainer: FC<InputContainerProps> = ({
 
   return (
     <div className={clsx(styles.inputContainer, className)}>
-      <label htmlFor={name} className={styles.inputContainer__label}>
+      <label
+        htmlFor={name}
+        className={clsx(styles.inputContainer__label, labelClassName)}
+      >
         {label}
       </label>
       <div className={styles.inputContainer__wrapper}>

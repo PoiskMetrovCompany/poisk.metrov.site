@@ -13,7 +13,11 @@
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-visually-hidden": "^1.2.3",
+    "@tanstack/react-form": "^1.19.2",
     "@yandex/ymaps3-types": "^1.0.17144096",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",

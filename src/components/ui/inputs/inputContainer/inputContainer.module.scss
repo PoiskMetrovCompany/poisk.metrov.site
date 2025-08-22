@@ -123,7 +123,20 @@
     font-weight: 400;
     line-height: 1.5;
 
-    background-color: rgb(255 255 255 / 100%);
+    &::before {
+      content: "";
+
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      right: 0;
+      left: 0;
+      transform: translateY(-50%);
+
+      height: 2px;
+
+      background-color: inherit;
+    }
 
     &:has(+ .inputContainer__input[readonly]),
     &:has(+ .inputContainer__wrapper .inputContainer__input[readonly]) {

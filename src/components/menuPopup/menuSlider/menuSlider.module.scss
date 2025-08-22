@@ -1,0 +1,268 @@
+.slider {
+  position: relative;
+  overflow: hidden;
+  width: 677px;
+  height: 790px;
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: 0 0 26px 0 rgb(34 32 32 / 10%);
+
+  @media screen and (width < 1920px) {
+    // width: 486px;
+    width: auto;
+    height: 538px;
+  }
+
+  &__navigation {
+    position: absolute;
+    z-index: 10;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    // width: 40%;
+
+    @media screen and (width < 1920px) {
+      gap: 4px;
+      bottom: 24px;
+    }
+
+    &__item {
+      position: relative;
+      display: flex;
+      flex: 1;
+      height: 4px;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 2px;
+      background-color: var(--color-text-gray-light);
+      width: 72px;
+      user-select: none;
+
+      @media screen and (width < 1920px) {
+        width: 64px;
+      }
+
+      &__active {
+        background-color: var(--color-text-gray-light);
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 0;
+          height: 100%;
+          border-radius: 2px;
+          background-color: var(--color-gray);
+          animation: fill-progress 4.3s linear;
+        }
+      }
+    }
+  }
+
+  &__swiper {
+    width: 100%;
+    height: 100%;
+
+    &__slide {
+      width: 100%;
+      height: 100%;
+      background-image: url("/images/temporary/promo-house.png");
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        height: 100%;
+        padding: 32px 32px 68px;
+
+        @media screen and (width < 1920px) {
+          padding: 24px 24px 52px;
+        }
+
+        &__info {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          @media screen and (width < 1920px) {
+            gap: 12px;
+          }
+
+          &__title {
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 130%;
+            color: var(--color-beige);
+            margin: 0;
+
+            @media screen and (width < 1920px) {
+              font-size: 18px;
+            }
+          }
+
+          &__description {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &__text {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              @media screen and (width < 1920px) {
+                gap: 2px;
+              }
+
+              &__road {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+
+                &__item {
+                  display: flex;
+                  gap: 8px;
+                  align-items: center;
+
+                  &__icon {
+                    width: 24px;
+                    height: 24px;
+
+                    @media screen and (width < 1920px) {
+                      width: 20px;
+                      height: 20px;
+                    }
+                  }
+
+                  &__text {
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 150%;
+                    color: var(--color-border-gray-light);
+
+                    @media screen and (width < 1920px) {
+                      font-size: 14px;
+                    }
+                  }
+                }
+              }
+
+              &__price {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 150%;
+                color: var(--color-border-gray-light);
+
+                @media screen and (width < 1920px) {
+                  font-size: 14px;
+                }
+              }
+            }
+
+            &__button {
+              height: 56px;
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 150%;
+              color: var(--color-black);
+              background-color: var(--color-border-gray);
+              transition: background-color 0.3s ease;
+              border-radius: 40px;
+              padding: 17px 32px;
+
+              @media screen and (width < 1920px) {
+                font-size: 14px;
+                padding: 14px 24px;
+                height: 48px;
+              }
+
+              &:hover {
+                background-color: var(--color-gray);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__navigationButton {
+    cursor: pointer;
+    position: absolute;
+    z-index: 10;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 0 16px 0 rgb(0 0 0 / 4%);
+    transition: all 0.3s ease;
+
+    @media screen and (width < 1920px) {
+      width: 48px !important;
+      height: 48px !important;
+      top: 55% !important;
+    }
+
+    &::after {
+      display: none;
+    }
+
+    &__icon {
+      position: relative;
+      width: 28px;
+      height: 28px;
+
+      @media screen and (width < 1920px) {
+        width: 24px;
+        height: 24px;
+      }
+
+      &__icon_next {
+        transform: rotate(180deg);
+      }
+    }
+    &:hover {
+      .slider__navigationButton__icon {
+        filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+          saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+      }
+    }
+  }
+
+  &__navigationButtonPrev {
+    left: 32px !important;
+
+    @media screen and (width < 1920px) {
+      left: 24px !important;
+    }
+  }
+
+  &__navigationButtonNext {
+    right: 32px !important;
+
+    @media screen and (width < 1920px) {
+      right: 24px !important;
+    }
+  }
+}
+
+@keyframes fill-progress {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}

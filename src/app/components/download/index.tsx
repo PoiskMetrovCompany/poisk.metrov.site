@@ -1,159 +1,102 @@
-import React from "react"
+"use client"
+
+import React, { useState } from "react"
 import styles from "./download.module.scss"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import clsx from "clsx"
 import IconImage from "@/components/ui/IconImage"
+import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
+import Input from "@/components/ui/inputs/inputContainer/fleldset"
 
 const Download = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    checkbox: false,
+  })
+
+  const handleInputChange = (name: string, value: string | boolean) => {
+    setFormData({ ...formData, [name]: value })
+  }
+
   return (
     <div className={styles.download}>
       <div className={styles.download__catalogue}>
         <div className={styles.download__catalogue__header}>
           <h2 className={styles.download__catalogue__header__title}>
-            Скачайте каталог
+            Каталог новостроек
           </h2>
-          <p className={styles.download__catalogue__header__description}>
-            <b>новых домов Новосибирска</b>
-            <br /> для жизни и инвестиций
-          </p>
+          <div className={styles.download__catalogue__header__description}>
+            <h2 className={styles.download__catalogue__header__title}>
+              Новосибирска
+            </h2>
+            <span
+              className={styles.download__catalogue__header__description__text}
+            >
+              от 3 млн ₽
+            </span>
+          </div>
         </div>
         <div className={styles.download__catalogue__statistics}>
-          <div className={styles.download__catalogue__statistics__item}>
-            <span
-              className={styles.download__catalogue__statistics__item__number}
-            >
-              140+
-            </span>
-            <p
-              className={
-                styles.download__catalogue__statistics__item__description
-              }
-            >
-              Новостроек
-            </p>
-          </div>
-          <div className={styles.download__catalogue__statistics__item}>
-            <span
-              className={styles.download__catalogue__statistics__item__number}
-            >
-              от 3 млн ₽{" "}
-            </span>
-            <p
-              className={
-                styles.download__catalogue__statistics__item__description
-              }
-            >
-              Стоимость квартир
-            </p>
-          </div>
+          <Input
+            label="Ваше имя"
+            name="name"
+            placeholder="Введите ваше имя"
+            value={formData.name}
+            onChange={(value) => handleInputChange("name", value)}
+          />
+          <Input
+            label="Телефон"
+            name="phone"
+            placeholder="+7"
+            value={formData.phone}
+            onChange={(value) => handleInputChange("phone", value)}
+            type="phone"
+          />
         </div>
-        <div className={styles.download__catalogue__buttons}>
-          <ActionButton
-            className={clsx(
-              styles.download__catalogue__buttons__button,
-              styles.download__catalogue__buttons__whatsapp
-            )}
-            size="medium"
-          >
-            Получить в WhatsApp{" "}
-            <IconImage
-              iconLink="/images/icons/whatsapp.svg"
-              alt="whatsApp"
-              className={styles.download__catalogue__buttons__button__icon}
-            />
-          </ActionButton>
-          <ActionButton
-            className={clsx(
-              styles.download__catalogue__buttons__button,
-              styles.download__catalogue__buttons__telegram
-            )}
-            size="medium"
-          >
-            Получить в Telegram
-            <IconImage
-              iconLink="/images/icons/telegram.svg"
-              alt="telegram"
-              className={styles.download__catalogue__buttons__button__icon}
-            />
-          </ActionButton>
+        <div className={styles.download__catalogue__actions}>
+          <div className={styles.download__catalogue__buttons}>
+            <ActionButton
+              className={clsx(
+                styles.download__catalogue__buttons__button,
+                styles.download__catalogue__buttons__whatsapp
+              )}
+              size="medium"
+            >
+              Получить в WhatsApp{" "}
+              <IconImage
+                iconLink="/images/icons/whatsapp.svg"
+                alt="whatsApp"
+                className={styles.download__catalogue__buttons__button__icon}
+              />
+            </ActionButton>
+            <ActionButton
+              className={clsx(
+                styles.download__catalogue__buttons__button,
+                styles.download__catalogue__buttons__telegram
+              )}
+              size="medium"
+            >
+              Получить в Telegram
+              <IconImage
+                iconLink="/images/icons/telegram.svg"
+                alt="telegram"
+                className={styles.download__catalogue__buttons__button__icon}
+              />
+            </ActionButton>
+          </div>
+          <CheckboxRow
+            checked={formData.checkbox}
+            onChange={() => handleInputChange("checkbox", !formData.checkbox)}
+            text="Нажимая на кнопку, вы даете согласие на обработку"
+            linkText="своих персональных данных"
+            linkHref="/privacy-policy"
+            name="personalData"
+            id="personalData"
+          />
         </div>
       </div>
-      <div className={styles.download__aboutUs}>
-        <IconImage
-          iconLink="/images/peopleDownload.webp"
-          alt="download"
-          className={styles.download__aboutUs__icon}
-        />
-        <div className={styles.download__aboutUs__statistics}>
-          <div className={styles.download__aboutUs__statistics__content}>
-            <div
-              className={styles.download__aboutUs__statistics__content__item}
-            >
-              <span
-                className={
-                  styles.download__aboutUs__statistics__content__item__number
-                }
-              >
-                145+
-              </span>
-              <p
-                className={
-                  styles.download__aboutUs__statistics__content__item__description
-                }
-              >
-                Застройщиков и банков – наши партнёры
-              </p>
-            </div>
-            <div
-              className={styles.download__aboutUs__statistics__content__item}
-            >
-              <span
-                className={
-                  styles.download__aboutUs__statistics__content__item__number
-                }
-              >
-                6 000+
-              </span>
-              <p
-                className={
-                  styles.download__aboutUs__statistics__content__item__description
-                }
-              >
-                Счастливых семей каждый год
-              </p>
-            </div>
-            <div
-              className={styles.download__aboutUs__statistics__content__item}
-            >
-              <span
-                className={
-                  styles.download__aboutUs__statistics__content__item__number
-                }
-              >
-                300+
-              </span>
-              <p
-                className={
-                  styles.download__aboutUs__statistics__content__item__description
-                }
-              >
-                Объектов недвижимостив нашей базе
-              </p>
-            </div>
-          </div>
-          <ActionButton
-            type="beige"
-            className={styles.download__aboutUs__statistics__button}
-          >
-            О нас
-            <IconImage
-              iconLink="/images/icons/arrow-top-right.svg"
-              alt="arrow"
-              className={styles.download__aboutUs__statistics__button__icon}
-            />
-          </ActionButton>
-        </div>
-      </div>
+      <div className={styles.download__image} />
     </div>
   )
 }
