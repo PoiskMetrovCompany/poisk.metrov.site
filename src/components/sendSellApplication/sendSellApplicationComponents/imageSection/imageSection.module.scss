@@ -1,7 +1,8 @@
 .sendSellApp {
   &__container {
     &__image {
-      min-height: 464px;
+      box-sizing: border-box;
+      height: 464px;
       margin-bottom: 120px;
       padding: 92px;
       border-radius: 40px;
@@ -14,13 +15,56 @@
       &__text {
         font-size: 40px;
         font-weight: 500;
+
+        @media (width <= 1920px) {
+          font-size: 26px;
+        }
+
+        @media (width <= 1440px) {
+          font-size: 22px;
+        }
       }
 
       &__button {
         &__send {
           max-width: 243px;
           margin-top: 32px;
+          font-size: 18px;
+
+          @media (width <= 1920px) {
+            max-width: 211px;
+            font-size: 16px;
+          }
+
+          @media (width <= 1440px) {
+            max-width: 195px;
+            padding: 0;
+          }
+
+          @media (width <= 1024) {
+            max-width: 163px;
+            font-size: 14px;
+          }
         }
+      }
+
+      @media (width <= 1920px) {
+        height: 380px;
+        padding: 80px;
+      }
+
+      @media (width <= 1440px) {
+        height: 320px;
+        padding: 64px;
+      }
+
+      @media (width <= 1024px) {
+        height: 220px;
+        padding: 32px;
+      }
+
+      @media (width <= 768px) {
+        padding: 16px;
       }
     }
   }

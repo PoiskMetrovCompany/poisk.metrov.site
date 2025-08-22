@@ -2,32 +2,49 @@
   &__container {
     &__rightSide {
       flex: 1;
+      max-width: 876px;
 
       &__list {
         &__item {
           display: flex;
           gap: 66px;
-          justify-content: flex-end;
+          justify-content: flex-start;
+
           height: 65px;
+          margin-bottom: 40px;
 
           &__number {
             position: relative;
+            margin-top: 6px;
             padding-left: 20px;
             font-size: 18px;
-            margin-top: 6px;
 
             &::before {
               content: "";
 
               position: absolute;
-              top: 70%;
+              top: 100%;
               left: 81%;
               transform: translateY(-50%);
 
               width: 2px;
-              height: 40px;
+              height: 60px;
 
               background-color: #ddd;
+            }
+
+            @media (width <= 768px) {
+              padding-left: 0;
+            }
+
+            @media (width <= 1920px) {
+              font-size: 15px;
+            }
+          }
+
+          &:last-child {
+            .sendSellApp__container__rightSide__list__item__number::before {
+              display: none;
             }
           }
 
@@ -36,6 +53,13 @@
               font-size: 28px;
               font-weight: 500;
 
+              @media (width <= 1920px) {
+                font-size: 20px;
+              }
+
+              @media (width <= 768px) {
+                font-size: 18px;
+              }
             }
 
             &__title {
@@ -43,7 +67,19 @@
               font-size: 18px;
               font-weight: 400;
               color: var(--color-text-gray);
+
+              @media (width <= 1920px) {
+                font-size: 15px;
+              }
             }
+          }
+
+          @media (width <= 768px) {
+            height: auto;
+          }
+
+          @media (width <= 768px) {
+            gap: 22px;
           }
         }
       }
