@@ -172,6 +172,7 @@ const FormSendSellApp = () => {
                     type={formData.isAgreed ? "primary" : "disabled"}
                     buttonWidth={253}
                     onClick={handleSubmit}
+                    className={styles.button}
                 >
                     Отправить
                 </ActionButton>
