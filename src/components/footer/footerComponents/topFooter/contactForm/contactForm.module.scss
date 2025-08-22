@@ -3,7 +3,7 @@
 }
 
 .hideOnDesktop {
-  @media screen and (width > 1024px) {
+  @media screen and (width > 1023px) {
     display: none !important;
   }
 }
