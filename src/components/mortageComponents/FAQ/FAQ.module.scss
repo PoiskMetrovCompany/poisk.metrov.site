@@ -108,6 +108,14 @@
             margin-bottom: 24px;
             font-size: 20px;
             color: var(--color-orange);
+
+            @media (width <= 1920px) {
+              font-size: 16px;
+            }
+
+            @media (width <= 768px) {
+              font-size: 14px;
+            }
           }
 
           &__answer {
