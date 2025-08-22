@@ -9,65 +9,10 @@
     align-items: center;
     justify-content: space-between;
 
-    &__switch {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-
-      &__button {
-        all: unset;
-        width: 56px;
-        height: 32px;
-        transition: background-color 0.3s ease;
-        background: var(--color-border-gray-light);
-        border-radius: 9999px;
-        position: relative;
-        // box-shadow: 0 2px 10px var(--color-gray-white);
-        // -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        // &:focus {
-        //   box-shadow: 0 0 0 2px black;
-        // }
-        &[data-state="checked"] {
-          background-color: var(--color-orange);
-          &:hover {
-            background-color: var(--color-orange);
-          }
-        }
-
-        &:hover {
-          background-color: var(--color-text-gray-light);
-        }
-
-        &__thumb {
-          display: block;
-          width: 24px;
-          height: 24px;
-          background-color: white;
-          border-radius: 9999px;
-          box-shadow: 0 2px 2px var(--black-a7);
-          transition: transform 100ms;
-          transform: translateX(4px);
-          will-change: transform;
-          &[data-state="checked"] {
-            transform: translateX(28px);
-          }
-        }
-      }
-
-      &__text {
-        color: var(--color-black);
-
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 150%;
-      }
-    }
-
     &__buttons {
       display: flex;
-      align-items: center;
       gap: 16px;
+      align-items: center;
 
       &__next {
         transform: rotate(180deg);
@@ -76,32 +21,32 @@
       &__prev,
       &__next {
         &.iconButton_disabled {
-          opacity: 0.5;
           cursor: not-allowed;
+          opacity: 0.5;
         }
       }
     }
   }
 
   &__content {
-    display: flex;
-    padding: 40px;
-    border-radius: 40px;
-    background: #fff;
     overflow: hidden;
-
-    width: 100%;
-
     display: flex;
     align-items: start;
+
+    width: 100%;
+    padding: 40px 31px;
+    border-radius: 40px;
+
+    background: #fff;
   }
 
   &__swiper {
+    overflow: visible;
+
     // width: 100%;
     width: 480px;
-    overflow: visible;
-    margin-left: 0;
     height: 100%;
+    margin-left: 0;
 
     .swiper-button-next,
     .swiper-button-prev {
@@ -112,8 +57,8 @@
       bottom: 10px;
 
       .swiper-pagination-bullet {
-        background: #007bff;
         opacity: 0.5;
+        background: #007bff;
 
         &-active {
           opacity: 1;
@@ -123,9 +68,9 @@
   }
 
   &__slide {
-    width: 448px;
-    height: auto;
     display: flex;
     justify-content: center;
+    width: 448px;
+    height: auto;
   }
 }

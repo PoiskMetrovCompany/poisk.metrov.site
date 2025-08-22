@@ -84,3 +84,15 @@ export interface IPropertyCardFull {
   apartments: IPropertyCardApartments
   cost: IPropertyCardCost
 }
+
+export interface IFlatLayoutCardFull {
+  id: number
+  image: string
+  title: string
+  address: string
+  general: IPropertyCardGeneral
+  location: IPropertyCardLocation
+  conveniences: IPropertyCardConveniences
+  price: string
+  pricePerMonth: string
+}

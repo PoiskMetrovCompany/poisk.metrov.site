@@ -12,6 +12,7 @@ import FlatLayoutCard from "@/components/flatLayoutCard"
 
 interface IFavouritesListProps {
   selectedView: IFavouriteView
+  setIsComparison: (isComparison: boolean) => void
 }
 
 const cards: IProperty[] = [
@@ -111,7 +112,10 @@ const cards: IProperty[] = [
   },
 ]
 
-const FavoutiresList = ({ selectedView }: IFavouritesListProps) => {
+const FavoutiresList = ({
+  selectedView,
+  setIsComparison,
+}: IFavouritesListProps) => {
   const [isEmpty, setIsEmpty] = useState(false)
 
   if (isEmpty) {
@@ -127,13 +131,13 @@ const FavoutiresList = ({ selectedView }: IFavouritesListProps) => {
 
   return (
     <div className={styles.favouritesList}>
-      <ListFilter />
+      <ListFilter setIsComparison={setIsComparison} />
       <div
         className={clsx(styles.favouritesList__list, {
-          [styles.favouritesList__list_complexes]: selectedView === "complexes",
+          [styles.favouritesList__list_complexes]: selectedView === "layouts",
         })}
       >
-        {selectedView === "layouts" &&
+        {selectedView === "complexes" &&
           cards.map((card) => (
             <PropertyCard
               className={styles.favouritesList__list__card}
@@ -144,7 +148,7 @@ const FavoutiresList = ({ selectedView }: IFavouritesListProps) => {
               listClassName={styles.favouritesList__list__card__specifications}
             />
           ))}
-        {selectedView === "complexes" &&
+        {selectedView === "layouts" &&
           [...Array(10)].map((_, index) => (
             <FlatLayoutCard
               listClassName={styles.favouritesList__list__flatList}

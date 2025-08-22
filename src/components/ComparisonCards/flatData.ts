@@ -1,8 +1,8 @@
-import { IPropertyCardFull } from "@/types/PropertyCard"
+import { IFlatLayoutCardFull, IPropertyCardFull } from "@/types/PropertyCard"
 
-const PropertyCardData: IPropertyCardFull = {
+const FlatLayoutCardData: IFlatLayoutCardFull = {
   id: 1,
-  image: "/images/temporary/flat.png",
+  image: "/images/temporary/flatImage.webp",
   title: "Европейский берег",
   address: "Новосибирск, ул. Зорге, 164",
   general: {
@@ -21,7 +21,7 @@ const PropertyCardData: IPropertyCardFull = {
     district: "Микрорайон на набережной Оби",
     metro: {
       name: "Октябрьская",
-      image: "/images/icons/car.svg",
+      image: "/images/icons/car-dark.svg",
       time: "25 минут",
     },
   },
@@ -32,32 +32,20 @@ const PropertyCardData: IPropertyCardFull = {
     wheelchair: "Есть",
     territory: "Закрытая",
   },
-  apartments: {
-    total: 8402,
-    forSale: 1749,
-    footage: "23 - 124 м²",
-    finishing: "White box, Предчистовая",
-    ceilings: 2.7,
-  },
-  cost: {
-    oneRoom: "6,7",
-    twoRooms: "9,2",
-    threeRooms: "12,6",
-    fourRooms: "13,5",
-    fiveRooms: "16,9",
-    penthouses: "13,1",
-  },
+
+  price: "6 540 210",
+  pricePerMonth: "6 540 210",
 }
 
-const PropertyCardDataArray: IPropertyCardFull[] = [
-  PropertyCardData,
+const FlatLayoutCardDataArray: IFlatLayoutCardFull[] = [
+  FlatLayoutCardData,
   {
-    ...PropertyCardData,
+    ...FlatLayoutCardData,
     id: 2,
     title: "Речной квартал",
     address: "Новосибирск, ул. Кирова, 45",
     general: {
-      ...PropertyCardData.general,
+      ...FlatLayoutCardData.general,
       builder: {
         name: "ГК Стройинвест",
         image: "/images/temporary/brusnika.png",
@@ -70,26 +58,20 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       district: "Центральный район",
       metro: {
         name: "Площадь Ленина",
-        image: "/images/icons/car.svg",
+        image: "/images/icons/car-dark.svg",
         time: "25 минут",
       },
     },
-    cost: {
-      oneRoom: "7,2",
-      twoRooms: "10,1",
-      threeRooms: "14,3",
-      fourRooms: "15,8",
-      fiveRooms: "18,5",
-      penthouses: "16,2",
-    },
+    price: "7,2",
+    pricePerMonth: "10,1",
   },
   {
-    ...PropertyCardData,
+    ...FlatLayoutCardData,
     id: 3,
     title: "Зеленый парк",
     address: "Новосибирск, ул. Красный проспект, 78",
     general: {
-      ...PropertyCardData.general,
+      ...FlatLayoutCardData.general,
       builder: {
         name: "ГК Домстрой",
         image: "/images/temporary/brusnika.png",
@@ -102,26 +84,20 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       district: "Заельцовский район",
       metro: {
         name: "Заельцовская",
-        image: "/images/icons/car.svg",
+        image: "/images/icons/car-dark.svg",
         time: "25 минут",
       },
     },
-    cost: {
-      oneRoom: "5,8",
-      twoRooms: "8,5",
-      threeRooms: "11,9",
-      fourRooms: "12,8",
-      fiveRooms: "15,3",
-      penthouses: "12,7",
-    },
+    price: "5,8",
+    pricePerMonth: "8,5",
   },
   {
-    ...PropertyCardData,
+    ...FlatLayoutCardData,
     id: 4,
     title: "Солнечный город",
     address: "Новосибирск, ул. Богдана Хмельницкого, 32",
     general: {
-      ...PropertyCardData.general,
+      ...FlatLayoutCardData.general,
       builder: {
         name: "ГК Новый дом",
         image: "/images/temporary/brusnika.png",
@@ -134,26 +110,20 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       district: "Калининский район",
       metro: {
         name: "Калининская",
-        image: "/images/icons/car.svg",
+        image: "/images/icons/car-dark.svg",
         time: "25 минут",
       },
     },
-    cost: {
-      oneRoom: "6,1",
-      twoRooms: "8,9",
-      threeRooms: "12,2",
-      fourRooms: "13,1",
-      fiveRooms: "16,4",
-      penthouses: "13,8",
-    },
+    price: "6,1",
+    pricePerMonth: "8,9",
   },
   {
-    ...PropertyCardData,
+    ...FlatLayoutCardData,
     id: 5,
     title: "Университетский",
     address: "Новосибирск, ул. Пирогова, 15",
     general: {
-      ...PropertyCardData.general,
+      ...FlatLayoutCardData.general,
       builder: {
         name: "ГК Академстрой",
         image: "/images/temporary/brusnika.png",
@@ -166,20 +136,14 @@ const PropertyCardDataArray: IPropertyCardFull[] = [
       district: "Советский район",
       metro: {
         name: "Гагаринская",
-        image: "/images/icons/car.svg",
+        image: "/images/icons/car-dark.svg",
         time: "25 минут",
       },
     },
-    cost: {
-      oneRoom: "7,5",
-      twoRooms: "10,8",
-      threeRooms: "15,1",
-      fourRooms: "16,2",
-      fiveRooms: "19,8",
-      penthouses: "17,3",
-    },
+    price: "7,5",
+    pricePerMonth: "10,8",
   },
 ]
 
-export default PropertyCardData
-export { PropertyCardDataArray }
+export default FlatLayoutCardData
+export { FlatLayoutCardDataArray }

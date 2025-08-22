@@ -6,15 +6,24 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import styles from "./comparison.module.scss"
-import Heading2 from "@/components/ui/heading2"
-import PropertyCardComparison from "@/components/PropertyCardComparison"
-import { PropertyCardDataArray } from "@/components/PropertyCardComparison/data"
-import * as Switch from "@radix-ui/react-switch"
+import { PropertyCardDataArray } from "@/components/ComparisonCards/propertyData"
+import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/flatData"
 import IconButton from "@/components/ui/buttons/IconButton"
+import SwitchComponent from "@/components/ui/switch"
+import { IFavouriteView } from "@/types/Favourites"
+import {
+  PropertyCardComparison,
+  FlatLayoutCardComparison,
+} from "@/components/ComparisonCards"
 
-const Comparison = () => {
+interface IComparisonProps {
+  selectedView: IFavouriteView
+}
+
+const Comparison = ({ selectedView }: IComparisonProps) => {
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
+  const [isOnlyDifferences, setIsOnlyDifferences] = useState(false)
   const swiperRef = useRef<SwiperType | null>(null)
 
   const handleSlideChange = (swiper: SwiperType) => {
@@ -37,19 +46,12 @@ const Comparison = () => {
   return (
     <div className={styles.comparison}>
       <div className={styles.comparison__header}>
-        <div className={styles.comparison__header__switch}>
-          <Switch.Root
-            className={styles.comparison__header__switch__button}
-            id="comparison-switch"
-          >
-            <Switch.Thumb
-              className={styles.comparison__header__switch__button__thumb}
-            />
-          </Switch.Root>
-          <span className={styles.comparison__header__switch__text}>
-            Только различия
-          </span>
-        </div>
+        <SwitchComponent
+          id="comparison-switch"
+          label="Только различия"
+          checked={isOnlyDifferences}
+          onCheckedChange={setIsOnlyDifferences}
+        />
         <div className={styles.comparison__header__buttons}>
           <IconButton
             iconLink="/images/icons/arrow-slider.svg"
@@ -81,11 +83,24 @@ const Comparison = () => {
           }}
           onSlideChange={handleSlideChange}
         >
-          {PropertyCardDataArray.map((cardData) => (
-            <SwiperSlide key={cardData.id} className={styles.comparison__slide}>
-              <PropertyCardComparison data={cardData} />
-            </SwiperSlide>
-          ))}
+          {selectedView === "complexes" &&
+            PropertyCardDataArray.map((cardData) => (
+              <SwiperSlide
+                key={cardData.id}
+                className={styles.comparison__slide}
+              >
+                <PropertyCardComparison data={cardData} />
+              </SwiperSlide>
+            ))}
+          {selectedView === "layouts" &&
+            FlatLayoutCardDataArray.map((cardData) => (
+              <SwiperSlide
+                key={cardData.id}
+                className={styles.comparison__slide}
+              >
+                <FlatLayoutCardComparison data={cardData} />
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
     </div>

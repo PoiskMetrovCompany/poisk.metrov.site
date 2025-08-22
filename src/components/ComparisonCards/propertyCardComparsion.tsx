@@ -1,7 +1,7 @@
 import React from "react"
-import styles from "./propertyCardComparison.module.scss"
+import styles from "./comparisonCards.module.scss"
 import IconImage from "../ui/IconImage"
-import PropertyCardData from "./data"
+import PropertyCardData from "./propertyData"
 import Heading3 from "../ui/heading3"
 import { propertyCardTranslations } from "./translations"
 import {
@@ -13,6 +13,7 @@ import {
   IPropertyCardFull,
 } from "@/types/PropertyCard"
 import ActionButton from "../ui/buttons/ActionButton"
+import IconButton from "../ui/buttons/IconButton"
 
 interface PropertyCardComparisonProps {
   data?: IPropertyCardFull
@@ -35,7 +36,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
       return (
         <div
           className={
-            styles.propertyCardComparison__content__block__list__item__value__complex
+            styles.comparisonCards__content__block__list__item__value__complex
           }
         >
           <span>{builderValue.name}</span>
@@ -43,7 +44,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
             iconLink={builderValue.image}
             alt={builderValue.name}
             className={
-              styles.propertyCardComparison__content__block__list__item__value__complex__icon
+              styles.comparisonCards__content__block__list__item__value__complex__icon
             }
           />
         </div>
@@ -63,31 +64,32 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
       return (
         <div
           className={
-            styles.propertyCardComparison__content__block__list__item__value__complex
+            styles.comparisonCards__content__block__list__item__value__complex
           }
         >
-          <IconImage
-            iconLink={metroValue.image}
-            alt={metroValue.name}
-            className={
-              styles.propertyCardComparison__content__block__list__item__value__complex__icon
-            }
-          />
           <div
             className={
-              styles.propertyCardComparison__content__block__list__item__value__complex__info
+              styles.comparisonCards__content__block__list__item__value__complex__info
             }
           >
             <span
               className={
-                styles.propertyCardComparison__content__block__list__item__value__complex__info__name
+                styles.comparisonCards__content__block__list__item__value__complex__info__name
               }
             >
               {metroValue.name}
             </span>
+            <IconImage
+              iconLink={metroValue.image}
+              alt={metroValue.name}
+              className={
+                styles.comparisonCards__content__block__list__item__value__complex__icon
+              }
+            />
+
             <span
               className={
-                styles.propertyCardComparison__content__block__list__item__value__complex__info__time
+                styles.comparisonCards__content__block__list__item__value__complex__info__time
               }
             >
               {metroValue.time}
@@ -102,27 +104,32 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   }
 
   return (
-    <div className={styles.propertyCardComparison}>
-      <div className={styles.propertyCardComparison__content}>
-        <div className={styles.propertyCardComparison__content__heading}>
-          <div
-            className={styles.propertyCardComparison__content__heading__image}
-          >
+    <div className={styles.comparisonCards}>
+      <div className={styles.comparisonCards__content}>
+        <div className={styles.comparisonCards__content__heading}>
+          <div className={styles.comparisonCards__content__heading__image}>
             <IconImage
               iconLink={data.image}
               alt="image"
+              className={styles.comparisonCards__content__heading__image__icon}
+            />
+            <IconButton
+              size="sm"
+              iconLink={"/images/icons/trash.svg"}
+              alt="trash"
+              iconClassName={
+                styles.comparisonCards__content__heading__image__delete__icon
+              }
               className={
-                styles.propertyCardComparison__content__heading__image__icon
+                styles.comparisonCards__content__heading__image__delete
               }
             />
           </div>
-          <div
-            className={styles.propertyCardComparison__content__heading__text}
-          >
+          <div className={styles.comparisonCards__content__heading__text}>
             <Heading3>{data.title}</Heading3>
             <span
               className={
-                styles.propertyCardComparison__content__heading__text__address
+                styles.comparisonCards__content__heading__text__address
               }
             >
               {data.address}
@@ -130,22 +137,20 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </div>
         </div>
 
-        <div className={styles.propertyCardComparison__content__block}>
-          <div className={styles.propertyCardComparison__content__block__title}>
+        <div className={styles.comparisonCards__content__block}>
+          <div className={styles.comparisonCards__content__block__title}>
             Общие сведения
           </div>
 
-          <ul className={styles.propertyCardComparison__content__block__list}>
+          <ul className={styles.comparisonCards__content__block__list}>
             {Object.entries(data.general).map(([key, value]) => (
               <li
                 key={key}
-                className={
-                  styles.propertyCardComparison__content__block__list__item
-                }
+                className={styles.comparisonCards__content__block__list__item}
               >
                 <span
                   className={
-                    styles.propertyCardComparison__content__block__list__item__title
+                    styles.comparisonCards__content__block__list__item__title
                   }
                 >
                   {
@@ -156,7 +161,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 </span>
                 <div
                   className={
-                    styles.propertyCardComparison__content__block__list__item__value
+                    styles.comparisonCards__content__block__list__item__value
                   }
                 >
                   {renderValue(key, value)}
@@ -166,22 +171,20 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </ul>
         </div>
 
-        <div className={styles.propertyCardComparison__content__block}>
-          <div className={styles.propertyCardComparison__content__block__title}>
+        <div className={styles.comparisonCards__content__block}>
+          <div className={styles.comparisonCards__content__block__title}>
             Расположение
           </div>
 
-          <ul className={styles.propertyCardComparison__content__block__list}>
+          <ul className={styles.comparisonCards__content__block__list}>
             {Object.entries(data.location).map(([key, value]) => (
               <li
                 key={key}
-                className={
-                  styles.propertyCardComparison__content__block__list__item
-                }
+                className={styles.comparisonCards__content__block__list__item}
               >
                 <span
                   className={
-                    styles.propertyCardComparison__content__block__list__item__title
+                    styles.comparisonCards__content__block__list__item__title
                   }
                 >
                   {
@@ -192,7 +195,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 </span>
                 <div
                   className={
-                    styles.propertyCardComparison__content__block__list__item__value
+                    styles.comparisonCards__content__block__list__item__value
                   }
                 >
                   {renderValue(key, value)}
@@ -202,22 +205,20 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </ul>
         </div>
 
-        <div className={styles.propertyCardComparison__content__block}>
-          <div className={styles.propertyCardComparison__content__block__title}>
+        <div className={styles.comparisonCards__content__block}>
+          <div className={styles.comparisonCards__content__block__title}>
             Удобства
           </div>
 
-          <ul className={styles.propertyCardComparison__content__block__list}>
+          <ul className={styles.comparisonCards__content__block__list}>
             {Object.entries(data.conveniences).map(([key, value]) => (
               <li
                 key={key}
-                className={
-                  styles.propertyCardComparison__content__block__list__item
-                }
+                className={styles.comparisonCards__content__block__list__item}
               >
                 <span
                   className={
-                    styles.propertyCardComparison__content__block__list__item__title
+                    styles.comparisonCards__content__block__list__item__title
                   }
                 >
                   {
@@ -228,7 +229,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 </span>
                 <div
                   className={
-                    styles.propertyCardComparison__content__block__list__item__value
+                    styles.comparisonCards__content__block__list__item__value
                   }
                 >
                   {renderValue(key, value)}
@@ -238,22 +239,20 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </ul>
         </div>
 
-        <div className={styles.propertyCardComparison__content__block}>
-          <div className={styles.propertyCardComparison__content__block__title}>
+        <div className={styles.comparisonCards__content__block}>
+          <div className={styles.comparisonCards__content__block__title}>
             Квартиры
           </div>
 
-          <ul className={styles.propertyCardComparison__content__block__list}>
+          <ul className={styles.comparisonCards__content__block__list}>
             {Object.entries(data.apartments).map(([key, value]) => (
               <li
                 key={key}
-                className={
-                  styles.propertyCardComparison__content__block__list__item
-                }
+                className={styles.comparisonCards__content__block__list__item}
               >
                 <span
                   className={
-                    styles.propertyCardComparison__content__block__list__item__title
+                    styles.comparisonCards__content__block__list__item__title
                   }
                 >
                   {
@@ -264,7 +263,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 </span>
                 <div
                   className={
-                    styles.propertyCardComparison__content__block__list__item__value
+                    styles.comparisonCards__content__block__list__item__value
                   }
                 >
                   {renderValue(key, value)}
@@ -274,22 +273,20 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </ul>
         </div>
 
-        <div className={styles.propertyCardComparison__content__block}>
-          <div className={styles.propertyCardComparison__content__block__title}>
+        <div className={styles.comparisonCards__content__block}>
+          <div className={styles.comparisonCards__content__block__title}>
             Стоимость квартир
           </div>
 
-          <ul className={styles.propertyCardComparison__content__block__list}>
+          <ul className={styles.comparisonCards__content__block__list}>
             {Object.entries(data.cost).map(([key, value]) => (
               <li
                 key={key}
-                className={
-                  styles.propertyCardComparison__content__block__list__item
-                }
+                className={styles.comparisonCards__content__block__list__item}
               >
                 <span
                   className={
-                    styles.propertyCardComparison__content__block__list__item__title
+                    styles.comparisonCards__content__block__list__item__title
                   }
                 >
                   {
@@ -300,7 +297,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 </span>
                 <div
                   className={
-                    styles.propertyCardComparison__content__block__list__item__value
+                    styles.comparisonCards__content__block__list__item__value
                   }
                 >
                   от {value} млн ₽
@@ -310,7 +307,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
           </ul>
         </div>
 
-        <div className={styles.propertyCardComparison__content__buttons}>
+        <div className={styles.comparisonCards__content__buttons}>
           <ActionButton>Записаться на просмотр</ActionButton>
           <ActionButton type="secondary">Скачать презентацию</ActionButton>
         </div>

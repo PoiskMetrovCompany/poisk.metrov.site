@@ -9,6 +9,7 @@ import RequestsWrapper from "../favouritesActions/requestsWrapper"
 import Comparison from "../comparison"
 
 const FavouritesWrapper = () => {
+  const [isComparison, setIsComparison] = useState(false)
   const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
   return (
     <div className={styles.favouritesWrapper}>
@@ -16,8 +17,15 @@ const FavouritesWrapper = () => {
         selectedView={selectedView}
         setSelectedView={setSelectedView}
       />
-      {/* <FavouritesList selectedView={selectedView} /> */}
-      <Comparison />
+
+      {isComparison ? (
+        <Comparison selectedView={selectedView} />
+      ) : (
+        <FavouritesList
+          selectedView={selectedView}
+          setIsComparison={setIsComparison}
+        />
+      )}
 
       <RequestsWrapper isHiddenDesktop />
     </div>

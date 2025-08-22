@@ -1,0 +1,67 @@
+.switch {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+
+  &__button {
+    all: unset;
+
+    cursor: pointer;
+
+    position: relative;
+
+    width: 56px;
+    height: 32px;
+    border-radius: 9999px;
+
+    background: var(--color-border-gray-light);
+
+    transition: background-color 0.3s ease;
+
+    &[data-state="checked"] {
+      background-color: var(--color-orange);
+
+      &:hover {
+        background-color: var(--color-orange);
+      }
+    }
+
+    &:hover {
+      background-color: var(--color-text-gray-light);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &__thumb {
+      will-change: transform;
+
+      transform: translateX(4px);
+
+      display: block;
+
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+
+      background-color: white;
+      box-shadow: 0 2px 2px var(--black-a7);
+
+      transition: transform 100ms;
+
+      &[data-state="checked"] {
+        transform: translateX(28px);
+      }
+    }
+  }
+
+  &__text {
+    font-size: 18px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 150%;
+    color: var(--color-black);
+  }
+}
