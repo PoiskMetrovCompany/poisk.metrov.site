@@ -43,6 +43,14 @@
       font-weight: 400;
       color: var(--color-text-gray);
       text-align: left;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &--selected {
+        color: var(--color-black);
+      }
     }
 
     &__icon {
@@ -79,6 +87,11 @@
 // Анимация для иконки при открытии
 .priceDropdown__trigger[data-state="open"] .priceDropdown__trigger__icon {
   transform: rotate(180deg);
+}
+
+// Изменение цвета текста при открытии
+.priceDropdown__trigger[data-state="open"] .priceDropdown__trigger__text {
+  color: var(--color-black);
 }
 
 .priceDropdown__content[data-state="open"] {

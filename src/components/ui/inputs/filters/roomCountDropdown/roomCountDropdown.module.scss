@@ -1,0 +1,160 @@
+.roomCountDropdown {
+  position: relative;
+
+  &__trigger {
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    width: 240px;
+    height: 24px;
+    padding-right: 16px;
+    padding-left: 24px;
+    border: none;
+    background: var(--white-white-100, #fff);
+    transition: all 0.2s ease;
+    border-left: 2px solid var(--color-gray-white);
+
+    &__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+    }
+
+    &__text {
+      flex: 1;
+      color: var(--color-text-gray);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 150%;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &--selected,
+      &--open {
+        color: var(--color-black);
+      }
+    }
+
+    &__badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      background: var(--color-orange, #ff6b35);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1;
+      margin-right: 8px;
+    }
+
+    &__icon {
+      flex-shrink: 0;
+      width: 12px;
+      height: 8px;
+      transition: transform 0.2s ease;
+
+      &__open {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 8px;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
+    min-width: 240px;
+
+    &__inner {
+      padding: 16px;
+    }
+  }
+
+  &__row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    height: 56px;
+    padding: 0 12px;
+    border: 1px solid var(--color-gray-white, #e5e5e5);
+    border-radius: 20px;
+    background: white;
+    color: var(--color-black);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+
+    &__studio {
+      padding: 0 24px;
+    }
+
+    &:hover {
+      border-radius: 20px;
+      border: 1px solid var(--color-border-gray-light);
+      background: var(--color-gray-0);
+    }
+
+    &--selected {
+      border: 1px solid rgba(236, 125, 63, 0.1);
+      background: rgba(236, 125, 63, 0.1);
+      color: var(--color-orange);
+
+      &:hover {
+        border: 1px solid rgba(236, 125, 63, 0.1);
+        background: rgba(236, 125, 63, 0.1);
+        color: var(--color-orange);
+      }
+    }
+
+    // &:focus {
+    //   outline: 2px solid var(--color-orange, #ff6b35);
+    //   outline-offset: 2px;
+    // }
+  }
+}
+
+// Анимация для контента
+.roomCountDropdown__content {
+  animation: slide-down-and-fade 0.2s ease-out;
+}
+
+@keyframes slide-down-and-fade {
+  from {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
