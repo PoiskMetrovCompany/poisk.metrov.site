@@ -12,6 +12,7 @@
       &__toggleSection {
         display: flex;
         gap: 183px;
+        justify-content: space-between;
 
         &__questions {
           display: flex;
@@ -50,12 +51,58 @@
               color: var(--color-beige);
 
               background-color: var(--color-orange);
+
+              @media (width <= 1920px) {
+                font-size: 18px;
+              }
+
+              @media (width <= 1440px) {
+                font-size: 16px;
+              }
+
+              @media (width <= 1024px) {
+                padding: 20px;
+              }
+
+              @media (width <= 768px) {
+                padding: 16px;
+                font-size: 14px;
+              }
             }
+
+            @media (width <= 1920px) {
+              font-size: 18px;
+            }
+
+            @media (width <= 1440px) {
+              font-size: 16px;
+            }
+
+            @media (width <= 1024px) {
+              padding: 20px;
+            }
+
+            @media (width <= 768px) {
+              padding: 16px;
+              font-size: 14px;
+            }
+          }
+
+          @media (width <= 1920px) {
+            width: 624px;
+          }
+
+          @media (width <= 1440px) {
+            width: 460px;
+          }
+
+          @media (width <= 1024px) {
+            width: 100%;
           }
         }
 
         &__answers {
-          flex: 1;
+          max-width: 677px;
 
           &__title {
             margin-bottom: 24px;
@@ -78,13 +125,46 @@
               transform: translateY(0);
               opacity: 1;
             }
+
+            @media (width <= 1920px) {
+              font-size: 16px;
+            }
+
+            @media (width <= 768px) {
+              font-size: 14px;
+            }
           }
+
+          @media (width <= 1920px) {
+            max-width: 515px;
+          }
+
+          @media (width <= 1440px) {
+            max-width: 379px;
+          }
+
+          @media (width <= 1024px) {
+            width: 100%;
+            max-width: none;
+          }
+        }
+
+        @media (width <= 1920px) {
+          gap: 141px;
+        }
+
+        @media (width <= 1440px) {
+          gap: 105px;
+        }
+
+        @media (width <= 1024px) {
+          flex-direction: column;
+          gap: 24px;
         }
       }
     }
   }
 }
-
 
 @keyframes fadeInUp {
   0% {
