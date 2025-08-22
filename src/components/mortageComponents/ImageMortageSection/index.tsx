@@ -7,14 +7,14 @@ const ImageMortageSection = () => {
     <div className={styles.mortage__container__imageSection}>
       <div className={styles.mortage__container__imageSection__text}>
         <div className={styles.mortage__container__imageSection__text__header}>
-          <span
-            className={
-              styles.mortage__container__imageSection__text__header__orange
-            }
-          >
-            Поиск Метров
-          </span>
-          – найдем квартиру, поможем с ипотекой
+          <Image
+            src="/images/icons/PMMortage.webp"
+            alt="Поиск метров"
+            width={207}
+            height={102}
+          />
+          <br />
+          <span>найдем квартиру, поможем с ипотекой</span>
         </div>
         <div className={styles.mortage__container__imageSection__text__title}>
           Мы сотрудничаем с большим количеством банков, а наши специалисты
