@@ -1,26 +1,33 @@
-import React, { useState, useRef } from "react"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
 import type { Swiper as SwiperType } from "swiper"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
-import styles from "./comparison.module.scss"
-import { PropertyCardDataArray } from "@/components/ComparisonCards/propertyData"
+import { Navigation } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+
+import React, { useRef, useState } from "react"
+
+import {
+  FlatLayoutCardComparison,
+  PropertyCardComparison,
+} from "@/components/ComparisonCards"
 import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/flatData"
+import { PropertyCardDataArray } from "@/components/ComparisonCards/propertyData"
+import { IFavouriteView } from "@/types/Favourites"
+
+import styles from "./comparison.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
 import SwitchComponent from "@/components/ui/switch"
-import { IFavouriteView } from "@/types/Favourites"
-import {
-  PropertyCardComparison,
-  FlatLayoutCardComparison,
-} from "@/components/ComparisonCards"
 
 interface IComparisonProps {
   selectedView: IFavouriteView
+  setIsComparison: (isComparison: boolean) => void
 }
 
-const Comparison = ({ selectedView }: IComparisonProps) => {
+const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
   const [isOnlyDifferences, setIsOnlyDifferences] = useState(false)
@@ -46,33 +53,49 @@ const Comparison = ({ selectedView }: IComparisonProps) => {
   return (
     <div className={styles.comparison}>
       <div className={styles.comparison__header}>
-        <SwitchComponent
-          id="comparison-switch"
-          label="Только различия"
-          checked={isOnlyDifferences}
-          onCheckedChange={setIsOnlyDifferences}
-        />
-        <div className={styles.comparison__header__buttons}>
-          <IconButton
-            iconLink="/images/icons/arrow-slider.svg"
-            alt="prev"
-            className={styles.comparison__header__buttons__prev}
-            onClick={handlePrevClick}
-            disabled={isBeginning}
+        <ActionButton
+          className={styles.comparison__header__button}
+          type="outline-white"
+          onClick={() => setIsComparison(false)}
+        >
+          <IconImage
+            iconLink="/images/icons/arrow-left.svg"
+            alt="arrow-left"
+            className={styles.comparison__header__button__icon}
           />
-          <IconButton
-            iconLink="/images/icons/arrow-slider.svg"
-            alt="next"
-            className={styles.comparison__header__buttons__next}
-            onClick={handleNextClick}
-            disabled={isEnd}
+          Вернуться в избранное
+        </ActionButton>
+        <div className={styles.comparison__header__actions}>
+          <SwitchComponent
+            id="comparison-switch"
+            label="Только различия"
+            checked={isOnlyDifferences}
+            onCheckedChange={setIsOnlyDifferences}
           />
+          <div className={styles.comparison__header__actions__buttons}>
+            <IconButton
+              iconLink="/images/icons/arrow-slider.svg"
+              alt="prev"
+              className={styles.comparison__header__actions__buttons__prev}
+              onClick={handlePrevClick}
+              disabled={isBeginning}
+            />
+            <IconButton
+              iconLink="/images/icons/arrow-slider.svg"
+              alt="next"
+              className={styles.comparison__header__actions__buttons__next}
+              onClick={handleNextClick}
+              disabled={isEnd}
+            />
+          </div>
         </div>
       </div>
       <div className={styles.comparison__content}>
         <Swiper
           modules={[Navigation]}
-          spaceBetween={32}
+          spaceBetween={0}
+          slidesPerView={2}
+          slidesPerGroup={1}
           navigation={false}
           pagination={{ clickable: true }}
           className={styles.comparison__swiper}
@@ -84,21 +107,27 @@ const Comparison = ({ selectedView }: IComparisonProps) => {
           onSlideChange={handleSlideChange}
         >
           {selectedView === "complexes" &&
-            PropertyCardDataArray.map((cardData) => (
+            PropertyCardDataArray.map((cardData, index) => (
               <SwiperSlide
                 key={cardData.id}
                 className={styles.comparison__slide}
               >
-                <PropertyCardComparison data={cardData} />
+                <PropertyCardComparison
+                  data={cardData}
+                  isLast={index === PropertyCardDataArray.length - 1}
+                />
               </SwiperSlide>
             ))}
           {selectedView === "layouts" &&
-            FlatLayoutCardDataArray.map((cardData) => (
+            FlatLayoutCardDataArray.map((cardData, index) => (
               <SwiperSlide
                 key={cardData.id}
                 className={styles.comparison__slide}
               >
-                <FlatLayoutCardComparison data={cardData} />
+                <FlatLayoutCardComparison
+                  data={cardData}
+                  isLast={index === FlatLayoutCardDataArray.length - 1}
+                />
               </SwiperSlide>
             ))}
         </Swiper>

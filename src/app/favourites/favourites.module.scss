@@ -4,8 +4,4 @@
   width: 100%;
 
   @include mixins.adaptive-padding;
-
-  &__title {
-    @include mixins.adaptive-heading-margin;
-  }
 }

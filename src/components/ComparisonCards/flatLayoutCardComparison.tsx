@@ -1,27 +1,32 @@
 import React from "react"
-import styles from "./comparisonCards.module.scss"
-import IconImage from "../ui/IconImage"
-import FlatLayoutCardData from "./flatData"
-import Heading3 from "../ui/heading3"
-import { propertyCardTranslations } from "./translations"
+
+import Link from "next/link"
+
 import {
+  IFlatLayoutCardFull,
+  IPropertyCardConveniences,
   IPropertyCardGeneral,
   IPropertyCardLocation,
-  IPropertyCardConveniences,
-  IPropertyCardApartments,
-  IPropertyCardCost,
-  IPropertyCardFull,
-  IFlatLayoutCardFull,
 } from "@/types/PropertyCard"
+
+import styles from "./comparisonCards.module.scss"
+
+import FlatLayoutCardData from "./flatData"
+import { propertyCardTranslations } from "./translations"
+
+import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
 import IconButton from "../ui/buttons/IconButton"
+import Heading3 from "../ui/heading3"
 
 interface FlatLayoutCardComparisonProps {
   data: IFlatLayoutCardFull
+  isLast?: boolean
 }
 
 const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
   data = FlatLayoutCardData,
+  isLast = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -104,28 +109,42 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
     return <span>{String(value)}</span>
   }
 
+  const onTrashClick = () => {
+    console.log("track")
+  }
+
   return (
-    <div className={styles.comparisonCards}>
+    <div
+      className={`${styles.comparisonCards} ${isLast ? styles.comparisonCards__last : ""}`}
+    >
       <div className={styles.comparisonCards__content}>
         <div className={styles.comparisonCards__content__heading}>
-          <div className={styles.comparisonCards__content__heading__imageFlat}>
-            <IconImage
-              iconLink={data.image}
-              alt="image"
-              className={
-                styles.comparisonCards__content__heading__imageFlat__icon
-              }
-            />
+          <div
+            className={styles.comparisonCards__content__heading__imageContainer}
+          >
+            <Link
+              href="/details/1"
+              className={styles.comparisonCards__content__heading__imageFlat}
+            >
+              <IconImage
+                iconLink={data.image}
+                alt="image"
+                className={
+                  styles.comparisonCards__content__heading__imageFlat__icon
+                }
+              />
+            </Link>
             <IconButton
               size="sm"
               iconLink={"/images/icons/trash.svg"}
               alt="trash"
               iconClassName={
-                styles.comparisonCards__content__heading__imageFlat__delete__icon
+                styles.comparisonCards__content__heading__image__delete__icon
               }
               className={
-                styles.comparisonCards__content__heading__imageFlat__delete
+                styles.comparisonCards__content__heading__image__delete
               }
+              onClick={onTrashClick}
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>

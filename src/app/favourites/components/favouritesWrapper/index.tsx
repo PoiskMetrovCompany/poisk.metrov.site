@@ -1,34 +1,49 @@
 "use client"
 
 import React, { useState } from "react"
-import styles from "./favouritesWrapper.module.scss"
-import FavouritesList from "../favouritesList"
-import FavouritesActions from "../favouritesActions"
+
 import { IFavouriteView } from "@/types/Favourites"
-import RequestsWrapper from "../favouritesActions/requestsWrapper"
+
+import styles from "./favouritesWrapper.module.scss"
+
 import Comparison from "../comparison"
+import FavouritesActions from "../favouritesActions"
+import RequestsWrapper from "../favouritesActions/requestsWrapper"
+import FavouritesList from "../favouritesList"
+
+import Heading1 from "@/components/ui/heading1"
 
 const FavouritesWrapper = () => {
   const [isComparison, setIsComparison] = useState(false)
   const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
+
   return (
-    <div className={styles.favouritesWrapper}>
-      <FavouritesActions
-        selectedView={selectedView}
-        setSelectedView={setSelectedView}
-      />
+    <>
+      <Heading1 className={styles.title}>
+        {isComparison ? "Сравнение" : "Избранное"}
+      </Heading1>
 
-      {isComparison ? (
-        <Comparison selectedView={selectedView} />
-      ) : (
-        <FavouritesList
+      <div className={styles.favouritesWrapper}>
+        <FavouritesActions
           selectedView={selectedView}
-          setIsComparison={setIsComparison}
+          setSelectedView={setSelectedView}
         />
-      )}
 
-      <RequestsWrapper isHiddenDesktop />
-    </div>
+        {isComparison ? (
+          <Comparison
+            selectedView={selectedView}
+            setIsComparison={setIsComparison}
+          />
+        ) : (
+          <FavouritesList
+            selectedView={selectedView}
+            setIsComparison={setIsComparison}
+          />
+        )}
+
+        <RequestsWrapper isHiddenDesktop />
+      </div>
+    </>
   )
 }
 

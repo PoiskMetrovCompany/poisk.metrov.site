@@ -1,4 +1,4 @@
-import { IFlatLayoutCardFull, IPropertyCardFull } from "@/types/PropertyCard"
+import { IFlatLayoutCardFull } from "@/types/PropertyCard"
 
 const FlatLayoutCardData: IFlatLayoutCardFull = {
   id: 1,

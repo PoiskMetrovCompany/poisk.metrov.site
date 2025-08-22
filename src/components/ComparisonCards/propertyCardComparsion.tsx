@@ -1,26 +1,34 @@
+import clsx from "clsx"
+
 import React from "react"
-import styles from "./comparisonCards.module.scss"
-import IconImage from "../ui/IconImage"
-import PropertyCardData from "./propertyData"
-import Heading3 from "../ui/heading3"
-import { propertyCardTranslations } from "./translations"
+
 import {
-  IPropertyCardGeneral,
-  IPropertyCardLocation,
-  IPropertyCardConveniences,
   IPropertyCardApartments,
+  IPropertyCardConveniences,
   IPropertyCardCost,
   IPropertyCardFull,
+  IPropertyCardGeneral,
+  IPropertyCardLocation,
 } from "@/types/PropertyCard"
+
+import styles from "./comparisonCards.module.scss"
+
+import PropertyCardData from "./propertyData"
+import { propertyCardTranslations } from "./translations"
+
+import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
 import IconButton from "../ui/buttons/IconButton"
+import Heading3 from "../ui/heading3"
 
 interface PropertyCardComparisonProps {
   data?: IPropertyCardFull
+  isLast?: boolean
 }
 
 const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   data = PropertyCardData,
+  isLast = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -104,7 +112,11 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   }
 
   return (
-    <div className={styles.comparisonCards}>
+    <div
+      className={clsx(styles.comparisonCards, {
+        [styles.comparisonCards__last]: isLast,
+      })}
+    >
       <div className={styles.comparisonCards__content}>
         <div className={styles.comparisonCards__content__heading}>
           <div className={styles.comparisonCards__content__heading__image}>

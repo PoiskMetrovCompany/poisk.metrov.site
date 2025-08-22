@@ -1,11 +1,14 @@
-import React from "react"
-import styles from "./IconButton.module.scss"
-import Image from "next/image"
 import clsx from "clsx"
+
+import React from "react"
+
+import Image from "next/image"
+
+import styles from "./IconButton.module.scss"
 
 type IconButtonProps = {
   iconLink: string
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
   iconClassName?: string
   size?: "sm" | "md" | "lg" | "tiny"
