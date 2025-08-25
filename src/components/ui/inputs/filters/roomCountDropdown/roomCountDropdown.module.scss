@@ -7,6 +7,12 @@
     gap: 8px;
     align-items: flex-start;
     width: 240px;
+    @media (max-width: 1920px) {
+      width: 200px;
+    }
+    @media (max-width: 1440px) {
+      width: 140px;
+    }
     height: 24px;
     padding-right: 16px;
     padding-left: 24px;

@@ -2,6 +2,7 @@ import React, { FC, useState, useRef, useEffect } from "react"
 import styles from "./roomCountDropdown.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface RoomCount {
   value: string
@@ -31,6 +32,7 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   const [selectedCounts, setSelectedCounts] = useState<string[]>(value)
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const { isLaptop } = useScreenSize()
 
   useEffect(() => {
     setSelectedCounts(value)
@@ -65,7 +67,8 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   }
 
   const getDisplayText = () => {
-    if (selectedCounts.length === 0) return "Кол-во комнат"
+    if (selectedCounts.length === 0)
+      return isLaptop ? "Кол-во комнат" : "Комнат"
 
     // Разделяем числовые значения и студию
     const numericValues = selectedCounts

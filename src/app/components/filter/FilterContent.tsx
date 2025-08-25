@@ -8,6 +8,7 @@ import HouseTypeDropdown from "@/components/ui/inputs/filters/houseTypeDropdown"
 import RoomCountDropdown from "@/components/ui/inputs/filters/roomCountDropdown"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface FilterContentProps {
   currentValues: {
@@ -33,24 +34,30 @@ const FilterContent: React.FC<FilterContentProps> = ({
   onApplyFilters,
   onShowFilters,
 }) => {
+  const { isTablet } = useScreenSize()
+
   return (
     <div className={styles.filter__content}>
       <div className={styles.filter__content__inputs}>
-        <HouseTypeDropdown
-          onHouseTypeChange={onHouseTypeChange}
-          value={currentValues.houseTypes}
-        />
-        <div className={styles.filter__content__inputs__divider} />
-        <RoomCountDropdown
-          onRoomCountChange={onRoomCountChange}
-          value={currentValues.roomCounts}
-        />
-        <div className={styles.filter__content__inputs__divider} />
-        <PriceDropdown
-          onPriceChange={onPriceChange}
-          value={currentValues.priceRange}
-        />
-        <div className={styles.filter__content__inputs__divider} />
+        {isTablet && (
+          <>
+            <HouseTypeDropdown
+              onHouseTypeChange={onHouseTypeChange}
+              value={currentValues.houseTypes}
+            />
+            <div className={styles.filter__content__inputs__divider} />
+            <RoomCountDropdown
+              onRoomCountChange={onRoomCountChange}
+              value={currentValues.roomCounts}
+            />
+            <div className={styles.filter__content__inputs__divider} />
+            <PriceDropdown
+              onPriceChange={onPriceChange}
+              value={currentValues.priceRange}
+            />
+            <div className={styles.filter__content__inputs__divider} />
+          </>
+        )}
 
         <SearchDropdown
           onSearchChange={onSearchChange}
@@ -65,7 +72,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
           className={styles.filter__content__buttonsDesktop__button__show}
           size="medium"
         >
-          Показать 12166 квартир
+          Показать<span> 12166 квартир</span>
         </ActionButton>
         <IconButton
           iconLink="/images/icons/map-orange.svg"
@@ -73,6 +80,24 @@ const FilterContent: React.FC<FilterContentProps> = ({
           className={styles.filter__content__buttonsDesktop__button__filter}
           size="md"
           type="orange-light"
+        />
+      </div>
+      <div className={styles.filter__content__buttonsMobile}>
+        <ActionButton
+          svgSrc="/images/icons/filters-orange.svg"
+          type="secondary"
+          svgWidth={18}
+          svgHeight={16}
+          buttonWidth={48}
+          className={styles.filter__content__buttonsMobile__button}
+        />
+        <ActionButton
+          svgSrc="/images/icons/search-white.svg"
+          type="primary"
+          svgWidth={18}
+          svgHeight={16}
+          buttonWidth={48}
+          className={styles.filter__content__buttonsMobile__button}
         />
       </div>
     </div>
