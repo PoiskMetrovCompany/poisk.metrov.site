@@ -13,7 +13,6 @@
     border: none;
     background: var(--white-white-100, #fff);
     transition: all 0.2s ease;
-    border-left: 2px solid var(--color-gray-white);
 
     &__content {
       display: flex;
@@ -27,7 +26,7 @@
       flex: 1;
       color: var(--color-text-gray);
       font-size: 18px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 150%;
       text-align: left;
       white-space: nowrap;
@@ -74,7 +73,7 @@
     left: 0;
     z-index: 1000;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 50px;
     border-radius: 24px;
     background: #fff;
     box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);

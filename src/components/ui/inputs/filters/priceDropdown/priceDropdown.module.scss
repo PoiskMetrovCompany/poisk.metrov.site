@@ -8,11 +8,9 @@
 
     width: 240px;
     height: 24px;
-    padding-right: 29px;
-    padding-left: 32px;
+    padding-right: 16px;
+    padding-left: 24px;
     border: none;
-    border-right: 2px solid var(--color-gray-white);
-    border-left: 2px solid var(--color-gray-white);
 
     background: var(--white-white-100, #fff);
 
@@ -40,7 +38,7 @@
       flex: 1;
 
       font-size: 16px;
-      font-weight: 400;
+      font-weight: 300;
       color: var(--color-text-gray);
       text-align: left;
 
@@ -68,7 +66,7 @@
 
     overflow: hidden;
 
-    margin-top: 16px;
+    margin-top: 40px;
     border-radius: 24px;
 
     background: #fff;
