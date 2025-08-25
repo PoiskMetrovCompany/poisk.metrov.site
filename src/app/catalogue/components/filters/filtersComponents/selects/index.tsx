@@ -1,7 +1,13 @@
 import React, { FC, RefObject } from "react"
 import styles from "./selects.module.scss"
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
-import { FiltersFormData } from "../../useFilters"
+import {
+  DISTRICT_OPTIONS,
+  BUILDER_OPTIONS,
+  LIVING_ESTATE_OPTIONS,
+  STREET_OPTIONS,
+  METRO_OPTIONS,
+} from "../../types"
 
 interface FilterSelectsProps {
   // Данные формы
@@ -12,145 +18,102 @@ interface FilterSelectsProps {
     street: string
     metro: string
   }
-  
+
   // Состояния показа опций селектов
-  showDistrictOptions: boolean
-  showBuilderOptions: boolean
-  showLivingEstateOptions: boolean
-  showStreetOptions: boolean
-  showMetroOptions: boolean
-  
+  showOptions: Record<string, boolean>
+
   // Рефы
-  districtRef: RefObject<HTMLDivElement | null>
-  builderRef: RefObject<HTMLDivElement | null>
-  livingEstateRef: RefObject<HTMLDivElement | null>
-  streetRef: RefObject<HTMLDivElement | null>
-  metroRef: RefObject<HTMLDivElement | null>
-  
-  // Опции для селектов
-  districtOptions: string[]
-  builderOptions: string[]
-  livingEstateOptions: string[]
-  streetOptions: string[]
-  metroOptions: string[]
-  
+  refs: {
+    district: RefObject<HTMLDivElement | null>
+    builder: RefObject<HTMLDivElement | null>
+    livingEstate: RefObject<HTMLDivElement | null>
+    street: RefObject<HTMLDivElement | null>
+    metro: RefObject<HTMLDivElement | null>
+  }
+
   // Обработчики
-  handleDistrictSelect: (value: string) => void
-  handleBuilderSelect: (value: string) => void
-  handleLivingEstateSelect: (value: string) => void
-  handleStreetSelect: (value: string) => void
-  handleMetroSelect: (value: string) => void
-  handleDistrictToggle: () => void
-  handleBuilderToggle: () => void
-  handleLivingEstateToggle: () => void
-  handleStreetToggle: () => void
-  handleMetroToggle: () => void
+  handleSelectToggle: (field: string) => void
+  handleSelectChange: (
+    field: "district" | "builder" | "livingEstate" | "street" | "metro",
+    value: string
+  ) => void
 }
 
 const FilterSelects: FC<FilterSelectsProps> = ({
   formData,
-  showDistrictOptions,
-  showBuilderOptions,
-  showLivingEstateOptions,
-  showStreetOptions,
-  showMetroOptions,
-  districtRef,
-  builderRef,
-  livingEstateRef,
-  streetRef,
-  metroRef,
-  districtOptions,
-  builderOptions,
-  livingEstateOptions,
-  streetOptions,
-  metroOptions,
-  handleDistrictSelect,
-  handleBuilderSelect,
-  handleLivingEstateSelect,
-  handleStreetSelect,
-  handleMetroSelect,
-  handleDistrictToggle,
-  handleBuilderToggle,
-  handleLivingEstateToggle,
-  handleStreetToggle,
-  handleMetroToggle,
+  showOptions,
+  refs,
+  handleSelectToggle,
+  handleSelectChange,
 }) => {
+  const selectConfigs = [
+    {
+      field: "district",
+      label: "Район",
+      options: DISTRICT_OPTIONS,
+      placeholder: "Район",
+      ref: refs.district,
+    },
+    {
+      field: "builder",
+      label: "Застройщик",
+      options: BUILDER_OPTIONS,
+      placeholder: "Застройщик",
+      ref: refs.builder,
+    },
+    {
+      field: "livingEstate",
+      label: "ЖК",
+      options: LIVING_ESTATE_OPTIONS,
+      placeholder: "ЖК",
+      ref: refs.livingEstate,
+    },
+    {
+      field: "street",
+      label: "Улица",
+      options: STREET_OPTIONS,
+      placeholder: "Улица",
+      ref: refs.street,
+    },
+    {
+      field: "metro",
+      label: "Метро",
+      options: METRO_OPTIONS,
+      placeholder: "Метро",
+      ref: refs.metro,
+    },
+  ]
+
   return (
     <div className={styles.catalogue__filters__container__selects}>
-      {/* Район */}
-      <div ref={districtRef}>
-        <CustomSelect
-          options={districtOptions}
-          placeholder="Район"
-          value={formData.district}
-          show={showDistrictOptions}
-          isLoading={false}
-          error=""
-          onToggle={handleDistrictToggle}
-          onSelect={handleDistrictSelect}
-          className={styles.colorSelect}
-        />
-      </div>
-
-      {/* Застройщик */}
-      <div ref={builderRef}>
-        <CustomSelect
-          options={builderOptions}
-          placeholder="Застройщик"
-          value={formData.builder}
-          show={showBuilderOptions}
-          isLoading={false}
-          error=""
-          onToggle={handleBuilderToggle}
-          onSelect={handleBuilderSelect}
-          className={styles.colorSelect}
-        />
-      </div>
-
-      {/* ЖК */}
-      <div ref={livingEstateRef}>
-        <CustomSelect
-          options={livingEstateOptions}
-          placeholder="ЖК"
-          value={formData.livingEstate}
-          show={showLivingEstateOptions}
-          isLoading={false}
-          error=""
-          onToggle={handleLivingEstateToggle}
-          onSelect={handleLivingEstateSelect}
-          className={styles.colorSelect}
-        />
-      </div>
-
-      {/* Улица */}
-      <div ref={streetRef}>
-        <CustomSelect
-          options={streetOptions}
-          placeholder="Улица"
-          value={formData.street}
-          show={showStreetOptions}
-          isLoading={false}
-          error=""
-          onToggle={handleStreetToggle}
-          onSelect={handleStreetSelect}
-          className={styles.colorSelect}
-        />
-      </div>
-
-      {/* Метро */}
-      <div ref={metroRef}>
-        <CustomSelect
-          options={metroOptions}
-          placeholder="Метро"
-          value={formData.metro}
-          show={showMetroOptions}
-          isLoading={false}
-          error=""
-          onToggle={handleMetroToggle}
-          onSelect={handleMetroSelect}
-          className={styles.colorSelect}
-        />
-      </div>
+      {selectConfigs.map(({ field, label, options, placeholder, ref }) => (
+        <div key={field} className={styles.selectItem}>
+          <div className={styles.selectLabel}>{label}</div>
+          <div className={styles.selectField} ref={ref}>
+            <CustomSelect
+              options={options.map((option) => option.value)}
+              placeholder={placeholder}
+              value={formData[field as keyof typeof formData] as string}
+              show={showOptions[field]}
+              isLoading={false}
+              error=""
+              onToggle={() => handleSelectToggle(field)}
+              onSelect={(value) =>
+                handleSelectChange(
+                  field as
+                    | "district"
+                    | "builder"
+                    | "livingEstate"
+                    | "street"
+                    | "metro",
+                  value
+                )
+              }
+              className={styles.colorSelect}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

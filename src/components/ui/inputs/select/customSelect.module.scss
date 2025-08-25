@@ -34,12 +34,12 @@
     content: "";
 
     position: absolute;
-    top: 1.25rem; /* 20px */
-    right: 1rem; /* 16px */
+    top: 1.5rem;
+    right: 1.5rem;
     transform: rotate(45deg);
 
-    width: 0.625rem; /* 10px */
-    height: 0.625rem; /* 10px */
+    width: 0.45rem;
+    height: 0.45rem;
     border: solid #818181;
     border-width: 0 2px 2px 0;
 
@@ -58,6 +58,10 @@
   @media (width <= 1024px) {
     font-size: 13px;
   }
+
+    @media (width <= 768px) {
+      font-size: 10.5px;
+    }
 }
 
 .selectItems {
@@ -100,6 +104,11 @@
     @media (width <= 1024px) {
       font-size: 13px;
     }
+
+    @media (width <= 768px) {
+      font-size: 10.5px;
+    }
+
   }
 }
 
@@ -133,4 +142,47 @@
   @media (width <= 570px) {
     font-size: 11px;
   }
+}
+
+.required::after {
+  content: "  *";
+  color: #f13131 !important;
+}
+
+.required label::after {
+  content: " *";
+  color: #f13131 !important;
+}
+
+.error {
+  border-color: #e74c3c !important;
+  border-width: 1.5px;
+}
+
+.error:focus {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgb(231 76 60 / 20%);
+}
+
+.errorMessage {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #e74c3c;
+}
+
+.disabled {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.customSelectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+// Стили для обязательных полей с ошибками
+.selectLabel.required.error::after {
+  content: " *";
+  color: #e74c3c !important;
 }

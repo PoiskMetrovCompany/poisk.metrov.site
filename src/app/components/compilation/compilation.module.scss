@@ -51,23 +51,18 @@
 
 .navigationButton {
   cursor: pointer;
-
   position: absolute;
   z-index: 10;
   top: 50%;
   transform: translateY(-50%);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border-radius: 50%;
-
   background: var(--color-white);
-
-  transition: all 0.3s ease;
+  user-select: none;
 
   &::after {
     display: none;
@@ -84,7 +79,10 @@
   }
 
   &:hover {
-    background: var(--color-beige);
+    .navigationButton__icon {
+      filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+        saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+    }
   }
 }
 
@@ -92,7 +90,6 @@
   @media (width <= 768px) {
     position: static !important;
     transform: none !important;
-
     width: 40px;
     height: 40px;
     margin-top: 5px;
@@ -107,7 +104,6 @@
     display: none !important;
   }
 }
-
 
 .navigationButtonDesktop {
   @media (width <= 768px) {

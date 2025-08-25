@@ -6,41 +6,21 @@ import Heading3 from "@/components/ui/heading3"
 import Heading2 from "@/components/ui/heading2"
 import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
-import Image from "next/image"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import RangeSlider from "@/components/ui/rangeSlider"
 import CatalogueFilters from "../catalogueFiltersNavbar"
-import Filters from "../filters"
+import FiltersDialog from "../filters"
 import { IProperty } from "@/types/PropertyCard"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import GetCatalogue from "@/components/getCatalogue"
 import Selection from "@/app/components/selection"
+import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
 
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import NotFound from "@/components/notFound"
-
-const useLockScroll = (lock: boolean) => {
-  useEffect(() => {
-    if (lock) {
-      const scrollY = window.scrollY
-      
-      document.body.style.position = 'fixed'
-      document.body.style.top = `-${scrollY}px`
-      document.body.style.width = '100%'
-    } else {
-      const scrollY = document.body.style.top
-
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.width = ''
-      
-      window.scrollTo(0, parseInt(scrollY || '0') * -1)
-    }
-  }, [lock])
-}
 
 const cards: IProperty[] = [
   {
@@ -143,10 +123,9 @@ const CatalogueList = () => {
   const [isEmpty, setIsEmpty] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
+  const [selectedPropertyType, setSelectedPropertyType] =
+    useState("Жилой комплекс")
   const { isLaptop } = useScreenSize(0)
-
-  // Блокируем скролл когда открыты фильтры
-  useLockScroll(showFilters)
 
   const handleSorting = (sort: SortType) => {
     setSelectedSorting(sort)
@@ -154,10 +133,6 @@ const CatalogueList = () => {
 
   const handleShowFilters = () => {
     setShowFilters(true)
-  }
-
-  const handleCloseFilters = () => {
-    setShowFilters(false)
   }
 
   const applyFilters = () => {
@@ -168,16 +143,6 @@ const CatalogueList = () => {
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
-
-  // Cleanup для случая размонтирования компонента с открытыми фильтрами
-  useEffect(() => {
-    return () => {
-      // Восстанавливаем скролл при размонтировании компонента
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.width = ''
-    }
-  }, [])
 
   const renderCardsWithDreamFlat = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
@@ -249,29 +214,28 @@ const CatalogueList = () => {
       <div className={styles.catalogue__choose}>
         <div className={styles.catalogue__choose__livingSet}>
           <Heading2>
-            Подобрать <span> Жилой комплекс</span>
+            Подобрать{" "}
+            <PropertyTypeSelect
+              defaultValue={selectedPropertyType}
+              onValueChange={setSelectedPropertyType}
+              placeholder="Выберите тип недвижимости"
+              className="inlineSelect"
+            />
           </Heading2>
-          <Image
-            src="images/icons/chevron-down-orange.svg"
-            alt="Нажмите, чтобы раскрыть"
-            width={16}
-            height={16}
-          />
         </div>
 
         <div className={styles.catalogue__choose__favorite}>
-          <Image
-            src="/images/icons/heartOrange.svg"
+          <IconImage
+            iconLink="/images/icons/heartOrange.svg"
             alt="Сохранить поиск"
-            width={26}
-            height={26}
+            className={styles.catalogue__choose__favorite__icon}
           />
-          сохранить поиск
+          Сохранить поиск
         </div>
       </div>
 
       <div className={styles.catalogue__filtersNavbar}>
-        <CatalogueFilters 
+        <CatalogueFilters
           onShowFilters={handleShowFilters}
           onApplyFilters={applyFilters}
         />
@@ -302,11 +266,7 @@ const CatalogueList = () => {
         </div>
       </div>
 
-      {showFilters && (
-        <div className={styles.catalogue__filters}>
-          <Filters onClose={handleCloseFilters} />
-        </div>
-      )}
+      <FiltersDialog open={showFilters} onOpenChange={setShowFilters} />
 
       <div className={styles.catalogue__header}>
         <Heading3>Найдено 102 ЖК из 182</Heading3>
