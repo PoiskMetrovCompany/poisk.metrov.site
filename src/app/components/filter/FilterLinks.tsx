@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./filter.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import Link from "next/link"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 const data = [
   {
@@ -41,23 +42,37 @@ const data = [
   },
 ]
 
+// Функция для сокращения заголовков на маленьких экранах
+const truncateTitle = (title: string): string => {
+  return title
+    .replace(/^Квартиры\s+/, "") // Убираем "Квартиры " в начале строки
+    .replace(/^ЖК\s+/, "") // Убираем "ЖК " в начале строки если есть
+}
+
 const FilterLinks = () => {
+  const { isTablet } = useScreenSize()
+
   return (
     <div className={styles.filterLinks}>
-      {data.map((item) => (
-        <Link
-          href={item.link}
-          className={styles.filterLinks__link}
-          key={item.title}
-        >
-          <IconImage
-            iconLink={item.icon}
-            alt={item.title}
-            className={styles.filterLinks__link__icon}
-          />
-          <p className={styles.filterLinks__link__title}>{item.title}</p>
-        </Link>
-      ))}
+      {data.map((item) => {
+        // На экранах < 1024px показываем сокращенный текст
+        const displayTitle = isTablet ? item.title : truncateTitle(item.title)
+
+        return (
+          <Link
+            href={item.link}
+            className={styles.filterLinks__link}
+            key={item.title}
+          >
+            <IconImage
+              iconLink={item.icon}
+              alt={item.title}
+              className={styles.filterLinks__link__icon}
+            />
+            <p className={styles.filterLinks__link__title}>{displayTitle}</p>
+          </Link>
+        )
+      })}
     </div>
   )
 }

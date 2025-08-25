@@ -185,7 +185,6 @@
         display: none;
       }
     }
-
   }
 
   &__activeFilters {
@@ -256,25 +255,41 @@
 }
 
 .filterLinks {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
   gap: 20px;
   margin-top: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px; // для компенсации возможного скролла
+
+  // Прячем полосу прокрутки для webkit браузеров
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Прячем полосу прокрутки для Firefox
+  scrollbar-width: none;
 
   &__link {
     display: flex;
     gap: 16px;
     flex-direction: column;
-    padding: 20px;
     align-items: flex-start;
     border-radius: 24px;
     border: 1px solid #fff;
     background: rgb(255, 255, 255, 0.5);
     transition: all 0.2s ease;
+    flex-shrink: 0; // предотвращаем сжатие карточек
+
+    // Размеры для экранов >1920px
+    width: 222px;
+    height: 128px;
+    padding: 20px;
 
     &__icon {
       width: 48px;
       height: 48px;
+      position: relative;
+      flex-shrink: 0;
     }
 
     &__title {
@@ -288,6 +303,80 @@
 
     &:hover {
       border: 1px solid var(--color-border-gray-light);
+    }
+
+    // Размеры для экранов <1920px
+    @media (max-width: 1920px) {
+      width: 188px;
+      height: 105px;
+      padding: 16px;
+
+      &__icon {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      &__title {
+        font-size: 14px;
+      }
+    }
+
+    // Размеры для экранов <1440px
+    @media (max-width: 1440px) {
+      width: 168px;
+      height: 88px;
+      padding: 14px;
+
+      &__icon {
+        width: 32px;
+        height: 32px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      &__title {
+        font-size: 13px;
+      }
+    }
+
+    // Размеры для экранов <1024px
+    @media (max-width: 1024px) {
+      width: 112px;
+      height: 76px;
+      padding: 10px;
+      gap: 8px;
+
+      &__icon {
+        width: 28px;
+        height: 28px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      &__title {
+        font-size: 13px; // сохраняем размер с предыдущего breakpoint
+      }
+    }
+
+    // Размеры для экранов <768px
+    @media (max-width: 768px) {
+      width: 88px;
+      height: 66px;
+      padding: 8px;
+      gap: 6px;
+
+      &__icon {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      &__title {
+        font-size: 12px;
+      }
     }
   }
 }

@@ -61,7 +61,7 @@ const Filter = () => {
         />
       )}
 
-      {/* <FilterLinks /> */}
+      <FilterLinks />
     </div>
   )
 }
