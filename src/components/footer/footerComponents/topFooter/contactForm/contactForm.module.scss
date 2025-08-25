@@ -17,7 +17,16 @@
 }
 
 .contactForm {
-  width: 50%;
+  flex: 1;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  &__contactForm {
+    width: 90%;
+  }
 }
 
 .position {

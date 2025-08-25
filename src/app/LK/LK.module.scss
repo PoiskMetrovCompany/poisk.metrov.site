@@ -1,0 +1,65 @@
+@use "@/utils/mixins" as mixins;
+.LK {
+  width: 100%;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    &__header {
+      font-size: 34px;
+      margin-bottom: 40px;
+      @media (max-width: 1919px) {
+        font-size: 22px;
+        margin-bottom: 32px;
+      }
+      @media (max-width: 1440px) {
+        margin-bottom: 24px;
+      }
+      @media (max-width: 1024px) {
+        font-size: 20px;
+      }
+      @media (max-width: 768px) {
+        margin-bottom: 16px;
+      }
+    }
+    &__formSection {
+      display: flex;
+      justify-content: space-between;
+      gap: 340px;
+      @media (max-width: 1919px) {
+        gap: 92px;
+      }
+      @media (max-width: 1440px) {
+        gap: 24px;
+      }
+
+      img {
+        @media (max-width: 1919px) {
+          width: 458px;
+          height: 425px;
+        }
+        @media (max-width: 1440px) {
+          width: 379px;
+          height: 392px;
+        }
+        @media (max-width: 1024px) {
+          display: none;
+        }
+      }
+    }
+    &__getCatalogue {
+      margin-top: 120px;
+      @media (max-width: 1919px) {
+        margin-top: 100px;
+      }
+      @media (max-width: 1440px) {
+        margin-top: 80px;
+      }
+      @media (max-width: 1024px) {
+        margin-top: 64px;
+      }
+    }
+  }
+
+  @include mixins.adaptive-padding;
+}

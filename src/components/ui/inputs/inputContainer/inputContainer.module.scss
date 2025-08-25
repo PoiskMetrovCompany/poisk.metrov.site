@@ -16,12 +16,10 @@
     padding: 24px 32px;
     border: 1.5px solid rgb(210 210 210 / 100%);
     border-radius: 1rem;
-
     font-family: var(--font-onest);
     font-size: 18px;
     font-weight: 300;
     line-height: 1.5;
-
     transition: border-color 0.3s ease;
 
     &::placeholder {
@@ -85,11 +83,9 @@
 
   &__prefix {
     pointer-events: none;
-
     position: absolute;
     z-index: 1;
     left: 0.875rem;
-
     font-size: 1rem;
     font-weight: 400;
     color: #333;
@@ -116,25 +112,21 @@
     z-index: 2;
     top: -0.6875rem;
     left: 18px;
-
     padding: 0 12px;
-
     font-size: 16px;
     font-weight: 400;
     line-height: 1.5;
+    background-color: var(--color-white);
 
     &::before {
       content: "";
-
       position: absolute;
       z-index: -1;
       top: 50%;
       right: 0;
       left: 0;
       transform: translateY(-50%);
-
       height: 2px;
-
       background-color: inherit;
     }
 
