@@ -1,14 +1,17 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import styles from "./filter.module.scss"
 import { useFilters } from "@/utils/hooks/use-filters"
 import ActiveFilters from "./ActiveFilters"
 import FilterLinks from "./FilterLinks"
 import FilterContent from "./FilterContent"
+import FilterDialog from "./FilterDialog"
 import Heading2 from "@/components/ui/heading2"
 
 const Filter = () => {
+  const [showFiltersDialog, setShowFiltersDialog] = useState(false)
+
   const {
     form,
     handlePriceChange,
@@ -19,6 +22,7 @@ const Filter = () => {
     removeRoomCount,
     removePriceRange,
     removeSearchValue,
+    clearAllFilters,
     getPriceDisplayText,
     hasActiveFilters,
     getCurrentValues,
@@ -29,7 +33,7 @@ const Filter = () => {
   }
 
   const onShowFilters = () => {
-    console.log("Показать фильтры")
+    setShowFiltersDialog(true)
   }
 
   const currentValues = getCurrentValues()
@@ -62,6 +66,18 @@ const Filter = () => {
       )}
 
       <FilterLinks />
+
+      <FilterDialog
+        open={showFiltersDialog}
+        onOpenChange={setShowFiltersDialog}
+        currentValues={currentValues}
+        onHouseTypeChange={handleHouseTypeChange}
+        onRoomCountChange={handleRoomCountChange}
+        onPriceChange={handlePriceChange}
+        onSearchChange={handleSearchChange}
+        onApplyFilters={applyFilters}
+        onResetFilters={clearAllFilters}
+      />
     </div>
   )
 }

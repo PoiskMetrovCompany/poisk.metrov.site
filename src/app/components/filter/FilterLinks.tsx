@@ -42,11 +42,10 @@ const data = [
   },
 ]
 
-// Функция для сокращения заголовков на маленьких экранах
 const truncateTitle = (title: string): string => {
   return title
-    .replace(/^Квартиры\s+/, "") // Убираем "Квартиры " в начале строки
-    .replace(/^ЖК\s+/, "") // Убираем "ЖК " в начале строки если есть
+    .replace(/^Квартиры\s+/, "") 
+    .replace(/^ЖК\s+/, "") 
 }
 
 const FilterLinks = () => {
@@ -55,7 +54,6 @@ const FilterLinks = () => {
   return (
     <div className={styles.filterLinks}>
       {data.map((item) => {
-        // На экранах < 1024px показываем сокращенный текст
         const displayTitle = isTablet ? item.title : truncateTitle(item.title)
 
         return (

@@ -78,7 +78,7 @@
         display: none;
       }
 
-      @media (width <= 1090px) {
+      @media (width <= 1024px) {
         padding-left: 0;
       }
     }
@@ -125,7 +125,7 @@
     &__buttonsMobile {
       display: none;
 
-      @media (width <= 1090px) {
+      @media (width <= 1024px) {
         display: flex;
         gap: 4px;
       }
@@ -181,7 +181,7 @@
         }
       }
 
-      @media (width <= 1090px) {
+      @media (width <= 1024px) {
         display: none;
       }
     }
@@ -258,10 +258,10 @@
   display: flex;
   gap: 20px;
   margin-top: 24px;
+  justify-content: space-between;
   overflow-x: auto;
-  padding-bottom: 4px; // для компенсации возможного скролла
+  padding-bottom: 4px;
 
-  // Прячем полосу прокрутки для webkit браузеров
   &::-webkit-scrollbar {
     display: none;
   }
@@ -279,8 +279,6 @@
     background: rgb(255, 255, 255, 0.5);
     transition: all 0.2s ease;
     flex-shrink: 0; // предотвращаем сжатие карточек
-
-    // Размеры для экранов >1920px
     width: 222px;
     height: 128px;
     padding: 20px;

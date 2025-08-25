@@ -13,6 +13,7 @@
     @media (max-width: 1440px) {
       width: 140px;
     }
+
     height: 24px;
     padding-right: 16px;
     padding-left: 24px;
@@ -83,7 +84,14 @@
     border-radius: 24px;
     background: #fff;
     box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
-    min-width: 240px;
+    max-width: 360px;
+    animation: slide-down-and-fade 0.2s ease-out;
+    @media (max-width: 1920px) {
+      max-width: 296px;
+    }
+    @media (max-width: 1440px) {
+      max-width: 256px;
+    }
 
     &__inner {
       padding: 16px;
@@ -93,6 +101,10 @@
   &__row {
     display: flex;
     gap: 12px;
+    @media (max-width: 1920px) {
+      gap: 8px;
+    }
+
     margin-bottom: 12px;
 
     &:last-child {
@@ -106,6 +118,19 @@
     justify-content: center;
     min-width: 56px;
     height: 56px;
+
+    @media (max-width: 1920px) {
+      width: 48px;
+      min-width: auto;
+      height: 48px;
+      border-radius: 16px;
+    }
+    @media (max-width: 1440px) {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
     padding: 0 12px;
     border: 1px solid var(--color-gray-white, #e5e5e5);
     border-radius: 20px;
@@ -120,6 +145,15 @@
 
     &__studio {
       padding: 0 24px;
+
+      @media (max-width: 1920px) {
+        width: auto;
+        min-width: 64px;
+      }
+      @media (max-width: 1440px) {
+        width: auto;
+        min-width: 56px;
+      }
     }
 
     &:hover {
@@ -129,13 +163,13 @@
     }
 
     &--selected {
-      border: 1px solid rgba(236, 125, 63, 0.1);
-      background: rgba(236, 125, 63, 0.1);
+      border: 1px solid rgb(236, 125, 63, 0.1);
+      background: rgb(236, 125, 63, 0.1);
       color: var(--color-orange);
 
       &:hover {
-        border: 1px solid rgba(236, 125, 63, 0.1);
-        background: rgba(236, 125, 63, 0.1);
+        border: 1px solid rgb(236, 125, 63, 0.1);
+        background: rgb(236, 125, 63, 0.1);
         color: var(--color-orange);
       }
     }
@@ -145,11 +179,6 @@
     //   outline-offset: 2px;
     // }
   }
-}
-
-// Анимация для контента
-.roomCountDropdown__content {
-  animation: slide-down-and-fade 0.2s ease-out;
 }
 
 @keyframes slide-down-and-fade {

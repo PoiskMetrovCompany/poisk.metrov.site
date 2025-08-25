@@ -83,21 +83,21 @@ const FilterContent: React.FC<FilterContentProps> = ({
         />
       </div>
       <div className={styles.filter__content__buttonsMobile}>
-        <ActionButton
-          svgSrc="/images/icons/filters-orange.svg"
+        <IconButton
+          iconLink="/images/icons/filters-orange.svg"
           type="secondary"
-          svgWidth={18}
-          svgHeight={16}
-          buttonWidth={48}
+          size="md"
+          onClick={onShowFilters}
           className={styles.filter__content__buttonsMobile__button}
+          alt="Показать фильтры"
         />
-        <ActionButton
-          svgSrc="/images/icons/search-white.svg"
-          type="primary"
-          svgWidth={18}
-          svgHeight={16}
-          buttonWidth={48}
+        <IconButton
+          iconLink="/images/icons/search-white.svg"
+          type="orange"
+          size="md"
+          onClick={onApplyFilters}
           className={styles.filter__content__buttonsMobile__button}
+          alt="Найти"
         />
       </div>
     </div>
