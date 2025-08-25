@@ -19,10 +19,13 @@
 }
 
 .divider{
-    // display: none;
+    display: none;
     margin: 20px 0;
     width: 100%;
     border: 1px solid var( --color-text-black);
+    @media (max-width: 1024px) {
+        display: block;
+    }
 }
 
 @media (max-width: 1024px) {
