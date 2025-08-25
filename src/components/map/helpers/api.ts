@@ -1,4 +1,4 @@
-import { InfrastructureItem } from "./variables"
+import { InfrastructureItem } from "../variables/variables"
 
 export const getInfrastructureByType = async (
   type: string,

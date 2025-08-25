@@ -2,7 +2,7 @@
 
 import React from "react"
 import styles from "./dropdown.module.scss"
-import { Select } from "radix-ui"
+import * as Select from "@radix-ui/react-select"
 import Image from "next/image"
 import clsx from "clsx"
 
@@ -24,7 +24,7 @@ const Dropdown = ({
   label,
 }: DropdownProps) => {
   return (
-    <Select.Root value={value} onValueChange={onChange}>
+    <Select.Root open={true} value={value} onValueChange={onChange}>
       <Select.Trigger
         className={clsx(styles.dropdown, className)}
         aria-label="Food"
@@ -47,7 +47,7 @@ const Dropdown = ({
           align="center"
           position="popper"
           alignOffset={300}
-          sideOffset={0}
+          sideOffset={4}
         >
           <Select.ScrollUpButton className={styles.ScrollButton}>
             <Image

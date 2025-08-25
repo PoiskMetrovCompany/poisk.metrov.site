@@ -4,7 +4,7 @@ export const cityCenterCooridnates: Record<string, LngLat> = {
   novosibirsk: [82.93668458845691, 55.01091579282242],
   "st-petersburg": [30.5, 60],
   "black-sea": [39.8, 43.5],
-  crimea: [34.4, 45],
+  crim: [34.4, 45],
   moscow: [37.7, 55.8],
   chelyabinsk: [61.45, 55.15],
   ekaterinburg: [60.7, 56.85],

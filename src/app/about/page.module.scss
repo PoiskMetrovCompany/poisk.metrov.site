@@ -1,5 +1,13 @@
+@use "@/utils/mixins" as mixins;
+
 .aboutPage {
   display: flex;
   flex-direction: column;
   gap: 120px;
+
+  @include mixins.adaptive-padding;
+}
+
+.apartmentSelection {
+  margin: 0 !important;
 }

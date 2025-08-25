@@ -2,10 +2,15 @@ import React from "react"
 import styles from "./selection.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import clsx from "clsx"
 
-const Selection = () => {
+interface ApartmentSelectionProps {
+  className?: string
+}
+
+const ApartmentSelection = ({ className }: ApartmentSelectionProps) => {
   return (
-    <div className={styles.selection}>
+    <div className={clsx(styles.selection, className)}>
       <IconImage
         className={styles.selection__bg}
         iconLink="/images/backgrounds/selection.svg"
@@ -32,4 +37,4 @@ const Selection = () => {
   )
 }
 
-export default Selection
+export default ApartmentSelection

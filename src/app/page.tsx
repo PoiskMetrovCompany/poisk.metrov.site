@@ -6,7 +6,7 @@ import Work from "./components/work"
 import Partners from "./components/partners"
 import Rating from "./components/rating"
 import Download from "./components/download"
-import Selection from "./components/selection"
+import Selection from "../components/apartmentSelection"
 import Favourites from "./components/favourites"
 
 const partnersData = [
@@ -34,7 +34,11 @@ export default function Home() {
         <Mortage />
         <Compilation header="Подборка квартир" hasPromoCard={true} />
         <Work />
-        <Partners logos={partnersData} headingText="Партнеры, которые нам" highlightedText="доверяют" />
+        <Partners
+          logos={partnersData}
+          headingText="Партнеры, которые нам"
+          highlightedText="доверяют"
+        />
         <Rating />
         <Download />
         <Selection />

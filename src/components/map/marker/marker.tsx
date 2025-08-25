@@ -3,8 +3,10 @@
 import { YMap } from "@yandex/ymaps3-types"
 import React, { memo, useCallback, useEffect, useRef, useState } from "react"
 import { ReactifyApi } from "@/providers/map-provider"
-import type { Place } from "./variables"
-import getPopupPosition from "../helpers/getPosition"
+import type { Place } from "../variables/variables"
+import getPopupPosition from "../../../app/details/components/location/helpers/getPosition"
+import styles from "./marker.module.scss"
+import Image from "next/image"
 
 interface MarkerWithPopupProps {
   mapRef: React.MutableRefObject<(YMap & { container: HTMLElement }) | null>
@@ -57,21 +59,29 @@ const MarkerWithPopup = ({
       coordinates={[place.longitude, place.latitude]}
     >
       <div
-        onMouseEnter={() => selectPlace(place.id)}
-        onMouseLeave={() => selectPlace(null)}
+      // onMouseEnter={() => selectPlace(place.id)}
+      // onMouseLeave={() => selectPlace(null)}
       >
-        <div
-          ref={markerRef}
-          className="absolute bottom-0 transform -translate-x-1/2 flex flex-col items-center"
-        >
+        <div ref={markerRef} className={styles.markerContainer}>
           {icon ? (
-            <div className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
-              <img src={icon} alt={place.label} className="w-5 h-5" />
+            <div className={styles.markerWithIcon}>
+              <div className={styles.iconContainer}>
+                <Image
+                  src={icon}
+                  alt={place.label}
+                  className={styles.icon}
+                  width={64}
+                  height={64}
+                />
+              </div>
+              <div className={styles.textContainer}>
+                <span className={styles.text}>{place.label}</span>
+              </div>
             </div>
           ) : (
             <div
-              className={`text-white whitespace-nowrap py-1 px-2 rounded text-sm shadow ${
-                selected ? "bg-slate-600" : "bg-slate-700"
+              className={`${styles.defaultMarker} ${
+                selected ? styles.selected : styles.default
               }`}
             >
               {place.label}
@@ -79,14 +89,10 @@ const MarkerWithPopup = ({
           )}
         </div>
         {selected ? (
-          <div
-            ref={popupRef}
-            className="absolute transform -translate-x-1/2 transition-opacity"
-            style={{ ...position }}
-          >
-            <div className="bg-slate-700 text-slate-300 min-w-[320px] p-4 rounded-lg text-sm shadow w-full h-full">
-              <div className="text-lg text-white">{place.label}</div>
-              <div className="text-sm">{place.text}</div>
+          <div ref={popupRef} className={styles.popup} style={{ ...position }}>
+            <div className={styles.popupContent}>
+              <div className={styles.popupTitle}>{place.label}</div>
+              <div className={styles.popupText}>{place.label}</div>
             </div>
           </div>
         ) : null}

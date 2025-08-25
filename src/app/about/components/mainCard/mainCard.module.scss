@@ -1,0 +1,137 @@
+.mainCard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    position: relative;
+
+    justify-content: space-between;
+
+    border-radius: 64px;
+    background: var(--color-white);
+
+    padding: 64px 0 64px 80px;
+
+    height: 580px;
+
+    overflow: hidden;
+
+    &__image {
+      position: absolute;
+      right: -300px;
+      top: -110px;
+
+      width: 1322px;
+      height: 694px;
+
+      background-image: url("/images/about/main-card-bg.webp");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    &__text {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+
+      &__heading {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+
+        &__title {
+          display: flex;
+          gap: 20px;
+
+          &__icon {
+            width: 56px;
+            height: 56px;
+          }
+
+          &__text {
+            color: var(--color-orange);
+
+            font-size: 56px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 130%;
+          }
+        }
+
+        &__text {
+          color: var(--color-black);
+
+          font-size: 56px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 130%;
+          max-width: 900px;
+        }
+      }
+
+      &__description {
+        color: var(--color-black);
+
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        max-width: 680px;
+      }
+    }
+
+    &__button {
+      width: fit-content !important;
+    }
+  }
+
+  &__info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+
+    &__item {
+      display: flex;
+      padding: 24px;
+      align-items: center;
+      gap: 16px;
+      border-radius: 32px;
+      background: var(--color-white);
+
+      &__icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        &__count {
+          color: var(--color-black);
+
+          font-size: 44px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 130%;
+          text-transform: uppercase;
+        }
+
+        &__description {
+          color: var(--color-text-gray);
+
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 150%;
+        }
+      }
+    }
+  }
+}

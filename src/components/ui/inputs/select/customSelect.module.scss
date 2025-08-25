@@ -47,7 +47,7 @@
   }
 
   &.selectArrowActive::after {
-    top: 1.25rem; /* 20px */
+    // top: 1.25rem; /* 20px */
     transform: rotate(-135deg);
   }
 
@@ -59,9 +59,9 @@
     font-size: 13px;
   }
 
-    @media (width <= 768px) {
-      font-size: 10.5px;
-    }
+  @media (width <= 768px) {
+    font-size: 10.5px;
+  }
 }
 
 .selectItems {
@@ -108,7 +108,6 @@
     @media (width <= 768px) {
       font-size: 10.5px;
     }
-
   }
 }
 
