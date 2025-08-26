@@ -1,21 +1,21 @@
 .where {
-  display: flex;
-  padding: 120px 40px 120px 80px;
   align-items: center;
-  gap: 40px;
-  justify-content: space-between;
-  border-radius: 64px;
-  height: 746px;
 
   background: linear-gradient(
     222deg,
     rgba(228, 98, 25, 0.15) 23.1%,
     rgba(236, 125, 63, 0.15) 76.5%
   );
+  border-radius: 64px;
+  display: flex;
+  gap: 40px;
+  height: 746px;
+  justify-content: space-between;
+  padding: 120px 40px 120px 80px;
 
   &__info {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 64px;
 
@@ -51,13 +51,13 @@
     }
 
     &__button {
-      width: 308px !important;
       height: 72px !important;
+      width: 308px !important;
     }
   }
 
   &__map {
-    width: 923px;
     height: 506px;
+    width: 923px;
   }
 }
