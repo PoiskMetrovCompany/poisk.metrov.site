@@ -5,6 +5,7 @@ import IconImage from "@/components/ui/IconImage"
 
 interface SearchDropdownProps {
   onSearchChange?: (value: string) => void
+  value?: string
 }
 
 type searchItemType = "metro" | "complex" | "adress"
@@ -44,8 +45,11 @@ const searchItemsAdress: IsearchItem[] = [
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
 ]
 
-const SearchDropdown: FC<SearchDropdownProps> = ({ onSearchChange }) => {
-  const [inputValue, setInputValue] = useState("")
+const SearchDropdown: FC<SearchDropdownProps> = ({
+  onSearchChange,
+  value = "",
+}) => {
+  const [inputValue, setInputValue] = useState(value)
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -100,6 +104,11 @@ const SearchDropdown: FC<SearchDropdownProps> = ({ onSearchChange }) => {
       inputRef.current?.focus()
     }, 0)
   }
+
+  // Синхронизируем локальное состояние с внешним значением
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
 
   // Очищаем таймаут при размонтировании
   useEffect(() => {

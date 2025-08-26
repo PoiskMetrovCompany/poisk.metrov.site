@@ -5,8 +5,8 @@ import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconImage from "@/components/ui/IconImage"
 import IconButton from "@/components/ui/buttons/IconButton"
-import PriceDropdown from "../filters/priceDropdown"
-import SearchDropdown from "../filters/searchDropdown"
+import PriceDropdown from "../../../../components/ui/inputs/filters/priceDropdown"
+import SearchDropdown from "../../../../components/ui/inputs/filters/searchDropdown"
 
 interface CatalogueFiltersProps {
   onShowFilters: () => void
@@ -18,7 +18,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
     console.log("Фильтры применены")
   }
 
-  const handlePriceChange = (range: [number, number]) => {
+  const handlePriceChange = (range: [number | null, number | null]) => {
     console.log("Диапазон цен изменен:", range)
   }
 
