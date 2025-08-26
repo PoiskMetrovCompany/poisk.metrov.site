@@ -1,7 +1,9 @@
 import React from "react"
+
 import styles from "./mainCard.module.scss"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+
 import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
 
 const info = [
   {
@@ -44,7 +46,7 @@ const MainCard = () => {
               </h2>
             </div>
             <div className={styles.mainCard__card__text__heading__text}>
-              бесплатный сервис бронирования новостроек
+              бесплатный сервис <br /> бронирования новостроек
             </div>
           </div>
           <p className={styles.mainCard__card__text__description}>
@@ -58,23 +60,19 @@ const MainCard = () => {
       </div>
 
       <div className={styles.mainCard__info}>
-        {info.map((item) => (
-          <div className={styles.mainCard__info__item} key={item.description}>
-            <IconImage
-              className={styles.mainCard__info__item__icon}
-              iconLink={item.icon}
-              alt={item.description}
-            />
-            <div className={styles.mainCard__info__item__text}>
-              <div className={styles.mainCard__info__item__text__count}>
-                {item.count}
-              </div>
-              <div className={styles.mainCard__info__item__text__description}>
-                {item.description}
-              </div>
+        <div className={styles.mainCard__info__item}>
+          <IconImage
+            className={styles.mainCard__info__item__icon}
+            iconLink={"/images/icons/about/ruble.svg"}
+            alt={"about"}
+          />
+          <div className={styles.mainCard__info__item__text}>
+            <div className={styles.mainCard__info__item__text__count}>200+</div>
+            <div className={styles.mainCard__info__item__text__description}>
+              Банков-партнеров
             </div>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   )

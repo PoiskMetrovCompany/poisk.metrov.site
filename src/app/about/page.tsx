@@ -18,7 +18,7 @@ const AboutPage = () => {
   return (
     <div className={styles.aboutPage}>
       <MainCard />
-      <Quote />
+      {/* <Quote />
       <Where />
       <About />
       <Escort />
@@ -27,7 +27,7 @@ const AboutPage = () => {
       <ApartmentSelection className={styles.apartmentSelection} />
       <MapProvider>
         <Location />
-      </MapProvider>
+      </MapProvider> */}
     </div>
   )
 }
