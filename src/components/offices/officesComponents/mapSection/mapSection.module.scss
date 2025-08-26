@@ -1,0 +1,11 @@
+.Offices {
+  &__mapSection {
+    margin-bottom: 120px;
+    width: 100%;
+    &__container {
+      display: flex;
+      gap: 40px;
+      justify-content: space-between;
+    }
+  }
+}

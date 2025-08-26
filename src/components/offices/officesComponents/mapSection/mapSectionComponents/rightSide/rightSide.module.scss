@@ -1,0 +1,11 @@
+.Offices{
+  &__mapSection{
+    &__container{
+      &__rightSide{
+        flex: 1;
+        background-color: var(--color-white);
+        border-radius: 40px;
+      }
+    }
+  }
+}
