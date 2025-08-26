@@ -29,6 +29,10 @@
   border-radius: 64px;
   background: var(--color-white);
 
+  &__dropdown {
+    margin-top: 5px;
+  }
+
   &__info {
     list-style: none;
     padding: 0;
