@@ -5,29 +5,6 @@ import styles from "./mainCard.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 
-const info = [
-  {
-    icon: "/images/icons/about/ruble.svg",
-    count: "200+",
-    description: "Банков-партнеров",
-  },
-  {
-    icon: "/images/icons/about/house.svg",
-    count: "300+",
-    description: "Объектов недвижимости",
-  },
-  {
-    icon: "/images/icons/about/expert.svg",
-    count: "200+",
-    description: "Экспертов по жилью",
-  },
-  {
-    icon: "/images/icons/about/face.svg",
-    count: "200+",
-    description: "Успешных сделок",
-  },
-]
-
 const MainCard = () => {
   return (
     <div className={styles.mainCard}>
@@ -70,6 +47,45 @@ const MainCard = () => {
             <div className={styles.mainCard__info__item__text__count}>200+</div>
             <div className={styles.mainCard__info__item__text__description}>
               Банков-партнеров
+            </div>
+          </div>
+        </div>
+        <div className={styles.mainCard__info__item}>
+          <IconImage
+            className={styles.mainCard__info__item__icon}
+            iconLink={"/images/icons/about/house.svg"}
+            alt={"house"}
+          />
+          <div className={styles.mainCard__info__item__text}>
+            <div className={styles.mainCard__info__item__text__count}>300+</div>
+            <div className={styles.mainCard__info__item__text__description}>
+              Объектов <span>недвижимости</span>
+            </div>
+          </div>
+        </div>
+        <div className={styles.mainCard__info__item}>
+          <IconImage
+            className={styles.mainCard__info__item__icon}
+            iconLink={"/images/icons/about/expert.svg"}
+            alt={"expert"}
+          />
+          <div className={styles.mainCard__info__item__text}>
+            <div className={styles.mainCard__info__item__text__count}>200+</div>
+            <div className={styles.mainCard__info__item__text__description}>
+              Экспертов по жилью
+            </div>
+          </div>
+        </div>
+        <div className={styles.mainCard__info__item}>
+          <IconImage
+            className={styles.mainCard__info__item__icon}
+            iconLink={"/images/icons/about/face.svg"}
+            alt={"face"}
+          />
+          <div className={styles.mainCard__info__item__text}>
+            <div className={styles.mainCard__info__item__text__count}>200+</div>
+            <div className={styles.mainCard__info__item__text__description}>
+              Успешных сделок
             </div>
           </div>
         </div>

@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
+
 import styles from "./location.module.scss"
+
 import { Map } from "../../../../components/map/map"
 import { Place } from "../../../../components/map/variables/variables"
+
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
-
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
 // Enum для городов
@@ -68,6 +70,7 @@ const Location = () => {
       <div className={styles.locationSelector}>
         <CustomSelect
           className={styles.locationSelector__dropdown}
+          labelClassName={styles.locationSelector__dropdown__label}
           label="Офис"
           placeholder="Выберите город"
           value={currentCityData.name}
@@ -143,6 +146,7 @@ const Location = () => {
         </ActionButton>
       </div>
       <Map
+        className={styles.location__map}
         viewLocation={currentCityData.coordinates}
         places={[locationPlace]}
       />

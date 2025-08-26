@@ -1,7 +1,9 @@
 import React from "react"
+
 import styles from "./where.module.scss"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+
 import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
 
 const Where = () => {
   return (
@@ -22,11 +24,7 @@ const Where = () => {
           Получить консультацию
         </ActionButton>
       </div>
-      <IconImage
-        className={styles.where__map}
-        iconLink="/images/about/map.svg"
-        alt="map"
-      />
+      <div className={styles.where__map} />
     </div>
   )
 }

@@ -1,5 +1,8 @@
-import ActionButton from "@/components/ui/buttons/ActionButton"
+import clsx from "clsx"
+
 import styles from "./escort.module.scss"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
 
 const Escort = () => {
   return (
@@ -62,6 +65,15 @@ const Escort = () => {
           </div>
         </div>
       </div>
+      <ActionButton
+        type="secondary"
+        className={clsx(
+          styles.escort__title__button,
+          styles.escort__title__button__mobile
+        )}
+      >
+        Получить консультацию
+      </ActionButton>
     </div>
   )
 }

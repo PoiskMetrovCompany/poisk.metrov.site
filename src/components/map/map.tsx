@@ -1,27 +1,32 @@
 "use client"
 
 import { YMap, YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap"
-import React, { useRef, useState, useCallback, useEffect, useMemo } from "react"
+import clsx from "clsx"
+
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { useMap } from "@/providers/map-provider"
-
-import MarkerWithPopup from "./marker/marker"
-import { Place, InfrastructureItem } from "./variables/variables"
-import styles from "./map.module.scss"
 import useDebounce from "@/utils/hooks/use-debounce"
-import { cityCenterCooridnates } from "./variables/cityCoordinates"
+
+import styles from "./map.module.scss"
+
 import { getCachedInfrastructure } from "./helpers/api"
+import MarkerWithPopup from "./marker/marker"
+import { cityCenterCooridnates } from "./variables/cityCoordinates"
+import { InfrastructureItem, Place } from "./variables/variables"
 
 interface MapProps {
   places?: Place[]
   selectedInfrastructure?: string[]
   viewLocation?: [number, number]
+  className?: string
 }
 
 export const Map = ({
   places,
   selectedInfrastructure = [],
   viewLocation,
+  className,
 }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
 
@@ -99,7 +104,7 @@ export const Map = ({
     filteredInfrastructure.length > 0 || (places && places.length > 0)
 
   return (
-    <div className={styles.mapContainer}>
+    <div className={clsx(styles.mapContainer, className)}>
       <YMap
         className={styles.map}
         margin={[20, 20, 20, 20]}

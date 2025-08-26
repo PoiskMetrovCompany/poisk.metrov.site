@@ -1,14 +1,29 @@
-import React from "react"
-import styles from "./questions.module.scss"
-import Heading2 from "@/components/ui/heading2"
-import ActionButton from "@/components/ui/buttons/ActionButton"
 import * as Accordion from "@radix-ui/react-accordion"
+import clsx from "clsx"
+
+import React from "react"
+
+import styles from "./questions.module.scss"
+
 import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Heading2 from "@/components/ui/heading2"
 
 const Questions = () => {
   return (
     <div className={styles.questions}>
-      <Heading2>Часто задаваемые вопросы</Heading2>
+      <Heading2 className={styles.questions__heading}>
+        Часто задаваемые вопросы{" "}
+        <ActionButton
+          type="secondary"
+          className={clsx(
+            styles.questions__content__consultation__button,
+            styles.questions__content__consultation__button__heading
+          )}
+        >
+          Получить консультацию
+        </ActionButton>
+      </Heading2>
       <div className={styles.questions__content}>
         <div className={styles.questions__content__list}>
           <Accordion.Root
@@ -242,9 +257,22 @@ const Questions = () => {
               <br /> мы свяжемся с вами
             </p>
           </div>
-          <ActionButton>Получить консультацию</ActionButton>
+          <ActionButton
+            className={styles.questions__content__consultation__button}
+          >
+            Получить консультацию
+          </ActionButton>
         </div>
       </div>
+      <ActionButton
+        type="secondary"
+        className={clsx(
+          styles.questions__content__consultation__button,
+          styles.questions__content__consultation__button__mobile
+        )}
+      >
+        Получить консультацию
+      </ActionButton>
     </div>
   )
 }
