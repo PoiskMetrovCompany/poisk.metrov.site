@@ -10,7 +10,6 @@
       gap: 12px;
       align-items: center;
       justify-content: center;
-
       margin-top: 12px;
 
       &__button {
@@ -49,12 +48,7 @@
     z-index: 9999;
     top: 0;
     left: 0;
-
     overflow-y: auto;
-
-    // width: 100vw;
-    // height: 100vh;
-
     width: 1000px;
     height: 688px;
 
@@ -63,7 +57,6 @@
       width: 100%;
       min-height: 100vh;
       padding: 20px;
-
       background: var(--color-white);
 
       &__showFlats {
@@ -83,7 +76,6 @@
             flex-wrap: wrap;
             gap: 8px;
             justify-content: flex-start;
-
             margin-top: 8px;
           }
         }
@@ -110,13 +102,10 @@
         position: sticky;
         z-index: 10;
         top: 0;
-
         display: flex;
         justify-content: space-between;
-
         margin-bottom: 32px;
         padding: 20px 0 10px;
-
         background: var(--color-white);
 
         &__text {
@@ -125,13 +114,10 @@
 
         &__link {
           cursor: pointer;
-
           display: flex;
           gap: 5px;
           align-items: center;
-
           width: 87px;
-
           font-size: 13px;
           color: var(--color-blue);
         }
@@ -164,11 +150,9 @@
 
     &__favorite {
       cursor: pointer;
-
       display: flex;
       gap: 8px;
       align-items: center;
-
       font-size: 18px;
       font-weight: 500;
       line-height: 150%;
