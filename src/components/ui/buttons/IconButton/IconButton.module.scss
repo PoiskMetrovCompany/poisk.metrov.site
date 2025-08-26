@@ -174,6 +174,18 @@
     }
   }
 
+  &_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+      .iconButton__icon {
+        filter: none;
+      }
+    }
+  }
+
   &_orangeLight {
     border: none;
     background-color: rgb(236 125 63 / 20%);

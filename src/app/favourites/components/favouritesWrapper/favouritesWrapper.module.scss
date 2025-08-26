@@ -1,3 +1,9 @@
+@use "@/utils/mixins" as mixins;
+
+.title {
+  @include mixins.adaptive-heading-margin;
+}
+
 .favouritesWrapper {
   display: flex;
   gap: 40px;
