@@ -1,16 +1,20 @@
-import React from "react"
-import styles from "./IconButton.module.scss"
-import Image from "next/image"
 import clsx from "clsx"
+
+import React from "react"
+
+import Image from "next/image"
+
+import styles from "./IconButton.module.scss"
 
 type IconButtonProps = {
   iconLink: string
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
   iconClassName?: string
   size?: "sm" | "md" | "lg" | "tiny"
   type?: "primary" | "secondary" | "orange" | "orange-light"
   alt?: string
+  disabled?: boolean
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -21,6 +25,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   size = "md",
   type = "primary",
   alt,
+  disabled = false,
 }) => {
   return (
     <button
@@ -33,8 +38,10 @@ const IconButton: React.FC<IconButtonProps> = ({
         [styles.iconButton_secondary]: type === "secondary",
         [styles.iconButton_orange]: type === "orange",
         [styles.iconButton_orangeLight]: type === "orange-light",
+        [styles.iconButton_disabled]: disabled,
       })}
       onClick={onClick}
+      disabled={disabled}
     >
       <div
         className={clsx(styles.iconButton__icon, iconClassName, {

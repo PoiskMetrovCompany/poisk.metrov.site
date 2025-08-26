@@ -4,7 +4,11 @@ import DropdownFilter from "@/components/ui/inputs/dropdownFilter"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconImage from "@/components/ui/IconImage"
 
-const ListFilter = () => {
+interface IListFilterProps {
+  setIsComparison: (isComparison: boolean) => void
+}
+
+const ListFilter = ({ setIsComparison }: IListFilterProps) => {
   return (
     <div className={styles.listFilter}>
       <DropdownFilter
@@ -23,6 +27,7 @@ const ListFilter = () => {
           type="outline-white"
           size="small"
           className={styles.listFilter__show__button}
+          onClick={() => setIsComparison(true)}
         >
           <div className={styles.listFilter__show__button__content}>
             <IconImage

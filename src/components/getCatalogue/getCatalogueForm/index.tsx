@@ -1,3 +1,4 @@
+"use client"
 import React, { FC, useState } from "react"
 import styles from "./leftSide.module.scss"
 import ActionButton from "@/components/ui/buttons/ActionButton"

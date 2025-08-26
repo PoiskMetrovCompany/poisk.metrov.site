@@ -8,6 +8,7 @@ import Rating from "./components/rating"
 import Download from "./components/download"
 import Selection from "../components/apartmentSelection"
 import Favourites from "./components/favourites"
+import Filter from "./components/filter"
 
 const partnersData = [
   { src: "/images/partners/akvilon.webp", alt: "Akvilon" },
@@ -30,6 +31,7 @@ export default function Home() {
     <div className={styles.main}>
       <div className={styles.main__container}>
         <HeaderCards />
+        <Filter />
         <Favourites />
         <Mortage />
         <Compilation header="Подборка квартир" hasPromoCard={true} />
