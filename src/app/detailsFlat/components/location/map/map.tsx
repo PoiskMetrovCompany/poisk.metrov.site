@@ -115,7 +115,6 @@ export const Map = ({ places, selectedInfrastructure = [] }: MapProps) => {
               place={{
                 id: item.id,
                 label: item.name,
-                text: item.name,
                 longitude: item.longitude,
                 latitude: item.latitude,
               }}

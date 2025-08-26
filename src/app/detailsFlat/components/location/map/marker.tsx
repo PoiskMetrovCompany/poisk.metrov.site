@@ -86,7 +86,7 @@ const MarkerWithPopup = ({
           >
             <div className="bg-slate-700 text-slate-300 min-w-[320px] p-4 rounded-lg text-sm shadow w-full h-full">
               <div className="text-lg text-white">{place.label}</div>
-              <div className="text-sm">{place.text}</div>
+              <div className="text-sm">{place.label}</div>
             </div>
           </div>
         ) : null}
