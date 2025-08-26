@@ -1,54 +1,53 @@
 .location {
-  width: 100%;
   height: 680px;
   position: relative;
+  width: 100%;
 
   &__dropdown {
-    width: 100%;
-
     background: var(--color-white);
+    width: 100%;
   }
 }
 
 .locationSelector {
-  z-index: 1;
-  position: absolute;
-  top: 48px;
-  left: 48px;
-
-  display: flex;
-  width: 573px;
-  height: 584px;
-  padding: 48px 56px;
-  flex-direction: column;
   align-items: flex-start;
-  gap: 39px;
-  justify-content: space-between;
-  flex-shrink: 0;
+  background: var(--color-white);
 
   border-radius: 64px;
-  background: var(--color-white);
+
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 39px;
+  height: 584px;
+  justify-content: space-between;
+  left: 48px;
+  padding: 48px 56px;
+  position: absolute;
+  top: 48px;
+  width: 573px;
+  z-index: 1;
 
   &__dropdown {
     margin-top: 5px;
   }
 
   &__info {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
     &__item {
-      display: flex;
       align-items: center;
+      display: flex;
       gap: 20px;
 
       &__icon {
-        width: 56px;
         height: 56px;
+        width: 56px;
       }
 
       &__text {

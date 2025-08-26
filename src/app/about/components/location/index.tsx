@@ -1,29 +1,28 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
+
 import styles from "./location.module.scss"
+
 import { Map } from "../../../../components/map/map"
 import { Place } from "../../../../components/map/variables/variables"
+
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
-
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
-// Enum для городов
 enum City {
   NOVOSIBIRSK = "novosibirsk",
   SPB = "spb",
   CRIM = "crim",
 }
 
-// Маппинг названий городов к ключам
 const cityNameToKey: Record<string, City> = {
   Новосибирск: City.NOVOSIBIRSK,
   "Санкт-Петербург": City.SPB,
   Крым: City.CRIM,
 }
 
-// Данные городов
 const citiesData = {
   novosibirsk: {
     name: "Новосибирск",
