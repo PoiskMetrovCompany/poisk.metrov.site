@@ -64,7 +64,7 @@ const ContactForm: FC = () => {
 
         <FormRow className={clsx(styles.smallWrap)}>
           <InputContainer
-            label="Ваше отчество"
+            label="Ваше отчество" 
             placeholder="Введите ваше отчество"
             value={formData.middleName}
             onChange={(value) => handleInputChange("middleName", value)}

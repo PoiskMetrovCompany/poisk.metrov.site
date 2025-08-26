@@ -8,15 +8,19 @@
     display: flex;
 }
 
-@media (max-width: 1530px) {
+@media (max-width: 1440px) {
     .topFooter{
-        padding: 20px 110px;
-        padding-left: 10px;
+        padding: 20px 60px;
     }
 }
 
 @media (max-width: 1024px) {
     .topFooter{
-        padding-right: 10px;
+        padding: 20px 40px;
+    }
+}
+@media (max-width: 768px) {
+    .topFooter{
+        padding: 20px 16px;
     }
 }

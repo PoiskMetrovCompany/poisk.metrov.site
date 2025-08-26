@@ -4,6 +4,9 @@
   padding: 0;
   gap: 72px;
   justify-content: space-between;
+  @media (max-width: 1440px) {
+    gap: 32px;
+  }
 }
 .contactSection__content {
   height: 100%;
