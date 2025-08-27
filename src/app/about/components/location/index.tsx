@@ -11,21 +11,18 @@ import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
-// Enum для городов
 enum City {
   NOVOSIBIRSK = "novosibirsk",
   SPB = "spb",
   CRIM = "crim",
 }
 
-// Маппинг названий городов к ключам
 const cityNameToKey: Record<string, City> = {
   Новосибирск: City.NOVOSIBIRSK,
   "Санкт-Петербург": City.SPB,
   Крым: City.CRIM,
 }
 
-// Данные городов
 const citiesData = {
   novosibirsk: {
     name: "Новосибирск",

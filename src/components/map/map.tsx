@@ -20,6 +20,7 @@ interface MapProps {
   selectedInfrastructure?: string[]
   viewLocation?: [number, number]
   className?: string
+  customIcon?: string
 }
 
 export const Map = ({
@@ -27,6 +28,7 @@ export const Map = ({
   selectedInfrastructure = [],
   viewLocation,
   className,
+  customIcon = "/images/icons/about/location.svg",
 }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
 
@@ -37,37 +39,6 @@ export const Map = ({
     InfrastructureItem[]
   >([])
   const [loading, setLoading] = useState(false)
-
-  // useEffect(() => {
-  //   const loadInfrastructure = async () => {
-  //     if (selectedInfrastructure.length === 0) {
-  //       setInfrastructureData([])
-  //       return
-  //     }
-
-  //     setLoading(true)
-  //     try {
-  //       const center: [number, number] = [
-  //         cityCenterCooridnates.novosibirsk[0],
-  //         cityCenterCooridnates.novosibirsk[1],
-  //       ]
-  //       const allData: InfrastructureItem[] = []
-
-  //       for (const type of selectedInfrastructure) {
-  //         const data = await getCachedInfrastructure(type, center)
-  //         allData.push(...data)
-  //       }
-
-  //       setInfrastructureData(allData)
-  //     } catch (error) {
-  //       console.error("Ошибка при загрузке инфраструктуры:", error)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   loadInfrastructure()
-  // }, [selectedInfrastructure])
 
   const filteredInfrastructure = infrastructureData.filter((item) =>
     selectedInfrastructure.includes(item.type)
@@ -120,7 +91,6 @@ export const Map = ({
           }}
         />
 
-        {/* Отображаем маркеры инфраструктуры */}
         {!loading &&
           filteredInfrastructure.map((item) => (
             <MarkerWithPopup
@@ -147,12 +117,11 @@ export const Map = ({
             reactifyApi={reactifyApi}
             selected={selectedPlaceId === place.id}
             selectPlace={selectPlace}
-            icon="/images/icons/about/location.svg"
+            icon={customIcon}
           />
         ))}
       </YMap>
 
-      {/* Блок с сообщением о том, что ничего не найдено */}
       {!loading && !hasDataToShow && (
         <div className={styles.noDataOverlay}>
           <div className={styles.noDataMessage}>
