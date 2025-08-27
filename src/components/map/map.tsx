@@ -25,7 +25,7 @@ export const Map = ({
   places,
   selectedInfrastructure = [],
   viewLocation,
-  customIcon = "/images/icons/about/location.svg", 
+  customIcon = "/images/icons/about/location.svg",
 }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
 
@@ -88,7 +88,6 @@ export const Map = ({
           }}
         />
 
-
         {!loading &&
           filteredInfrastructure.map((item) => (
             <MarkerWithPopup
@@ -115,11 +114,10 @@ export const Map = ({
             reactifyApi={reactifyApi}
             selected={selectedPlaceId === place.id}
             selectPlace={selectPlace}
-            icon={customIcon} 
+            icon={customIcon}
           />
         ))}
       </YMap>
-
 
       {!loading && !hasDataToShow && (
         <div className={styles.noDataOverlay}>

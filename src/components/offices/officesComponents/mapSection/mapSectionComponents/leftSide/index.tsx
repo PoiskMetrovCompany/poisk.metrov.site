@@ -58,7 +58,7 @@ const LeftMapSection: React.FC<LeftMapSectionProps> = ({
 
   const getCityCenter = (city: string): [number, number] => {
     const cityOffices = officesData.filter((office) => office.city === city)
-    if (cityOffices.length === 0) return [82.9752, 55.0388] 
+    if (cityOffices.length === 0) return [82.9752, 55.0388]
 
     const avgLng =
       cityOffices.reduce((sum, office) => sum + office.coordinates.lng, 0) /
@@ -77,7 +77,7 @@ const LeftMapSection: React.FC<LeftMapSectionProps> = ({
     )
     onOfficesChange(newFilteredOffices)
     onLocationChange(getCityCenter(city))
-    setSelectedOfficeId(null) 
+    setSelectedOfficeId(null)
   }
 
   const handleOfficeClick = (office: (typeof officesData)[0]) => {
@@ -89,7 +89,7 @@ const LeftMapSection: React.FC<LeftMapSectionProps> = ({
   React.useEffect(() => {
     onOfficesChange(filteredOffices)
     onLocationChange(getCityCenter(selectedCity))
-  }, []) 
+  }, [])
 
   return (
     <div className={styles.Offices__mapSection__container__leftSide}>
