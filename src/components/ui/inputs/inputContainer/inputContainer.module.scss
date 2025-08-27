@@ -21,14 +21,15 @@
     font-weight: 300;
     line-height: 1.5;
     transition: border-color 0.3s ease;
+    background-color: var(--color-white, #ffffff);
 
     &::placeholder {
       font-size: 18px;
-
+      
       @media (width <= 1440px) {
         font-size: 16px;
       }
-
+      
       @media (width <= 768px) {
         font-size: 14px;
       }
@@ -46,6 +47,10 @@
       padding-top: 1rem;
       border: none;
       background: rgb(249 249 247 / 100%);
+    }
+
+    &_gray {
+      background-color: var(--color-beige);
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
