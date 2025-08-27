@@ -126,7 +126,7 @@ const Rating = () => {
           slidesPerView={3}
           breakpoints={{
             0: {
-              slidesPerView: 1.1,
+              slidesPerView: 1.3,
               spaceBetween: 20,
             },
             768: {
