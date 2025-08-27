@@ -16,7 +16,7 @@ import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import GetCatalogue from "@/components/getCatalogue"
-import Selection from "@/app/components/selection"
+import Selection from "@/components/apartmentSelection"
 import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
 
 import { useScreenSize } from "@/utils/hooks/use-screen-size"

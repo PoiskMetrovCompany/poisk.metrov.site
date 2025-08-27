@@ -1,0 +1,63 @@
+.where {
+  align-items: center;
+
+  background: linear-gradient(
+    222deg,
+    rgba(228, 98, 25, 0.15) 23.1%,
+    rgba(236, 125, 63, 0.15) 76.5%
+  );
+  border-radius: 64px;
+  display: flex;
+  gap: 40px;
+  height: 746px;
+  justify-content: space-between;
+  padding: 120px 40px 120px 80px;
+
+  &__info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 64px;
+
+    &__text {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+
+      &__title {
+        color: var(--color-black);
+
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 130%;
+      }
+
+      &__description {
+        color: var(--color-black);
+
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 130%;
+
+        margin: 0;
+
+        b {
+          color: var(--color-orange);
+          font-weight: 500;
+        }
+      }
+    }
+
+    &__button {
+      height: 72px !important;
+      width: 308px !important;
+    }
+  }
+
+  &__map {
+    height: 506px;
+    width: 923px;
+  }
+}
