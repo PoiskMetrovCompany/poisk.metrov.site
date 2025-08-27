@@ -1,6 +1,7 @@
 "use client"
 
 import { YMap, YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap"
+import clsx from "clsx"
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
@@ -18,6 +19,7 @@ interface MapProps {
   places?: Place[]
   selectedInfrastructure?: string[]
   viewLocation?: [number, number]
+  className?: string
   customIcon?: string
 }
 
@@ -25,6 +27,7 @@ export const Map = ({
   places,
   selectedInfrastructure = [],
   viewLocation,
+  className,
   customIcon = "/images/icons/about/location.svg",
 }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
@@ -72,7 +75,7 @@ export const Map = ({
     filteredInfrastructure.length > 0 || (places && places.length > 0)
 
   return (
-    <div className={styles.mapContainer}>
+    <div className={clsx(styles.mapContainer, className)}>
       <YMap
         className={styles.map}
         margin={[20, 20, 20, 20]}

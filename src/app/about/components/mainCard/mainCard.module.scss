@@ -59,6 +59,7 @@
       top: -110px;
 
       width: 1322px;
+      z-index: 0;
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         height: 555px;
@@ -74,11 +75,17 @@
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
-        font-size: 22px;
+        height: 555px;
+        right: -580px;
+        top: -50px;
+        width: 1122px;
       }
 
       @media screen and (width < 768px) {
-        font-size: 22px;
+        height: 545px;
+        right: -215px;
+        top: 240px;
+        width: 622px;
       }
     }
 
@@ -86,6 +93,7 @@
       display: flex;
       flex-direction: column;
       gap: 32px;
+      z-index: 1;
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         gap: 24px;
@@ -224,7 +232,7 @@
 
         @media screen and (width < 768px) {
           font-size: 15px;
-          max-width: 296px;
+          max-width: 260px;
         }
       }
     }
@@ -232,6 +240,7 @@
     &__button {
       height: 72px !important;
       width: 242px !important;
+      z-index: 1;
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         font-size: 15px !important;
@@ -242,12 +251,14 @@
       @media screen and (width >= 1024px) and (width < 1440px) {
         font-size: 15px !important;
         height: 56px !important;
+        padding: 0 !important;
         width: 185px !important;
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
         font-size: 14px !important;
         height: 48px !important;
+        padding: 0 !important;
         width: 161px !important;
       }
 
@@ -347,6 +358,12 @@
           font-style: normal;
           font-weight: 400;
           line-height: 150%;
+
+          span {
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              display: none;
+            }
+          }
 
           @media screen and (width >= 768px) and (width < 1920px) {
             font-size: 15px;

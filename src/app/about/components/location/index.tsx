@@ -67,6 +67,7 @@ const Location = () => {
       <div className={styles.locationSelector}>
         <CustomSelect
           className={styles.locationSelector__dropdown}
+          labelClassName={styles.locationSelector__dropdown__label}
           label="Офис"
           placeholder="Выберите город"
           value={currentCityData.name}
@@ -142,6 +143,7 @@ const Location = () => {
         </ActionButton>
       </div>
       <Map
+        className={styles.location__map}
         viewLocation={currentCityData.coordinates}
         places={[locationPlace]}
       />

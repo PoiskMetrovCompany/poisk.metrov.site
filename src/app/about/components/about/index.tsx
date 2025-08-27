@@ -1,10 +1,19 @@
-import React from "react"
-import styles from "./about.module.scss"
-import IconImage from "@/components/ui/IconImage"
+"use client"
+
 import clsx from "clsx"
+
+import React from "react"
+
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
+
+import styles from "./about.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 import Heading2 from "@/components/ui/heading2"
 
 const About = () => {
+  const { isMobile } = useScreenSize()
+
   return (
     <div className={styles.about}>
       <Heading2 className={styles.about__title}>О компании</Heading2>
@@ -51,7 +60,7 @@ const About = () => {
               )}
             >
               <span className={styles.about__container__col_left__block__count}>
-                3 /
+                {!isMobile ? "2 /" : "3 /"}
               </span>
               <div className={styles.about__container__col_left__block__text}>
                 <h2
@@ -81,22 +90,20 @@ const About = () => {
                 styles.about__container__col_right__block_1
               )}
             >
-              <span
-                className={styles.about__container__col_right__block__count}
-              >
-                2 /
+              <span className={styles.about__container__col_left__block__count}>
+                {!isMobile ? "3 /" : "2 /"}
               </span>
-              <div className={styles.about__container__col_right__block__text}>
+              <div className={styles.about__container__col_left__block__text}>
                 <h2
                   className={
-                    styles.about__container__col_right__block__text__title
+                    styles.about__container__col_left__block__text__title
                   }
                 >
                   Выход на новые города
                 </h2>
                 <p
                   className={
-                    styles.about__container__col_right__block__text__description
+                    styles.about__container__col_left__block__text__description
                   }
                 >
                   В 2023 году мы расширили географию и начали работать в
@@ -111,22 +118,20 @@ const About = () => {
                 styles.about__container__col_right__block_2
               )}
             >
-              <span
-                className={styles.about__container__col_right__block__count}
-              >
+              <span className={styles.about__container__col_left__block__count}>
                 4 /
               </span>
-              <div className={styles.about__container__col_right__block__text}>
+              <div className={styles.about__container__col_left__block__text}>
                 <h2
                   className={
-                    styles.about__container__col_right__block__text__title
+                    styles.about__container__col_left__block__text__title
                   }
                 >
                   Что дальше
                 </h2>
                 <p
                   className={
-                    styles.about__container__col_right__block__text__description
+                    styles.about__container__col_left__block__text__description
                   }
                 >
                   Мы развиваем «Поиск Метров» как удобный и понятный сервис для

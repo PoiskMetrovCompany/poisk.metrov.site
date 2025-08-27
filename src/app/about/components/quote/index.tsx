@@ -1,6 +1,8 @@
-import React from "react"
-import styles from "./quote.module.scss"
 import clsx from "clsx"
+
+import React from "react"
+
+import styles from "./quote.module.scss"
 
 const Quote = () => {
   return (
@@ -22,9 +24,8 @@ const Quote = () => {
         </div>
         <div className={styles.quote__block__text}>
           Мы стремимся сделать покупку жилья комфортной и спокойной.
-          <br />
-          Наша миссия — помочь вам найти <br /> не просто квартиру, а настоящий
-          дом, место, где вы будете счастливы.
+          <br /> Наша миссия — помочь вам найти <br /> не просто квартиру, а
+          настоящий дом, место, где вы будете счастливы.
         </div>
         <div
           className={clsx(
