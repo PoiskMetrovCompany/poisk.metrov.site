@@ -1,0 +1,29 @@
+@use "@/utils/mixins" as mixins;
+
+.aboutPage {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 100px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 80px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 64px;
+  }
+
+  @media screen and (width < 768px) {
+    gap: 64px;
+  }
+
+  @include mixins.adaptive-padding;
+}
+
+.apartmentSelection {
+  margin: 0 !important;
+}

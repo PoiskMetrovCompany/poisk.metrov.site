@@ -1,6 +1,15 @@
-import React, { FC, memo, useState, useEffect, useCallback } from "react"
-import styles from "./rangeInput.module.scss"
 import clsx from "clsx"
+
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+
+import styles from "./rangeInput.module.scss"
 
 interface IRangeInput {
   value: [number | null, number | null]
@@ -16,10 +25,18 @@ const RangeInput: FC<IRangeInput> = memo(
     const [fromValue, setFromValue] = useState(value[0]?.toString() || "")
     const [toValue, setToValue] = useState(value[1]?.toString() || "")
 
+    // Используем ref для отслеживания предыдущего значения
+    const prevValueRef = useRef<[number | null, number | null]>(value)
+
     // Обновляем локальное состояние при изменении пропсов
     useEffect(() => {
-      setFromValue(value[0]?.toString() || "")
-      setToValue(value[1]?.toString() || "")
+      const prevValue = prevValueRef.current
+      // Проверяем, действительно ли значения изменились
+      if (prevValue[0] !== value[0] || prevValue[1] !== value[1]) {
+        setFromValue(value[0]?.toString() || "")
+        setToValue(value[1]?.toString() || "")
+        prevValueRef.current = value
+      }
     }, [value])
 
     const handleFromChange = useCallback(

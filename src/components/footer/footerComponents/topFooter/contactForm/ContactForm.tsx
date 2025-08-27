@@ -1,13 +1,17 @@
 "use client"
-import React, { FC, useState } from "react"
+
 import clsx from "clsx"
+import { Form } from "radix-ui"
+
+import React, { FC, useState } from "react"
+
 import styles from "./contactForm.module.scss"
-import { FormRow } from "@/components/ui/forms/formRow/FormRow"
-import InputContainer from "@/components/ui/inputs/inputContainer"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
 import ArrowButton from "@/components/ui/buttons/smallSubmitBtn"
 import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
-import ActionButton from "@/components/ui/buttons/ActionButton"
-import { Form } from "radix-ui"
+import { FormRow } from "@/components/ui/forms/formRow/FormRow"
+import InputContainer from "@/components/ui/inputs/inputContainer"
 
 interface ContactFormData {
   lastName: string
@@ -64,7 +68,7 @@ const ContactForm: FC = () => {
 
         <FormRow className={clsx(styles.smallWrap)}>
           <InputContainer
-            label="Ваше отчество" 
+            label="Ваше отчество"
             placeholder="Введите ваше отчество"
             value={formData.middleName}
             onChange={(value) => handleInputChange("middleName", value)}
@@ -101,7 +105,7 @@ const ContactForm: FC = () => {
             svgWidth={20}
             svgHeight={20}
             className={clsx(styles.borderRadius, styles.hideOnDesktop)}
-            svgSrc="./svgFiles/nextArrow.svg"
+            svgSrc="./images/icons/header/nextArrow.svg"
             svgDiscolored={true}
           >
             Отправить

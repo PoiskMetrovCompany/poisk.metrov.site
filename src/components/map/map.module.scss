@@ -1,0 +1,37 @@
+.map {
+  border-radius: 32px;
+  height: 100%;
+  width: 100%;
+}
+
+.mapContainer {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.noDataOverlay {
+  align-items: center;
+
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.noDataMessage {
+  background: var(--color-text-black);
+  border-radius: 16px;
+  box-shadow: 0 0 26px 0 rgb(34 32 32 / 10%);
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  padding: 8px 16px;
+  text-align: center;
+  width: 320px;
+}

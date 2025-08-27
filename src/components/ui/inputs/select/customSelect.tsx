@@ -1,7 +1,10 @@
 "use client"
-import React, { FC, useState, useEffect, useRef } from "react"
-import styles from "./customSelect.module.scss"
+
 import clsx from "clsx"
+
+import React, { FC, useEffect, useRef, useState } from "react"
+
+import styles from "./customSelect.module.scss"
 
 interface ICustomSelectProps {
   label?: string
@@ -12,6 +15,7 @@ interface ICustomSelectProps {
   isLoading?: boolean
   error?: string | boolean
   className?: string
+  labelClassName?: string
   disabled?: boolean
   required?: boolean
   style?: React.CSSProperties
@@ -24,6 +28,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   value,
   onChange,
   className,
+  labelClassName,
   isLoading = false,
   error = "",
   disabled = false,
@@ -96,14 +101,10 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   const shouldShowDropdown = !isLoading && isOpen && options.length > 0
 
   return (
-    <div
-      className={clsx(styles.customSelectWrapper, className)}
-      ref={selectRef}
-      style={style}
-    >
+    <div className={styles.customSelectWrapper} ref={selectRef} style={style}>
       {label && (
         <label
-          className={clsx(styles.selectLabel, {
+          className={clsx(styles.selectLabel, labelClassName, {
             [styles.required]: required,
             [styles.error]: hasValidationError,
           })}
@@ -113,7 +114,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
       )}
       <div className={clsx(styles.customSelect)}>
         <div
-          className={clsx(styles.selectSelected, {
+          className={clsx(styles.selectSelected, className, {
             [styles.selectArrowActive]: isOpen,
             [styles.disabled]: disabled || isLoading,
             [styles.error]: !!errorMessage || hasValidationError,

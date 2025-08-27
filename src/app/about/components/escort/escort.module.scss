@@ -1,0 +1,227 @@
+.escort {
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  margin-left: -120px;
+  padding: 120px;
+  width: 100vw;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 32px;
+    margin-left: -80px;
+    padding: 80px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 24px;
+    margin-left: -40px;
+    padding: 40px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 24px;
+    margin-left: -40px;
+    padding: 40px;
+  }
+
+  @media screen and (width < 768px) {
+    gap: 32px;
+    margin-left: -16px;
+    padding: 16px;
+  }
+
+  &__title {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    &__title {
+      color: var(--color-black);
+      font-size: 34px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 130%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        font-size: 22px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        font-size: 22px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        font-size: 20px;
+      }
+
+      @media screen and (width < 768px) {
+        font-size: 20px;
+      }
+    }
+
+    &__button {
+      height: 56px !important;
+      padding: 0 !important;
+      width: 253px !important;
+
+      @media screen and (width >= 768) and (width < 1920px) {
+        font-size: 14px !important;
+        height: 48px !important;
+        width: 213px !important;
+      }
+
+      @media screen and (width < 768px) {
+        display: none;
+        font-size: 14px !important;
+        height: 48px !important;
+        width: 100% !important;
+      }
+
+      &__mobile {
+        display: none !important;
+
+        @media screen and (width < 768px) {
+          display: block;
+        }
+      }
+    }
+  }
+
+  &__cards {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: repeat(4, 1fr);
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 32px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 16px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (width < 768px) {
+      gap: 16px;
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    &__card {
+      background: var(--color-beige);
+
+      border-radius: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      height: 460px;
+      justify-content: space-between;
+      padding: 40px;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        border-radius: 24px;
+        height: 340px;
+        padding: 32px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        border-radius: 20px;
+        height: 300px;
+        padding: 16px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        border-radius: 20px;
+        height: 220px;
+        padding: 20px;
+      }
+
+      @media screen and (width < 768px) {
+        border-radius: 20px;
+        gap: 32px;
+        height: auto;
+        padding: 16px;
+      }
+
+      &:first-child {
+        background: var(--color-orange);
+
+        .escort__cards__card__count {
+          color: var(--color-white);
+        }
+
+        .escort__cards__card__text {
+          &__title {
+            color: var(--color-white);
+          }
+
+          &__description {
+            color: var(--color-white);
+          }
+        }
+      }
+
+      &__count {
+        color: var(--color-orange);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%;
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          font-size: 14px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 13px;
+        }
+      }
+
+      &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        &__title {
+          color: var(--color-black);
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 130%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 20px;
+            width: 95%;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 18px;
+          }
+        }
+
+        &__description {
+          color: var(--color-text-black);
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 150%;
+          margin: 0;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 14px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}

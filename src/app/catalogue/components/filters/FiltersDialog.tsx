@@ -1,14 +1,17 @@
-import React, { FC } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import styles from "./filters.module.scss"
-import ActionButton from "@/components/ui/buttons/ActionButton"
 
-import { useFiltersForm } from "./useFiltersForm"
+import React, { FC, useMemo } from "react"
+
+import styles from "./filters.module.scss"
+
 import ApartmentFilters from "./filtersComponents/flitersBlocks/apartmentFilters"
 import ComplexFilters from "./filtersComponents/flitersBlocks/complexFilters"
 import PurchaseFilters from "./filtersComponents/flitersBlocks/purchaseFilters"
+import { useFiltersForm } from "./useFiltersForm"
+
 import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
 
 interface FiltersDialogProps {
   open: boolean
@@ -29,6 +32,58 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
     handleApartmentsSelect,
     handleMetroTransportTypeSelect,
   } = useFiltersForm()
+
+  // Мемоизируем данные для ApartmentFilters
+  const apartmentFormData = useMemo(
+    () => ({
+      rooms: formData.rooms || [],
+      priceMin: formData.priceMin,
+      priceMax: formData.priceMax,
+      floorMin: formData.floorMin,
+      floorMax: formData.floorMax,
+      floorOptions: formData.floorOptions || [],
+      flatAreaMin: formData.flatAreaMin,
+      flatAreaMax: formData.flatAreaMax,
+      livingAreaMin: formData.livingAreaMin,
+      livingAreaMax: formData.livingAreaMax,
+      ceilingHeight: formData.ceilingHeight || [],
+      layout: formData.layout || [],
+      finish: formData.finish || [],
+      bathroom: formData.bathroom || [],
+      apartments: formData.apartments || "",
+      features: formData.features || [],
+    }),
+    [formData]
+  )
+
+  // Мемоизируем данные для ComplexFilters
+  const complexFormData = useMemo(
+    () => ({
+      buildingType: formData.buildingType || [],
+      builder: formData.builder || [],
+      completionDate: formData.completionDate || [],
+      metroDistance: formData.metroDistance || [],
+      metroTransportType: formData.metroTransportType || "",
+      elevator: formData.elevator || [],
+      floorsInBuildingMin: formData.floorsInBuildingMin,
+      floorsInBuildingMax: formData.floorsInBuildingMax,
+      parking: formData.parking || [],
+      security: formData.security || [],
+    }),
+    [formData]
+  )
+
+  // Мемоизируем данные для PurchaseFilters
+  const purchaseFormData = useMemo(
+    () => ({
+      paymentMethod: formData.paymentMethod || [],
+      mortgageType: formData.mortgageType || [],
+      installmentPeriod: formData.installmentPeriod || [],
+      downPayment: formData.downPayment || [],
+      mortgagePrograms: formData.mortgagePrograms || [],
+    }),
+    [formData]
+  )
 
   const handleApplyFilters = () => {
     form.handleSubmit()
@@ -59,24 +114,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
 
             {/* Блок "Квартира" */}
             <ApartmentFilters
-              formData={{
-                rooms: formData.rooms || [],
-                priceMin: formData.priceMin,
-                priceMax: formData.priceMax,
-                floorMin: formData.floorMin,
-                floorMax: formData.floorMax,
-                floorOptions: formData.floorOptions || [],
-                flatAreaMin: formData.flatAreaMin,
-                flatAreaMax: formData.flatAreaMax,
-                livingAreaMin: formData.livingAreaMin,
-                livingAreaMax: formData.livingAreaMax,
-                ceilingHeight: formData.ceilingHeight || [],
-                layout: formData.layout || [],
-                finish: formData.finish || [],
-                bathroom: formData.bathroom || [],
-                apartments: formData.apartments || "",
-                features: formData.features || [],
-              }}
+              formData={apartmentFormData}
               handleMultiSelect={handleMultiSelect}
               handleApartmentsSelect={handleApartmentsSelect}
               handleRangeInputChange={handleRangeInputChange}
@@ -85,18 +123,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
 
             {/* Блок "Жилой комплекс" */}
             <ComplexFilters
-              formData={{
-                buildingType: formData.buildingType || [],
-                builder: formData.builder || [],
-                completionDate: formData.completionDate || [],
-                metroDistance: formData.metroDistance || [],
-                metroTransportType: formData.metroTransportType || "",
-                elevator: formData.elevator || [],
-                floorsInBuildingMin: formData.floorsInBuildingMin,
-                floorsInBuildingMax: formData.floorsInBuildingMax,
-                parking: formData.parking || [],
-                security: formData.security || [],
-              }}
+              formData={complexFormData}
               handleMultiSelect={handleMultiSelect}
               handleMetroTransportTypeSelect={handleMetroTransportTypeSelect}
               handleRangeInputChange={handleRangeInputChange}
@@ -104,13 +131,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
 
             {/* Блок "Покупка" */}
             <PurchaseFilters
-              formData={{
-                paymentMethod: formData.paymentMethod || [],
-                mortgageType: formData.mortgageType || [],
-                installmentPeriod: formData.installmentPeriod || [],
-                downPayment: formData.downPayment || [],
-                mortgagePrograms: formData.mortgagePrograms || [],
-              }}
+              formData={purchaseFormData}
               handleMultiSelect={handleMultiSelect}
             />
 
