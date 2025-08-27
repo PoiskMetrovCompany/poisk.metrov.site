@@ -3,7 +3,7 @@ import clsx from "clsx"
 
 import React, { FC, useEffect, useRef, useState } from "react"
 
-import RangeInput from "@/app/catalogue/components/filters/rangeInput"
+import RangeInput from "@/app/catalogue/components/filters/filtersComponents/rangeInput"
 
 import styles from "./priceDropdown.module.scss"
 

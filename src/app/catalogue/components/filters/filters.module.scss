@@ -5,11 +5,36 @@
       padding: 0 32px 32px;
       width: 100%;
 
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        padding: 0 24px 16px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        padding: 0 20px 16px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        padding: 0 40px 24px;
+      }
+
+      @media screen and (width < 768px) {
+        padding: 0 16px 16px;
+      }
+
       &__showFlats {
         display: flex;
         gap: 120px;
         margin-top: 32px;
         width: 100%;
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          gap: 80px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 0;
+          margin-top: 0;
+        }
 
         &__save {
           align-items: center;
@@ -24,9 +49,38 @@
 
           width: 205px;
 
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            font-size: 16px;
+            width: 171px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1440px) {
+            font-size: 14px;
+            gap: 6px;
+            width: 171px;
+          }
+
+          @media screen and (width < 768px) {
+            display: none;
+          }
+
           &__icon {
             height: 28px;
             width: 28px;
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              height: 24px;
+              width: 24px;
+            }
+
+            @media screen and (width >= 768px) and (width < 1440px) {
+              height: 20px;
+              width: 20px;
+            }
+
+            @media screen and (width < 768px) {
+              font-size: 22px;
+            }
           }
         }
 
@@ -35,6 +89,11 @@
           flex: 1;
           gap: 12px;
 
+          @media screen and (width < 768px) {
+            flex-direction: column;
+            gap: 8px;
+          }
+
           &__clear {
             align-items: center;
             display: flex;
@@ -42,6 +101,26 @@
             justify-content: center;
 
             padding: 0 34px !important;
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              gap: 8px;
+              padding: 0 32px !important;
+            }
+
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              gap: 6px;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width >= 768px) and (width < 1024px) {
+              gap: 6px;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width < 768px) {
+              gap: 4px;
+              padding: 0 20px !important;
+            }
 
             &__count {
               align-items: center;
@@ -60,7 +139,21 @@
               line-height: 150%;
 
               min-width: 28px;
-              padding: 10px 6px;
+
+              @media screen and (width >= 1024px) and (width < 1440px) {
+                height: 24px;
+                min-width: 24px;
+              }
+
+              @media screen and (width >= 768px) and (width < 1024px) {
+                height: 24px;
+                min-width: 24px;
+              }
+
+              @media screen and (width < 768px) {
+                height: 20px;
+                min-width: 20px;
+              }
             }
           }
 
