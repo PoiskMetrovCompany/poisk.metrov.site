@@ -1,9 +1,13 @@
-import React, { FC, useState, useEffect } from "react"
 import * as Popover from "@radix-ui/react-popover"
-import styles from "./priceDropdown.module.scss"
-import RangeInput from "@/app/catalogue/components/filters/rangeInput"
-import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+
+import React, { FC, useEffect, useState } from "react"
+
+import RangeInput from "@/app/catalogue/components/filters/rangeInput"
+
+import styles from "./priceDropdown.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface PriceDropdownProps {
   onPriceChange?: (range: [number | null, number | null]) => void

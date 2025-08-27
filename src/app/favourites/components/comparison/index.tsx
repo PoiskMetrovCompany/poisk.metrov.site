@@ -31,11 +31,14 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
   const [isOnlyDifferences, setIsOnlyDifferences] = useState(false)
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+
   const swiperRef = useRef<SwiperType | null>(null)
 
   const handleSlideChange = (swiper: SwiperType) => {
     setIsBeginning(swiper.isBeginning)
     setIsEnd(swiper.isEnd)
+    setActiveSlideIndex(swiper.activeIndex)
   }
 
   const handlePrevClick = () => {
@@ -115,6 +118,9 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
                 <PropertyCardComparison
                   data={cardData}
                   isLast={index === PropertyCardDataArray.length - 1}
+                  isInView={
+                    index >= activeSlideIndex && index < activeSlideIndex + 2
+                  }
                 />
               </SwiperSlide>
             ))}
@@ -127,6 +133,9 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
                 <FlatLayoutCardComparison
                   data={cardData}
                   isLast={index === FlatLayoutCardDataArray.length - 1}
+                  isInView={
+                    index >= activeSlideIndex && index < activeSlideIndex + 2
+                  }
                 />
               </SwiperSlide>
             ))}

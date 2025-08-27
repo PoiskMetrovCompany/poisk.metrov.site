@@ -26,11 +26,13 @@ import Heading3 from "../ui/heading3"
 interface PropertyCardComparisonProps {
   data?: IPropertyCardFull
   isLast?: boolean
+  isInView?: boolean
 }
 
 const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   data = PropertyCardData,
   isLast = false,
+  isInView = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -150,7 +152,11 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>
-            <Heading3>{data.title}</Heading3>
+            <Heading3
+              className={styles.comparisonCards__content__heading__text__title}
+            >
+              {data.title}
+            </Heading3>
             <span
               className={
                 styles.comparisonCards__content__heading__text__address
@@ -206,7 +212,10 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                 key={key}
                 className={clsx(
                   styles.comparisonCards__content__block__list__item,
-                  styles.comparisonCards__content__block__list__item_active
+                  {
+                    [styles.comparisonCards__content__block__list__item_active]:
+                      isInView,
+                  }
                 )}
               >
                 <span

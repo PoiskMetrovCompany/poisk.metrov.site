@@ -22,11 +22,13 @@ import Heading3 from "../ui/heading3"
 interface FlatLayoutCardComparisonProps {
   data: IFlatLayoutCardFull
   isLast?: boolean
+  isInView?: boolean
 }
 
 const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
   data = FlatLayoutCardData,
   isLast = false,
+  isInView = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -149,7 +151,11 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>
-            <Heading3>{data.title}</Heading3>
+            <Heading3
+              className={styles.comparisonCards__content__heading__text__title}
+            >
+              {data.title}
+            </Heading3>
             <span
               className={
                 styles.comparisonCards__content__heading__text__address

@@ -133,7 +133,8 @@
     }
 
     @media screen and (width < 768px) {
-      padding: 20px 0px;
+      border-radius: 24px;
+      padding: 12px 0px;
     }
   }
 
@@ -144,6 +145,10 @@
     min-width: 0;
     overflow: hidden;
     width: 100%;
+
+    @media screen and (width < 768px) {
+      padding-left: 12px;
+    }
 
     // .swiper-wrapper {
     //   display: flex;
@@ -190,6 +195,11 @@
 
     @media screen and (width < 1440px) {
       padding: 0 0 0 23px;
+    }
+
+    @media screen and (width < 768px) {
+      padding: 0px;
+      width: 50% !important;
     }
   }
 }
