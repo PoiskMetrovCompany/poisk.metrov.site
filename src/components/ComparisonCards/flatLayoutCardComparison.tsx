@@ -11,8 +11,8 @@ import {
 
 import styles from "./comparisonCards.module.scss"
 
-import FlatLayoutCardData from "./flatData"
-import { propertyCardTranslations } from "./translations"
+import FlatLayoutCardData from "./data/flatData"
+import { propertyCardTranslations } from "./data/translations"
 
 import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
@@ -137,6 +137,7 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             <IconButton
               size="sm"
               iconLink={"/images/icons/trash.svg"}
+              type="secondary"
               alt="trash"
               iconClassName={
                 styles.comparisonCards__content__heading__image__delete__icon

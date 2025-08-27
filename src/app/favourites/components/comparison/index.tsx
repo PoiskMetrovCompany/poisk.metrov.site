@@ -11,8 +11,8 @@ import {
   FlatLayoutCardComparison,
   PropertyCardComparison,
 } from "@/components/ComparisonCards"
-import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/flatData"
-import { PropertyCardDataArray } from "@/components/ComparisonCards/propertyData"
+import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/data/flatData"
+import { PropertyCardDataArray } from "@/components/ComparisonCards/data/propertyData"
 import { IFavouriteView } from "@/types/Favourites"
 
 import styles from "./comparison.module.scss"
@@ -59,7 +59,7 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
           onClick={() => setIsComparison(false)}
         >
           <IconImage
-            iconLink="/images/icons/arrow-left.svg"
+            iconLink="/images/icons/arrow-left-dark.svg"
             alt="arrow-left"
             className={styles.comparison__header__button__icon}
           />

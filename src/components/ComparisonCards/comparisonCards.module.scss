@@ -3,6 +3,22 @@
   padding-right: 32px;
   width: 100%;
 
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    padding-right: 28px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    padding-right: 24px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    padding-right: 24px;
+  }
+
+  @media screen and (width < 768px) {
+    padding-right: 20px;
+  }
+
   &__last {
     border-right: none;
   }
@@ -13,6 +29,22 @@
     flex-direction: column;
     gap: 56px;
 
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 48px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 40px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 32px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 24px;
+    }
+
     // width: 448px;
     width: 100%;
 
@@ -21,6 +53,14 @@
       flex-direction: column;
       gap: 24px;
       width: 100%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 16px;
+      }
+
+      @media screen and (width < 1440px) {
+        gap: 12px;
+      }
 
       &__image {
         aspect-ratio: 56/41;
@@ -39,10 +79,33 @@
           position: absolute;
           right: 24px;
           top: 24px;
+          z-index: 10;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            right: 16px;
+            top: 16px;
+          }
+
+          @media screen and (width < 768px) {
+            height: 32px !important;
+            right: 12px;
+            top: 12px;
+            width: 32px !important;
+          }
 
           &__icon {
             height: 24px !important;
             width: 24px !important;
+
+            @media screen and (width >= 768px) and (width < 1920px) {
+              height: 20px !important;
+              width: 20px !important;
+            }
+
+            @media screen and (width < 768px) {
+              height: 16px !important;
+              width: 16px !important;
+            }
           }
         }
       }
@@ -67,18 +130,26 @@
         &__icon {
           height: 259px;
           width: 274px;
-        }
-      }
 
-      &__image__delete {
-        position: absolute;
-        right: 24px;
-        top: 24px;
-        z-index: 10;
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            height: 223px;
+            width: 236px;
+          }
 
-        &__icon {
-          height: 24px !important;
-          width: 24px !important;
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            height: 196px;
+            width: 208px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            height: 150px;
+            width: 159px;
+          }
+
+          @media screen and (width < 768px) {
+            height: 127px;
+            width: 135px;
+          }
         }
       }
 
@@ -88,12 +159,24 @@
         flex-direction: column;
         gap: 8px;
 
+        @media screen and (width < 768px) {
+          gap: 4px;
+        }
+
         &__address {
           color: var(--color-text-gray);
           font-size: 18px;
           font-style: normal;
           font-weight: 300;
           line-height: 150%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
         }
       }
     }
@@ -103,6 +186,22 @@
       flex-direction: column;
       gap: 32px;
       width: 100%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 28px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 24px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 16px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 16px;
+      }
 
       &__title {
         align-items: center;
@@ -120,6 +219,24 @@
         line-height: 150%;
         margin: 0 -31px;
         padding: 0 31px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          margin: 0 -27px;
+          padding: 0 27px;
+        }
+
+        @media screen and (width < 1440px) {
+          margin: 0 -23px;
+          padding: 0 23px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 14px;
+        }
       }
 
       &__list {
@@ -128,24 +245,61 @@
         gap: 32px;
         list-style: none;
 
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          gap: 28px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          gap: 24px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          gap: 16px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 16px;
+        }
+
         &__item {
           align-items: center;
           display: flex;
           gap: 5px;
           justify-content: space-between;
 
-          &::before {
-            background-color: var(--color-orange);
-            border-radius: 50%;
-            content: "";
-            height: 8px;
-            left: 16px;
-            margin-top: 0;
+          @media screen and (width < 1024px) {
+            align-items: start;
+            flex-direction: column;
+            justify-content: start;
+          }
 
-            position: absolute;
-            transform: translateX(-50%);
+          @media screen and (width < 768px) {
+            gap: 4px;
+          }
 
-            width: 8px;
+          &_active {
+            &::before {
+              background-color: var(--color-orange);
+              border-radius: 50%;
+              content: "";
+              height: 8px;
+              left: 16px;
+              margin-top: 0;
+
+              position: absolute;
+              transform: translateX(-50%);
+
+              @media screen and (width >= 1024px) and (width < 1440px) {
+                left: 12px;
+              }
+
+              @media screen and (width < 1024px) {
+                left: 14px;
+                margin-top: 6px;
+              }
+
+              width: 8px;
+            }
           }
 
           &__title {
@@ -154,6 +308,14 @@
             font-style: normal;
             font-weight: 300;
             line-height: 150%;
+
+            @media screen and (width >= 768px) and (width < 1920px) {
+              font-size: 15px;
+            }
+
+            @media screen and (width < 768px) {
+              font-size: 15px;
+            }
           }
 
           &__value {
@@ -163,16 +325,33 @@
             font-weight: 500;
             line-height: 150%;
 
+            @media screen and (width >= 768px) and (width < 1920px) {
+              font-size: 15px;
+            }
+
+            @media screen and (width < 768px) {
+              font-size: 14px;
+            }
+
             &__complex {
               align-items: center;
               display: flex;
               gap: 12px;
+
+              @media screen and (width < 1920px) {
+                gap: 10px;
+              }
 
               &__icon {
                 border-radius: 50%;
                 height: 24px;
                 object-fit: cover;
                 width: 24px;
+
+                @media screen and (width < 768px) {
+                  height: 20px;
+                  width: 20px;
+                }
               }
 
               &__info {
@@ -185,6 +364,14 @@
                   font-style: normal;
                   font-weight: 500;
                   line-height: 150%;
+
+                  @media screen and (width >= 768px) and (width < 1920px) {
+                    font-size: 15px;
+                  }
+
+                  @media screen and (width < 768px) {
+                    font-size: 14px;
+                  }
                 }
 
                 &__time {
@@ -193,6 +380,14 @@
                   font-style: normal;
                   font-weight: 500;
                   line-height: 150%;
+
+                  @media screen and (width >= 768px) and (width < 1920px) {
+                    font-size: 15px;
+                  }
+
+                  @media screen and (width < 768px) {
+                    font-size: 14px;
+                  }
                 }
               }
             }
@@ -207,11 +402,29 @@
       gap: 40px;
       width: 100%;
 
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 32px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 28px;
+      }
+
+      @media screen and (width < 1024px) {
+        gap: 24px;
+      }
+
       &__value {
         align-items: end;
         display: flex;
         gap: 12px;
         justify-content: space-between;
+
+        @media screen and (width < 768px) {
+          align-items: start;
+          flex-direction: column;
+          gap: 4px;
+        }
 
         &__price {
           color: var(--color-black);
@@ -219,6 +432,14 @@
           font-style: normal;
           font-weight: 500;
           line-height: 130%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 20px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 18px;
+          }
         }
 
         &__pricePerMonth {
@@ -226,6 +447,14 @@
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
         }
       }
     }
@@ -235,6 +464,10 @@
       flex-direction: column;
       gap: 16px;
       width: 100%;
+
+      @media screen and (width < 1920px) {
+        gap: 12px;
+      }
     }
   }
 }
