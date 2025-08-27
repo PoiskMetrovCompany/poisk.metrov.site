@@ -1,16 +1,19 @@
-import React, { FC } from "react"
+import React, { FC, useMemo } from "react"
+
 import styles from "./filterBlocks.module.scss"
-import FiltersButton from "@/components/ui/buttons/FiltersButton"
+
 import RangeInput from "../../rangeInput"
 import {
-  BUILDING_TYPE_OPTIONS,
   BUILDER_OPTIONS,
+  BUILDING_TYPE_OPTIONS,
   COMPLETION_DATE_OPTIONS,
-  METRO_DISTANCE_OPTIONS,
   ELEVATOR_OPTIONS,
+  METRO_DISTANCE_OPTIONS,
   PARKING_OPTIONS,
   SECURITY_OPTIONS,
 } from "../../types"
+
+import FiltersButton from "@/components/ui/buttons/FiltersButton"
 import Heading3 from "@/components/ui/heading3"
 
 interface ComplexFiltersProps {
@@ -50,6 +53,16 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
   handleMetroTransportTypeSelect,
   handleRangeInputChange,
 }) => {
+  // Мемоизируем значение для RangeInput, чтобы избежать создания нового массива при каждом рендере
+  const floorsInBuildingRange = useMemo(
+    () =>
+      [formData.floorsInBuildingMin, formData.floorsInBuildingMax] as [
+        number | null,
+        number | null,
+      ],
+    [formData.floorsInBuildingMin, formData.floorsInBuildingMax]
+  )
+
   return (
     <div className={styles.filterBlock}>
       <div className={styles.filterBlock__title}>
@@ -160,7 +173,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
         <div className={styles.filterBlock__section__label}>Этажей в доме</div>
         <div className={styles.filterBlock__section__range}>
           <RangeInput
-            value={[formData.floorsInBuildingMin, formData.floorsInBuildingMax]}
+            value={floorsInBuildingRange}
             onValueChange={(range) =>
               handleRangeInputChange("floorsInBuilding", range)
             }

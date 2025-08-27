@@ -1,9 +1,13 @@
-import React, { FC, useState, useEffect } from "react"
 import * as Popover from "@radix-ui/react-popover"
-import styles from "./priceDropdown.module.scss"
-import RangeInput from "@/app/catalogue/components/filters/rangeInput"
-import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+
+import React, { FC, useEffect, useRef, useState } from "react"
+
+import RangeInput from "@/app/catalogue/components/filters/rangeInput"
+
+import styles from "./priceDropdown.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface PriceDropdownProps {
   onPriceChange?: (range: [number | null, number | null]) => void
@@ -17,13 +21,21 @@ const PriceDropdown: FC<PriceDropdownProps> = ({
   const [priceRange, setPriceRange] =
     useState<[number | null, number | null]>(value)
 
+  // Используем ref для отслеживания предыдущего значения
+  const prevValueRef = useRef<[number | null, number | null]>(value)
+
   const handlePriceChange = (range: [number | null, number | null]) => {
     setPriceRange(range)
     onPriceChange?.(range)
   }
 
   useEffect(() => {
-    setPriceRange(value)
+    // Проверяем, действительно ли значения изменились
+    const prevValue = prevValueRef.current
+    if (prevValue[0] !== value[0] || prevValue[1] !== value[1]) {
+      setPriceRange(value)
+      prevValueRef.current = value
+    }
   }, [value])
 
   const formatPrice = (price: number): string => {
