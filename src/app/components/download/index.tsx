@@ -1,7 +1,5 @@
 "use client"
 
-import clsx from "clsx"
-
 import React, { useState } from "react"
 
 import { useApiMutation } from "@/utils/hooks/use-api"
@@ -21,19 +19,15 @@ interface ApiData {
 }
 
 const Download = () => {
+  const [sendMessenger, setSendMessenger] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    messenger: "",
     checkbox: false,
   })
 
   const handleInputChange = (name: string, value: string | boolean) => {
     setFormData({ ...formData, [name]: value })
-  }
-
-  const handleChangeMessenger = (value: string) => {
-    setFormData({ ...formData, messenger: value })
   }
 
   const submitMutation = useApiMutation<ApiData, ApiData>("/crm/store", {
@@ -42,26 +36,28 @@ const Download = () => {
       setFormData({
         name: "",
         phone: "",
-        messenger: "",
         checkbox: false,
       })
+      setSendMessenger("")
     },
     onError: (error) => {
       console.log("Ошибка при отправке запроса", error)
     },
   })
 
-  const handleSubmit = () => {
+  const handleSubmit = (value: string) => {
     if (!formData.checkbox) return
 
-    if (!formData.name || !formData.phone || !formData.messenger) {
+    setSendMessenger(value)
+    console.log(value)
+    if (!formData.name || !formData.phone) {
       console.log("Пожалуйста, заполните все поля")
       return
     }
     const apiData: ApiData = {
       name: formData.name,
       phone: formData.phone,
-      comment: `Пользователь запросил каталог в мессенджер ${formData.messenger}`,
+      comment: `Пользователь запросил каталог в мессенджер ${value}`,
       city: "novosibirsk",
     }
 
@@ -106,14 +102,16 @@ const Download = () => {
         <div className={styles.download__catalogue__actions}>
           <div className={styles.download__catalogue__buttons}>
             <ActionButton
-              className={clsx(
-                styles.download__catalogue__buttons__button,
-                styles.download__catalogue__buttons__whatsapp
-              )}
+              className={styles.download__catalogue__buttons__button}
               size="medium"
-              onClick={() => handleChangeMessenger("whatsapp")}
+              type="whatsapp"
+              onClick={() => handleSubmit("whatsapp")}
+              loading={sendMessenger === "whatsapp" && submitMutation.isPending}
+              disabled={sendMessenger === "whatsapp" && submitMutation.isPending}
             >
-              Получить в WhatsApp{" "}
+              {submitMutation.isPending && sendMessenger === "whatsapp"
+                ? "Отправляем в whatsapp"
+                : "Получить в WhatsApp"}
               <IconImage
                 iconLink="/images/icons/whatsapp.svg"
                 alt="whatsApp"
@@ -121,32 +119,21 @@ const Download = () => {
               />
             </ActionButton>
             <ActionButton
-              className={clsx(
-                styles.download__catalogue__buttons__button,
-                styles.download__catalogue__buttons__telegram
-              )}
+              className={styles.download__catalogue__buttons__button}
               size="medium"
-              onClick={() => handleChangeMessenger("telegram")}
+              type="telegram"
+              onClick={() => handleSubmit("telegram")}
+              loading={sendMessenger === "telegram" && submitMutation.isPending }
+              disabled={sendMessenger === "telegram" && submitMutation.isPending}
             >
-              Получить в Telegram
+              {submitMutation.isPending && sendMessenger === "telegram"
+                ? "Отправляем в telegram"
+                : "Получить в Telegram"}
               <IconImage
                 iconLink="/images/icons/telegram.svg"
                 alt="telegram"
                 className={styles.download__catalogue__buttons__button__icon}
               />
-            </ActionButton>
-          </div>
-          <div className={styles.download__catalogue__buttons}>
-            <ActionButton
-              className={styles.download__catalogue__buttons__button__send}
-              size="medium"
-              onClick={handleSubmit}
-              type="primary"
-              buttonWidth={189}
-              disabled={submitMutation.isPending}
-              loading={submitMutation.isPending}
-            >
-              {submitMutation.isPending ? "Отправка..." : "Отправить"}
             </ActionButton>
           </div>
           <CheckboxRow

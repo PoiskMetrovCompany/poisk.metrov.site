@@ -1,26 +1,29 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import styles from "./catalogueList.module.scss"
-import Heading3 from "@/components/ui/heading3"
-import Heading2 from "@/components/ui/heading2"
-import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
 
-import ActionButton from "@/components/ui/buttons/ActionButton"
-import RangeSlider from "@/components/ui/rangeSlider"
-import CatalogueFilters from "../catalogueFiltersNavbar"
-import FiltersDialog from "../filters"
-import { IProperty } from "@/types/PropertyCard"
+import React, { useEffect, useState } from "react"
+
+import Download from "@/app/components/download"
+import Selection from "@/components/apartmentSelection"
+import GetYourDreamFlat from "@/components/getYourDreamFlat"
+import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
-import GetYourDreamFlat from "@/components/getYourDreamFlat"
-import GetCatalogue from "@/components/getCatalogue"
-import Selection from "@/components/apartmentSelection"
-import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
-
+import { IProperty } from "@/types/PropertyCard"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
-import NotFound from "@/components/notFound"
+
+import styles from "./catalogueList.module.scss"
+
+import CatalogueFilters from "../catalogueFiltersNavbar"
+import FiltersDialog from "../filters"
+
+import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Heading2 from "@/components/ui/heading2"
+import Heading3 from "@/components/ui/heading3"
+import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
+import RangeSlider from "@/components/ui/rangeSlider"
 
 const cards: IProperty[] = [
   {
@@ -173,13 +176,14 @@ const CatalogueList = () => {
     result.push(
       <div
         key="get-catalogue"
-        className={
+        className={clsx(
           selectedSorting === "cards"
             ? styles.catalogue__cards__fullWidth
-            : undefined
-        }
+            : undefined,
+          styles.mt_getCatalogue
+        )}
       >
-        <GetCatalogue />
+        <Download />
       </div>
     )
 

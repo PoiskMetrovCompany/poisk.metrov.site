@@ -3,6 +3,7 @@ import styles from "./LK.module.scss"
 import Image from "next/image"
 import LeftFormLK from "@/components/LKComponents/LKForm/LeftFomLK"
 import GetCatalogue from "@/components/getCatalogue"
+import Download from "../components/download"
 
 const LK = () => {
   return (
@@ -19,7 +20,7 @@ const LK = () => {
           />
         </div>
         <div className={styles.LK__container__getCatalogue}>
-          <GetCatalogue />
+          <Download />
         </div>
       </div>
     </div>

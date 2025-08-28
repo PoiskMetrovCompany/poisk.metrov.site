@@ -2,38 +2,38 @@
   position: relative;
 
   &__filtersNavbar {
-    width: 100%;
     margin-bottom: 80px;
+    width: 100%;
 
     &__buttonsMobile {
+      align-items: center;
       display: flex;
       gap: 12px;
-      align-items: center;
       justify-content: center;
       margin-top: 12px;
 
       &__button {
         gap: 5px;
-        width: 211px;
         padding: 0;
+        width: 211px;
 
         span {
           display: flex;
         }
 
         &__filter {
-          width: 173px;
           padding: 0;
+          width: 173px;
 
           @media (width <= 768px) {
-            width: 48px;
             height: 48px;
+            width: 48px;
           }
         }
 
         @media (width <= 768px) {
-          width: 268px;
           height: 48px;
+          width: 268px;
         }
       }
 
@@ -44,25 +44,25 @@
   }
 
   &__filters {
-    position: fixed;
-    z-index: 9999;
-    top: 0;
+    height: 688px;
     left: 0;
     overflow-y: auto;
+    position: fixed;
+    top: 0;
     width: 1000px;
-    height: 688px;
+    z-index: 9999;
 
     &__container {
+      background: var(--color-white);
       box-sizing: border-box;
-      width: 100%;
       min-height: 100vh;
       padding: 20px;
-      background: var(--color-white);
+      width: 100%;
 
       &__showFlats {
-        width: 100%;
         margin-top: 64px;
         padding-bottom: 20px;
+        width: 100%;
       }
 
       &__buttonsSection {
@@ -89,8 +89,8 @@
 
       &__range {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         gap: 24px;
+        grid-template-columns: repeat(2, 1fr);
         margin-top: 32px;
 
         @media (width <= 768px) {
@@ -99,27 +99,27 @@
       }
 
       &__head {
-        position: sticky;
-        z-index: 10;
-        top: 0;
+        background: var(--color-white);
         display: flex;
         justify-content: space-between;
         margin-bottom: 32px;
         padding: 20px 0 10px;
-        background: var(--color-white);
+        position: sticky;
+        top: 0;
+        z-index: 10;
 
         &__text {
           font-size: 15px;
         }
 
         &__link {
+          align-items: center;
+          color: var(--color-blue);
           cursor: pointer;
           display: flex;
-          gap: 5px;
-          align-items: center;
-          width: 87px;
           font-size: 13px;
-          color: var(--color-blue);
+          gap: 5px;
+          width: 87px;
         }
       }
     }
@@ -131,43 +131,43 @@
     margin-bottom: 40px;
 
     &__livingSet {
+      align-items: center;
       display: flex;
       gap: 8px;
-      align-items: center;
       justify-content: space-between;
 
       span {
-        cursor: pointer;
         color: var(--color-orange);
+        cursor: pointer;
       }
     }
 
     .inlineSelect {
       display: inline-block;
-      width: auto;
       min-width: 200px;
+      width: auto;
     }
 
     &__favorite {
+      align-items: center;
+      color: var(--color-orange);
       cursor: pointer;
       display: flex;
-      gap: 8px;
-      align-items: center;
       font-size: 18px;
       font-weight: 500;
+      gap: 8px;
       line-height: 150%;
-      color: var(--color-orange);
 
       &__icon {
-        width: 32px;
         height: 32px;
+        width: 32px;
       }
     }
   }
 
   &__header {
-    display: flex;
     align-items: center;
+    display: flex;
     justify-content: space-between;
 
     &__buttons {
@@ -175,10 +175,10 @@
       gap: 10px;
 
       &__button {
-        display: flex;
-        gap: 4px;
         align-items: center;
         color: var(--color-text-gray);
+        display: flex;
+        gap: 4px;
 
         &_active {
           color: var(--color-orange);
@@ -191,8 +191,8 @@
         }
 
         &__icon {
-          width: 24px;
           height: 24px;
+          width: 24px;
         }
       }
 
@@ -207,8 +207,8 @@
 
     &_cards {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
       gap: 0 40px;
+      grid-template-columns: repeat(2, 1fr);
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         gap: 0 32px;
@@ -242,9 +242,9 @@
 }
 
 .filterSvg {
-  width: 18px;
   height: 18px;
   margin-left: 10px;
+  width: 18px;
 
   @media (width <= 768px) {
     margin-left: 0;
@@ -254,5 +254,17 @@
 .textFiltersMobile {
   @media (width <= 768px) {
     display: none;
+  }
+}
+.mt_getCatalogue {
+  margin-top: 120px;
+  @media (width >= 1440px) and (width < 1920px) {
+    margin-top: 100px;
+  }
+  @media (width >= 1024px) and (width < 1440px) {
+    margin-top: 80px;
+  }
+  @media (width < 1024px) {
+    margin-top: 64px;
   }
 }
