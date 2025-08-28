@@ -2,40 +2,56 @@
 
 import clsx from "clsx"
 
-import React, { FC, useState } from "react"
+import React, { useState } from "react"
 
 import Image from "next/image"
 
+import { useLocationStore } from "@/stores/useLocationStore"
+import { CityResponse } from "@/types/api"
+import { useApiQuery } from "@/utils/hooks/use-api"
+
 import styles from "../header.module.scss"
 
-interface ICity {
-  name: string
-  id: string
+import Skeleton from "@/components/ui/skeleton"
+
+interface LocationSelectorProps {
+  initialCity: { name: string; id: string; slug: string } | null
 }
 
-interface ILocationSelectorProps {
-  defaultCity?: string
-  onCityChange?: (city: string) => void
-}
-
-const LocationSelector: FC<ILocationSelectorProps> = ({
-  defaultCity = "Новосибирск",
-  onCityChange,
-}) => {
+const LocationSelector = ({ initialCity }: LocationSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedCity, setSelectedCity] = useState<string>(defaultCity)
 
-  const cities: ICity[] = [
-    { name: "Новосибирск", id: "novosibirsk" },
-    { name: "Санкт-Петербург", id: "spb" },
-  ]
+  const { selectedCity, setSelectedCity } = useLocationStore()
 
-  const handleCitySelect = (city: string): void => {
-    setSelectedCity(city)
-    setIsOpen(false)
-    if (onCityChange) {
-      onCityChange(city)
+  const {
+    data: citiesData,
+    isLoading,
+    error,
+  } = useApiQuery<CityResponse>(["cities"], "/city")
+
+  const cities = citiesData?.attributes || []
+
+  const handleCitySelect = (cityName: string): void => {
+    const city = cities.find((c) => c.title === cityName)
+    if (city) {
+      setSelectedCity({
+        name: city.title,
+        id: city.id.toString(),
+        slug: city.slug,
+      })
+
+      try {
+        const cookieValue = encodeURIComponent(
+          JSON.stringify({
+            name: city.title,
+            id: city.id.toString(),
+            slug: city.slug,
+          })
+        )
+        document.cookie = `selectedCity=${cookieValue}; Path=/; Max-Age=${60 * 60 * 24 * 365}`
+      } catch {}
     }
+    setIsOpen(false)
   }
 
   const toggleDropdown = () => {
@@ -55,7 +71,9 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
         onClick={toggleDropdown}
         type="button"
       >
-        <span className={styles.location_selector__text}>{selectedCity}</span>
+        <span className={styles.location_selector__text}>
+          {selectedCity?.name || initialCity?.name || "Выберите город"}
+        </span>
         <Image
           className={clsx(
             styles.location_selector__arrow,
@@ -71,21 +89,53 @@ const LocationSelector: FC<ILocationSelectorProps> = ({
       {isOpen && (
         <div className={styles.location_selector__dropdown}>
           <ul className={styles.location_selector__list}>
-            {cities.map((city) => (
-              <li key={city.id} className={styles.location_selector__item}>
-                <button
-                  className={`${styles.location_selector__option} ${
-                    city.name === selectedCity
-                      ? styles["location-selector__option--active"]
-                      : ""
-                  }`}
-                  onClick={() => handleCitySelect(city.name)}
-                  type="button"
-                >
-                  {city.name}
-                </button>
+            {isLoading ? (
+              <>
+                <li className={styles.location_selector__item}>
+                  <div className={styles.location_selector__option}>
+                    <Skeleton width={100} height={16} />
+                  </div>
+                </li>
+                <li className={styles.location_selector__item}>
+                  <div className={styles.location_selector__option}>
+                    <Skeleton width={100} height={16} />
+                  </div>
+                </li>
+                <li className={styles.location_selector__item}>
+                  <div className={styles.location_selector__option}>
+                    <Skeleton width={100} height={16} />
+                  </div>
+                </li>
+              </>
+            ) : error ? (
+              <li className={styles.location_selector__item}>
+                <div className={styles.location_selector__option}>
+                  Ошибка загрузки
+                </div>
               </li>
-            ))}
+            ) : cities.length === 0 ? (
+              <li className={styles.location_selector__item}>
+                <div className={styles.location_selector__option}>
+                  Города не найдены
+                </div>
+              </li>
+            ) : (
+              cities.map((city) => (
+                <li key={city.id} className={styles.location_selector__item}>
+                  <button
+                    className={`${styles.location_selector__option} ${
+                      city.title === selectedCity?.name
+                        ? styles["location-selector__option--active"]
+                        : ""
+                    }`}
+                    onClick={() => handleCitySelect(city.title)}
+                    type="button"
+                  >
+                    {city.title}
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       )}
