@@ -1,4 +1,5 @@
 import * as Popover from "@radix-ui/react-popover"
+import clsx from "clsx"
 
 import React, { FC, useEffect, useRef, useState } from "react"
 
@@ -9,6 +10,7 @@ import IconImage from "@/components/ui/IconImage"
 interface SearchDropdownProps {
   onSearchChange?: (value: string) => void
   value?: string
+  className?: string
 }
 
 type searchItemType = "metro" | "complex" | "adress"
@@ -50,6 +52,7 @@ const searchItemsAdress: IsearchItem[] = [
 const SearchDropdown: FC<SearchDropdownProps> = ({
   onSearchChange,
   value = "",
+  className,
 }) => {
   const [inputValue, setInputValue] = useState(value)
   const [isOpen, setIsOpen] = useState(false)
@@ -126,7 +129,7 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
   return (
     <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
       <Popover.Anchor asChild>
-        <div className={styles.searchDropdown__trigger}>
+        <div className={clsx(styles.searchDropdown__trigger, className)}>
           <IconImage
             className={styles.searchDropdown__trigger__icon}
             iconLink="/images/icons/search-gray.svg"

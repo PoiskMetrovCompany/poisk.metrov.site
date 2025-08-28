@@ -6,6 +6,8 @@ import React, { useState } from "react"
 
 import styles from "./propertyTypeSelect.module.scss"
 
+import ActionButton from "../../buttons/ActionButton"
+
 import IconImage from "@/components/ui/IconImage"
 
 interface PropertyTypeSelectProps {
@@ -20,6 +22,7 @@ const propertyTypeOptions = [
   { value: "Жилой комплекс", label: "Жилой комплекс" },
   { value: "Квартира", label: "Квартира" },
   { value: "Апартаменты", label: "Апартаменты" },
+  { value: "Дома", label: "Дома" },
 ]
 
 const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
@@ -30,10 +33,15 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
   className,
 }) => {
   const [value, setValue] = useState(defaultValue)
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue)
     onValueChange?.(newValue)
+  }
+
+  const handleApply = () => {
+    setIsOpen(false)
   }
 
   return (
@@ -41,7 +49,12 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
       className={`${styles.selectRoot} ${className ? styles[className] : ""}`}
     >
       {label && <div className={styles.selectLabel}>{label}</div>}
-      <Select.Root value={value} onValueChange={handleValueChange}>
+      <Select.Root
+        value={value}
+        onValueChange={handleValueChange}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
         <Select.Trigger className={styles.selectTrigger}>
           <Select.Value placeholder={placeholder} />
           <Select.Icon className={styles.selectIcon}>
@@ -57,6 +70,9 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
             className={styles.selectContent}
             position="popper"
             sideOffset={5}
+            side="bottom"
+            align="start"
+            avoidCollisions={false}
           >
             <Select.Viewport className={styles.selectViewport}>
               {propertyTypeOptions.map((option) => (
@@ -76,6 +92,12 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
                 </Select.Item>
               ))}
             </Select.Viewport>
+            <ActionButton
+              className={styles.selectMobileApplyButton}
+              onClick={handleApply}
+            >
+              Применить
+            </ActionButton>
           </Select.Content>
         </Select.Portal>
       </Select.Root>

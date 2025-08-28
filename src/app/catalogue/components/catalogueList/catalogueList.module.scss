@@ -2,23 +2,53 @@
   position: relative;
 
   &__filtersNavbar {
+    backdrop-filter: blur(10px);
+    // background: white;
+    // box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 80px;
+    position: sticky;
+    top: 81px; // Высота header для >=1024px (TopBar + MainBar)
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
+    z-index: 2;
+
+    // Изменяем фон на красный при sticky-состоянии
+    &_sticky {
+      // backdrop-filter: none;
+      // background: red;
+
+      // background: var(--White-100, #fff);
+      // border-top: 1px solid var(--Grey-100, #e9e9e9);
+    }
+
+    // Скрываем фильтры при скролле вниз
+    &_hidden {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       margin-bottom: 64px;
+      top: 81px; // Высота header для >=1024px (TopBar + MainBar)
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
       margin-bottom: 56px;
+      top: 81px; // Высота header для >=1024px (TopBar + MainBar)
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
       margin-bottom: 48px;
+      top: 70px; // Высота header для <1024px (только MainBar, TopBar скрыт)
     }
 
-    @media screen and (width < 768px) {
+    @media screen and (width >= 501px) and (width < 768px) {
       margin-bottom: 40px;
+      top: 65px; // Высота header для <1024px (только MainBar, TopBar скрыт)
+    }
+    @media screen and (width < 501px) {
+      margin-bottom: 40px;
+      top: 57px; // Высота header для <1024px (только MainBar, TopBar скрыт)
     }
 
     &__buttonsMobile {
@@ -151,15 +181,15 @@
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
-      margin-bottom: 56px;
+      margin-bottom: 24px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      margin-bottom: 48px;
+      margin-bottom: 24px;
     }
 
     @media screen and (width < 768px) {
-      margin-bottom: 40px;
+      margin-bottom: 16px;
     }
 
     &__livingSet {

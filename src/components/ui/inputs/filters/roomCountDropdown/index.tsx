@@ -1,8 +1,12 @@
-import React, { FC, useState, useRef, useEffect } from "react"
-import styles from "./roomCountDropdown.module.scss"
-import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+
+import React, { FC, useEffect, useMemo, useRef, useState } from "react"
+
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
+
+import styles from "./roomCountDropdown.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface RoomCount {
   value: string
@@ -34,9 +38,11 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { isLaptop } = useScreenSize()
 
+  const valueString = useMemo(() => JSON.stringify(value), [value])
+
   useEffect(() => {
     setSelectedCounts(value)
-  }, [value])
+  }, [valueString])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -116,7 +122,7 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
       ref={dropdownRef}
     >
       <button
-        className={styles.roomCountDropdown__trigger}
+        className={clsx(styles.roomCountDropdown__trigger, className)}
         onClick={() => setIsOpen(!isOpen)}
         type="button"
         aria-expanded={isOpen}

@@ -73,7 +73,9 @@
   display: inline-block;
   min-width: 200px;
   width: auto;
-
+  @media screen and (width < 768px) {
+    min-width: 0;
+  }
   .selectTrigger {
     background-color: transparent;
     border: none;
@@ -84,13 +86,17 @@
     height: auto;
     line-height: 1.5;
     min-width: 180px;
+
+    @media screen and (width < 768px) {
+      min-width: 0;
+    }
   }
 
   .selectIcon {
     margin-left: 8px;
 
     @media screen and (width < 768px) {
-      margin-left: 4px;
+      margin-left: 8px;
     }
   }
 }
@@ -111,11 +117,34 @@
 
   width: var(--radix-select-trigger-width);
   z-index: 9999;
+
+  @media screen and (width < 768px) {
+    animation: slide-up-and-fade 0.3s ease;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+
+    bottom: 0 !important;
+    box-shadow: 0 -4px 20px 0 rgb(0 0 0 / 20%);
+    left: 0 !important;
+    max-height: 80vh;
+    padding: 8px 16px 24px 16px;
+    position: fixed !important;
+    right: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    z-index: 9999;
+  }
 }
 
 .selectViewport {
   max-height: 18.75rem;
   overflow-y: auto;
+
+  @media screen and (width < 768px) {
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 .selectItem {
@@ -136,6 +165,11 @@
   text-align: left;
 
   transition: color 0.3s ease;
+
+  @media screen and (width < 768px) {
+    font-size: 14px;
+    height: 40px;
+  }
 
   &:hover {
     color: var(--color-orange);
@@ -159,6 +193,38 @@
   &_icon {
     height: 24px;
     width: 24px;
+
+    @media screen and (width < 768px) {
+      height: 18px;
+      width: 18px;
+    }
+  }
+}
+
+.selectMobileHeader {
+  display: none;
+
+  @media screen and (width < 768px) {
+    align-items: center;
+    border-bottom: 1px solid rgb(210 210 210 / 30%);
+    color: var(--color-orange);
+    display: flex;
+    font-size: 18px;
+    font-weight: 600;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+.selectMobileApplyButton {
+  display: none;
+
+  @media screen and (width < 768px) {
+    display: block !important;
+    height: 40px !important;
+    margin-top: 24px;
+    width: 100% !important;
   }
 }
 
@@ -188,6 +254,18 @@
   from {
     opacity: 0;
     transform: translateY(-2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-and-fade {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
   }
 
   to {

@@ -12,11 +12,13 @@ import IconImage from "@/components/ui/IconImage"
 interface PriceDropdownProps {
   onPriceChange?: (range: [number | null, number | null]) => void
   value?: [number | null, number | null]
+  className?: string
 }
 
 const PriceDropdown: FC<PriceDropdownProps> = ({
   onPriceChange,
   value = [null, null],
+  className,
 }) => {
   const [priceRange, setPriceRange] =
     useState<[number | null, number | null]>(value)
@@ -73,7 +75,7 @@ const PriceDropdown: FC<PriceDropdownProps> = ({
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button className={styles.priceDropdown__trigger}>
+        <button className={clsx(styles.priceDropdown__trigger, className)}>
           <div className={styles.priceDropdown__trigger__content}>
             <span
               className={clsx(
