@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState } from "react"
 import * as Select from "@radix-ui/react-select"
-import Image from "next/image"
+
+import React, { useState } from "react"
+
 import styles from "./propertyTypeSelect.module.scss"
+
 import IconImage from "@/components/ui/IconImage"
 
 interface PropertyTypeSelectProps {
