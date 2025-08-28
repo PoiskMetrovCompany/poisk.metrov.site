@@ -1,0 +1,227 @@
+.about {
+  display: flex;
+  gap: 180px;
+
+  &__title {
+    width: 538px;
+    font-weight: 400;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 352px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 178px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: 100%;
+    }
+
+    @media screen and (width < 768px) {
+      width: 100%;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    gap: 64px;
+
+    &__number {
+      display: flex;
+      flex-direction: column;
+      gap: 45px;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+
+        &__number {
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 150%;
+          color: var(--color-black);
+
+          @media screen and (width < 1920px) {
+            font-size: 15px;
+          }
+        }
+
+        &__line {
+          width: 2px;
+          height: 86px;
+          background-color: var(--color-border-gray-light);
+
+          @media screen and (width < 768px) {
+            height: 159px;
+          }
+        }
+
+        @media screen and (width >= 1920px) {
+          margin-top: 6px;
+        }
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          margin-top: 2px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          margin-top: 2px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          margin-top: 2px;
+        }
+
+        @media screen and (width < 768px) {
+          margin-top: 0;
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 30px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 34px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 8px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 22px;
+      }
+    }
+
+    &__text {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        height: 128px;
+
+        &__title {
+          font-size: 28px;
+          font-weight: 400;
+          line-height: 130%;
+          color: var(--color-black);
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            font-size: 20px;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            font-size: 20px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            font-size: 20px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 18px;
+          }
+        }
+
+        &__text {
+          margin: 0;
+
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 150%;
+          color: var(--color-text-gray);
+
+          @media screen and (width < 1920px) {
+            font-size: 15px;
+          }
+        }
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          gap: 12px;
+          height: 113px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          gap: 8px;
+          height: 126px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          gap: 8px;
+          height: 103px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 8px;
+          height: 192px;
+        }
+      }
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 32px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 24px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 20px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 16px;
+      }
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 56px;
+      margin-right: 30px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 48px;
+      margin-right: 10px;
+      font-size: 22px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 48px;
+      margin-right: 10px;
+      font-size: 22px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 24px;
+      margin-right: 10px;
+      font-size: 22px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 167px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 145px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  @media screen and (width < 768px) {
+    flex-direction: column;
+    gap: 24px;
+  }
+}

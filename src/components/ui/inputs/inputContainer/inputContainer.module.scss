@@ -1,0 +1,171 @@
+.inputContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  &.big {
+    flex-wrap: wrap;
+    width: auto;
+    text-align: left;
+  }
+
+  &__input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 72px;
+    padding: 24px 32px;
+    border: 1.5px solid rgb(210 210 210 / 100%);
+    border-radius: 1rem;
+    font-family: var(--font-onest);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.5;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      font-size: 18px;
+
+      @media (width <= 1440px) {
+        font-size: 16px;
+      }
+
+      @media (width <= 768px) {
+        font-size: 14px;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.big {
+      width: 100%;
+    }
+
+    &[readonly] {
+      padding-top: 1rem;
+      border: none;
+      background: rgb(249 249 247 / 100%);
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      height: 64px;
+      padding: 19px 24px;
+      font-size: 16px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      height: 56px;
+      padding: 17px 24px;
+      font-size: 16px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      height: 48px;
+      padding: 17px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    @media screen and (width < 768px) {
+      height: 48px;
+      padding: 17px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__prefix {
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    left: 0.875rem;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 16px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 16px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 14px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 14px;
+    }
+  }
+
+  &__label {
+    position: absolute;
+    z-index: 2;
+    top: -0.6875rem;
+    left: 18px;
+    padding: 0 12px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    background-color: var(--color-white);
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      right: 0;
+      left: 0;
+      transform: translateY(-50%);
+      height: 2px;
+      background-color: inherit;
+    }
+
+    &:has(+ .inputContainer__input[readonly]),
+    &:has(+ .inputContainer__wrapper .inputContainer__input[readonly]) {
+      top: 0;
+      font-size: 16px;
+      font-weight: 600;
+      background: none;
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      left: 16px;
+      padding: 0 8px;
+      font-size: 14px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      left: 16px;
+      padding: 0 8px;
+      font-size: 14px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      top: -9px;
+      left: 14px;
+      padding: 0 8px;
+      font-size: 12px;
+    }
+
+    @media screen and (width < 768px) {
+      top: -8px;
+      left: 14px;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+  }
+
+  &__wrapper:has(.inputContainer__prefix) .inputContainer__input {
+    padding-left: 3rem;
+  }
+}

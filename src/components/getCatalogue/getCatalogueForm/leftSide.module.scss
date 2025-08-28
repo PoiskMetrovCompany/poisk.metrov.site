@@ -1,0 +1,96 @@
+.leftSide {
+  width: 60%;
+  padding: 40px;
+
+  button {
+    height: 72px;
+    @media (max-width: 1920px) {
+      height: 64px;
+    }
+    @media (max-width: 1440px) {
+      height: 56px;
+      padding: 0;
+    }
+    @media (max-width: 1024px) {
+      height: 48px;
+    };
+  }
+  @media (max-width: 860px) {
+    padding: 10px;
+  }
+  @media (max-width: 745px) {
+    width: 100%;
+    padding: 24px 16px;
+  }
+  &__header {
+    font-size: 56px;
+    font-weight: 500;
+    @media (max-width: 1440px) {
+      font-size: 40px;
+    }
+    @media (max-width: 1024px) {
+      font-size: 34px;
+    }
+    @media (max-width: 768px) {
+      font-size: 26px;
+    }
+  }
+  &__description {
+    font-size: 34px;
+    font-weight: 500;
+    margin-top: 40px;
+    @media (max-width: 1920px) {
+      font-size: 22px;
+    }
+    @media (max-width: 1024px) {
+      font-size: 20px;
+    }
+  }
+  &__marker {
+    color: var(--color-orange);
+  }
+}
+.mt_0 {
+  margin-top: 0 !important;
+}
+.mediaButton {
+  @media (max-width: 1440px) {
+    font-size: 15px;
+  }
+}
+.buttonText {
+  &__full {
+    display: inline;
+  }
+
+  &__short {
+    display: none;
+  }
+
+  @media (max-width: 1440px) {
+    &__full {
+      display: none;
+    }
+
+    &__short {
+      display: inline;
+    }
+  }
+}
+
+.smallWrap {
+  @media (max-width: 500px) {
+    flex-wrap: wrap;
+  }
+}
+.w_50 {
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.fullWidth {
+  @media (max-width: 1024px) {
+    width: 100% !important;
+  }
+}

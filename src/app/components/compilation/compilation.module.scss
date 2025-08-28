@@ -3,6 +3,33 @@
 
   &__header {
     margin-bottom: 40px;
+
+    &__h2 {
+      @media (width <= 1440px) {
+        font-size: 22px !important;
+      }
+
+      @media (width <= 1024px) {
+        font-size: 20px !important;
+      }
+    }
+
+    &__navigation {
+      display: none;
+
+      @media (width <= 768px) {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+      }
+    }
+
+    @media (width <= 768px) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
   }
 
   &__content {
@@ -17,30 +44,25 @@
 
   &__slide {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
   }
 }
 
 .navigationButton {
   cursor: pointer;
-
   position: absolute;
   z-index: 10;
   top: 50%;
   transform: translateY(-50%);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border-radius: 50%;
-
   background: var(--color-white);
-
-  transition: all 0.3s ease;
+  user-select: none;
 
   &::after {
     display: none;
@@ -57,16 +79,58 @@
   }
 
   &:hover {
-    background: var(--color-beige);
+    .navigationButton__icon {
+      filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+        saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+    }
+  }
+}
+
+.navigationButtonMobile {
+  @media (width <= 768px) {
+    position: static !important;
+    transform: none !important;
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+
+    .navigationButton__icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  @media (width > 768px) {
+    display: none !important;
+  }
+}
+
+.navigationButtonDesktop {
+  @media (width <= 768px) {
+    display: none !important;
   }
 }
 
 .navigationButtonPrev {
   left: 0;
   transform: translateX(-50%) translateY(-22.5px);
+
+  &.navigationButtonMobile {
+    @media (width <= 768px) {
+      left: auto;
+      transform: none;
+    }
+  }
 }
 
 .navigationButtonNext {
   right: 0;
   transform: translateX(50%) translateY(-22.5px);
+
+  &.navigationButtonMobile {
+    @media (width <= 768px) {
+      right: auto;
+      transform: none;
+    }
+  }
 }

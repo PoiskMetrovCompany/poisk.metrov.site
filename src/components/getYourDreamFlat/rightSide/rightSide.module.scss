@@ -1,0 +1,13 @@
+.rightSide{
+    width: 100%;
+}
+
+.mt_0{
+    margin-top: 0 !important;
+}
+
+.smallWrap{
+    @media (max-width: 700px) {
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,132 @@
+.priceDropdown {
+  &__trigger {
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    width: 240px;
+    @media (max-width: 1920px) {
+      width: 200px;
+    }
+    @media (max-width: 1440px) {
+      width: 140px;
+    }
+
+    height: 24px;
+    padding-right: 16px;
+    padding-left: 24px;
+    border: none;
+    background: var(--white-white-100, #fff);
+    transition: all 0.2s ease;
+
+    // &:hover {
+    //   box-shadow: 0 4px 15px 0 rgb(0 0 0 / 15%);
+    // }
+
+    // &:focus {
+    //   outline: 2px solid #007aff;
+    //   outline-offset: 2px;
+    // }
+
+    &__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+    }
+
+    &__text {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--color-text-gray);
+      text-align: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &--selected {
+        color: var(--color-black);
+      }
+    }
+
+    &__icon {
+      flex-shrink: 0;
+      width: 12px;
+      height: 8px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &__content {
+    will-change: transform, opacity;
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 40px;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
+    animation-duration: 400ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+
+    &__inner {
+      width: 404px;
+      padding: 16px;
+      @media (max-width: 1920px) {
+        width: 340px;
+      }
+      @media (max-width: 1440px) {
+        width: 336px;
+      }
+    }
+  }
+}
+
+// Анимация для иконки при открытии
+.priceDropdown__trigger[data-state="open"] .priceDropdown__trigger__icon {
+  transform: rotate(180deg);
+}
+
+// Изменение цвета текста при открытии
+.priceDropdown__trigger[data-state="open"] .priceDropdown__trigger__text {
+  color: var(--color-black);
+}
+
+.priceDropdown__content[data-state="open"] {
+  animation-name: slide-down-and-fade;
+}
+
+.priceDropdown__content[data-state="closed"] {
+  animation-name: slide-up-and-fade;
+}
+
+@keyframes slide-down-and-fade {
+  from {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up-and-fade {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+}
+
+.priceDropdown__arrow {
+  fill: var(--white-white-100, #fff);
+  stroke: #e5e7eb;
+  stroke-width: 1px;
+}

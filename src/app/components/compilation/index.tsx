@@ -1,5 +1,4 @@
 "use client"
-
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import "swiper/css"
@@ -10,8 +9,12 @@ import FlatLayoutCard from "@/components/flatLayoutCard"
 import Image from "next/image"
 import PromoCard from "./promoCard"
 
-const Compilation = () => {
-  // Моковые данные для карточек
+interface compilationProps {
+  header: string
+  hasPromoCard: boolean
+}
+
+const Compilation = ({ header, hasPromoCard }: compilationProps) => {
   const flatCards = [
     {
       id: 1,
@@ -66,45 +69,74 @@ const Compilation = () => {
   return (
     <div className={styles.compilation}>
       <div className={styles.compilation__header}>
-        <Heading2>Подборка квартир</Heading2>
+        <Heading2 className={styles.compilation__header__h2}>{header}</Heading2>
+        <div className={styles.compilation__header__navigation}>
+          <div
+            className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonMobile}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-left"
+                fill
+              />
+            </div>
+          </div>
+          <div
+            className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext} ${styles.navigationButtonMobile}`}
+          >
+            <div className={styles.navigationButton__icon}>
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-right"
+                fill
+                className={styles.navigationButton__icon__icon_next}
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
       <div className={styles.compilation__content}>
         <Swiper
           modules={[Navigation]}
           spaceBetween={20}
-          slidesPerView={4}
+          slidesPerView={1}
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
           }}
           breakpoints={{
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 20,
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 10,
             },
-            1200: {
+            1440: {
+              slidesPerView: 3,
+              spaceBetween: 15,
+            },
+            1920: {
               slidesPerView: 4,
-              spaceBetween: 40,
+              spaceBetween: 30,
             },
           }}
           className={styles.swiper}
         >
           {flatCards.map((card) => (
             <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              {card.id === 3 ? <PromoCard /> : <FlatLayoutCard />}
+              {card.id === 3 && hasPromoCard === true ? <PromoCard /> : <FlatLayoutCard />}
             </SwiperSlide>
           ))}
         </Swiper>
-
         <div
-          className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
+          className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonDesktop}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
           </div>
         </div>
         <div
-          className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext}`}
+          className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext} ${styles.navigationButtonDesktop}`}
         >
           <div className={styles.navigationButton__icon}>
             <Image

@@ -1,7 +1,0 @@
-{
-  "extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
-  "plugins": ["stylelint-scss"],
-  "rules": {
-    "selector-class-pattern": null
-  }
-}

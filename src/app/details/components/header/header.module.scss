@@ -1,28 +1,50 @@
 .header {
   display: flex;
-  align-items: center;
+  gap: 40px;
+  align-items: flex-start;
   justify-content: space-between;
-
-  &__title {
-    display: flex;
-    flex-direction: column;
-  }
 
   &__place {
     display: flex;
+    flex: 1;
     gap: 40px;
-    min-width: 471px;
+    justify-content: space-between;
+
+    &__title {
+      display: flex;
+      flex-direction: column;
+    }
 
     &__text {
       display: flex;
       flex-direction: column;
       gap: 8px;
 
+      min-width: 290px;
+
+      text-align: right;
+
       &__title {
         font-size: 18px;
         font-weight: 400;
         line-height: 150%;
         color: var(--color-text-black);
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 14px;
+        }
       }
 
       &__distance {
@@ -45,13 +67,92 @@
             width: 20px;
             height: 20px;
           }
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
         }
+
+        @media screen and (width < 1024px) {
+          margin-left: 0;
+        }
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 4px;
+      }
+
+      @media screen and (width < 1024px) {
+        gap: 4px;
+        text-align: left;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 4px;
+        min-width: 0;
+        max-width: 225px;
       }
     }
 
-    &__buttons {
-      display: flex;
-      gap: 16px;
+    @media screen and (width >= 768px) and (width < 1024px) {
+      flex-direction: column;
+      gap: 0;
+      align-items: start;
     }
+
+    @media screen and (width < 768px) {
+      flex-direction: column;
+      gap: 9px;
+      align-items: start;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 16px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 12px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 12px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 12px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 8px;
+    }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 32px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 24px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 5px;
+  }
+
+  @media screen and (width < 768px) {
+    gap: 12px;
   }
 }

@@ -2,26 +2,72 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border: 1.5px solid var(--color-border-gray);
   border-radius: 50%;
-
   font-family: var(--font-onest);
-
   background-color: var(--color-white);
-
   transition: all 0.3s ease;
 
   &_sm {
     width: 48px;
     height: 48px;
+
+    @media screen and (width < 1920px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   &_md {
     width: 64px;
     height: 64px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 56px;
+      height: 56px;
+
+      .iconButton__icon {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 48px;
+      height: 48px;
+
+      .iconButton__icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: 48px;
+      height: 48px;
+
+      .iconButton__icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    @media screen and (width < 768px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   &_lg {
@@ -46,8 +92,58 @@
     }
   }
 
+  &_tiny {
+    width: 56px;
+    height: 56px;
+
+    .iconButton__icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 48px;
+      height: 48px;
+
+      .iconButton__icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media screen and (width < 768px) {
+      width: 40px;
+      height: 40px;
+
+      .iconButton__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
   &:hover {
-    border: 1.5px solid var(--color-orange);
+    // border: 1.5px solid var(--color-orange);
 
     .iconButton__icon {
       filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
@@ -63,5 +159,44 @@
   &_secondary {
     border: none;
     background-color: var(--color-beige);
+  }
+
+  &_orange {
+    border: 1.5px solid var(--color-orange);
+    background-color: var(--color-orange);
+
+    &:hover {
+      background-color: var(--color-orange-hover);
+
+      .iconButton__icon {
+        filter: none;
+      }
+    }
+  }
+
+  &_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+      .iconButton__icon {
+        filter: none;
+      }
+    }
+  }
+
+  &_orangeLight {
+    border: none;
+    background-color: rgb(236 125 63 / 20%);
+
+    &:hover {
+      border: none;
+      background-color: rgb(228 98 25 / 20%);
+
+      .iconButton__icon {
+        filter: none;
+      }
+    }
   }
 }

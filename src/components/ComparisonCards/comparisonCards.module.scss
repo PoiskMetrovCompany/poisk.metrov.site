@@ -1,0 +1,524 @@
+.comparisonCards {
+  border-right: 1px solid var(--color-gray-white);
+  padding-right: 32px;
+  width: 100%;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    padding-right: 28px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    padding-right: 24px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    padding-right: 24px;
+  }
+
+  @media screen and (width < 768px) {
+    border-right: none;
+    padding-right: 12px;
+  }
+
+  &__last {
+    border-right: none;
+  }
+
+  &__content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      gap: 48px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      gap: 40px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 32px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 20px;
+    }
+
+    // width: 448px;
+    width: 100%;
+
+    &__heading {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 16px;
+      }
+
+      @media screen and (width < 1440px) {
+        gap: 12px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 8px;
+      }
+
+      &__image {
+        aspect-ratio: 56/41;
+        border-radius: 24px;
+
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        &__icon {
+          height: 100%;
+          width: 100%;
+        }
+
+        &__delete {
+          position: absolute;
+          right: 24px;
+          top: 24px;
+          z-index: 10;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            right: 16px;
+            top: 16px;
+          }
+
+          @media screen and (width < 768px) {
+            height: 24px !important;
+            right: 8px;
+            top: 8px;
+            width: 24px !important;
+          }
+
+          &__icon {
+            height: 24px !important;
+            width: 24px !important;
+
+            @media screen and (width >= 768px) and (width < 1920px) {
+              height: 20px !important;
+              width: 20px !important;
+            }
+
+            @media screen and (width < 768px) {
+              height: 12px !important;
+              width: 12px !important;
+            }
+          }
+        }
+      }
+
+      &__imageContainer {
+        position: relative;
+        width: 100%;
+      }
+
+      &__imageFlat {
+        align-items: center;
+
+        aspect-ratio: 56/41;
+        border: 1px solid var(--color-gray-white);
+        border-radius: 24px;
+        display: flex;
+        justify-content: center;
+
+        overflow: hidden;
+        width: 100%;
+
+        &__icon {
+          height: 259px;
+          width: 274px;
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            height: 223px;
+            width: 236px;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            height: 196px;
+            width: 208px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            height: 150px;
+            width: 159px;
+          }
+
+          @media screen and (width < 768px) {
+            height: 127px;
+            width: 135px;
+          }
+        }
+      }
+
+      &__text {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        @media screen and (width < 768px) {
+          gap: 0px;
+        }
+
+        &__title {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          @media screen and (width < 768px) {
+            font-size: 11px !important;
+          }
+        }
+
+        &__address {
+          color: var(--color-text-gray);
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 300;
+          line-height: 150%;
+
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+
+    &__block {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 100%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 28px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 24px;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        gap: 16px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 12px;
+      }
+
+      &__title {
+        align-items: center;
+
+        background: var(--color-beige-light);
+        color: var(--color-text-black);
+        display: flex;
+
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+
+        height: 50px;
+        justify-content: start;
+        line-height: 150%;
+        margin: 0 -31px;
+        padding: 0 31px;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          margin: 0 -27px;
+          padding: 0 27px;
+        }
+
+        @media screen and (width < 1440px) {
+          margin: 0 -23px;
+          padding: 0 23px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          font-size: 15px;
+        }
+
+        @media screen and (width < 768px) {
+          font-size: 10px;
+          height: 22px;
+        }
+      }
+
+      &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        list-style: none;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          gap: 28px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          gap: 24px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          gap: 16px;
+        }
+
+        @media screen and (width < 768px) {
+          gap: 6px;
+        }
+
+        &__item {
+          align-items: center;
+          display: flex;
+          gap: 5px;
+          justify-content: space-between;
+
+          @media screen and (width < 1024px) {
+            align-items: start;
+            flex-direction: column;
+            justify-content: start;
+          }
+
+          @media screen and (width < 768px) {
+            gap: 2px;
+          }
+
+          &_active {
+            &::before {
+              background-color: var(--color-orange);
+              border-radius: 50%;
+              content: "";
+              height: 8px;
+              left: 16px;
+              margin-top: 0;
+
+              position: absolute;
+              transform: translateX(-50%);
+              width: 8px;
+
+              @media screen and (width >= 1024px) and (width < 1440px) {
+                left: 12px;
+              }
+
+              @media screen and (width < 1024px) {
+                left: 14px;
+                margin-top: 6px;
+              }
+
+              @media screen and (width < 768px) {
+                height: 4px;
+                left: -6px;
+                width: 4px;
+              }
+            }
+          }
+
+          &__title {
+            color: var(--color-text-gray);
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 150%;
+
+            @media screen and (width >= 768px) and (width < 1920px) {
+              font-size: 15px;
+            }
+
+            @media screen and (width < 768px) {
+              font-size: 10px;
+            }
+          }
+
+          &__value {
+            color: var(--color-black);
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            @media screen and (width >= 768px) and (width < 1920px) {
+              font-size: 15px;
+            }
+
+            @media screen and (width < 768px) {
+              font-size: 11px;
+            }
+
+            &__complex {
+              align-items: center;
+              display: flex;
+              gap: 12px;
+
+              @media screen and (width < 1920px) {
+                gap: 10px;
+              }
+
+              @media screen and (width < 768px) {
+                gap: 2px;
+              }
+
+              &__icon {
+                border-radius: 50%;
+                height: 24px;
+                object-fit: cover;
+                width: 24px;
+
+                @media screen and (width < 768px) {
+                  height: 14px;
+                  width: 14px;
+                }
+              }
+
+              &__info {
+                display: flex;
+                gap: 8px;
+
+                @media screen and (width < 768px) {
+                  flex-wrap: wrap;
+                  gap: 4px;
+                }
+
+                &__name {
+                  color: var(--color-black);
+                  font-size: 18px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 150%;
+
+                  @media screen and (width >= 768px) and (width < 1920px) {
+                    font-size: 15px;
+                  }
+
+                  @media screen and (width < 768px) {
+                    font-size: 11px;
+                  }
+                }
+
+                &__time {
+                  color: var(--color-black);
+                  font-size: 18px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 150%;
+
+                  @media screen and (width >= 768px) and (width < 1920px) {
+                    font-size: 15px;
+                  }
+
+                  @media screen and (width < 768px) {
+                    font-size: 11px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &__price {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: 100%;
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        gap: 32px;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        gap: 28px;
+      }
+
+      @media screen and (width < 1024px) {
+        gap: 24px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 12px;
+      }
+
+      &__value {
+        align-items: end;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+
+        @media screen and (width < 768px) {
+          align-items: start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        &__price {
+          color: var(--color-black);
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 130%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 20px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 14px;
+          }
+        }
+
+        &__pricePerMonth {
+          color: var(--color-text-gray);
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 150%;
+
+          @media screen and (width >= 768px) and (width < 1920px) {
+            font-size: 15px;
+          }
+
+          @media screen and (width < 768px) {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+
+      @media screen and (width < 1920px) {
+        gap: 12px;
+      }
+
+      @media screen and (width < 768px) {
+        gap: 8px;
+        > button {
+          font-size: 10px !important;
+        }
+      }
+    }
+  }
+}

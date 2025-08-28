@@ -1,246 +1,261 @@
-"use client";
-import React, { FC, useState, useEffect, useRef } from "react";
+"use client"
+import React, { FC, useState, useEffect, useRef } from "react"
 
-import Image from "next/image";
+import Image from "next/image"
 
 interface INotification {
-  id?: { $oid?: string };
-  title: string;
-  created_at: string;
+  id?: { $oid?: string }
+  title: string
+  created_at: string
 }
 
 interface IHeaderProps {
-  onCityChange?: (city: string) => void;
-  activePage?: 'candidates' | 'settings'; 
+  onCityChange?: (city: string) => void
+  activePage?: "candidates" | "settings"
 }
 
-const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }) => {
-  const [showNotifications, setShowNotifications] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<INotification[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [selectedCity, setSelectedCity] = useState<string>('Новосибирск');
-  const [showCityDropdown, setShowCityDropdown] = useState<boolean>(false);
-  const notificationButtonRef = useRef<HTMLButtonElement>(null);
-  const cityDropdownRef = useRef<HTMLDivElement>(null);
+const BigHeader: FC<IHeaderProps> = ({
+  onCityChange,
+  activePage = "candidates",
+}) => {
+  const [showNotifications, setShowNotifications] = useState<boolean>(false)
+  const [notifications, setNotifications] = useState<INotification[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [selectedCity, setSelectedCity] = useState<string>("Новосибирск")
+  const [showCityDropdown, setShowCityDropdown] = useState<boolean>(false)
+  const notificationButtonRef = useRef<HTMLButtonElement>(null)
+  const cityDropdownRef = useRef<HTMLDivElement>(null)
 
   // Список городов
-  const cities = ['Новосибирск', 'Санкт-Петербург'];
+  const cities = ["Новосибирск", "Санкт-Петербург"]
 
   // Функция для форматирования даты
   const formatNotificationDate = (dateString: string): string => {
-    const notificationDate = new Date(dateString);
-    const now = new Date();
-    
+    const notificationDate = new Date(dateString)
+    const now = new Date()
+
     // Проверяем, является ли дата сегодняшней
-    const isToday = notificationDate.toDateString() === now.toDateString();
-    
-    const hours = notificationDate.getHours().toString().padStart(2, '0');
-    const minutes = notificationDate.getMinutes().toString().padStart(2, '0');
-    const time = `${hours}:${minutes}`;
-    
+    const isToday = notificationDate.toDateString() === now.toDateString()
+
+    const hours = notificationDate.getHours().toString().padStart(2, "0")
+    const minutes = notificationDate.getMinutes().toString().padStart(2, "0")
+    const time = `${hours}:${minutes}`
+
     if (isToday) {
-      return time;
+      return time
     } else {
-      const day = notificationDate.getDate().toString().padStart(2, '0');
-      const month = (notificationDate.getMonth() + 1).toString().padStart(2, '0');
-      return `${time} ${day}.${month}`;
+      const day = notificationDate.getDate().toString().padStart(2, "0")
+      const month = (notificationDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")
+      return `${time} ${day}.${month}`
     }
-  };
+  }
 
   // Обработчик выбора города
   const handleCitySelect = (city: string) => {
-    setSelectedCity(city);
-    setShowCityDropdown(false);
+    setSelectedCity(city)
+    setShowCityDropdown(false)
     if (onCityChange) {
-      onCityChange(city);
+      onCityChange(city)
     }
-  };
+  }
 
   // Обработчик клика по селектору города
   const toggleCityDropdown = () => {
-    setShowCityDropdown(!showCityDropdown);
-  };
+    setShowCityDropdown(!showCityDropdown)
+  }
 
   // Обработчик клика вне dropdown для закрытия
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
-        setShowCityDropdown(false);
+      if (
+        cityDropdownRef.current &&
+        !cityDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowCityDropdown(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      setLoading(true);
-      const url = '/api/v1/notification/new-candidates';
-      
+      setLoading(true)
+      const url = "/api/v1/notification/new-candidates"
+
       // Используем уже существующую в проекте функцию для получения токена
       const getAccessToken = (): string | null => {
-        const cookies = document.cookie.split(';');
+        const cookies = document.cookie.split(";")
         for (let cookie of cookies) {
-          const [name, value] = cookie.trim().split('=');
-          if (name === 'access_token') {
-            return value;
+          const [name, value] = cookie.trim().split("=")
+          if (name === "access_token") {
+            return value
           }
         }
-        return null;
-      };
+        return null
+      }
 
       // Функция для получения CSRF токена
       const getCsrfToken = (): string => {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        const metaTag = document.querySelector('meta[name="csrf-token"]')
         if (metaTag) {
-          return metaTag.getAttribute('content') || '';
+          return metaTag.getAttribute("content") || ""
         }
 
-        const cookies = document.cookie.split(';');
+        const cookies = document.cookie.split(";")
         for (let cookie of cookies) {
-          const [name, value] = cookie.trim().split('=');
-          if (name === 'XSRF-TOKEN') {
-            return decodeURIComponent(value);
+          const [name, value] = cookie.trim().split("=")
+          if (name === "XSRF-TOKEN") {
+            return decodeURIComponent(value)
           }
         }
 
-        return 'Zva2RlvTSh5wTQogjJMfE8v5ObQoOSIcL40Xwc5d';
-      };
+        return "Zva2RlvTSh5wTQogjJMfE8v5ObQoOSIcL40Xwc5d"
+      }
 
-      const token = getAccessToken();
-      const csrfToken = getCsrfToken();
-      
-      console.log('🚀 Отправляем GET запрос на:', url);
-      console.log('🌐 Текущий домен:', window.location.origin);
-      console.log('📍 Полный URL:', window.location.origin + url);
-      console.log('🔑 Access Token найден:', token ? 'Да' : 'Нет');
-      console.log('🔑 Access Token (первые 20 символов):', token ? token.substring(0, 20) + '...' : 'Отсутствует');
-      console.log('🛡️ CSRF Token найден:', csrfToken ? 'Да' : 'Нет');
+      const token = getAccessToken()
+      const csrfToken = getCsrfToken()
+
+      console.log("🚀 Отправляем GET запрос на:", url)
+      console.log("🌐 Текущий домен:", window.location.origin)
+      console.log("📍 Полный URL:", window.location.origin + url)
+      console.log("🔑 Access Token найден:", token ? "Да" : "Нет")
+      console.log(
+        "🔑 Access Token (первые 20 символов):",
+        token ? token.substring(0, 20) + "..." : "Отсутствует"
+      )
+      console.log("🛡️ CSRF Token найден:", csrfToken ? "Да" : "Нет")
 
       try {
         const headers: Record<string, string> = {
-          'accept': 'application/json',
-          'Content-Type': 'application/json'
-        };
+          accept: "application/json",
+          "Content-Type": "application/json",
+        }
 
         // Добавляем Authorization заголовок, если токен найден
         if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
+          headers["Authorization"] = `Bearer ${token}`
         }
 
-        // Добавляем CSRF токен
         if (csrfToken) {
-          headers['X-CSRF-TOKEN'] = csrfToken;
+          headers["X-CSRF-TOKEN"] = csrfToken
         }
 
-        console.log('📋 Заголовки запроса:', headers);
+        console.log("📋 Заголовки запроса:", headers)
 
         const response = await fetch(url, {
-          method: 'GET',
-          headers: headers
-        });
-        
-        console.log('📡 Статус ответа:', response.status);
-        console.log('📋 Заголовки ответа:', Object.fromEntries(response.headers.entries()));
-        console.log('✅ Запрос успешен:', response.ok);
+          method: "GET",
+          headers: headers,
+        })
+
+        console.log("📡 Статус ответа:", response.status)
+        console.log(
+          "📋 Заголовки ответа:",
+          Object.fromEntries(response.headers.entries())
+        )
+        console.log("✅ Запрос успешен:", response.ok)
 
         if (response.ok) {
           // Получаем JSON ответ
-          const data = await response.json();
-          console.log('✅ Данные уведомлений получены:', data);
-          
+          const data = await response.json()
+          console.log("✅ Данные уведомлений получены:", data)
+
           // Обновляем состояние с полученными уведомлениями
           if (data.response && data.attributes) {
-            setNotifications(data.attributes);
+            setNotifications(data.attributes)
           }
         } else {
           // Получаем текст ошибки
-          const errorText = await response.text();
-          console.error('❌ Ошибка ответа сервера:', {
+          const errorText = await response.text()
+          console.error("❌ Ошибка ответа сервера:", {
             status: response.status,
             statusText: response.statusText,
-            errorText: errorText.substring(0, 200)
-          });
+            errorText: errorText.substring(0, 200),
+          })
         }
-
       } catch (error) {
-        console.error('❌ Ошибка при получении уведомлений:', error);
-        console.error('🔍 Детали ошибки:', {
+        console.error("❌ Ошибка при получении уведомлений:", error)
+        console.error("🔍 Детали ошибки:", {
           name: (error as Error).name,
           message: (error as Error).message,
-          stack: (error as Error).stack
-        });
+          stack: (error as Error).stack,
+        })
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchNotifications();
-  }, []);
+    fetchNotifications()
+  }, [])
 
   const handleLogout = () => {
-    document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    window.location.reload();
-  };
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    window.location.reload()
+  }
 
   const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
-  };
+    setShowNotifications(!showNotifications)
+  }
 
   // Определяем какую иконку показывать
   const getNotificationIcon = (): string => {
-    return notifications.length > 0 
-      ? '/images/candidatesSecurityImg/ringActive.webp' 
-      : '/images/candidatesSecurityImg/ring.webp';
-  };
+    return notifications.length > 0
+      ? "/images/candidatesSecurityImg/ringActive.webp"
+      : "/images/candidatesSecurityImg/ring.webp"
+  }
 
   const getNotificationAlt = (): string => {
-    return notifications.length > 0 ? 'Есть новые уведомления' : 'Уведомлений нет';
-  };
+    return notifications.length > 0
+      ? "Есть новые уведомления"
+      : "Уведомлений нет"
+  }
 
   return (
     <header>
       <div className="formRow justify-space-between w-80">
-        <div style={{display: 'flex', alignItems: 'center'}}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Image
             id="nonTextImg"
-            src="/images/candidatesSecurityImg/logo_без _текста.webp"
+            src="/images/candidatesSecurityImg/logoNonText.webp"
             alt="Логотип компании Поиск Метров"
-            width={40} 
+            width={40}
             height={40}
           />
-          <div style={{position: 'relative'}} ref={cityDropdownRef}>
+          <div style={{ position: "relative" }} ref={cityDropdownRef}>
             <h5 id="city">
-              Город: 
-              <span 
-                id="selectCity" 
-                onClick={toggleCityDropdown}
-                style={{cursor: 'pointer'}}
-              >
-                {selectedCity}
-              </span>
-              <Image
-                    src="/images/icons/chevron-down.svg"
-                    alt="Dropdown arrow"
-                    width={12}
-                    height={12}
-                    style={{
-                      transform: showCityDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform 0.2s ease'
-                    }}
-              />
+              Город:
+              <div className="city-selector" onClick={toggleCityDropdown}>
+                <span id="selectCity">{selectedCity}</span>
+                <Image
+                  src="/images/icons/chevron-down.svg"
+                  alt="Dropdown arrow"
+                  width={12}
+                  height={12}
+                  style={{
+                    transform: showCityDropdown
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 0.2s ease",
+                  }}
+                />
+              </div>
             </h5>
-            
+
             {/* Выпадающий список городов */}
             {showCityDropdown && (
               <div className="city-dropdown">
                 {cities.map((city) => (
-                  <div 
+                  <div
                     key={city}
-                    className={`city-option ${city === selectedCity ? 'selected' : ''}`}
+                    className={`city-option ${
+                      city === selectedCity ? "selected" : ""
+                    }`}
                     onClick={() => handleCitySelect(city)}
                   >
                     {city}
@@ -250,31 +265,46 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
             )}
           </div>
         </div>
-        <div className="w-80" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '30px'}}>
-          <a 
+        <div
+          className="w-80"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "30px",
+          }}
+        >
+          <a
             href="/candidatesSecurityBlock/candidatesSecurityTable"
-            className={activePage === 'candidates' ? 'active' : ''}
+            className={activePage === "candidates" ? "active" : ""}
           >
             Кандидаты
           </a>
-          <a 
+          <a
             href="/candidatesSecurityBlock/securitySettings"
-            className={activePage === 'settings' ? 'active' : ''}
+            className={activePage === "settings" ? "active" : ""}
           >
             Настройки
           </a>
         </div>
-        <div style={{display: 'flex', justifyContent: 'space-between', minWidth: '250px', position: 'relative'}}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            minWidth: "250px",
+            position: "relative",
+          }}
+        >
           {/* Контейнер для кнопки уведомлений и блока уведомлений */}
-          <div style={{position: 'relative'}}>
+          <div style={{ position: "relative" }}>
             <button
               id="notifBtn"
               ref={notificationButtonRef}
               onClick={toggleNotifications}
-              style={{position: 'relative'}}
+              style={{ position: "relative" }}
             >
-              <Image 
-                src={getNotificationIcon()} 
+              <Image
+                src={getNotificationIcon()}
                 alt={getNotificationAlt()}
                 width={24}
                 height={24}
@@ -291,15 +321,22 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
                   {loading ? (
                     <div className="notification-item">
                       <div className="notification-content">
-                        <span className="notification-text">Загрузка уведомлений...</span>
+                        <span className="notification-text">
+                          Загрузка уведомлений...
+                        </span>
                       </div>
                     </div>
                   ) : notifications.length > 0 ? (
                     notifications.map((notification, index) => (
-                      <div key={notification.id?.$oid || index} className="notification-item">
+                      <div
+                        key={notification.id?.$oid || index}
+                        className="notification-item"
+                      >
                         <div className="notification-dot"></div>
                         <div className="notification-content">
-                          <span className="notification-text">{notification.title}</span>
+                          <span className="notification-text">
+                            {notification.title}
+                          </span>
                           <span className="notification-time">
                             {formatNotificationDate(notification.created_at)}
                           </span>
@@ -309,7 +346,9 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
                   ) : (
                     <div className="notification-item">
                       <div className="notification-content">
-                        <span className="notification-text">Уведомлений нет</span>
+                        <span className="notification-text">
+                          Уведомлений нет
+                        </span>
                       </div>
                     </div>
                   )}
@@ -318,9 +357,9 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
             )}
           </div>
           <button id="exitBtn" onClick={handleLogout}>
-            Выйти из ЛК 
-            <Image 
-              src="/images/candidatesSecurityImg/arowRight.webp" 
+            Выйти из ЛК
+            <Image
+              src="/images/candidatesSecurityImg/arowRight.webp"
               alt="Стрелочка вправо"
               width={16}
               height={16}
@@ -329,7 +368,7 @@ const BigHeader: FC<IHeaderProps> = ({ onCityChange, activePage = 'candidates' }
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default BigHeader;
+export default BigHeader

@@ -17,17 +17,28 @@
 
       &__description {
         margin: 0;
-
         font-size: 24px;
         font-weight: 400;
         line-height: 130%;
-        color: var(--color-border-gray-light);
+        color: var(--color-text-gray-light);
+
+        @media (width <= 1920px) {
+          font-size: 18px;
+        }
+
+        @media (width <= 1024px) {
+          font-size: 16px;
+        }
       }
     }
 
     &__buttons {
       display: flex;
       gap: 24px;
+
+      @media (width <= 768px) {
+        display: none;
+      }
     }
   }
 
@@ -48,7 +59,6 @@
 
         &__name {
           margin: 0;
-
           font-size: 24px;
           font-weight: 500;
           line-height: 130%;
@@ -63,7 +73,6 @@
 
       &__description {
         margin: 0;
-
         font-size: 24px;
         font-weight: 400;
         line-height: 120%;
@@ -86,19 +95,14 @@
 
 .navigationButton {
   cursor: pointer;
-
   z-index: 10;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
   height: 64px;
   border-radius: 50%;
-
   background: var(--color-white);
-
   transition: all 0.3s ease;
 
   &::after {
@@ -116,6 +120,9 @@
   }
 
   &:hover {
-    background: var(--color-beige);
+    .navigationButton__icon {
+      filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+        saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+    }
   }
 }

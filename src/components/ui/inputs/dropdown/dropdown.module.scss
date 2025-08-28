@@ -1,4 +1,6 @@
 .dropdown {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,7 +12,7 @@
 
   font-family: var(--font-onest);
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 150%;
   color: var(--color-text-gray);
 
@@ -20,6 +22,75 @@
 
   &:hover {
     border-color: var(--color-border-gray-hover);
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    height: 64px;
+    padding: 19px 24px;
+    font-size: 16px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    height: 56px;
+    padding: 17px 24px;
+    font-size: 16px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    height: 48px;
+    padding: 17px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  @media screen and (width < 768px) {
+    height: 48px;
+    padding: 17px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+}
+
+.label {
+  position: absolute;
+  top: -14px;
+  left: 18px;
+
+  float: none;
+
+  width: fit-content;
+  padding: 0 12px;
+
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-black);
+
+  background-color: white;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    left: 16px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    left: 16px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    top: -11px;
+    left: 14px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  @media screen and (width < 768px) {
+    top: -10px;
+    left: 14px;
+    padding: 0 8px;
+    font-size: 11px;
   }
 }
 
@@ -39,10 +110,11 @@
 .Content {
   overflow: hidden;
 
-  width: 100%;
+  width: var(--radix-select-trigger-width);
   border-radius: 6px;
+  border-radius: 0 0 16px 16px;
 
-  background-color: var(--color-beige);
+  background-color: white;
   box-shadow: 0 4px 3px 2px #0000001a;
 }
 
@@ -51,6 +123,7 @@
 }
 
 .Item {
+  cursor: pointer;
   user-select: none;
 
   position: relative;
@@ -58,12 +131,17 @@
   display: flex;
   align-items: center;
 
-  height: 25px;
+  height: 65px;
   padding: 0 35px 0 25px;
-  border-radius: 3px;
 
   font-size: 13px;
   line-height: 1;
+
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-beige);
+  }
 
   &[data-disabled] {
     pointer-events: none;

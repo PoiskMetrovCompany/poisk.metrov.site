@@ -4,6 +4,7 @@ import Image from "next/image"
 import IconButton from "../ui/buttons/IconButton"
 import Link from "next/link"
 import IconImage from "../ui/IconImage"
+import clsx from "clsx"
 
 const description = [
   "Этаж 8 из 17",
@@ -12,7 +13,11 @@ const description = [
   "Отделка улучшенная черновая",
 ]
 
-const FlatLayoutCard = () => {
+interface IFlatLayoutCardProps {
+  listClassName?: string
+}
+
+const FlatLayoutCard = ({ listClassName }: IFlatLayoutCardProps) => {
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
@@ -46,7 +51,12 @@ const FlatLayoutCard = () => {
         <span className={styles.flatLayoutCard__content__title}>
           Студия, 25 м²
         </span>
-        <ul className={styles.flatLayoutCard__content__description}>
+        <ul
+          className={clsx(
+            styles.flatLayoutCard__content__description,
+            listClassName
+          )}
+        >
           {description.map((item, index) => (
             <React.Fragment key={item}>
               <li className={styles.flatLayoutCard__content__description__item}>

@@ -1,0 +1,27 @@
+.bottomFooter{
+    background: var( --color-black);
+    color: white;
+    width: 100%;
+    padding: 0px 120px;
+    @media screen and (max-width: 1920px) {
+        padding: 0px 120px;
+    }
+}
+
+@media (max-width: 1440px) {
+    .bottomFooter{
+        padding: 0px 60px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .bottomFooter{
+        padding: 0px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bottomFooter{
+        padding: 0px 16px;
+    }
+}

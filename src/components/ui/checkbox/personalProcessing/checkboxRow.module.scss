@@ -1,0 +1,107 @@
+.checkboxRow {
+  display: flex;
+  gap: 0.75rem; // 12px
+  align-items: center;
+  justify-content: flex-start;
+
+  margin-top: 1.25rem; // 20px
+
+  &__customCheckbox {
+    cursor: pointer;
+
+    position: relative;
+
+    display: inline-block;
+
+    margin-top: 0.3rem;
+    margin-left: 0.4375rem; // 7px
+  }
+
+  &__input {
+    cursor: pointer;
+
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    opacity: 0;
+  }
+
+  // Кастомная галочка
+  &__checkmark {
+    position: relative;
+
+    display: inline-block;
+
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 0.375rem; // 6px
+
+    background: #fff;
+
+    transition: all 0.5s ease-in-out;
+
+    &::after {
+      content: "";
+
+      position: absolute;
+      top: 0.125rem; // 2px
+      left: 0.375rem; // 6px
+      transform: rotate(45deg);
+
+      display: none;
+
+      width: 0.375rem; // 6px
+      height: 0.625rem; // 10px
+      border: solid white;
+      border-width: 0 2px 2px 0;
+    }
+
+    @media screen and (width < 1920px) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__customCheckbox:hover &__checkmark {
+    border-color: #ec7d3f;
+  }
+
+  // Состояние когда чекбокс выбран
+  &__input:checked + &__checkmark {
+    background: #ec7d3f;
+
+    &::after {
+      display: block;
+    }
+  }
+
+  // Лейбл с текстом
+  &__label {
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-black);
+    text-align: left;
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 12px;
+    }
+
+    @media screen and (width < 768px) {
+      font-size: 12px;
+    }
+  }
+
+  &__linkText {
+    font-weight: normal;
+    color: #ff6b35;
+  }
+
+  @media screen and (width < 1920px) {
+    margin-top: 16px;
+  }
+}

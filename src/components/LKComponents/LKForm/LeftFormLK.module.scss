@@ -1,0 +1,51 @@
+.LK {
+  &__container {
+    &__leftForm {
+      flex: 1;
+      &__form {
+        padding: 32px;
+        background-color: var(--color-white);
+        border-radius: 40px;
+        width: 100%;
+        @media (max-width: 1440px) {
+          padding: 24px;
+        }
+
+        button {
+          padding: 0;
+          @media (max-width: 1920px) {
+            width: 243px !important;
+            height: 64px;
+          }
+          @media (max-width: 1440px) {
+            width: 227px !important;
+            height: 56px;
+          }
+          @media (max-width: 1024px) {
+            width: 211px !important;
+            height: 48px;
+            padding: 0;
+          }
+          @media (max-width: 768px) {
+            width: 100% !important;
+
+          }
+        }
+      }
+      &__header {
+        margin-bottom: 40px;
+        font-size: 34px;
+      }
+    }
+  }
+}
+.w_50 {
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+.smallWrap {
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+}

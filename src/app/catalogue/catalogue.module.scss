@@ -1,0 +1,7 @@
+@use "@/utils/mixins" as mixins;
+
+.catalogue {
+  width: 100%;
+
+  @include mixins.adaptive-padding;
+}

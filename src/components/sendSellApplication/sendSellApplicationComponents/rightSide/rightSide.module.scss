@@ -1,0 +1,15 @@
+.mt_0 {
+  margin-top: 0 !important;
+}
+
+.smallWrap {
+  @media (width <= 570px) {
+    flex-wrap: wrap;
+  }
+}
+
+.button {
+  @media (width <= 768px) {
+    width: 100% !important;
+  }
+}

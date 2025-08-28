@@ -1,0 +1,177 @@
+.selectRoot {
+  position: relative;
+  width: 100%;
+  font-family: var(--font-onest);
+}
+
+.selectTrigger {
+  cursor: pointer;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 4rem;
+  border: 1.5px solid rgb(210 210 210 / 100%);
+  border-radius: 1rem;
+
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 4rem;
+  color: #333;
+  text-align: left;
+
+  appearance: none;
+  background-color: white;
+  outline: none;
+
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #ec7d3f;
+  }
+
+  &[data-state="open"] {
+    border-color: #ec7d3f;
+  }
+}
+
+.selectIcon {
+  margin-left: 16px;
+  transition: transform 0.3s ease;
+
+  &_icon {
+    width: 24px;
+    height: 12px;
+  }
+}
+
+.inlineSelect {
+  display: inline-block;
+  width: auto;
+  min-width: 200px;
+
+  .selectTrigger {
+    min-width: 180px;
+    height: auto;
+    border: none;
+
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 1.5;
+    color: var(--color-orange);
+
+    background-color: transparent;
+  }
+
+  .selectIcon {
+    margin-left: 8px;
+  }
+}
+
+.selectTrigger[data-state="open"] .selectIcon {
+  transform: rotate(180deg) !important;
+}
+
+.selectContent {
+  z-index: 9999;
+
+  overflow: hidden;
+
+  width: var(--radix-select-trigger-width);
+  padding: 8px 24px;
+  border-radius: 24px;
+
+  background-color: white;
+  box-shadow: 0 2px 10px 0 rgb(0 0 0 / 10%);
+
+  animation: slide-down-and-fade 0.3s ease;
+}
+
+.selectViewport {
+  overflow-y: auto;
+  max-height: 18.75rem;
+}
+
+.selectItem {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 56px;
+
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  color: var(--color-black);
+  text-align: left;
+
+  outline: none;
+
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--color-orange);
+  }
+
+  // &[data-highlighted] {
+  //   background-color: rgb(236 125 63 / 10%);
+  // }
+
+  &[data-state="checked"] {
+    color: var(--color-orange);
+  }
+}
+
+.selectItemIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+
+  &_icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.selectLabel {
+  position: absolute;
+  z-index: 2;
+  top: -0.6875rem;
+  left: 1.1rem;
+
+  padding: 0 0.3125rem;
+
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  background-color: rgb(255 255 255 / 100%);
+
+  @media (width <= 768px) {
+    font-size: 12px;
+  }
+
+  @media (width <= 570px) {
+    font-size: 11px;
+  }
+}
+
+@keyframes slide-down-and-fade {
+  from {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
