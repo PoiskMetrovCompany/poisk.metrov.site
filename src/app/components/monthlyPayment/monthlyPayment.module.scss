@@ -1,0 +1,88 @@
+.monthlyPayment {
+  background-color: var(--color-white);
+  border-radius: 40px;
+  margin: 120px 0;
+  width: 100%;
+  &__container {
+    padding: 80px 120px;
+    position: relative;
+    &__image {
+      &__key {
+        left: 0;
+        position: absolute;
+        top: 0;
+      }
+      &__noteBook {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+    &__content {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      &__title {
+        background-color: var(--color-orange-light);
+        border-radius: 100px;
+        color: var(--color-orange);
+        font-size: 18px;
+        padding: 6px 24px;
+        text-align: center;
+      }
+      &__question {
+        color: var(--color-black);
+        font-size: 34px;
+        font-weight: 500;
+        margin-top: 24px;
+        text-align: center;
+        &__marker {
+          color: var(--color-orange);
+        }
+      }
+      &__buttons {
+        display: flex;
+        gap: 24px;
+        margin-top: 40px;
+        button {
+          background-color: var(--color-beige-light);
+          border: 1px solid var(--color-gray-white);
+          width: max-content;
+          &:active {
+            background-color: var(--color-orange-light);
+            color: var(--color-orange);
+            border: 1px solid rgba(236, 125, 63, 0.10);
+          }
+          &:hover {
+            background-color: var(--color-orange-light);
+            color: var(--color-orange);
+            border: 1px solid rgba(236, 125, 63, 0.10);
+          }
+        }
+      }
+      &__form {
+        margin-top: 40px;
+        max-width: 1000px;
+        width: 100%;
+        &__row {
+          align-items: center;
+          button {
+            max-width: 220px;
+          }
+        }
+      }
+      &__back {
+        margin-top: 24px;
+        button {
+          background-color: var(--color-gray-white);
+          border: 1px solid var(--color-gray);
+          color: var(--color-gray);
+          &:hover {
+            background-color: var(--color-gray);
+            color: var(--color-white);
+          }
+        }
+      }
+    }
+  }
+}
