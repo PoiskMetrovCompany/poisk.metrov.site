@@ -12,6 +12,10 @@ import AboutObjectSmall from "./components/aboutObjectSmall"
 import Documents from "./components/documents"
 import { IAboutObjectItem } from "@/types/Object"
 
+interface ApiData {
+  key: string
+}
+
 const aboutObjectItems: IAboutObjectItem[] = [
   {
     title: "Кирпично-монолитный",

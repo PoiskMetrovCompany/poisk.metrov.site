@@ -140,7 +140,7 @@ const CatalogueList = () => {
 
   const applyFilters = () => {
     console.log("Фильтры применены")
-    setShowFilters(false) // Закрываем фильтры при применении
+    setShowFilters(false)
   }
 
   useEffect(() => {
