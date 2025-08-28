@@ -330,33 +330,3 @@
     padding: 24px 16px;
   }
 }
-
-.loadingButton {
-  overflow: hidden;
-  position: relative;
-
-  &::before {
-    animation: shimmer 2s infinite;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.6),
-      transparent
-    );
-    content: "";
-    height: 100%;
-    left: -100%;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}

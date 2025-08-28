@@ -1,67 +1,97 @@
 .arrowButton {
-  display: flex;
   align-items: center;
-  justify-content: center;
+  background: var(--color-orange);
   border: none;
   border-radius: 24px;
-  background: var(--color-orange);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: var(--color-orange-hover);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
-  
+
   &:disabled {
-    opacity: 0.6;
     cursor: not-allowed;
+    opacity: 0.6;
     pointer-events: none;
     transform: none;
   }
-  
+
   &__icon {
-    transition: transform 0.2s ease;
     filter: brightness(0) invert(1); // Делаем иконку белой
+    transition: transform 0.2s ease;
   }
-  
+
   &:hover &__icon {
     transform: translateX(2px);
   }
-  
+
   &_small {
-    width: 40px;
-    height: 40px;
     border-radius: 12px;
+    height: 40px;
+    width: 40px;
   }
-  
+
   &_medium {
-    width: 60px;
-    height: 60px;
     border-radius: 18px;
+    height: 60px;
+    width: 60px;
   }
-  
+
   &_large {
-    width: 80px;
-    height: 80px;
     border-radius: 24px;
+    height: 80px;
+    width: 80px;
   }
-  
+
   &_absolute {
     position: absolute;
   }
+
+  &_loading {
+    overflow: hidden;
+    position: absolute;
+
+    &::before {
+      animation: shimmer 2s infinite;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+      );
+      content: "";
+      height: 100%;
+      left: -100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
 }
 
-.arrowButton__icon{
-  color: white
+.arrowButton__icon {
+  color: white;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 @media (max-width: 1024px) {
-  .arrowButton{
-    &_absolute{
+  .arrowButton {
+    &_absolute {
       display: none;
     }
   }

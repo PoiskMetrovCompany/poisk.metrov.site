@@ -8,11 +8,19 @@ import ActionButton from "@/components/ui/buttons/ActionButton";
 
 import clsx from "clsx";
 import CheckboxRow from "@/components/ui/checkbox/personalProcessing";
+import { useApiMutation } from "@/utils/hooks/use-api";
 
 interface DreamFlatData {
     firstName: string;
     phoneNumber: string;
     isAgreed: boolean;
+}
+
+interface ApiData{
+    name: string,
+    phone: string,
+    comment: string,
+    city: string,
 }
 
 const RightSide:FC = () => {
@@ -21,6 +29,23 @@ const RightSide:FC = () => {
         phoneNumber: "",
         isAgreed: false,
     })
+
+    const submitMutation = useApiMutation<ApiData, ApiData>(
+        "/crm/store",
+        {
+            onSuccess: (data) => {
+                console.log("Запрос отправлен", data)
+                setFormData({
+                    firstName: "",
+                    phoneNumber: "",
+                    isAgreed: false,
+                })
+            },
+            onError: (error) => {
+                console.log("Ошибка отправки запроса", error)
+            }
+        }
+    )
 
     const handleInputChange = (name: string, value: string) =>{
         setFormData(prev => ({...prev, [name]: value}))
@@ -32,8 +57,17 @@ const RightSide:FC = () => {
 
     const handleSubmit = () => {
         if(!formData.isAgreed) return
-
-        console.log("Form submited, need back", formData)
+        if(!formData.firstName || !formData.phoneNumber) {
+            console.log("Пожалуйста заполните все поля")
+            return
+        }
+        const apiData: ApiData = {
+            name: formData.firstName,
+            phone: formData.phoneNumber,
+            comment: "Пользователь запросил консультацию по получению персональной скидки от застройщика",
+            city: "novosibirsk",
+        }
+        submitMutation.mutate(apiData)
     }
 
     return (
@@ -58,10 +92,12 @@ const RightSide:FC = () => {
 
                 <ActionButton
                 onClick={handleSubmit}
+                loading={submitMutation.isPending}
+                disabled={submitMutation.isPending}
                 size="medium"
                 type="primary"
                 >
-                Отправить
+                    {submitMutation.isPending ? "Отправка..." : "Отправить"}
                 </ActionButton>
             </FormRow>
 

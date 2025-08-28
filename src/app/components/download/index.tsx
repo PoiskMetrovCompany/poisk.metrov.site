@@ -138,15 +138,13 @@ const Download = () => {
           </div>
           <div className={styles.download__catalogue__buttons}>
             <ActionButton
-              className={clsx(
-                styles.download__catalogue__buttons__button__send,
-                submitMutation.isPending ? styles.loadingButton : ""
-              )}
+              className={styles.download__catalogue__buttons__button__send}
               size="medium"
               onClick={handleSubmit}
               type="primary"
               buttonWidth={189}
               disabled={submitMutation.isPending}
+              loading={submitMutation.isPending}
             >
               {submitMutation.isPending ? "Отправка..." : "Отправить"}
             </ActionButton>

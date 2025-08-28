@@ -136,6 +136,7 @@ const ContactForm: FC = () => {
             size="medium"
             absolute={true}
             disabled={submitMutation.isPending}
+            loading={submitMutation.isPending}
             className={clsx(
               !formData.isAgreed
                 ? styles.contactForm__submitButton_disabled
@@ -152,6 +153,7 @@ const ContactForm: FC = () => {
             type="primary"
             svgWidth={20}
             svgHeight={20}
+            loading={submitMutation.isPending}
             disabled={submitMutation.isPending}
             className={clsx(styles.borderRadius, styles.hideOnDesktop)}
             svgSrc="./images/icons/header/nextArrow.svg"

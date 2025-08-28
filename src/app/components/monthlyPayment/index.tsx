@@ -409,9 +409,7 @@ const MonthlyPayment = () => {
                   <ActionButton
                     type="primary"
                     size="small"
-                    className={
-                      submitMutation.isPending ? styles.loadingButton : ""
-                    }
+                    loading = {submitMutation.isPending}
                     disabled={submitMutation.isPending}
                   >
                     {submitMutation.isPending
