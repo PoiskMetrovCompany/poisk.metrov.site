@@ -63,16 +63,26 @@ const Request = () => {
           city: "",
           checked: false,
         })
-      }, 
+      },
       onError: (error) => {
         console.log("Ошибка запроса", error)
-      }
+      },
     }
   )
 
-  const handleSubmit = () =>{
-    if(!formData.checked) return
-    if(!formData.agentLastname || !formData.agentFirstname || !formData.agentPatronymic || !formData.agentPhone || !formData.clientLastname || !formData.clientFirstname || !formData.clientPatronymic || !formData.clientPhone || !formData.city) {
+  const handleSubmit = () => {
+    if (!formData.checked) return
+    if (
+      !formData.agentLastname ||
+      !formData.agentFirstname ||
+      !formData.agentPatronymic ||
+      !formData.agentPhone ||
+      !formData.clientLastname ||
+      !formData.clientFirstname ||
+      !formData.clientPatronymic ||
+      !formData.clientPhone ||
+      !formData.city
+    ) {
       console.log("Пожалуйста, заполните все поля")
       return
     }
@@ -86,11 +96,10 @@ const Request = () => {
       client_first_name: formData.clientFirstname,
       client_middle_name: formData.clientPatronymic,
       client_phone: formData.clientPhone,
-      city: formData.city
+      city: formData.city,
     }
     submitMutation.mutate(ApiData)
   }
-
 
   return (
     <div className={styles.request}>
@@ -183,11 +192,13 @@ const Request = () => {
         </div>
         <div className={styles.request__form__submit}>
           <ActionButton
-            disabled={isDisabled}
+            loading={submitMutation.isPending}
+            disabled={submitMutation.isPending}
             className={styles.request__form__submit__button}
             onClick={handleSubmit}
+            type= {formData.checked ? "primary" : "gray"}
           >
-            Отправить заявку
+            {submitMutation.isPending ? "Отправка..." : "Отправить"}
           </ActionButton>
           <CheckboxRow
             checked={formData.checked}

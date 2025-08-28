@@ -137,12 +137,14 @@ const QuestionsForm: FC = () => {
       <FormRow justifyContent="flex-start">
         <ActionButton
           type={formData.isAgreed ? "primary" : "disabled"}
+          loading = {submitMutation.isPending}
+          disabled = {submitMutation.isPending}
           onClick={handleSubmit}
           size="medium"
           buttonWidth={293}
           className={styles.w_100}
         >
-          Отправить Сообщение
+          {submitMutation.isPending ? "Отправка..." : "Отправить"}
         </ActionButton>
       </FormRow>
 
