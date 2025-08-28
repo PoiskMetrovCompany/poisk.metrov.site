@@ -179,7 +179,6 @@ const MonthlyPayment = () => {
     if (currentQuestionIndex < maxQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
     } else {
-      // Опрос завершен, переходим к форме
       setViewState("form")
     }
   }
@@ -194,14 +193,12 @@ const MonthlyPayment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Выводим данные опроса в консоль
     console.log("Результаты опроса:", {
       paymentMethod: userAnswers.paymentMethod,
       answers: userAnswers.answers,
       formData: formData,
     })
 
-    // Сбрасываем состояние и возвращаемся к начальному экрану
     setViewState("initial")
     setCurrentBranch(null)
     setCurrentQuestionIndex(0)
@@ -215,8 +212,6 @@ const MonthlyPayment = () => {
     })
   }
 
-
-  // Отображение вопросов опроса
   if (viewState === "quiz" && currentBranch) {
     let currentQuestion
     if (currentBranch === "Ипотека") {
@@ -286,7 +281,6 @@ const MonthlyPayment = () => {
     )
   }
 
-  // Отображение формы
   if (viewState === "form") {
     return (
       <div className={styles.monthlyPayment}>
@@ -296,14 +290,14 @@ const MonthlyPayment = () => {
             alt="quiz"
             width={365}
             height={365}
-            className={styles.monthlyPayment__container__image__key}
+            className={styles.monthlyPayment__container__image__keyForm}
           />
           <Image
             src="/images/noteBookMonthly.webp"
             alt="quiz"
             width={365}
             height={365}
-            className={styles.monthlyPayment__container__image__noteBook}
+            className={styles.monthlyPayment__container__image__noteBookForm}
           />
           <div className={styles.monthlyPayment__container__content}>
             <div className={styles.monthlyPayment__container__content__title}>
@@ -326,32 +320,44 @@ const MonthlyPayment = () => {
               onSubmit={handleSubmit}
               className={styles.monthlyPayment__container__content__form}
             >
-              <FormRow
+              <div
                 className={styles.monthlyPayment__container__content__form__row}
               >
-                <InputContainer
-                  name="name"
-                  label=""
-                  placeholder="Ваше имя"
-                  grayInput={true}
-                  value={formData.name}
-                  onChange={handleInputChange("name")}
-                  required
-                />
-                <InputContainer
-                  name="phone"
-                  label=""
-                  placeholder="Ваш телефон"
-                  type="phone"
-                  grayInput={true}
-                  value={formData.phone}
-                  onChange={handleInputChange("phone")}
-                  required
-                />
-                <ActionButton type="primary" size="small">
-                  Отправить заявку
-                </ActionButton>
-              </FormRow>
+                <div
+                  className={
+                    styles.monthlyPayment__container__content__form__inputs
+                  }
+                >
+                  <InputContainer
+                    name="name"
+                    label=""
+                    placeholder="Ваше имя"
+                    grayInput={true}
+                    value={formData.name}
+                    onChange={handleInputChange("name")}
+                    required
+                  />
+                  <InputContainer
+                    name="phone"
+                    label=""
+                    placeholder="Ваш телефон"
+                    type="phone"
+                    grayInput={true}
+                    value={formData.phone}
+                    onChange={handleInputChange("phone")}
+                    required
+                  />
+                </div>
+                <div
+                  className={
+                    styles.monthlyPayment__container__content__form__button
+                  }
+                >
+                  <ActionButton type="primary" size="small">
+                    Отправить заявку
+                  </ActionButton>
+                </div>
+              </div>
             </form>
           </div>
         </div>
@@ -359,7 +365,6 @@ const MonthlyPayment = () => {
     )
   }
 
-  // Начальный экран с выбором способа покупки
   return (
     <div className={styles.monthlyPayment}>
       <div className={styles.monthlyPayment__container}>
