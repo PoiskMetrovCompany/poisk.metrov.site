@@ -1,8 +1,16 @@
 .monthlyPayment {
   background-color: var(--color-white);
   border-radius: 40px;
-  margin: 120px 0;
-  width: 100%;
+  margin-top: 120px;
+  @media (width >= 1440px) and (width < 1920px) {
+    margin-top: 100px;
+  }
+  @media (width >= 1024px) and (width < 1440px) {
+    margin-top: 80px;
+  }
+  @media (width < 1024px) {
+    margin-top: 64px;
+  }
 
   &__container {
     overflow: hidden;
@@ -149,9 +157,9 @@
         button {
           background-color: var(--color-beige-light);
           border: 1px solid var(--color-gray-white);
+          height: 64px;
           padding: 18px 24px;
           width: max-content;
-          height: 64px;
           @media (max-width: 1919px) {
             font-size: 15px;
             height: 56px;
@@ -265,4 +273,3 @@
     }
   }
 }
-
