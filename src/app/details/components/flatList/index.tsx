@@ -1,8 +1,11 @@
 import React from "react"
+
 import styles from "./flatList.module.scss"
+
 import Filter from "./filter"
-import Heading2 from "@/components/ui/heading2"
 import LayoutList from "./layoutList"
+
+import Heading2 from "@/components/ui/heading2"
 
 const FlatList = () => {
   return (
