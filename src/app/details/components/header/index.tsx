@@ -5,6 +5,7 @@ import styles from "./header.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import IconButton from "@/components/ui/buttons/IconButton"
 import Heading1 from "@/components/ui/heading1"
+import Skeleton from "@/components/ui/skeleton"
 
 interface HeaderData {
   name: string
@@ -24,89 +25,27 @@ const HeaderSkeleton = () => (
   <div className={styles.header}>
     <div className={styles.header__place}>
       <div className={styles.header__place__title}>
-        <div
-          style={{
-            height: "48px",
-            backgroundColor: "#f0f0f0",
-            borderRadius: "8px",
-            animation: "pulse 2s infinite",
-          }}
-        />
+        <Skeleton height="48px" border="8px" />
       </div>
       <div className={styles.header__place__text}>
-        <div
-          style={{
-            height: "24px",
-            backgroundColor: "#f0f0f0",
-            borderRadius: "4px",
-            marginBottom: "12px",
-            width: "70%",
-            animation: "pulse 2s infinite",
-          }}
-        />
+        <div style={{ marginBottom: "12px" }}>
+          <Skeleton height="24px" width="70%" border="4px" />
+        </div>
         <div className={styles.header__place__text__distance}>
           <div className={styles.header__place__text__distance__item}>
-            <div
-              style={{
-                height: "20px",
-                width: "20px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "4px",
-                animation: "pulse 2s infinite",
-              }}
-            />
-            <div
-              style={{
-                height: "16px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "4px",
-                width: "80px",
-                animation: "pulse 2s infinite",
-              }}
-            />
+            <Skeleton height="20px" width="20px" border="4px" />
+            <Skeleton height="16px" width="80px" border="4px" />
           </div>
           <div className={styles.header__place__text__distance__item}>
-            <div
-              style={{
-                height: "20px",
-                width: "20px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "4px",
-                animation: "pulse 2s infinite",
-              }}
-            />
-            <div
-              style={{
-                height: "16px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "4px",
-                width: "60px",
-                animation: "pulse 2s infinite",
-              }}
-            />
+            <Skeleton height="20px" width="20px" border="4px" />
+            <Skeleton height="16px" width="60px" border="4px" />
           </div>
         </div>
       </div>
     </div>
     <div className={styles.header__buttons}>
-      <div
-        style={{
-          height: "40px",
-          width: "40px",
-          backgroundColor: "#f0f0f0",
-          borderRadius: "8px",
-          animation: "pulse 2s infinite",
-        }}
-      />
-      <div
-        style={{
-          height: "40px",
-          width: "40px",
-          backgroundColor: "#f0f0f0",
-          borderRadius: "8px",
-          animation: "pulse 2s infinite",
-        }}
-      />
+      <Skeleton height="40px" width="40px" border="8px" />
+      <Skeleton height="40px" width="40px" border="8px" />
     </div>
   </div>
 )

@@ -26,11 +26,6 @@ body {
   }
 }
 
-.container {
-  margin: 0 auto;
-  padding: 0 120px;
-}
-
 button {
   background-color: transparent;
   border: none;
@@ -124,9 +119,6 @@ footer {
   width: 100%;
 }
 
-.container {
-  padding: 0;
-}
 
 button {
   border: none;

@@ -1,14 +1,22 @@
 "use client"
-import React, { useState } from "react"
+
 import { Accordion } from "radix-ui"
-import LayoutItem from "./layoutItem"
+
+import React, { useState } from "react"
+
 import NotFound from "@/components/notFound"
+import { IApartment } from "@/types/api/complex"
 
-const LayoutList = () => {
-  const [openId, setOpenId] = useState<string[]>([])
-  const [isEmpty, setIsEmpty] = useState(false)
+import LayoutItem from "./layoutItem"
 
-  if (isEmpty) {
+interface LayoutListProps {
+  apartments: IApartment[]
+}
+
+const LayoutList = ({ apartments }: LayoutListProps) => {
+  const [openId, setOpenId] = useState<string[]>(["apartments-list"])
+
+  if (apartments.length === 0) {
     return (
       <NotFound
         title="Подходящих вариантов нет"
@@ -21,10 +29,14 @@ const LayoutList = () => {
   return (
     <Accordion.Root
       type="multiple"
+      value={openId}
       onValueChange={(value) => setOpenId(value as string[])}
     >
-      <LayoutItem name="item-1" isOpen={openId.includes("item-1")} />
-      <LayoutItem name="item-2" isOpen={openId.includes("item-2")} />
+      <LayoutItem
+        name="apartments-list"
+        isOpen={openId.includes("apartments-list")}
+        apartments={apartments}
+      />
     </Accordion.Root>
   )
 }
