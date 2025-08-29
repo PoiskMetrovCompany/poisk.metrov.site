@@ -29,6 +29,11 @@ function getApiClient(url: string) {
   return isExternalUrl(url) ? externalApi : api
 }
 
+// Узкий type-guard для ответов формата { data: ... }
+function hasDataKey(value: unknown): value is { data: unknown } {
+  return typeof value === "object" && value !== null && "data" in value
+}
+
 // Хук для GET запросов
 export function useApiQuery<T>(
   key: string[],
@@ -45,7 +50,7 @@ export function useApiQuery<T>(
 ) {
   return useQuery({
     queryKey: key,
-    queryFn: async (): Promise<T> => {
+    queryFn: async (): Promise<T | null> => {
       try {
         // Если включен мок-режим и предоставлена мок-функция
         if (options?.useMock && options?.mockFn) {
@@ -53,19 +58,28 @@ export function useApiQuery<T>(
         }
 
         const client = getApiClient(url)
-        const response = await client.get<T>(url)
+        const response = await client.get<unknown>(url)
+        const payload: unknown = response.data
 
-        // Если это внешний API, возвращаем данные напрямую
+        // Если это внешний API, возвращаем данные напрямую (или null, но не undefined)
         if (isExternalUrl(url)) {
-          return response.data
+          return (payload ?? null) as T | null
         }
 
-        // Если это внутренний API, ожидаем структуру ApiResponse
-        const apiResponse = response.data as ApiResponse<T>
-        return apiResponse.data
-      } catch (error) {
-        console.error("API Query Error:", error)
-        throw error
+        // Нет содержимого
+        if (response.status === 204) {
+          return null
+        }
+
+        // Если сервер оборачивает ответ в { data: ... }
+        if (hasDataKey(payload)) {
+          return ((payload.data as unknown) ?? null) as T | null
+        }
+
+        // Иначе возвращаем payload как есть или null (чтобы не вернуть undefined)
+        return (payload ?? null) as T | null
+      } catch {
+        return null
       }
     },
     enabled: options?.enabled ?? true,
@@ -90,17 +104,21 @@ export function useApiMutation<T, V>(
     mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.post<T>(url, variables)
+        const response = await client.post<unknown>(url, variables)
+        const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
-          return response.data
+          return payload as T
         }
 
-        const apiResponse = response.data as ApiResponse<T>
-        return apiResponse.data
-      } catch (error) {
-        console.error("API Mutation Error:", error)
-        throw error
+        if (hasDataKey(payload)) {
+          return payload.data as T
+        }
+
+        return payload as T
+      } catch (_error) {
+        console.error("API Mutation Error:", _error)
+        throw _error as Error
       }
     },
     onSuccess: (data) => {
@@ -128,17 +146,21 @@ export function useApiUpdate<T, V>(
     mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.put<T>(url, variables)
+        const response = await client.put<unknown>(url, variables)
+        const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
-          return response.data
+          return payload as T
         }
 
-        const apiResponse = response.data as ApiResponse<T>
-        return apiResponse.data
-      } catch (error) {
-        console.error("API Update Error:", error)
-        throw error
+        if (hasDataKey(payload)) {
+          return payload.data as T
+        }
+
+        return payload as T
+      } catch (_error) {
+        console.error("API Update Error:", _error)
+        throw _error as Error
       }
     },
     onSuccess: (data) => {
@@ -165,17 +187,21 @@ export function useApiDelete<T>(
     mutationFn: async (): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.delete<T>(url)
+        const response = await client.delete<unknown>(url)
+        const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
-          return response.data
+          return payload as T
         }
 
-        const apiResponse = response.data as ApiResponse<T>
-        return apiResponse.data
-      } catch (error) {
-        console.error("API Delete Error:", error)
-        throw error
+        if (hasDataKey(payload)) {
+          return payload.data as T
+        }
+
+        return payload as T
+      } catch (_error) {
+        console.error("API Delete Error:", _error)
+        throw _error as Error
       }
     },
     onSuccess: (data) => {

@@ -8,7 +8,11 @@ import MenuPopup from "../menuPopup"
 import MainBar from "./headerComponents/MainBar"
 import TopBar from "./headerComponents/TopBar"
 
-const Header = () => {
+interface HeaderProps {
+  initialCity: { name: string; id: string; slug: string } | null
+}
+
+const Header = ({ initialCity }: HeaderProps) => {
   const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false)
 
   return (
