@@ -4,6 +4,7 @@ import React, { useState } from "react"
 
 import Image from "next/image"
 
+
 import { useApiMutation } from "@/utils/hooks/use-api"
 
 import styles from "./monthlyPayment.module.scss"
@@ -131,6 +132,7 @@ type ViewState = "initial" | "quiz" | "form"
 
 interface UserAnswers {
   paymentMethod: string
+
   answers: Array<{
     question: string
     answer: string
@@ -141,6 +143,7 @@ interface FormData {
   name: string
   phone: string
 }
+
 
 interface ApiRequestData {
   name: string
@@ -161,6 +164,7 @@ const MonthlyPayment = () => {
     name: "",
     phone: "",
   })
+
 
   const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
     "/crm/store",
@@ -196,6 +200,7 @@ const MonthlyPayment = () => {
   }
 
   const handleAnswerSelect = (answer: string) => {
+
     let currentQuestion
     if (currentBranch === "Ипотека") {
       currentQuestion = mortgageQuestions[currentQuestionIndex]
@@ -242,6 +247,7 @@ const MonthlyPayment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
+
     if (!formData.name || !formData.phone) {
       console.log("Пожалуйста, заполните все поля")
       return
@@ -263,6 +269,7 @@ const MonthlyPayment = () => {
     }
 
     submitMutation.mutate(apiData)
+
   }
 
   if (viewState === "quiz" && currentBranch) {
@@ -406,6 +413,7 @@ const MonthlyPayment = () => {
                     styles.monthlyPayment__container__content__form__button
                   }
                 >
+
                   <ActionButton
                     type="primary"
                     size="small"
