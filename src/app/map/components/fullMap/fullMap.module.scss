@@ -1,0 +1,64 @@
+.fullMap {
+  height: calc(100vh - 127px);
+
+  margin-top: -4rem;
+
+  position: relative;
+  width: 100%;
+
+  @media screen and (width >= 1024px) and (width < 1024px) {
+    height: calc(100vh - 70px);
+  }
+
+  @media screen and (width < 768px) {
+    height: calc(100vh - 57px);
+    margin-top: -1rem;
+  }
+
+  &__overlay {
+    // background-color: rgba(0, 0, 0, 0.3);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+  }
+
+  &__propertyCard {
+    cursor: default;
+    left: 24px;
+    position: absolute;
+    top: 24px;
+    width: 480px;
+    z-index: 11;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 400px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 360px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      bottom: 0;
+      left: 0;
+      top: auto;
+      width: 100vw;
+    }
+
+    @media screen and (width < 768px) {
+      bottom: 0;
+      left: 0;
+      top: auto;
+      width: 100vw;
+    }
+  }
+
+  &__map {
+    height: 100%;
+    width: 100%;
+  }
+}
