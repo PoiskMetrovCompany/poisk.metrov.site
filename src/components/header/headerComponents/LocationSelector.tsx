@@ -1,5 +1,6 @@
 "use client"
 
+import * as Dialog from "@radix-ui/react-dialog"
 import clsx from "clsx"
 
 import React, { useState } from "react"
@@ -12,6 +13,7 @@ import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "../header.module.scss"
 
+import IconImage from "@/components/ui/IconImage"
 import Skeleton from "@/components/ui/skeleton"
 
 interface LocationSelectorProps {
@@ -54,92 +56,107 @@ const LocationSelector = ({ initialCity }: LocationSelectorProps) => {
     setIsOpen(false)
   }
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
+  const currentCity = selectedCity || initialCity
 
   return (
-    <div className={styles.location_selector}>
-      <Image
-        src="/images/icons/header/svgPickCity.svg"
-        alt="Location cursor"
-        width={24}
-        height={24}
-      />
-      <button
-        className={styles.location_selector__button}
-        onClick={toggleDropdown}
-        type="button"
-      >
-        <span className={styles.location_selector__text}>
-          {selectedCity?.name || initialCity?.name || "Выберите город"}
-        </span>
-        <Image
-          className={clsx(
-            styles.location_selector__arrow,
-            isOpen && styles["location-selector__arrow--open"]
-          )}
-          src="/images/icons/header/svgExpandArrow.svg"
-          alt="Arrow"
-          width={16}
-          height={16}
-        />
-      </button>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog.Trigger asChild>
+        <div className={styles.location_selector}>
+          <Image
+            src="/images/icons/header/svgPickCity.svg"
+            alt="Location cursor"
+            width={24}
+            height={24}
+          />
+          <button className={styles.location_selector__button} type="button">
+            <span className={styles.location_selector__text}>
+              {currentCity?.name || "Выберите город"}
+            </span>
+            <Image
+              className={styles.location_selector__arrow}
+              src="/images/icons/header/svgExpandArrow.svg"
+              alt="Arrow"
+              width={16}
+              height={16}
+            />
+          </button>
+        </div>
+      </Dialog.Trigger>
 
-      {isOpen && (
-        <div className={styles.location_selector__dropdown}>
-          <ul className={styles.location_selector__list}>
+      <Dialog.Portal>
+        <Dialog.Overlay className={styles.location_dialog__overlay} />
+        <Dialog.Content className={styles.location_dialog__content}>
+          <div className={styles.location_dialog__header}>
+            <Dialog.Title className={styles.location_dialog__title}>
+              Выберите город
+            </Dialog.Title>
+            <Dialog.Close asChild>
+              <button className={styles.location_dialog__close} type="button">
+                <IconImage
+                  className={styles.location_dialog__close__icon}
+                  iconLink="/images/icons/close-popup.svg"
+                  alt="Закрыть"
+                />
+              </button>
+            </Dialog.Close>
+          </div>
+
+          {currentCity && (
+            <div className={styles.location_dialog__current}>
+              <span className={styles.location_dialog__current_label}>
+                Текущий город
+              </span>
+              <div className={styles.location_dialog__current_city}>
+                <Image
+                  src="/images/icons/checkMark-orange.svg"
+                  alt="Выбрано"
+                  width={16}
+                  height={16}
+                />
+                <span className={styles.location_dialog__current_city_text}>
+                  {currentCity.name}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.location_dialog__cities}>
             {isLoading ? (
-              <>
-                <li className={styles.location_selector__item}>
-                  <div className={styles.location_selector__option}>
-                    <Skeleton width={100} height={16} />
-                  </div>
-                </li>
-                <li className={styles.location_selector__item}>
-                  <div className={styles.location_selector__option}>
-                    <Skeleton width={100} height={16} />
-                  </div>
-                </li>
-                <li className={styles.location_selector__item}>
-                  <div className={styles.location_selector__option}>
-                    <Skeleton width={100} height={16} />
-                  </div>
-                </li>
-              </>
+              <div className={styles.location_dialog__loading}>
+                <Skeleton width={100} height={16} />
+                <Skeleton width={100} height={16} />
+                <Skeleton width={100} height={16} />
+              </div>
             ) : error ? (
-              <li className={styles.location_selector__item}>
-                <div className={styles.location_selector__option}>
-                  Ошибка загрузки
-                </div>
-              </li>
+              <div className={styles.location_dialog__error}>
+                Ошибка загрузки
+              </div>
             ) : cities.length === 0 ? (
-              <li className={styles.location_selector__item}>
-                <div className={styles.location_selector__option}>
-                  Города не найдены
-                </div>
-              </li>
+              <div className={styles.location_dialog__error}>
+                Города не найдены
+              </div>
             ) : (
-              cities.map((city) => (
-                <li key={city.id} className={styles.location_selector__item}>
+              <div className={styles.location_dialog__grid}>
+                {cities.map((city) => (
                   <button
-                    className={`${styles.location_selector__option} ${
-                      city.title === selectedCity?.name
-                        ? styles["location-selector__option--active"]
-                        : ""
-                    }`}
+                    key={city.id}
+                    className={clsx(
+                      styles.location_dialog__city,
+                      city.title === currentCity?.name &&
+                        styles.location_dialog__city_active
+                    )}
                     onClick={() => handleCitySelect(city.title)}
                     type="button"
                   >
                     {city.title}
                   </button>
-                </li>
-              ))
+                ))}
+              </div>
             )}
-          </ul>
-        </div>
-      )}
-    </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
 
