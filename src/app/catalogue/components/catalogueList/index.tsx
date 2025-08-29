@@ -8,10 +8,16 @@ import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import NotFound from "@/components/notFound"
+import Pagination from "@/components/pagination"
 import PropertyCard from "@/components/propertyCard"
+import PropertyCardSkeleton from "@/components/propertyCard/PropertyCardSkeleton"
 import PropertyCardList from "@/components/propertyCardList"
+import PropertyCardListSkeleton from "@/components/propertyCardList/PropertyCardListSkeleton"
 import { IProperty } from "@/types/PropertyCard"
+import { ResidentialComplexDataResponse } from "@/types/api/complex"
+import { useApiQuery } from "@/utils/hooks/use-api"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
+import { mapResidentialComplexesToProperties } from "@/utils/mappers/propertyMapper"
 
 import styles from "./catalogueList.module.scss"
 
@@ -25,102 +31,104 @@ import Heading3 from "@/components/ui/heading3"
 import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
 import RangeSlider from "@/components/ui/rangeSlider"
 
-const cards: IProperty[] = [
-  {
-    id: 1,
-    title: "Европейский берег",
-    price: "от 5.6 млн ₽",
-    subtitle: "Микрорайон на набережной Оби",
-    badge: { developer: "Брусника", period: "I – IV 2026" },
-    metro: "Октябрьская",
-    driveTime: "25 минут",
-    specifications: [
-      { type: "Студии", price: "от 5,6 млн ₽" },
-      { type: "1-комн. кв", price: "от 7,1 млн ₽" },
-      { type: "2-комн. кв", price: "от 8,5 млн ₽" },
-      { type: "3-комн. кв", price: "от 10,8 млн ₽" },
-      { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 2,
-    title: "Солнечная долина",
-    price: "от 4.8 млн ₽",
-    subtitle: "Жилой комплекс в центре города",
-    badge: { developer: "ПИК", period: "III – IV 2025" },
-    metro: "Центральная",
-    driveTime: "15 минут",
-    specifications: [
-      { type: "Студии", price: "от 4,8 млн ₽" },
-      { type: "1-комн. кв", price: "от 6,2 млн ₽" },
-      { type: "2-комн. кв", price: "от 7,8 млн ₽" },
-      { type: "3-комн. кв", price: "от 9,5 млн ₽" },
-      { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 3,
-    title: "Зеленый парк",
-    price: "от 6.2 млн ₽",
-    subtitle: "Элитный комплекс у парка",
-    badge: { developer: "Самолет", period: "II – III 2026" },
-    metro: "Парковая",
-    driveTime: "20 минут",
-    specifications: [
-      { type: "Студии", price: "от 6,2 млн ₽" },
-      { type: "1-комн. кв", price: "от 8,0 млн ₽" },
-      { type: "2-комн. кв", price: "от 9,8 млн ₽" },
-      { type: "3-комн. кв", price: "от 12,5 млн ₽" },
-      { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 4,
-    title: "Морской бриз",
-    price: "от 7.1 млн ₽",
-    subtitle: "Премиум класс у моря",
-    badge: { developer: "Эталон", period: "I – II 2027" },
-    metro: "Морская",
-    driveTime: "30 минут",
-    specifications: [
-      { type: "Студии", price: "от 7,1 млн ₽" },
-      { type: "1-комн. кв", price: "от 9,3 млн ₽" },
-      { type: "2-комн. кв", price: "от 11,2 млн ₽" },
-      { type: "3-комн. кв", price: "от 14,8 млн ₽" },
-      { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-]
+// const cards: IProperty[] = [
+//   {
+//     id: 1,
+//     title: "Европейский берег",
+//     price: "от 5.6 млн ₽",
+//     subtitle: "Микрорайон на набережной Оби",
+//     badge: { developer: "Брусника", period: "I – IV 2026" },
+//     metro: "Октябрьская",
+//     driveTime: "25 минут",
+//     specifications: [
+//       { type: "Студии", price: "от 5,6 млн ₽" },
+//       { type: "1-комн. кв", price: "от 7,1 млн ₽" },
+//       { type: "2-комн. кв", price: "от 8,5 млн ₽" },
+//       { type: "3-комн. кв", price: "от 10,8 млн ₽" },
+//       { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
+//     ],
+//     description: [
+//       { type: "Срок сдачи", status: "Сдан — IV 2028" },
+//       { type: "Недвижимость", status: "Жилая" },
+//       { type: "Класс жилья", status: "Комфорт +" },
+//       { type: "Квартир", status: "8 402" },
+//     ],
+//     image: "/images/buildingCarousel/buidingExpandImg.webp",
+//   },
+//   {
+//     id: 2,
+//     title: "Солнечная долина",
+//     price: "от 4.8 млн ₽",
+//     subtitle: "Жилой комплекс в центре города",
+//     badge: { developer: "ПИК", period: "III – IV 2025" },
+//     metro: "Центральная",
+//     driveTime: "15 минут",
+//     specifications: [
+//       { type: "Студии", price: "от 4,8 млн ₽" },
+//       { type: "1-комн. кв", price: "от 6,2 млн ₽" },
+//       { type: "2-комн. кв", price: "от 7,8 млн ₽" },
+//       { type: "3-комн. кв", price: "от 9,5 млн ₽" },
+//       { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
+//     ],
+//     description: [
+//       { type: "Срок сдачи", status: "Сдан — IV 2028" },
+//       { type: "Недвижимость", status: "Жилая" },
+//       { type: "Класс жилья", status: "Комфорт +" },
+//       { type: "Квартир", status: "8 402" },
+//     ],
+//     image: "/images/buildingCarousel/buidingExpandImg.webp",
+//   },
+//   {
+//     id: 3,
+//     title: "Зеленый парк",
+//     price: "от 6.2 млн ₽",
+//     subtitle: "Элитный комплекс у парка",
+//     badge: { developer: "Самолет", period: "II – III 2026" },
+//     metro: "Парковая",
+//     driveTime: "20 минут",
+//     specifications: [
+//       { type: "Студии", price: "от 6,2 млн ₽" },
+//       { type: "1-комн. кв", price: "от 8,0 млн ₽" },
+//       { type: "2-комн. кв", price: "от 9,8 млн ₽" },
+//       { type: "3-комн. кв", price: "от 12,5 млн ₽" },
+//       { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
+//     ],
+//     description: [
+//       { type: "Срок сдачи", status: "Сдан — IV 2028" },
+//       { type: "Недвижимость", status: "Жилая" },
+//       { type: "Класс жилья", status: "Комфорт +" },
+//       { type: "Квартир", status: "8 402" },
+//     ],
+//     image: "/images/buildingCarousel/buidingExpandImg.webp",
+//   },
+//   {
+//     id: 4,
+//     title: "Морской бриз",
+//     price: "от 7.1 млн ₽",
+//     subtitle: "Премиум класс у моря",
+//     badge: { developer: "Эталон", period: "I – II 2027" },
+//     metro: "Морская",
+//     driveTime: "30 минут",
+//     specifications: [
+//       { type: "Студии", price: "от 7,1 млн ₽" },
+//       { type: "1-комн. кв", price: "от 9,3 млн ₽" },
+//       { type: "2-комн. кв", price: "от 11,2 млн ₽" },
+//       { type: "3-комн. кв", price: "от 14,8 млн ₽" },
+//       { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
+//     ],
+//     description: [
+//       { type: "Срок сдачи", status: "Сдан — IV 2028" },
+//       { type: "Недвижимость", status: "Жилая" },
+//       { type: "Класс жилья", status: "Комфорт +" },
+//       { type: "Квартир", status: "8 402" },
+//     ],
+//     image: "/images/buildingCarousel/buidingExpandImg.webp",
+//   },
+// ]
 
 type SortType = "cards" | "list"
+const CITY = "novosibirsk"
+const PER_PAGE = "4"
 
 const CatalogueList = () => {
   const [isEmpty, setIsEmpty] = useState(false)
@@ -128,6 +136,7 @@ const CatalogueList = () => {
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const [selectedPropertyType, setSelectedPropertyType] =
     useState("Жилой комплекс")
+  const [currentPage, setCurrentPage] = useState(1)
   const { isLaptop } = useScreenSize(0)
 
   const handleSorting = (sort: SortType) => {
@@ -143,24 +152,51 @@ const CatalogueList = () => {
     setShowFilters(false)
   }
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
   useEffect(() => {
     if (!isLaptop) setSelectedSorting("cards")
   }, [isLaptop])
 
-  const renderCardsWithDreamFlat = (): React.ReactNode[] => {
+  const renderSkeletons = (): React.ReactNode[] => {
+    const result: React.ReactNode[] = []
+    const skeletonCount = 4 // Количество skeleton'ов соответствует количеству карточек на странице
+
+    for (let i = 0; i < skeletonCount; i++) {
+      if (selectedSorting === "cards") {
+        result.push(<PropertyCardSkeleton key={`skeleton-${i}`} />)
+      } else {
+        result.push(<PropertyCardListSkeleton key={`skeleton-${i}`} />)
+      }
+    }
+
+    return result
+  }
+
+  const renderCards = (): React.ReactNode[] => {
     const result: React.ReactNode[] = []
 
-    cards.forEach((card, index) => {
+    const complexes = Array.isArray(catalogueResidentialComplexes)
+      ? catalogueResidentialComplexes
+      : catalogueResidentialComplexes?.attributes || []
+
+    // Преобразуем данные API в формат IProperty
+    const properties = mapResidentialComplexesToProperties(complexes)
+
+    properties.forEach((property, index) => {
       if (selectedSorting === "cards") {
-        result.push(<PropertyCard key={card.id} property={card} />)
+        result.push(<PropertyCard key={property.id} property={property} />)
       } else {
-        result.push(<PropertyCardList key={card.id} property={card} />)
+        result.push(<PropertyCardList key={property.id} property={property} />)
       }
 
+      // Добавляем GetYourDreamFlat после 2-й карточки
       if (index === 1) {
         result.push(
           <div
-            key={`dream-flat-${index}`}
+            key="dream-flat-in-cards"
             className={
               selectedSorting === "cards"
                 ? styles.catalogue__cards__fullWidth
@@ -172,6 +208,12 @@ const CatalogueList = () => {
         )
       }
     })
+
+    return result
+  }
+
+  const renderAdditionalComponents = (): React.ReactNode[] => {
+    const result: React.ReactNode[] = []
 
     result.push(
       <div
@@ -212,7 +254,20 @@ const CatalogueList = () => {
       />
     )
   }
+  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`
 
+  const {
+    data: catalogueResidentialComplexes,
+    isLoading,
+    error,
+  } = useApiQuery<ResidentialComplexDataResponse>(
+    ["residential-complex", CITY, currentPage.toString(), PER_PAGE],
+    FULL_API_URL,
+    {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    }
+  )
   return (
     <div className={styles.catalogue}>
       <div className={styles.catalogue__choose}>
@@ -324,7 +379,26 @@ const CatalogueList = () => {
           selectedSorting === "list" && styles.catalogue__cards_list
         )}
       >
-        {renderCardsWithDreamFlat()}
+        {isLoading ? renderSkeletons() : renderCards()}
+      </div>
+
+      {!isLoading && !isEmpty && (
+        <Pagination
+          totalPages={25} // Временное значение, пока API не возвращает реальную информацию о пагинации
+          currentPage={currentPage}
+          itemsPerPage={parseInt(PER_PAGE)}
+          onPageChange={handlePageChange}
+        />
+      )}
+
+      <div
+        className={clsx(
+          styles.catalogue__cards,
+          selectedSorting === "cards" && styles.catalogue__cards_cards,
+          selectedSorting === "list" && styles.catalogue__cards_list
+        )}
+      >
+        {renderAdditionalComponents()}
       </div>
     </div>
   )

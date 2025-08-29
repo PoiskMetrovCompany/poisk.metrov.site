@@ -1,11 +1,16 @@
 "use client"
 
-import React, { FC } from "react"
-import styles from "./propertyCard.module.scss"
 import clsx from "clsx"
+
+import React, { FC } from "react"
+
+import { IProperty } from "@/types/PropertyCard"
+
+import styles from "./propertyCard.module.scss"
+
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
-import { IProperty } from "@/types/PropertyCard"
+
 import IconImage from "../ui/IconImage"
 
 interface IPropertyCardProps {
@@ -23,8 +28,23 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   subtitleClassName,
   listClassName,
 }) => {
-  const { title, price, subtitle, badge, metro, driveTime, specifications } =
-    property
+  const {
+    title,
+    price,
+    subtitle,
+    badge,
+    metro,
+    driveTime,
+    metroType,
+    specifications,
+  } = property
+
+  // Выбираем иконку в зависимости от типа передвижения до метро
+  const getMetroIcon = () => {
+    return metroType === "on_foot"
+      ? "/images/icons/walk.svg"
+      : "/images/icons/car.svg"
+  }
 
   return (
     <article className={clsx(styles.property_card, className)}>
@@ -73,8 +93,8 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             </span>
             <span className={clsx(styles.property_card__location__item)}>
               <IconImage
-                iconLink="/images/icons/car.svg"
-                alt="Drive time"
+                iconLink={getMetroIcon()}
+                alt={metroType === "on_foot" ? "Walking time" : "Drive time"}
                 className={styles.property_card__location__item__icon}
               />
               {driveTime}

@@ -59,6 +59,6 @@ export interface IResidentialComplex {
 
 export interface ResidentialComplexDataResponse {
   identifier: string
-  attributes: IResidentialComplex
+  attributes: IResidentialComplex[]
   meta: IMeta
 }

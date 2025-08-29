@@ -97,9 +97,7 @@ const DetailsPage = () => {
       <div className={styles.details}>
         <DetailsHeader isLoading={true} />
         <Estate />
-        <FlatList
-          complexKey={RESIDENTIAL_COMPLEX_KEY}
-        />
+        <FlatList complexKey={RESIDENTIAL_COMPLEX_KEY} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex isLoading={true} />
         <MapProvider>
@@ -116,9 +114,7 @@ const DetailsPage = () => {
       <div className={styles.details}>
         <DetailsHeader isError={true} />
         <Estate />
-        <FlatList
-          complexKey={RESIDENTIAL_COMPLEX_KEY}
-        />
+        <FlatList complexKey={RESIDENTIAL_COMPLEX_KEY} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex />
         <MapProvider>
@@ -130,30 +126,32 @@ const DetailsPage = () => {
       </div>
     )
   }
+  const complexAttributes = Array.isArray(complexData.attributes)
+    ? complexData.attributes[0]
+    : complexData.attributes
+
   const headerData = {
-    name: complexData.attributes.name,
-    address: complexData.attributes.address,
-    metroStation: complexData.attributes.metro_station,
-    metroType: complexData.attributes.metro_type,
-    metroTime: complexData.attributes.metro_time,
+    name: complexAttributes.name,
+    address: complexAttributes.address,
+    metroStation: complexAttributes.metro_station,
+    metroType: complexAttributes.metro_type,
+    metroTime: complexAttributes.metro_time,
   }
   const aboutComplexData = {
-    description: complexData.attributes.description,
+    description: complexAttributes.description,
   }
   return (
     <div className={styles.details}>
       <DetailsHeader data={headerData} />
       <Estate />
-      <FlatList
-        complexKey={RESIDENTIAL_COMPLEX_KEY}
-      />
+      <FlatList complexKey={RESIDENTIAL_COMPLEX_KEY} />
       <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
       <MapProvider>
         <Location
-          latitude={complexData.attributes.latitude}
-          longitude={complexData.attributes.longitude}
-          complexName={complexData.attributes.name}
+          latitude={complexAttributes.latitude}
+          longitude={complexAttributes.longitude}
+          complexName={complexAttributes.name}
         />
       </MapProvider>
       <AboutObjectSmall items={aboutObjectItemsSmall} />
