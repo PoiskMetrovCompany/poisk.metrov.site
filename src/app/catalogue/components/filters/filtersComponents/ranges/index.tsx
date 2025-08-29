@@ -2,7 +2,7 @@ import React, { FC, useMemo } from "react"
 
 import styles from "./ranges.module.scss"
 
-import RangeInput from "../../rangeInput"
+import RangeInput from "../rangeInput"
 
 import Range from "@/components/ui/inputs/range"
 

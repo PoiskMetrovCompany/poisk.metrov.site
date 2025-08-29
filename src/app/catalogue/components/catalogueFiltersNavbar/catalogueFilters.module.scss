@@ -1,41 +1,169 @@
 .catalogue {
   &__filters {
     &__container {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-
-      height: 96px;
-      padding: 12px;
-      border-radius: 80px;
-
       background: var(--color-white);
+      border-radius: 80px;
+      display: flex;
+      height: 96px;
+      justify-content: space-between;
+      padding: 12px;
+      // transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media screen and (width >= 1440px) and (width < 1920px) {
+        height: 80px;
+        padding: 8px 12px !important;
+      }
+
+      @media screen and (width >= 1024px) and (width < 1440px) {
+        height: 64px;
+        padding: 0 8px !important;
+      }
+
+      @media screen and (width >= 768px) and (width < 1024px) {
+        border-radius: 40px;
+        height: 56px;
+        padding: 4px !important;
+      }
+
+      @media screen and (width < 768px) {
+        border-radius: 80px;
+        height: 48px;
+        padding: 4px !important;
+      }
+
+      // Стили для sticky состояния (применяются через родительский контейнер)
+      &.sticky {
+        backdrop-filter: none;
+        border-radius: 0;
+        border-top: 1px solid var(--Grey-100, #e9e9e9);
+        margin-left: -120px;
+        padding: 0 132px;
+        width: 100vw;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          margin-left: -80px;
+          padding: 0 92px !important;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          margin-left: -40px;
+          padding: 0 48px !important;
+        }
+
+        @media screen and (width >= 768px) and (width < 1024px) {
+          margin-left: -40px;
+          padding: 0 48px !important;
+        }
+
+        @media screen and (width < 768px) {
+          margin-left: -16px;
+          padding: 0 20px !important;
+        }
+      }
 
       &__inputs {
+        align-items: center;
         display: flex;
         flex: 1;
         gap: 16px;
-        align-items: center;
+
+        @media screen and (width >= 1440px) and (width < 1920px) {
+          gap: 12px;
+        }
+
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          gap: 4px;
+        }
+
+        &__separator {
+          background: var(--Grey-Grey-100, #e9e9e9);
+
+          border-radius: 8px;
+          height: 24px;
+          width: 2px;
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            height: 20px;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            display: none;
+          }
+
+          @media screen and (width < 768px) {
+            display: none;
+          }
+        }
+
+        &__room {
+          width: 240px !important;
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            width: 200px !important;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            padding-left: 6px !important;
+
+            width: 140px !important;
+          }
+
+          @media screen and (width >= 768px) and (width < 1024px) {
+            display: none;
+          }
+
+          @media screen and (width < 768px) {
+            display: none;
+          }
+        }
+
+        &__price {
+          width: 240px !important;
+
+          @media screen and (width >= 1440px) and (width < 1920px) {
+            width: 200px !important;
+          }
+
+          @media screen and (width >= 1024px) and (width < 1440px) {
+            padding-left: 12px !important;
+            width: 140px !important;
+          }
+
+          @media screen and (width < 1024px) {
+            display: none !important;
+          }
+        }
+
+        &__search {
+          @media screen and (width >= 768px) and (width < 1024px) {
+            padding-left: 12px !important;
+          }
+
+          @media screen and (width < 768px) {
+            padding-left: 12px !important;
+          }
+        }
       }
 
       &__select {
+        align-items: center;
+        border-left: 2px solid var(--color-gray-white);
+        border-right: 2px solid var(--color-gray-white);
         display: flex;
         gap: 8px;
-        align-items: center;
+        height: 24px;
         justify-content: space-between;
+        padding-left: 16px;
+        padding-right: 16px;
 
         width: 240px;
-        height: 24px;
-        padding-right: 16px;
-        padding-left: 16px;
-        border-right: 2px solid var(--color-gray-white);
-        border-left: 2px solid var(--color-gray-white);
 
         &__text {
-          padding-left: 24px;
+          color: var(--color-text-gray);
           font-size: 18px;
           font-weight: 400;
-          color: var(--color-text-gray);
+          padding-left: 24px;
 
           @media (width <= 1920px) {
             font-size: 15px;
@@ -47,9 +175,9 @@
         }
 
         &__icon {
-          width: 12px;
           height: 8px;
           margin-right: 16px;
+          width: 12px;
         }
 
         @media (width <= 768px) {
@@ -62,22 +190,22 @@
       }
 
       &__search {
+        align-items: center;
         display: flex;
         gap: 10px;
-        align-items: center;
         justify-content: space-between;
 
         margin-left: 24px;
 
         &__icon {
-          width: 24px;
           height: 24px;
+          width: 24px;
         }
 
         input {
-          width: 324px;
           border: none;
           outline: none;
+          width: 324px;
 
           @media (width <= 1440px) {
             width: 263px;
@@ -91,10 +219,10 @@
         }
 
         &__text {
+          color: var(--color-text-gray);
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
-          color: var(--color-text-gray);
 
           @media (width <= 1920px) {
             font-size: 15px;
@@ -106,24 +234,149 @@
         display: flex;
         gap: 16px;
 
+        @media screen and (width >= 1024px) and (width < 1440px) {
+          gap: 12px;
+        }
+
+        @media screen and (width < 1024px) {
+          flex-direction: row-reverse;
+          gap: 4px;
+        }
+
         span {
-          @media (width <= 1920px) {
+          @media (width < 1920px) {
             display: none;
           }
         }
 
         &__button {
           &__show {
+            display: flex;
+
             flex: 1;
             font-size: 18px !important;
             font-weight: 400 !important;
+            gap: 3px;
             line-height: 150%;
+
+            &__icon {
+              display: none;
+              height: 24px;
+              width: 24px;
+
+              @media screen and (width < 1024px) {
+                display: flex !important;
+              }
+
+              @media screen and (width < 768px) {
+                height: 20px;
+                width: 20px;
+              }
+            }
+
+            &__text {
+              white-space: nowrap;
+
+              @media screen and (width < 1024px) {
+                display: none;
+              }
+            }
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              font-size: 15px !important;
+              height: 56px !important;
+            }
+
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              font-size: 14px !important;
+              height: 48px !important;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width >= 768px) and (width < 1024px) {
+              gap: 0 !important;
+              height: 48px !important;
+              padding: 0 !important;
+              width: 48px !important;
+            }
+
+            @media screen and (width < 768px) {
+              gap: 0 !important;
+              height: 40px !important;
+              padding: 0 !important;
+              width: 40px !important;
+            }
+
+            > span {
+              white-space: nowrap;
+            }
+          }
+
+          &__filter {
+            display: flex;
+            gap: 12px;
+
+            @media screen and (width >= 1920px) {
+              padding: 20px !important;
+            }
+
+            &__text {
+              display: flex !important;
+
+              @media screen and (width >= 1920px) {
+                display: none !important;
+              }
+
+              @media screen and (width < 1024px) {
+                display: none !important;
+              }
+            }
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              font-size: 15px !important;
+              height: 56px !important;
+            }
+
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              font-size: 14px !important;
+              height: 48px !important;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width >= 768px) and (width < 1024px) {
+              gap: 0 !important;
+              height: 48px !important;
+              padding: 0 !important;
+              width: 48px !important;
+            }
+
+            @media screen and (width < 768px) {
+              gap: 0 !important;
+              height: 40px !important;
+              padding: 0 !important;
+              width: 40px !important;
+            }
+
+            &__icon {
+              height: 28px;
+              width: 28px;
+
+              @media screen and (width >= 768px) and (width < 1440px) {
+                height: 24px;
+                width: 24px;
+              }
+
+              @media screen and (width < 768px) {
+                height: 18px !important;
+                width: 18px !important;
+              }
+            }
           }
         }
 
-        @media (width <= 1090px) {
-          display: none;
-        }
+        // @media (width < 1920px) {
+        //   display: none;
+        // }
       }
 
       @media (width <= 1090px) {
@@ -135,13 +388,13 @@
 
 .filterSvg {
   @media (width <= 1920px) {
-    width: 22;
     height: 22;
+    width: 22;
   }
 
   @media (width <= 1440px) {
-    width: 18px;
     height: 18px;
     margin-left: 10px;
+    width: 18px;
   }
 }

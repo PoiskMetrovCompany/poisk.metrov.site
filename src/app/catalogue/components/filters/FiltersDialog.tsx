@@ -12,6 +12,7 @@ import { useFiltersForm } from "./useFiltersForm"
 
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import IconButton from "@/components/ui/buttons/IconButton"
 
 interface FiltersDialogProps {
   open: boolean
@@ -112,28 +113,30 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
               <FiltersHeader onClose={handleClose} onReset={resetFilters} />
             </div> */}
 
-            {/* Блок "Квартира" */}
-            <ApartmentFilters
-              formData={apartmentFormData}
-              handleMultiSelect={handleMultiSelect}
-              handleApartmentsSelect={handleApartmentsSelect}
-              handleRangeInputChange={handleRangeInputChange}
-              onCloseDialog={handleClose}
-            />
+            <div className={styles.catalogue__filters__container__content}>
+              {/* Блок "Квартира" */}
+              <ApartmentFilters
+                formData={apartmentFormData}
+                handleMultiSelect={handleMultiSelect}
+                handleApartmentsSelect={handleApartmentsSelect}
+                handleRangeInputChange={handleRangeInputChange}
+                onCloseDialog={handleClose}
+              />
 
-            {/* Блок "Жилой комплекс" */}
-            <ComplexFilters
-              formData={complexFormData}
-              handleMultiSelect={handleMultiSelect}
-              handleMetroTransportTypeSelect={handleMetroTransportTypeSelect}
-              handleRangeInputChange={handleRangeInputChange}
-            />
+              {/* Блок "Жилой комплекс" */}
+              <ComplexFilters
+                formData={complexFormData}
+                handleMultiSelect={handleMultiSelect}
+                handleMetroTransportTypeSelect={handleMetroTransportTypeSelect}
+                handleRangeInputChange={handleRangeInputChange}
+              />
 
-            {/* Блок "Покупка" */}
-            <PurchaseFilters
-              formData={purchaseFormData}
-              handleMultiSelect={handleMultiSelect}
-            />
+              {/* Блок "Покупка" */}
+              <PurchaseFilters
+                formData={purchaseFormData}
+                handleMultiSelect={handleMultiSelect}
+              />
+            </div>
 
             <div className={styles.catalogue__filters__container__showFlats}>
               <button
@@ -172,15 +175,29 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
                     {getActiveFiltersCount()}
                   </span>
                 </ActionButton>
-                <ActionButton
+                <div
                   className={
-                    styles.catalogue__filters__container__showFlats__buttons__apply
+                    styles.catalogue__filters__container__showFlats__buttons__apply__wrapper
                   }
-                  onClick={handleApplyFilters}
-                  type="primary"
                 >
-                  Показать 12166 предложений
-                </ActionButton>
+                  <ActionButton
+                    className={
+                      styles.catalogue__filters__container__showFlats__buttons__apply
+                    }
+                    onClick={handleApplyFilters}
+                    type="primary"
+                  >
+                    Показать <span>12166 предложений</span>
+                  </ActionButton>
+
+                  <IconButton
+                    iconLink="/images/icons/heart.svg"
+                    onClick={handleClose}
+                    className={
+                      styles.catalogue__filters__container__showFlats__buttons__apply__heart
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>
