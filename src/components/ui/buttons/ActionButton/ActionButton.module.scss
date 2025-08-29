@@ -59,6 +59,13 @@
   &_whatsap {
     background: var(--color-whatsapp);
     min-width: 202px;
+    &:active {
+      background: var(--color-green-light);
+    }
+
+    &_active {
+      background: var(--color-whatsapp-active);
+    }
 
     @media (width <= 1440px) {
       font-size: 15px !important;
@@ -83,6 +90,14 @@
   &_telegram {
     background: var(--color-telegram);
     min-width: 202px;
+
+    &:active {
+      background: var(--color-blue);
+    }
+
+    &_active {
+      background: var(--color-telegram-active);
+    }
 
     @media (width <= 1440px) {
       font-size: 15px !important;
@@ -193,6 +208,27 @@
     }
   }
 
+  &_loading {
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      animation: shimmer 2s infinite;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+      );
+      content: "";
+      height: 100%;
+      left: -100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+
   &:disabled {
     background: var(--color-gray);
     color: var(--color-text-gray);
@@ -201,5 +237,14 @@
     &:hover {
       background-color: var(--color-gray);
     }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
   }
 }

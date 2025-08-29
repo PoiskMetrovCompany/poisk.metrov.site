@@ -24,7 +24,7 @@ const Dropdown = ({
   label,
 }: DropdownProps) => {
   return (
-    <Select.Root open={true} value={value} onValueChange={onChange}>
+    <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger
         className={clsx(styles.dropdown, className)}
         aria-label="Food"

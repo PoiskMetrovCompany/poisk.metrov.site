@@ -1,6 +1,9 @@
-import React, { FC, useState, useEffect, useRef } from "react"
 import * as Popover from "@radix-ui/react-popover"
+
+import React, { FC, useEffect, useRef, useState } from "react"
+
 import styles from "./searchDropdown.module.scss"
+
 import IconImage from "@/components/ui/IconImage"
 
 interface SearchDropdownProps {
@@ -31,7 +34,6 @@ const searchItemsComplex: IsearchItem[] = [
 ]
 
 const searchItemsAdress: IsearchItem[] = [
-  { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
@@ -107,8 +109,10 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
 
   // Синхронизируем локальное состояние с внешним значением
   useEffect(() => {
-    setInputValue(value)
-  }, [value])
+    if (inputValue !== value) {
+      setInputValue(value)
+    }
+  }, [value, inputValue])
 
   // Очищаем таймаут при размонтировании
   useEffect(() => {

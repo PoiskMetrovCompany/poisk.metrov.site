@@ -10,6 +10,7 @@ interface ArrowButtonProps {
   disabled?: boolean
   size?: "small" | "medium" | "large"
   absolute?: boolean
+  loading?: boolean
 }
 
 const ArrowButton = ({
@@ -18,6 +19,7 @@ const ArrowButton = ({
   disabled = false,
   size = "medium",
   absolute = false,
+  loading = false,
 }: ArrowButtonProps) => {
   return (
     <button
@@ -28,6 +30,7 @@ const ArrowButton = ({
           [styles.arrowButton_medium]: size === "medium",
           [styles.arrowButton_large]: size === "large",
           [styles.arrowButton_absolute]: absolute,
+          [styles.arrowButton_loading]: loading,
         },
         className
       )}

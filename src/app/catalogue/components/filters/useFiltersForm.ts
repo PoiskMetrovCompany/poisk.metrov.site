@@ -1,5 +1,7 @@
 import { useForm } from "@tanstack/react-form"
-import { useState, useRef, useEffect, useMemo, useCallback } from "react"
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+
 import { FiltersFormData, INITIAL_RANGES } from "./types"
 
 // Типы для селектов
@@ -543,9 +545,14 @@ export const useFiltersForm = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [refs, closeAllSelects])
 
+  // Мемоизируем formData, чтобы избежать создания нового объекта при каждом рендере
+  const formData = useMemo(() => {
+    return { ...form.state.values, ...multiSelectValues }
+  }, [form.state.values, multiSelectValues])
+
   return {
     form,
-    formData: { ...form.state.values, ...multiSelectValues },
+    formData,
 
     // Состояния показа опций селектов
     showOptions,

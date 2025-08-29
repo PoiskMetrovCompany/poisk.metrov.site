@@ -1,19 +1,23 @@
-import React, { FC, memo } from "react"
+import clsx from "clsx"
+
+import React, { FC, memo, useMemo } from "react"
+
 import styles from "./filterBlocks.module.scss"
-import FiltersButton from "@/components/ui/buttons/FiltersButton"
+
 import RangeInput from "../../rangeInput"
 import {
-  ROOMS_OPTIONS,
+  APARTMENTS_OPTIONS,
+  BATHROOM_OPTIONS,
+  FEATURES_OPTIONS,
+  FINISH_OPTIONS,
   FLOOR_OPTIONS,
   LAYOUT_OPTIONS,
-  FINISH_OPTIONS,
-  BATHROOM_OPTIONS,
-  APARTMENTS_OPTIONS,
-  FEATURES_OPTIONS,
+  ROOMS_OPTIONS,
 } from "../../types"
-import Heading3 from "@/components/ui/heading3"
+
 import IconImage from "@/components/ui/IconImage"
-import clsx from "clsx"
+import FiltersButton from "@/components/ui/buttons/FiltersButton"
+import Heading3 from "@/components/ui/heading3"
 
 interface ApartmentFiltersProps {
   formData: {
@@ -63,6 +67,40 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
   }) => {
     const ceilingHeightOptions = ["От 2,5 м", "От 2,7 м", "От 3 м", "От 4 м"]
 
+    // Мемоизируем значения для RangeInput, чтобы избежать создания новых массивов при каждом рендере
+    const priceRange = useMemo(
+      () =>
+        [formData.priceMin, formData.priceMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.priceMin, formData.priceMax]
+    )
+    const floorRange = useMemo(
+      () =>
+        [formData.floorMin, formData.floorMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.floorMin, formData.floorMax]
+    )
+    const flatAreaRange = useMemo(
+      () =>
+        [formData.flatAreaMin, formData.flatAreaMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.flatAreaMin, formData.flatAreaMax]
+    )
+    const livingAreaRange = useMemo(
+      () =>
+        [formData.livingAreaMin, formData.livingAreaMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.livingAreaMin, formData.livingAreaMax]
+    )
+
     return (
       <div className={styles.filterBlock}>
         <div className={styles.filterBlock__title}>
@@ -86,6 +124,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           <div className={styles.filterBlock__section__label}>
             Количество комнат
           </div>
+
           <div className={styles.filterBlock__section__options}>
             {ROOMS_OPTIONS.map((option) => (
               <FiltersButton
@@ -103,7 +142,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           <div className={styles.filterBlock__section__label}>Цена</div>
           <div className={styles.filterBlock__section__range}>
             <RangeInput
-              value={[formData.priceMin, formData.priceMax]}
+              value={priceRange}
               onValueChange={(range) => handleRangeInputChange("price", range)}
               unit="₽"
             />
@@ -120,7 +159,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           <div className={styles.filterBlock__section__label}>Этаж</div>
           <div className={styles.filterBlock__section__optionsRange}>
             <RangeInput
-              value={[formData.floorMin, formData.floorMax]}
+              value={floorRange}
               onValueChange={(range) => handleRangeInputChange("floor", range)}
               unit=""
             />
@@ -144,7 +183,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           </div>
           <div className={styles.filterBlock__section__range}>
             <RangeInput
-              value={[formData.flatAreaMin, formData.flatAreaMax]}
+              value={flatAreaRange}
               onValueChange={(range) =>
                 handleRangeInputChange("flatArea", range)
               }
@@ -160,7 +199,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           </div>
           <div className={styles.filterBlock__section__range}>
             <RangeInput
-              value={[formData.livingAreaMin, formData.livingAreaMax]}
+              value={livingAreaRange}
               onValueChange={(range) =>
                 handleRangeInputChange("livingArea", range)
               }

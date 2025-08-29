@@ -4,6 +4,9 @@ import React, { useState } from "react"
 
 import Image from "next/image"
 
+
+import { useApiMutation } from "@/utils/hooks/use-api"
+
 import styles from "./monthlyPayment.module.scss"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -129,12 +132,24 @@ type ViewState = "initial" | "quiz" | "form"
 
 interface UserAnswers {
   paymentMethod: string
-  answers: string[]
+
+  answers: Array<{
+    question: string
+    answer: string
+  }>
 }
 
 interface FormData {
   name: string
   phone: string
+}
+
+
+interface ApiRequestData {
+  name: string
+  phone: string
+  comment: string
+  city: string
 }
 
 const MonthlyPayment = () => {
@@ -150,6 +165,30 @@ const MonthlyPayment = () => {
     phone: "",
   })
 
+
+  const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
+    "/crm/store",
+    {
+      onSuccess: (data) => {
+        console.log("Заявка отправлена", data)
+        setViewState("initial")
+        setCurrentBranch(null)
+        setCurrentQuestionIndex(0)
+        setUserAnswers({
+          paymentMethod: "",
+          answers: [],
+        })
+        setFormData({
+          name: "",
+          phone: "",
+        })
+      },
+      onError: (error) => {
+        console.log("Ошибка при отправке заявки", error)
+      },
+    }
+  )
+
   const handleBranchSelect = (branch: string) => {
     setCurrentBranch(branch)
     setCurrentQuestionIndex(0)
@@ -161,7 +200,22 @@ const MonthlyPayment = () => {
   }
 
   const handleAnswerSelect = (answer: string) => {
-    const newAnswers = [...userAnswers.answers, answer]
+
+    let currentQuestion
+    if (currentBranch === "Ипотека") {
+      currentQuestion = mortgageQuestions[currentQuestionIndex]
+    } else if (currentBranch === "Наличные") {
+      currentQuestion = cashQuestions[currentQuestionIndex]
+    } else {
+      currentQuestion = installmentQuestions[currentQuestionIndex]
+    }
+
+    const newAnswer = {
+      question: currentQuestion.question,
+      answer: answer,
+    }
+
+    const newAnswers = [...userAnswers.answers, newAnswer]
     setUserAnswers((prev) => ({
       ...prev,
       answers: newAnswers,
@@ -193,23 +247,29 @@ const MonthlyPayment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    console.log("Результаты опроса:", {
-      paymentMethod: userAnswers.paymentMethod,
-      answers: userAnswers.answers,
-      formData: formData,
+
+    if (!formData.name || !formData.phone) {
+      console.log("Пожалуйста, заполните все поля")
+      return
+    }
+
+    const commentParts = [`Способ покупки --- ${userAnswers.paymentMethod}`]
+
+    userAnswers.answers.forEach(({ question, answer }) => {
+      commentParts.push(`${question} --- ${answer}`)
     })
 
-    setViewState("initial")
-    setCurrentBranch(null)
-    setCurrentQuestionIndex(0)
-    setUserAnswers({
-      paymentMethod: "",
-      answers: [],
-    })
-    setFormData({
-      name: "",
-      phone: "",
-    })
+    const comment = commentParts.join(" || ")
+
+    const apiData: ApiRequestData = {
+      name: formData.name,
+      phone: formData.phone,
+      comment: comment,
+      city: "novosibirsk",
+    }
+
+    submitMutation.mutate(apiData)
+
   }
 
   if (viewState === "quiz" && currentBranch) {
@@ -353,8 +413,16 @@ const MonthlyPayment = () => {
                     styles.monthlyPayment__container__content__form__button
                   }
                 >
-                  <ActionButton type="primary" size="small">
-                    Отправить заявку
+
+                  <ActionButton
+                    type="primary"
+                    size="small"
+                    loading = {submitMutation.isPending}
+                    disabled={submitMutation.isPending}
+                  >
+                    {submitMutation.isPending
+                      ? "Отправка..."
+                      : "Отправить заявку"}
                   </ActionButton>
                 </div>
               </div>

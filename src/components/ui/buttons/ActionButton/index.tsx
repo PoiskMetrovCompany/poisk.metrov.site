@@ -27,6 +27,8 @@ interface ActionButtonProps {
   svgHeight?: number
   svgDiscolored?: boolean
   disabled?: boolean
+  loading?: boolean
+  isActive?: boolean
 }
 
 const ActionButton = ({
@@ -43,6 +45,8 @@ const ActionButton = ({
   svgHeight = 16,
   svgDiscolored = false,
   disabled = false,
+  loading = false,
+  isActive = false,
 }: ActionButtonProps) => {
   return (
     <button
@@ -57,7 +61,11 @@ const ActionButton = ({
           [styles.actionButton_gray]: type === "gray",
           [styles.actionButton_disabled]: type === "disabled",
           [styles.actionButton_whatsap]: type === "whatsapp",
+          [styles.actionButton_whatsap_active]: type === "whatsapp" && isActive,
           [styles.actionButton_telegram]: type === "telegram",
+          [styles.actionButton_telegram_active]:
+            type === "telegram" && isActive,
+          [styles.actionButton_loading]: loading,
         },
         {
           [styles.actionButton_small]: size === "small",

@@ -1,10 +1,13 @@
 "use client"
-import React, { FC } from "react"
-import styles from "./inputContainer.module.scss"
+
 import clsx from "clsx"
 
+import React, { FC } from "react"
+
+import styles from "./inputContainer.module.scss"
+
 interface InputContainerProps {
-  label: string
+  label?: string
   placeholder: string
   value: string
   onChange: (value: string) => void
@@ -95,12 +98,14 @@ const InputContainer: FC<InputContainerProps> = ({
 
   return (
     <div className={clsx(styles.inputContainer, className)}>
-      <label
-        htmlFor={name}
-        className={clsx(styles.inputContainer__label, labelClassName)}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={name}
+          className={clsx(styles.inputContainer__label, labelClassName)}
+        >
+          {label}
+        </label>
+      )}
       <div className={styles.inputContainer__wrapper}>
         {prefix && (
           <span className={styles.inputContainer__prefix}>{prefix}</span>
