@@ -327,6 +327,82 @@
                 display: none !important;
               }
 
+              &_map {
+                @media screen and (width >= 1920px) {
+                  display: flex !important;
+                }
+              }
+
+              @media screen and (width < 1024px) {
+                display: none !important;
+              }
+            }
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              font-size: 15px !important;
+              height: 56px !important;
+            }
+
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              font-size: 14px !important;
+              height: 48px !important;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width >= 768px) and (width < 1024px) {
+              gap: 0 !important;
+              height: 48px !important;
+              padding: 0 !important;
+              width: 48px !important;
+            }
+
+            @media screen and (width < 768px) {
+              gap: 0 !important;
+              height: 40px !important;
+              padding: 0 !important;
+              width: 40px !important;
+            }
+
+            &__icon {
+              height: 28px;
+              width: 28px;
+
+              @media screen and (width >= 768px) and (width < 1440px) {
+                height: 24px;
+                width: 24px;
+              }
+
+              @media screen and (width < 768px) {
+                height: 18px !important;
+                width: 18px !important;
+              }
+            }
+          }
+
+          &__save {
+            border-radius: 40px;
+            color: var(--color-orange);
+            display: flex;
+            gap: 12px;
+            white-space: nowrap;
+
+            @media screen and (width >= 1920px) {
+              padding: 20px !important;
+            }
+
+            &__text {
+              display: flex !important;
+
+              @media screen and (width >= 1920px) {
+                display: none !important;
+              }
+
+              &_map {
+                @media screen and (width >= 1920px) {
+                  display: flex !important;
+                }
+              }
+
               @media screen and (width < 1024px) {
                 display: none !important;
               }

@@ -10,9 +10,10 @@ import TopBar from "./headerComponents/TopBar"
 
 interface HeaderProps {
   initialCity: { name: string; id: string; slug: string } | null
+  hideTopBar?: boolean
 }
 
-const Header = ({ initialCity }: HeaderProps) => {
+const Header = ({ initialCity, hideTopBar = false }: HeaderProps) => {
   const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false)
 
   return (
@@ -22,7 +23,7 @@ const Header = ({ initialCity }: HeaderProps) => {
         onClose={() => setIsMenuPopupOpen(false)}
       />
       <header className={styles.header}>
-        <TopBar />
+        {!hideTopBar && <TopBar initialCity={initialCity} />}
       </header>
       <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
     </>

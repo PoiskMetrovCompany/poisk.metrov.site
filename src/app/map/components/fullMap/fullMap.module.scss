@@ -26,6 +26,26 @@
     z-index: 10;
   }
 
+  &__filtersNavbar {
+    padding: 0 120px;
+    position: sticky;
+    top: 81px; // совпадает с каталогом: TopBar + MainBar
+    z-index: 12; // выше оверлея и карты
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      padding: 0 80px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      padding: 0 40px;
+    }
+
+    @media screen and (width < 1024px) {
+      padding: 0 16px;
+      top: 70px;
+    }
+  }
+
   &__propertyCard {
     cursor: default;
     left: 24px;

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react"
 
+import CatalogueFilters from "@/app/catalogue/components/catalogueFiltersNavbar"
+import FiltersDialog from "@/app/catalogue/components/filters"
 import { Map } from "@/components/map/map"
 import { IPoint } from "@/components/map/variables/variables"
 import { PointType } from "@/components/map/variables/variables"
@@ -69,6 +71,7 @@ const FullMap = () => {
     PointType.IN_SALE,
     PointType.ANNOUNCEMENTS,
   ])
+  const [showFilters, setShowFilters] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
   // Блокировка скролла при показе карточки
@@ -103,6 +106,15 @@ const FullMap = () => {
 
   return (
     <div className={styles.fullMap}>
+      <div className={styles.fullMap__filtersNavbar}>
+        <CatalogueFilters
+          isMap
+          isSticky
+          onShowFilters={() => setShowFilters(true)}
+          onApplyFilters={() => setShowFilters(false)}
+        />
+      </div>
+      <FiltersDialog open={showFilters} onOpenChange={setShowFilters} />
       <PointTypes
         activePoints={activePoints}
         handlePointClick={handlePointClick}
