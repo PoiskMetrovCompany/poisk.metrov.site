@@ -7,30 +7,29 @@ html {
 }
 
 section {
-  position: relative;
-
-  display: flex;
   align-items: center;
-  justify-content: center;
 
   box-sizing: border-box;
-  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  margin: 0 40px;
   max-width: 990px;
   min-height: calc(100vh - 5.625rem);
-  margin: 0 40px;
   padding: 0 !important;
+  position: relative;
+  width: 100%;
 }
 
 header {
-  position: relative;
+  background: none !important;
 
   display: flex;
   justify-content: center;
-
-  margin-top: 1rem;
   margin-bottom: 3rem;
 
-  background: none !important;
+  margin-top: 1rem;
+  position: relative;
 }
 
 main {
@@ -41,9 +40,9 @@ main {
 }
 
 article {
-  width: 100%;
   margin-bottom: 3rem; /* 48px */
   text-align: center;
+  width: 100%;
 }
 
 article h1 {
@@ -52,36 +51,35 @@ article h1 {
 }
 
 article p {
+  color: #818181;
   font-size: 1.125rem; /* 18px */
   font-weight: 400;
-  color: #818181;
 }
 
 /* Основная карточка */
 .center-card {
-  position: relative;
-
-  width: 21rem; /* 336px */
+  background-color: rgb(255 255 255 / 100%);
+  border-radius: 2rem; /* 32px */
   height: 27.25rem; /* 436px */
   padding: 1.5rem 3rem 0; /* 24px 48px 0 */
-  border-radius: 2rem; /* 32px */
+  position: relative;
 
   text-align: center;
 
-  background-color: rgb(255 255 255 / 100%);
+  width: 21rem; /* 336px */
 }
 
 .center-card.big {
-  display: flex;
-  flex-direction: column;
   align-items: center;
 
   box-sizing: border-box;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
   height: auto;
-  min-height: auto;
   margin-bottom: 40px;
+  min-height: auto;
   padding-bottom: 1.5rem;
+  width: 100%;
 }
 
 /* Типография карточек */
@@ -91,11 +89,11 @@ article p {
 }
 
 .center-card p {
+  color: rgb(129 129 129 / 100%);
   /* 16px */
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: rgb(129 129 129 / 100%);
 }
 
 /* ==============================================
@@ -104,8 +102,8 @@ article p {
 
 /* Основная форма */
 form {
-  position: relative;
   margin-top: 3.75rem; /* 60px */
+  position: relative;
 }
 
 /* Ряды формы */
@@ -113,9 +111,9 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 1.875rem; /* 30px */
 
   width: 100%;
-  margin-top: 1.875rem; /* 30px */
 }
 
 .formRow.justify-space-between {
@@ -138,44 +136,42 @@ form {
 }
 
 .formRow h2 {
-  width: 100%;
-  margin-bottom: 2rem;
-
   font-size: 24px;
   font-weight: 500;
+  margin-bottom: 2rem;
   text-align: left;
+  width: 100%;
 }
 
 .formRow h3 {
-  width: 100%;
-  margin: 0;
-
   font-size: 1.25rem;
   font-weight: 500;
+  margin: 0;
   text-align: center;
+  width: 100%;
 }
 
 .formRow h4 {
-  width: 100%;
-  margin: 0;
-  margin-top: 1.25rem; /* 20px */
+  color: #818181;
 
   font-size: 1rem;
   font-weight: 400;
-  color: #818181;
+  margin: 0;
+  margin-top: 1.25rem; /* 20px */
   text-align: center;
+  width: 100%;
 }
 
 .input-container {
-  position: relative;
   display: inline-block;
+  position: relative;
   width: 100%;
 }
 
 .input-container.big {
   flex-wrap: wrap;
-  width: auto;
   text-align: left;
+  width: auto;
 }
 
 /* ==============================================
@@ -184,18 +180,18 @@ form {
 
 /* Основные поля ввода */
 .formInput {
-  box-sizing: border-box;
-  width: 100%;
-  height: 4rem; /* 64px */
-  padding-left: 0.875rem; /* 14px */
   border: 1.5px solid rgb(210 210 210 / 100%);
   border-radius: 1rem; /* 16px */
+  box-sizing: border-box;
 
   font-size: 1rem; /* 16px */
   font-weight: 400;
+  height: 4rem; /* 64px */
   line-height: 1.5;
+  padding-left: 0.875rem; /* 14px */
 
   transition: border-color 0.3s ease;
+  width: 100%;
 }
 
 .formInput:focus {
@@ -207,47 +203,46 @@ form {
 }
 
 .formInput[readonly] {
+  background: rgb(249 249 247 / 100%);
+  border: none;
   min-height: 5.2rem;
   padding-top: 1.6rem;
-  border: none;
-  background: rgb(249 249 247 / 100%);
 }
 
 .inputTable input[readonly] {
-  border: none;
   background: rgb(249 249 247 / 100%);
+  border: none;
 }
 
 .formLabel:has(+ .formInput[readonly]) {
-  top: 10px;
+  background: none;
   font-size: 16px;
   font-weight: 600;
-  background: none;
+  top: 10px;
 }
 
 .formLabel {
-  position: absolute;
-  z-index: 2;
-  top: -0.6875rem; /* -10.5px */
-  left: 0.5rem; /* 8px */
-
-  padding: 0 0.3125rem; /* 0 5px */
+  background-color: rgb(255 255 255 / 100%);
 
   font-size: 0.875rem; /* 14px */
   font-weight: 400;
+  left: 0.5rem; /* 8px */
   line-height: 1.5;
 
-  background-color: rgb(255 255 255 / 100%);
+  padding: 0 0.3125rem; /* 0 5px */
+  position: absolute;
+  top: -0.6875rem; /* -10.5px */
+  z-index: 2;
 }
 
 .required::after {
-  content: "  *";
   color: #f13131 !important;
+  content: "  *";
 }
 
 .required label::after {
-  content: " *";
   color: #f13131 !important;
+  content: " *";
 }
 
 .formInput.error {
@@ -262,39 +257,40 @@ form {
 
 /* Анимация для подсветки ошибок */
 .formInput {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* Стили для текста ошибки (если понадобится в будущем) */
 .error-message {
-  display: block;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
   color: #e74c3c;
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
 }
 
 /* Стили для обязательных полей с ошибками */
 .formLabel.required.error::after {
-  content: " *";
   color: #e74c3c !important;
+  content: " *";
 }
 
 .custom-input-container {
+  height: 100%;
   position: relative;
   width: 100%;
-  height: 100%;
 }
 
 .custom-input-container input {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 0;
+  background: transparent;
   border: none;
+  box-sizing: border-box;
 
   font-size: 1rem;
-
-  background: transparent;
+  height: 100%;
+  padding: 0;
+  width: 100%;
 }
 
 .custom-input-container input:focus {
@@ -302,23 +298,23 @@ form {
 }
 
 .custom-placeholder {
-  pointer-events: none;
+  color: #999;
 
-  position: absolute;
-  top: 50%;
+  font-size: 1rem;
   left: 0;
-  transform: translateY(-50%);
-
-  overflow: hidden;
 
   max-width: calc(100% - 20px);
 
-  font-size: 1rem;
-  color: #999;
+  overflow: hidden;
+  pointer-events: none;
+
+  position: absolute;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  top: 50%;
+  transform: translateY(-50%);
 
   transition: all 0.3s ease;
+  white-space: nowrap;
 
   @media (width <= 768px) {
     font-size: 10.5px;
@@ -333,19 +329,19 @@ form {
 
 .custom-input-container input:focus + .custom-placeholder,
 .custom-input-container input.has-value + .custom-placeholder {
-  transform: translateY(-50%) scale(0.8);
   opacity: 0;
+  transform: translateY(-50%) scale(0.8);
 }
 
 .custom-placeholder .required-star {
-  position: relative;
-  font-weight: bold;
   color: #f13131;
+  font-weight: bold;
+  position: relative;
 }
 
 .custom-placeholder.required .required-star {
-  position: absolute;
   margin-left: 4px;
+  position: absolute;
 }
 
 /* ==============================================
@@ -354,83 +350,82 @@ form {
 
 /* Основные кнопки формы */
 .formBtn {
-  cursor: pointer;
-
-  width: 21rem; /* 336px */
-  height: 4rem; /* 64px */
-  margin-top: 1.25rem; /* 20px */
-  margin-bottom: 24px;
   border: none;
   border-radius: 2.5rem; /* 40px */
+  cursor: pointer;
 
   font-size: 1rem; /* 16px */
+  height: 4rem; /* 64px */
+  margin-bottom: 24px;
+  margin-top: 1.25rem; /* 20px */
 
   transition: background ease-in-out 0.3s;
+
+  width: 21rem; /* 336px */
 }
 
 .formBtn.small {
-  width: 181px;
   height: 56px;
   margin-right: 1rem;
+  width: 181px;
 }
 
 .btn-inactive {
-  color: rgb(129 129 129 / 100%);
   background: #e4e4e4;
+  color: rgb(129 129 129 / 100%);
 }
 
 .btn-active {
-  color: #f4f4f1;
   background: #ec7d3f;
+  color: #f4f4f1;
 }
 
 /* Большие кнопки формы */
 .bigFormButton {
+  align-items: center;
+
+  background: none;
+  border: 2px solid #e4621980;
+  border-radius: 1rem; /* 16px */
+  color: #ec7d3f;
   cursor: pointer;
 
   display: flex;
-  gap: 0.5rem; /* 8px */
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: 4rem; /* 64px */
-  border: 2px solid #e4621980;
-  border-radius: 1rem; /* 16px */
 
   font-size: 1rem; /* 16px */
   font-weight: 500;
-  color: #ec7d3f;
+  gap: 0.5rem; /* 8px */
+  height: 4rem; /* 64px */
+  justify-content: center;
   text-align: center;
 
-  background: none;
+  width: 100%;
 }
 
 .bigFormButton svg {
-  width: 1rem; /* 16px */
   height: 1rem; /* 16px */
+  width: 1rem; /* 16px */
 }
 
 /* Кнопки фильтра */
 .filterButton {
-  cursor: pointer;
-
-  margin: 0.375rem; /* 20px */
-  padding: 0.5rem 1rem; /* 8px 16px */
+  background: #f4f4f1;
   border: none;
   border-radius: 1.5rem; /* 24px */
+  color: #494949;
+  cursor: pointer;
 
   font-size: 1.125rem; /* 18px */
   font-weight: 400;
   line-height: 1.5;
-  color: #494949;
 
-  background: #f4f4f1;
+  margin: 0.375rem; /* 20px */
+  padding: 0.5rem 1rem; /* 8px 16px */
 }
 
 .filterButton.active {
-  color: #fff !important;
   background: #ec7d3f;
+  color: #fff !important;
 }
 
 #filterRow button:first-of-type,
@@ -439,18 +434,17 @@ form {
 }
 
 .aButton {
-  cursor: pointer;
-
-  padding: 0;
+  background: none;
   border: none;
+  color: #ec7d3f;
+  cursor: pointer;
 
   font-size: 0.875rem; /* 14px */
   font-weight: 500;
   line-height: 1.5;
-  color: #ec7d3f;
-  text-align: left;
 
-  background: none;
+  padding: 0;
+  text-align: left;
 }
 
 .aButton:hover {
@@ -458,23 +452,23 @@ form {
 }
 
 #filters {
+  align-items: center;
+
+  background: #ec7d3f1a;
+  border: none;
+  border-radius: 0.75rem; /* 12px */
+  color: #ec7d3f;
   cursor: pointer;
 
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  width: 8.75rem; /* 140px */
-  height: 1.3125rem; /* 21px */
-  height: 100%;
-  padding: 0.84375rem; /* 13.5px */
-  border: none;
-  border-radius: 0.75rem; /* 12px */
 
   font-size: 1rem; /* 16px */
-  color: #ec7d3f;
+  height: 1.3125rem; /* 21px */
+  height: 100%;
+  justify-content: space-around;
+  padding: 0.84375rem; /* 13.5px */
 
-  background: #ec7d3f1a;
+  width: 8.75rem; /* 140px */
 }
 
 #filters:hover {
@@ -489,38 +483,37 @@ form {
 .custom-checkbox {
   cursor: pointer;
 
-  position: relative;
-
   display: inline-block;
+  margin-left: 0.4375rem; /* 7px */
 
   margin-top: 0.125rem; /* 2px */
-  margin-left: 0.4375rem; /* 7px */
+
+  position: relative;
 }
 
 .custom-checkbox input[type="checkbox"] {
   cursor: pointer;
+  height: 0;
+
+  opacity: 0;
 
   position: absolute;
 
   width: 0;
-  height: 0;
-
-  opacity: 0;
 }
 
 .custom-checkbox .checkmark {
-  position: relative;
-
-  display: inline-block;
-
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
+  background: #fff;
   border: 2px solid #ddd;
   border-radius: 0.375rem; /* 6px */
 
-  background: #fff;
+  display: inline-block;
+  height: 1.25rem; /* 20px */
+  position: relative;
 
   transition: all 0.5s ease-in-out;
+
+  width: 1.25rem; /* 20px */
 }
 
 .custom-checkbox:hover .checkmark {
@@ -532,19 +525,19 @@ form {
 }
 
 .custom-checkbox .checkmark::after {
+  border: solid white;
+  border-width: 0 2px 2px 0;
   content: "";
+
+  display: none;
+  height: 0.625rem; /* 10px */
+  left: 0.375rem; /* 6px */
 
   position: absolute;
   top: 0.125rem; /* 2px */
-  left: 0.375rem; /* 6px */
   transform: rotate(45deg);
 
-  display: none;
-
   width: 0.375rem; /* 6px */
-  height: 0.625rem; /* 10px */
-  border: solid white;
-  border-width: 0 2px 2px 0;
 }
 
 .custom-checkbox input[type="checkbox"]:checked ~ .checkmark::after {
@@ -552,46 +545,45 @@ form {
 }
 
 .custom-radio {
+  align-items: center;
+  color: rgb(129 129 129 / 100%);
   cursor: pointer;
 
-  position: relative;
-
   display: inline-flex;
-  gap: 0.5rem; /* 8px */
-  align-items: center;
-
-  margin-top: 1.125rem; /* 2px */
-  margin-left: 0.4375rem; /* 7px */
 
   font-size: 1rem;
-  color: rgb(129 129 129 / 100%);
+  gap: 0.5rem; /* 8px */
+  margin-left: 0.4375rem; /* 7px */
+
+  margin-top: 1.125rem; /* 2px */
+
+  position: relative;
 }
 
 .custom-radio input[type="radio"] {
   cursor: pointer;
+  height: 0;
+
+  opacity: 0;
 
   position: absolute;
 
   width: 0;
-  height: 0;
-
-  opacity: 0;
 }
 
 .custom-radio .radiomark {
-  position: relative;
-
-  display: inline-block;
-  flex-shrink: 0;
-
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
+  background: #fff;
   border: 2px solid #ddd;
   border-radius: 50%;
 
-  background: #fff;
+  display: inline-block;
+  flex-shrink: 0;
+  height: 1.25rem; /* 20px */
+  position: relative;
 
   transition: all 0.3s ease;
+
+  width: 1.25rem; /* 20px */
 }
 
 .custom-radio:hover .radiomark {
@@ -599,25 +591,24 @@ form {
 }
 
 .custom-radio input[type="radio"]:checked ~ .radiomark {
-  border: 2px solid #ec7d3f;
   background: #fff;
+  border: 2px solid #ec7d3f;
 }
 
 .custom-radio .radiomark::after {
+  background: #ec7d3f;
+  border-radius: 50%;
   content: "";
+
+  display: none;
+  height: 0.75rem; /* 12px */
+  left: 50%;
 
   position: absolute;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
 
-  display: none;
-
   width: 0.75rem; /* 12px */
-  height: 0.75rem; /* 12px */
-  border-radius: 50%;
-
-  background: #ec7d3f;
 }
 
 .custom-radio input[type="radio"]:checked ~ .radiomark::after {
@@ -625,53 +616,53 @@ form {
 }
 
 .checkboxRow {
-  display: flex;
-  gap: 0.75rem; /* 12px */
   align-items: flex-start;
-  justify-content: flex-start;
-
-  max-width: 25rem; /* 400px */
-  margin-top: 1.25rem; /* 20px */
+  display: flex;
 
   font-family: Arial, sans-serif;
   font-size: 0.875rem; /* 14px */
+  gap: 0.75rem; /* 12px */
+  justify-content: flex-start;
   line-height: 1.4;
+  margin-top: 1.25rem; /* 20px */
+
+  max-width: 25rem; /* 400px */
 }
 
 .checkboxRow input[type="checkbox"] {
   cursor: pointer;
 
   flex-shrink: 0;
-
-  width: 1rem; /* 16px */
   height: 1rem; /* 16px */
   margin: 0;
-  margin-top: 0.125rem; /* 2px */
   margin-left: 0.4375rem; /* 7px */
+  margin-top: 0.125rem; /* 2px */
+
+  width: 1rem; /* 16px */
 }
 
 .checkboxRow label {
-  cursor: pointer;
   color: #333;
+  cursor: pointer;
   text-align: left;
 }
 
 .checkboxRow label span {
-  font-weight: normal;
   color: #ff6b35;
+  font-weight: normal;
 }
 
 /* Лейблы для радио и чекбоксов */
 input[type="radio"] + label {
-  margin-right: 1.875rem; /* 30px */
   font-size: 1.125rem; /* 18px */
   font-weight: 400;
+  margin-right: 1.875rem; /* 30px */
 }
 
 input[type="checkbox"] + label {
-  margin-right: 1.875rem; /* 30px */
   font-size: 1.125rem; /* 18px */
   font-weight: 400;
+  margin-right: 1.875rem; /* 30px */
 }
 
 /* ==============================================
@@ -680,16 +671,16 @@ input[type="checkbox"] + label {
 
 /* Таблицы ввода */
 .inputTable {
-  position: relative;
+  border: 1px solid #d2d2d2;
+  border-collapse: separate;
+  border-radius: 1rem; /* 16px */
 
   border-spacing: 0;
-  border-collapse: separate;
-
-  width: 100%;
   height: 13.5rem; /* 216px */
   margin-top: 1.25rem; /* 20px */
-  border: 1px solid #d2d2d2;
-  border-radius: 1rem; /* 16px */
+  position: relative;
+
+  width: 100%;
 }
 
 .showTable tr {
@@ -711,9 +702,9 @@ input[type="checkbox"] + label {
 }
 
 .inputTable td {
-  position: relative;
-  padding: 0.625rem; /* 10px */
   border: 1px solid #d2d2d2;
+  padding: 0.625rem; /* 10px */
+  position: relative;
   transition: border-color 0.3s ease;
 }
 
@@ -739,13 +730,13 @@ input[type="checkbox"] + label {
 }
 
 .inputTable td input {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 0;
   border: none;
+  box-sizing: border-box;
 
   font-size: 1rem; /* 18px */
+  height: 100%;
+  padding: 0;
+  width: 100%;
 }
 
 .inputTable td input:focus {
@@ -754,39 +745,38 @@ input[type="checkbox"] + label {
 
 /* Лейблы таблиц */
 .tableLabel {
-  position: absolute;
-  z-index: 3;
-  top: -0.6875rem; /* -11px */
-  left: 0.5rem; /* 8px */
-  transform: translateY(0);
-
-  padding: 0 0.3125rem; /* 0 5px */
+  background-color: rgb(255 255 255 / 100%);
 
   font-size: 0.875rem; /* 14px */
   font-weight: 400;
+  left: 0.5rem; /* 8px */
   line-height: 1.5;
 
-  background-color: rgb(255 255 255 / 100%);
+  padding: 0 0.3125rem; /* 0 5px */
+  position: absolute;
+  top: -0.6875rem; /* -11px */
+  transform: translateY(0);
+  z-index: 3;
 }
 
 /* Контейнеры таблиц */
 .table-container {
-  position: relative;
-
-  overflow: hidden;
+  margin-bottom: 0;
 
   max-height: 13.5rem; /* 216px */
-  margin-bottom: 0;
-  padding-bottom: 1.25rem; /* 20px */
 
   opacity: 1;
+
+  overflow: hidden;
+  padding-bottom: 1.25rem; /* 20px */
+  position: relative;
 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .table-container[style*="opacity: 0"] {
-  transform: translateY(-1.25rem); /* -20px */
   margin-bottom: 0 !important;
+  transform: translateY(-1.25rem); /* -20px */
 }
 
 /* ==============================================
@@ -803,42 +793,41 @@ input[type="checkbox"] + label {
 }
 
 .select-selected {
-  cursor: pointer;
-
-  position: relative;
-
-  box-sizing: border-box;
-  width: 100%;
-  height: 4rem; /* 64px */
-  padding: 0 0.875rem; /* 0 14px */
+  background-color: white;
   border: 1.5px solid rgb(210 210 210 / 100%);
   border-radius: 1rem; /* 16px */
 
+  box-sizing: border-box;
+  color: #333;
+  cursor: pointer;
+
   font-size: 1rem; /* 16px */
   font-weight: 400;
+  height: 4rem; /* 64px */
   line-height: 4rem; /* 64px */
-  color: #333;
+  padding: 0 0.875rem; /* 0 14px */
+
+  position: relative;
   text-align: left;
 
-  background-color: white;
-
   transition: border-color 0.3s ease;
+  width: 100%;
 }
 
 .select-selected::after {
-  content: "";
-
-  position: absolute;
-  top: 1.25rem; /* 20px */
-  right: 1rem; /* 16px */
-  transform: rotate(45deg);
-
-  width: 0.625rem; /* 10px */
-  height: 0.625rem; /* 10px */
   border: solid #818181;
   border-width: 0 2px 2px 0;
+  content: "";
+  height: 0.625rem; /* 10px */
+
+  position: absolute;
+  right: 1rem; /* 16px */
+  top: 1.25rem; /* 20px */
+  transform: rotate(45deg);
 
   transition: all 0.3s ease;
+
+  width: 0.625rem; /* 10px */
 }
 
 .select-selected.select-arrow-active::after {
@@ -847,31 +836,30 @@ input[type="checkbox"] + label {
 }
 
 .select-items {
-  position: absolute;
-  z-index: 99;
-  top: 100%;
-  right: 0;
+  background-color: white;
+  border: 1.5px solid rgb(210 210 210 / 100%);
+  border-radius: 1rem; /* 16px */
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   left: 0;
+  margin-top: 0.5rem; /* 8px */
+
+  max-height: 18.75rem; /* 300px */
 
   overflow: hidden;
   overflow-y: auto;
-
-  max-height: 18.75rem; /* 300px */
-  margin-top: 0.5rem; /* 8px */
-  border: 1.5px solid rgb(210 210 210 / 100%);
-  border-radius: 1rem; /* 16px */
-
-  background-color: white;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 99;
 }
 
 .select-items div {
+  color: #333;
   cursor: pointer;
 
-  padding: 0.75rem 1rem; /* 12px 16px */
-
   font-size: 1rem; /* 16px */
-  color: #333;
+
+  padding: 0.75rem 1rem; /* 12px 16px */
   text-align: left;
 
   transition: background-color 0.3s ease;
@@ -890,23 +878,22 @@ input[type="checkbox"] + label {
 }
 
 .same-as-selected {
-  color: #ec7d3f;
   background-color: rgb(236 125 63 / 10%);
+  color: #ec7d3f;
 }
 
 .select-label {
-  position: absolute;
-  z-index: 2;
-  top: -0.6875rem; /* -10.5px */
-  left: 0.5rem; /* 8px */
-
-  padding: 0 0.3125rem; /* 0 5px */
+  background-color: rgb(255 255 255 / 100%);
 
   font-size: 0.875rem; /* 14px */
   font-weight: 400;
+  left: 0.5rem; /* 8px */
   line-height: 1.5;
 
-  background-color: rgb(255 255 255 / 100%);
+  padding: 0 0.3125rem; /* 0 5px */
+  position: absolute;
+  top: -0.6875rem; /* -10.5px */
+  z-index: 2;
 }
 
 /* ==============================================
@@ -917,9 +904,9 @@ input[type="checkbox"] + label {
   display: flex;
   gap: 1.25rem; /* 20px */
   justify-content: space-between;
+  margin-top: 1.875rem; /* 30px */
 
   width: 100%;
-  margin-top: 1.875rem; /* 30px */
 }
 
 .calendar-wrapper {
@@ -927,16 +914,16 @@ input[type="checkbox"] + label {
 }
 
 .calendar-header {
-  display: flex;
   align-items: center;
+  color: #181817;
+  display: flex;
+
+  font-size: 1.125rem; /* 18px */
+  font-weight: 500;
   justify-content: space-between;
 
   margin-bottom: 0.9375rem; /* 15px */
   padding: 0 0.625rem; /* 0 10px */
-
-  font-size: 1.125rem; /* 18px */
-  font-weight: 500;
-  color: #181817;
   text-align: center;
 }
 
@@ -946,22 +933,22 @@ input[type="checkbox"] + label {
 }
 
 .nav-arrow {
+  align-items: center;
+  border-radius: 50%;
+  color: #494949;
   cursor: pointer;
-  user-select: none;
 
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
-  padding: 0.3125rem; /* 5px */
-  border-radius: 50%;
 
   font-size: 1.25rem; /* 20px */
-  color: #494949;
+  height: 1.25rem; /* 20px */
+  justify-content: center;
+  padding: 0.3125rem; /* 5px */
 
   transition: background-color 0.2s;
+  user-select: none;
+
+  width: 1.25rem; /* 20px */
 }
 
 .nav-arrow:hover {
@@ -974,31 +961,31 @@ input[type="checkbox"] + label {
 }
 
 .calendar th {
-  padding: 0.625rem 0; /* 10px 0 */
+  color: #818181;
 
   font-size: 1rem; /* 16px */
   font-weight: 400;
-  color: #818181;
+  padding: 0.625rem 0; /* 10px 0 */
   text-align: center;
 }
 
 .calendar td {
+  color: #9e9e9e;
   cursor: pointer;
-
-  position: relative;
-
-  height: 1.875rem; /* 30px */
 
   font-size: 1rem; /* 16px */
   font-weight: 200;
+
+  height: 1.875rem; /* 30px */
   line-height: 1.5;
-  color: #9e9e9e;
+
+  position: relative;
   text-align: center;
 }
 
 .calendar tr {
-  margin-top: 0.625rem; /* 10px */
   margin-bottom: 0.625rem; /* 10px */
+  margin-top: 0.625rem; /* 10px */
 }
 
 .start-date-bg {
@@ -1010,14 +997,13 @@ input[type="checkbox"] + label {
 }
 
 .calendar td .day-number {
-  position: relative;
-  z-index: 1;
-
   display: inline-block;
 
-  width: 1.875rem; /* 30px */
-
   line-height: 1.875rem; /* 30px */
+  position: relative;
+
+  width: 1.875rem; /* 30px */
+  z-index: 1;
 }
 
 .calendar td.in-range {
@@ -1026,19 +1012,18 @@ input[type="checkbox"] + label {
 
 .calendar td.start-date::after,
 .calendar td.end-date::after {
+  background-color: #ec7d3f;
+  border-radius: 50%;
   content: "";
+  height: 1.875rem; /* 30px */
+  left: 50%;
 
   position: absolute;
-  z-index: 0;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
 
   width: 1.875rem; /* 30px */
-  height: 1.875rem; /* 30px */
-  border-radius: 50%;
-
-  background-color: #ec7d3f;
+  z-index: 0;
 }
 
 .calendar td.start-date .day-number,
@@ -1067,34 +1052,34 @@ input[type="checkbox"] + label {
 
 /* Анимируемые блоки */
 .toggle-block {
-  transform: translateY(0);
-
-  overflow: hidden;
-
-  max-height: 15000px;
   margin-bottom: 0;
 
+  max-height: 15000px;
+
   opacity: 1;
+
+  overflow: hidden;
+  transform: translateY(0);
 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toggle-block.hidden {
-  transform: translateY(-1.25rem); /* -20px */
-  max-height: 0;
   margin-bottom: 0;
+  max-height: 0;
   opacity: 0;
+  transform: translateY(-1.25rem); /* -20px */
 }
 
 .toggle-block .formRow {
-  transform: translateY(0);
   opacity: 1;
+  transform: translateY(0);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toggle-block.hidden .formRow {
-  transform: translateY(-0.9375rem); /* -15px */
   opacity: 0;
+  transform: translateY(-0.9375rem); /* -15px */
 }
 
 .toggle-block .formInput {
@@ -1107,21 +1092,20 @@ input[type="checkbox"] + label {
 
 /* Иконка галочки */
 .checkmark-icon {
+  display: none;
+  height: 1.5rem; /* 24px */
   position: absolute;
-  z-index: 3;
-  top: 50%;
   right: 1.25rem; /* 20px */
+  top: 50%;
   transform: translateY(-50%);
 
-  display: none;
-
   width: 1.5rem; /* 24px */
-  height: 1.5rem; /* 24px */
+  z-index: 3;
 }
 
 .checkmark-icon svg {
-  width: 100%;
   height: 100%;
+  width: 100%;
   fill: #ec7d3f;
 }
 
@@ -1159,35 +1143,35 @@ input[type="checkbox"] + label {
 
 /* Специальные отступы */
 .calendar-spacing {
-  margin-top: 625rem; /* 10000px */
   margin-bottom: 625rem; /* 10000px */
+  margin-top: 625rem; /* 10000px */
 }
 
 /* Ссылка для смены номера */
 #changeNumber {
-  position: absolute;
   bottom: 4.6875rem; /* 75px */
-  left: 50%;
-  transform: translateX(-50%);
 
   color: #818181;
+  left: 50%;
+  position: absolute;
   text-decoration: none;
+  transform: translateX(-50%);
 }
 
 .candidatesTable {
-  border-spacing: 0;
   border-collapse: collapse;
-  margin-top: 1.875rem;
   border-radius: 1rem;
+  border-spacing: 0;
+  margin-top: 1.875rem;
 }
 
 .candidatesTable th {
-  padding: 0.625rem;
+  color: #818181;
 
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
-  color: #818181;
+  padding: 0.625rem;
   text-align: left;
 }
 
@@ -1224,10 +1208,10 @@ input[type="checkbox"] + label {
 }
 
 .candidatesTable td {
-  padding: 0.625rem;
+  color: #494949;
   font-weight: 400;
   line-height: 1.4;
-  color: #494949;
+  padding: 0.625rem;
 }
 
 .candidatesTable tbody {
@@ -1255,38 +1239,37 @@ input[type="checkbox"] + label {
 }
 
 .candidatesTable button {
+  align-items: center;
+
+  background-color: none;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
 
   display: inline-flex;
-  align-items: center;
+  height: 2.5rem;
   justify-content: center;
 
   width: 2.5rem;
-  height: 2.5rem;
-  border: none;
-  border-radius: 10px;
-
-  background-color: none;
 }
 
 .candidatesTable button img {
-  width: 1.2rem;
   height: 1.2rem;
+  width: 1.2rem;
 }
 
 .deleteBtn {
-  margin-right: 12px;
-  padding: 10px 24px;
+  background: #ffd8d8;
   border-radius: 16px;
 
   color: #f13131;
-
-  background: #ffd8d8;
+  margin-right: 12px;
+  padding: 10px 24px;
 }
 
 .downloadBtn {
-  color: rgb(236 125 63 / 50%);
   background: rgb(236 125 63 / 20%);
+  color: rgb(236 125 63 / 50%);
 }
 
 .downloadBtn:hover svg {
@@ -1302,48 +1285,48 @@ input[type="checkbox"] + label {
 }
 
 .candidatesTable p {
-  box-sizing: border-box;
-  width: fit-content;
-  padding: 8px;
   border-radius: 24px;
+  box-sizing: border-box;
+  padding: 8px;
 
   text-align: center;
+  width: fit-content;
 }
 
 #new {
-  color: #c5801f;
   background: #f8f8e8;
+  color: #c5801f;
 }
 
 #checked {
-  color: сrgb(15 141 19 / 100%);
   background: rgb(228 248 228 / 100%);
+  color: сrgb(15 141 19 / 100%);
 }
 
 #startWorking {
-  color: rgb(44 83 45);
   background-color: rgb(151 215 153);
+  color: rgb(44 83 45);
 }
 
 #accepted {
-  color: #c51af0;
   background-color: #fae5ff;
+  color: #c51af0;
 }
 
-#not{
-  background: #EBEBEB;
-  color: #EBEBEB;
+#not {
+  background: #ebebeb;
+  color: #ebebeb;
 }
 
 #needRevision {
-  width: 160px;
-  color: rgb(44 129 150 / 100%);
   background: rgb(236 246 248 / 100%);
+  color: rgb(44 129 150 / 100%);
+  width: 160px;
 }
 
 #rejected {
-  color: rgb(240 76 26 / 100%);
   background: rgb(255 239 233 / 100%);
+  color: rgb(240 76 26 / 100%);
 }
 
 .left-side {
@@ -1354,16 +1337,15 @@ input[type="checkbox"] + label {
 }
 
 .navBtn {
-  cursor: pointer;
-
-  width: 149px;
-  height: 42px;
+  background: rgb(255 255 255 / 100%);
   border: none;
   border-radius: 16px;
+  cursor: pointer;
 
   font-size: 1rem;
+  height: 42px;
 
-  background: rgb(255 255 255 / 100%);
+  width: 149px;
 }
 
 .navBtn:hover {
@@ -1371,45 +1353,44 @@ input[type="checkbox"] + label {
 }
 
 .inactive {
-  cursor: default;
   color: rgb(158 158 158 / 100%);
+  cursor: default;
 }
 
 .pagination {
-  display: flex;
-  border-spacing: 0;
   border-collapse: collapse;
+  border-spacing: 0;
+  display: flex;
 }
 
 .paginationBtn {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0;
   cursor: pointer;
 
-  width: 42px;
+  font-size: 1rem;
   height: 42px;
   margin: 0;
   padding: 0;
-  border: 1px solid #ddd;
-  border-radius: 0;
 
-  font-size: 1rem;
-
-  background: white;
+  width: 42px;
 }
 
 .paginationBtn:first-child {
-  border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
+  border-top-left-radius: 16px;
 }
 
 .paginationBtn:last-child {
-  border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 @media (width <= 768px) {
   .place-of-living-cell {
-    border-right: none !important;
     border-left: none !important;
+    border-right: none !important;
   }
 
   .noRadius {
@@ -1432,38 +1413,37 @@ input[type="checkbox"] + label {
 }
 
 .paginationBtn:hover {
-  border: 1px solid white;
   background: rgb(244 244 241 / 100%);
+  border: 1px solid white;
 }
 
 .paginationBtn.active {
+  background: rgb(236 125 63 / 100%);
   border-color: rgb(236 125 63 / 100%);
   color: white !important;
-  background: rgb(236 125 63 / 100%);
 }
 
 /* Контейнер для группы кнопок скачивания */
 .download-button-group {
-  position: relative;
-  display: flex;
   border-radius: 25px;
+  display: flex;
+  position: relative;
 }
 
 /* Основная кнопка скачивания */
 .download-btn.primary {
-  cursor: pointer;
-
-  min-width: 100px;
-  padding: 12px 24px;
+  background: rgb(236 125 63 / 100%);
   border: none;
   border-radius: 16px 0 0 16px;
+  color: white;
+  cursor: pointer;
 
   font-size: 16px;
   font-weight: 500;
-  color: white;
-  text-align: center;
 
-  background: rgb(236 125 63 / 100%);
+  min-width: 100px;
+  padding: 12px 24px;
+  text-align: center;
 
   transition: background-color 0.2s ease;
 }
@@ -1474,24 +1454,24 @@ input[type="checkbox"] + label {
 
 /* Кнопка dropdown с форматом */
 .download-btn.dropdown-toggle {
-  cursor: pointer;
-
-  position: relative;
-
-  display: flex;
-  gap: 8px;
   align-items: center;
 
-  padding: 12px 20px;
+  background: rgb(236 125 63 / 100%);
   border: none;
   border-left: 2px solid rgb(255 255 255 / 20%);
   border-radius: 0 16px 16px 0;
+  color: white;
+  cursor: pointer;
+
+  display: flex;
 
   font-size: 16px;
   font-weight: 500;
-  color: white;
+  gap: 8px;
 
-  background: rgb(236 125 63 / 100%);
+  padding: 12px 20px;
+
+  position: relative;
 
   transition: background-color 0.2s ease;
 }
@@ -1501,27 +1481,27 @@ input[type="checkbox"] + label {
 }
 
 #city {
-  display: flex;
   align-items: center;
-
-  margin: 0;
-  margin-left: 3rem;
+  color: rgb(73 73 73 / 100%);
+  display: flex;
 
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-  color: rgb(73 73 73 / 100%);
+
+  margin: 0;
+  margin-left: 3rem;
 }
 
 .city-selector {
+  align-items: center;
+  border-radius: 4px;
   cursor: pointer;
 
   display: flex;
-  align-items: center;
 
   margin-left: 0.5rem;
   padding: 2px 4px; /* небольшие отступы для лучшего UX */
-  border-radius: 4px;
 
   transition: background-color 0.2s ease;
 }
@@ -1535,14 +1515,14 @@ input[type="checkbox"] + label {
 }
 
 #city span {
-  width: max-content;
-  margin-right: 4px; /* небольшой отступ между текстом и стрелкой */
   color: rgb(236 125 63 / 100%);
+  margin-right: 4px; /* небольшой отступ между текстом и стрелкой */
+  width: max-content;
 }
 
 #notifBtn img {
-  width: 28px;
   height: 28px;
+  width: 28px;
 }
 
 #notifBtn:hover {
@@ -1550,10 +1530,10 @@ input[type="checkbox"] + label {
 }
 
 #notifBtn {
-  padding: 18px;
+  background: rgb(236 125 63 / 10%);
   border: none;
   border-radius: 16px;
-  background: rgb(236 125 63 / 10%);
+  padding: 18px;
 }
 
 /* #notifBtn:hover img{ */
@@ -1562,8 +1542,8 @@ input[type="checkbox"] + label {
 
 /* } */
 #exitBtn img {
-  width: 16px;
   height: 16px;
+  width: 16px;
 }
 
 .redactBtn {
@@ -1571,7 +1551,6 @@ input[type="checkbox"] + label {
 }
 
 #exitBtn {
-  width: 180px;
   border: none;
   border-radius: 16px;
 
@@ -1579,6 +1558,7 @@ input[type="checkbox"] + label {
   font-weight: 500;
 
   transition: background 0.3s ease-in-out;
+  width: 180px;
 }
 
 #exitBtn:hover {
@@ -1594,31 +1574,30 @@ input[type="checkbox"] + label {
 }
 
 .file-formats-card {
-  position: absolute;
-  right: -20px;
+  background-color: white;
+  border-radius: 16px;
   bottom: -85px;
 
   overflow: hidden;
+  position: absolute;
+  right: -20px;
 
   width: 103px;
-  border-radius: 16px;
-
-  background-color: white;
 }
 
 .format-item {
+  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+  color: rgb(73 73 73 / 100%);
   cursor: pointer;
 
   display: flex;
-  align-items: center;
-
-  height: 40px;
-  padding-left: 1rem;
-  border-bottom: 1px solid #e5e5e5;
 
   font-size: 14px;
   font-weight: 400;
-  color: rgb(73 73 73 / 100%);
+
+  height: 40px;
+  padding-left: 1rem;
 
   transition: background 0.2s ease;
 }
@@ -1632,21 +1611,20 @@ input[type="checkbox"] + label {
 }
 
 .calendar-filter-panel {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  right: -900px;
-
-  overflow-y: auto;
-
-  width: 900px;
-  height: 100vh;
-  padding-bottom: 0;
-
   background: #fff;
   box-shadow: -2px 0 16px rgb(0 0 0 / 8%);
+  height: 100vh;
+
+  overflow-y: auto;
+  padding-bottom: 0;
+  position: fixed;
+  right: -900px;
+  top: 0;
 
   transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  width: 900px;
+  z-index: 1000;
 }
 
 .calendar-filter-panel.open {
@@ -1654,31 +1632,29 @@ input[type="checkbox"] + label {
 }
 
 .calendar-filter-panel .close-btn {
-  cursor: pointer;
-
-  position: absolute;
-  z-index: 10;
-  top: 24px;
-  right: 32px;
+  background: none;
 
   border: none;
+  cursor: pointer;
 
   font-size: 32px;
 
-  background: none;
+  position: absolute;
+  right: 32px;
+  top: 24px;
+  z-index: 10;
 }
 
 .roleItem {
-  margin-right: 1rem;
-  padding: 0.3rem 0.8rem;
+  background: rgb(236 125 63 / 10%);
   border-radius: 24px;
+  color: rgb(236 125 63 / 100%);
 
   font-size: 18px;
   font-weight: 400;
   line-height: 1.5;
-  color: rgb(236 125 63 / 100%);
-
-  background: rgb(236 125 63 / 10%);
+  margin-right: 1rem;
+  padding: 0.3rem 0.8rem;
 }
 
 .roleItem:first-child,
@@ -1687,49 +1663,48 @@ input[type="checkbox"] + label {
 }
 
 #line {
-  width: 100%;
-  margin: 0.5rem 0;
   border-bottom: 1px solid rgb(210 210 210 / 100%);
+  margin: 0.5rem 0;
+  width: 100%;
 }
 
 .fixedMenu {
   position: fixed;
-  z-index: 100;
-  top: 49%;
   right: 0;
   right: calc((100vw - 50%) / 2 - 22rem);
+  top: 49%;
   transform: translateY(-50%);
+  z-index: 100;
 }
 
 .navArea {
+  background: rgb(255 255 255 / 100%);
+  border: 1px solid rgb(210 210 210 / 30%);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   display: flex;
   flex-direction: column;
 
   min-width: 200px;
   padding: 1.5rem;
-  border: 1px solid rgb(210 210 210 / 30%);
-  border-radius: 1rem;
-
-  background: rgb(255 255 255 / 100%);
-  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
 }
 
 .navArea a {
-  position: relative;
+  align-items: center;
+  border-radius: 0.5rem;
+  color: rgb(24 24 23 / 100%);
 
   display: flex;
-  align-items: center;
-
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
 
   font-size: 0.875rem;
   font-weight: 400;
-  color: rgb(24 24 23 / 100%);
+
+  padding: 0.75rem 1rem;
+  position: relative;
   text-decoration: none;
-  white-space: nowrap;
 
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .navArea a:active {
@@ -1741,32 +1716,32 @@ input[type="checkbox"] + label {
 }
 
 .yellowSelect {
-  position: relative;
   display: inline-block;
+  position: relative;
   width: 100%;
 }
 
 .select-trigger {
-  cursor: pointer;
-
-  position: relative;
-
-  display: flex;
   align-items: center;
-  justify-content: space-between;
 
-  box-sizing: border-box;
-  width: 100%;
-  padding: 12px 50px 12px 20px;
+  background: rgb(248 248 232 / 100%);
   border: none;
   border-radius: 20px;
 
-  font-size: 14px;
+  box-sizing: border-box;
   color: rgb(197 128 31 / 100%);
+  cursor: pointer;
 
-  background: rgb(248 248 232 / 100%);
+  display: flex;
+
+  font-size: 14px;
+  justify-content: space-between;
+  padding: 12px 50px 12px 20px;
+
+  position: relative;
 
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .select-trigger:hover {
@@ -1774,20 +1749,19 @@ input[type="checkbox"] + label {
 }
 
 .select-trigger::after {
-  content: "";
-
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-
-  width: 16px;
-  height: 10px;
-
   background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxNiAxMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMSAxIEw4IDggTDE1IDEiIHN0cm9rZT0iI2I4ODYwYiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiLz4KPC9zdmc+")
     no-repeat center;
+  content: "";
+  height: 10px;
+
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 
   transition: transform 0.2s ease;
+
+  width: 16px;
 }
 
 .yellowSelect.open .select-trigger::after {
@@ -1795,38 +1769,38 @@ input[type="checkbox"] + label {
 }
 
 .select-dropdown {
-  position: absolute;
-  z-index: 1000;
-  top: 100%;
-  right: 0;
+  background: rgb(248 248 232 / 100%);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   left: 0;
-  transform: translateY(-10px);
 
   margin-top: 5px;
-  padding: 10px 0;
-  border-radius: 20px;
-
-  visibility: hidden;
   opacity: 0;
-  background: rgb(248 248 232 / 100%);
-  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+  padding: 10px 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  transform: translateY(-10px);
 
   transition: all 0.2s ease;
+
+  visibility: hidden;
+  z-index: 1000;
 }
 
 .yellowSelect.open .select-dropdown {
+  opacity: 1;
   transform: translateY(0);
   visibility: visible;
-  opacity: 1;
 }
 
 .select-option {
+  color: #333;
   cursor: pointer;
 
-  padding: 12px 20px;
-
   font-size: 14px;
-  color: #333;
+
+  padding: 12px 20px;
 
   transition: background-color 0.15s ease;
 }
@@ -1840,14 +1814,13 @@ input[type="checkbox"] + label {
 }
 
 #commentArea {
-  resize: none;
-
-  height: 152px !important;
-  padding: 1rem;
+  background: rgb(249 249 247 / 100%);
   border: none;
   border-radius: 16px;
 
-  background: rgb(249 249 247 / 100%);
+  height: 152px !important;
+  padding: 1rem;
+  resize: none;
 }
 
 #commentArea:focus {
@@ -1855,54 +1828,52 @@ input[type="checkbox"] + label {
 }
 
 #addComment {
-  width: 100%;
-  width: 218px;
-  height: 40px;
+  background: rgb(236 125 63 / 10%);
   border: none;
   border-radius: 40px;
-
-  font-weight: 500;
   color: rgb(236 125 63 / 100%);
 
-  background: rgb(236 125 63 / 10%);
+  font-weight: 500;
+  height: 40px;
+  width: 100%;
+  width: 218px;
 }
 
 .notification-header {
-  width: 100%;
-  padding: 0 1rem;
+  color: rgb(24 24 23 / 100%);
 
   font-size: 14px !important;
   font-weight: 400;
   line-height: 1.5;
-  color: rgb(24 24 23 / 100%);
+  padding: 0 1rem;
   text-align: left;
+  width: 100%;
 }
 
 .divider {
+  background-color: #e0e0e0;
   height: 1px;
   margin: 0;
-  background-color: #e0e0e0;
 }
 
 .notifications-container {
+  background-color: rgb(255 255 255 / 100%);
+  border-radius: 16px;
+  height: auto;
   position: absolute;
-  z-index: 10;
 
   width: 196px;
-  height: auto;
-  border-radius: 16px;
-
-  background-color: rgb(255 255 255 / 100%);
+  z-index: 10;
 }
 
 .notification-item {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: flex-start;
+  padding-bottom: 7px;
+  padding-top: 7px;
 
   width: 100%;
-  padding-top: 7px;
-  padding-bottom: 7px;
 }
 
 .notifications-list {
@@ -1916,58 +1887,56 @@ input[type="checkbox"] + label {
 }
 
 .notification-text {
+  color: rgb(73 73 73 / 100%);
   font-size: 12px;
   font-weight: 400;
-  color: rgb(73 73 73 / 100%);
 }
 
 .notification-time {
+  color: rgb(158 158 158 / 100%);
   font-size: 12px;
   font-weight: 400;
-  color: rgb(158 158 158 / 100%);
 }
 
 .notification-dot {
+  background-color: #ff6b35;
+  border-radius: 50%;
   flex-shrink: 0;
-
-  width: 8px;
   height: 8px;
   margin-right: 16px;
-  border-radius: 50%;
 
-  background-color: #ff6b35;
+  width: 8px;
 }
 
 /* Стили дропдауна города */
 .city-dropdown {
-  position: absolute;
-  z-index: 1000;
-  top: 100%;
-  right: 0;
-  left: 100px;
-
-  overflow-y: auto;
-
-  min-width: 180px;
-  max-height: 240px;
-  margin-top: 4px;
+  background: rgb(255 255 255 / 100%);
   border: 1px solid #e1e5e9;
   border-radius: 8px;
 
   color: rgb(73 73 73 / 100%);
+  left: 100px;
+  margin-top: 4px;
+  max-height: 240px;
 
-  background: rgb(255 255 255 / 100%);
+  min-width: 180px;
+
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
 }
 
 .city-option {
-  cursor: pointer;
-
-  padding: 12px 16px;
   border-bottom: 1px solid #f5f5f5;
+  color: rgb(73 73 73 / 100%);
+  cursor: pointer;
 
   font-size: 14px;
   font-weight: 300;
-  color: rgb(73 73 73 / 100%);
+
+  padding: 12px 16px;
 
   transition: background-color 0.2s ease;
 }
@@ -1977,14 +1946,14 @@ input[type="checkbox"] + label {
 }
 
 .city-option.selected {
-  font-weight: 400;
   background-color: rgb(236 125 63 / 5%);
+  font-weight: 400;
 }
 
 #selectCity {
+  border-radius: 4px;
   margin-left: 4px;
   padding: 4px 8px;
-  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
@@ -1994,8 +1963,8 @@ input[type="checkbox"] + label {
 }
 
 #city {
-  user-select: none;
   position: relative;
+  user-select: none;
 }
 
 .city-dropdown::-webkit-scrollbar {
@@ -2003,13 +1972,13 @@ input[type="checkbox"] + label {
 }
 
 .city-dropdown::-webkit-scrollbar-track {
-  border-radius: 3px;
   background: #f1f1f1;
+  border-radius: 3px;
 }
 
 .city-dropdown::-webkit-scrollbar-thumb {
-  border-radius: 3px;
   background: #c1c1c1;
+  border-radius: 3px;
 }
 
 .city-dropdown::-webkit-scrollbar-thumb:hover {
@@ -2017,55 +1986,55 @@ input[type="checkbox"] + label {
 }
 
 .comment-tooltip {
-  position: absolute;
-  z-index: 1000;
-  right: -8px;
-  bottom: -50px;
-
-  width: max-content;
-  max-width: 500px;
-  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  bottom: -50px;
+  color: #333;
 
   font-size: 14px;
-  color: #333;
-  word-wrap: break-word;
+  max-width: 500px;
+  padding: 12px;
+  position: absolute;
+  right: -8px;
 
-  visibility: hidden;
-  opacity: 0;
+  width: max-content;
+  z-index: 1000;
+  word-wrap: break-word;
   background: white;
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  opacity: 0;
 
-  transition: opacity 0.2s, visibility 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+
+  visibility: hidden;
 }
 
 .comment-tooltip.visible {
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
 }
 
 .comment-tooltip::after {
+  border: 8px solid transparent;
+  border-bottom-color: white;
+  bottom: 100%;
   content: "";
 
   position: absolute;
   right: 20px;
-  bottom: 100%;
-
-  border: 8px solid transparent;
-  border-bottom-color: white;
 }
 
 .comment-tooltip::before {
+  border: 9px solid transparent;
+  border-bottom-color: #ddd;
+  bottom: 100%;
   content: "";
 
   position: absolute;
-  z-index: -1;
   right: 19px;
-  bottom: 100%;
-
-  border: 9px solid transparent;
-  border-bottom-color: #ddd;
+  z-index: -1;
 }
 
 .redactBtn {
@@ -2268,19 +2237,19 @@ input[type="checkbox"] + label {
 
 @media screen and (width <= 768px) {
   section {
-    max-width: 100%;
     margin: 0 20px; /* Уменьшенные отступы для мобильных */
+    max-width: 100%;
   }
 
   .center-card {
-    width: 100%;
-    padding: 1rem 1.5rem 0; /* Уменьшенные внутренние отступы */
     border-radius: 1rem; /* Уменьшенный радиус */
+    padding: 1rem 1.5rem 0; /* Уменьшенные внутренние отступы */
+    width: 100%;
   }
 
   .center-card.big {
-    width: 100%;
     padding: 1rem 1.5rem;
+    width: 100%;
   }
 
   /* Адаптивность для полей формы */
@@ -2295,8 +2264,8 @@ input[type="checkbox"] + label {
 
   /* Адаптивность для кнопок */
   .formBtn {
-    width: 100%;
     max-width: none;
+    width: 100%;
   }
 }
 
@@ -2497,13 +2466,13 @@ input[type="checkbox"] + label {
 @media screen and (width <= 768px) {
   /* Изменяем структуру таблицы на мобильных */
   .inputTable {
-    display: block;
-
-    width: 100%;
-    height: auto;
-    min-height: auto;
     border: 1.5px solid #d2d2d2; /* Сохраняем исходную ширину границы */
     border-radius: 1rem;
+    display: block;
+    height: auto;
+    min-height: auto;
+
+    width: 100%;
   }
 
   #workTable {
@@ -2516,24 +2485,24 @@ input[type="checkbox"] + label {
   }
 
   .inputTable tr {
-    display: block;
-    width: 100%;
-    margin-bottom: 0;
     border: none;
+    display: block;
+    margin-bottom: 0;
+    width: 100%;
   }
 
   .inputTable td {
-    display: block;
+    border-bottom: 1.5px solid #d2d2d2;
 
     box-sizing: border-box;
-    width: 100% !important;
+    display: block;
     padding: 1rem;
-    border-bottom: 1.5px solid #d2d2d2;
+    width: 100% !important;
   }
 
   .inputTable tr:last-child td:last-child {
-    padding-bottom: 1rem;
     border-bottom: none;
+    padding-bottom: 1rem;
   }
 
   .inputTable td {
@@ -2541,15 +2510,14 @@ input[type="checkbox"] + label {
   }
 
   .inputTable td input {
+    background: transparent;
     box-sizing: border-box;
-    width: 100%;
-    min-height: 2.5rem;
-    padding: 0.75rem 0;
 
     font-size: 0.9375rem;
     line-height: 1.5;
-
-    background: transparent;
+    min-height: 2.5rem;
+    padding: 0.75rem 0;
+    width: 100%;
   }
 
   .bigFormButton {
@@ -2562,8 +2530,8 @@ input[type="checkbox"] + label {
 
   .table-container {
     height: auto;
-    max-height: none !important;
     margin-bottom: 1.25rem;
+    max-height: none !important;
     padding-bottom: 0;
   }
 
@@ -2572,24 +2540,23 @@ input[type="checkbox"] + label {
   }
 
   .tableLabel {
-    position: absolute;
-    z-index: 3;
-    top: -0.6875rem;
-    left: 0.5rem;
-
-    padding: 0 0.3125rem;
+    background-color: rgb(255 255 255 / 100%);
 
     font-size: 1rem;
     font-weight: 400;
+    left: 0.5rem;
     line-height: 1.5;
 
-    background-color: rgb(255 255 255 / 100%);
+    padding: 0 0.3125rem;
+    position: absolute;
+    top: -0.6875rem;
+    z-index: 3;
   }
 }
 
 .inputTable td.error {
-  z-index: 1;
   border-color: #e74c3c !important;
+  z-index: 1;
 }
 
 /* Округление углов */
@@ -2610,14 +2577,13 @@ input[type="checkbox"] + label {
 }
 
 .errorMessage {
-  width: 100%;
-  padding: 10.5 0;
+  background: #fee;
   border-radius: 16px;
-
-  font-size: 14px;
   color: #f13131;
 
-  background: #fee;
+  font-size: 14px;
+  padding: 10.5 0;
+  width: 100%;
 
   @media (width <= 768px) {
     font-size: 12px;

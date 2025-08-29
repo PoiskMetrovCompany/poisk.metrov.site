@@ -1,14 +1,18 @@
 "use client"
-import React, { FC } from "react"
-import styles from "./inputContainer.module.scss"
+
 import clsx from "clsx"
 
+import React, { FC } from "react"
+
+import styles from "./inputContainer.module.scss"
+
 interface InputContainerProps {
-  label: string
+  label?: string
   placeholder: string
   value: string
   onChange: (value: string) => void
   name: string
+  grayInput?: boolean
   type?: "text" | "phone" | "date" | string
   prefix?: string
   required?: boolean
@@ -27,24 +31,23 @@ const InputContainer: FC<InputContainerProps> = ({
   prefix,
   required = false,
   disabled = false,
+  grayInput = false,
   className,
   labelClassName,
 }) => {
   const formatPhoneNumber = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
-
     if (numbers.length === 0) return ""
-
+    
     let cleanNumbers = numbers
-
     if (numbers.startsWith("8")) {
       cleanNumbers = "7" + numbers.slice(1)
     } else if (!numbers.startsWith("7")) {
       cleanNumbers = "7" + numbers
     }
-
+    
     cleanNumbers = cleanNumbers.slice(0, 11)
-
+    
     if (cleanNumbers.length <= 1) return `+${cleanNumbers}`
     if (cleanNumbers.length <= 4)
       return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(1)}`
@@ -58,7 +61,6 @@ const InputContainer: FC<InputContainerProps> = ({
         1,
         4
       )} ${cleanNumbers.slice(4, 7)} ${cleanNumbers.slice(7)}`
-
     return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(
       1,
       4
@@ -70,14 +72,12 @@ const InputContainer: FC<InputContainerProps> = ({
 
   const formatDate = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
-
     const limitedNumbers = numbers.slice(0, 8)
-
+    
     if (limitedNumbers.length === 0) return ""
     if (limitedNumbers.length <= 2) return limitedNumbers
     if (limitedNumbers.length <= 4)
       return `${limitedNumbers.slice(0, 2)}.${limitedNumbers.slice(2)}`
-
     return `${limitedNumbers.slice(0, 2)}.${limitedNumbers.slice(
       2,
       4
@@ -86,24 +86,26 @@ const InputContainer: FC<InputContainerProps> = ({
 
   const handleInputChange = (inputValue: string) => {
     let formattedValue = inputValue
-
+    
     if (type === "phone") {
       formattedValue = formatPhoneNumber(inputValue)
     } else if (type === "date") {
       formattedValue = formatDate(inputValue)
     }
-
+    
     onChange(formattedValue)
   }
 
   return (
     <div className={clsx(styles.inputContainer, className)}>
-      <label
-        htmlFor={name}
-        className={clsx(styles.inputContainer__label, labelClassName)}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={name}
+          className={clsx(styles.inputContainer__label, labelClassName)}
+        >
+          {label}
+        </label>
+      )}
       <div className={styles.inputContainer__wrapper}>
         {prefix && (
           <span className={styles.inputContainer__prefix}>{prefix}</span>
@@ -112,7 +114,10 @@ const InputContainer: FC<InputContainerProps> = ({
           type="text"
           id={name}
           name={name}
-          className={styles.inputContainer__input}
+          className={clsx(
+            styles.inputContainer__input,
+            grayInput && styles.inputContainer__input_gray
+          )}
           placeholder={placeholder}
           value={value}
           onChange={(e) => handleInputChange(e.target.value)}

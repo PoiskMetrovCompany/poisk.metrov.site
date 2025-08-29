@@ -5,6 +5,8 @@ import { Form } from "radix-ui"
 
 import React, { FC, useState } from "react"
 
+import { useApiMutation } from "@/utils/hooks/use-api"
+
 import styles from "./contactForm.module.scss"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -21,6 +23,13 @@ interface ContactFormData {
   isAgreed: boolean
 }
 
+interface ApiRequestData {
+  name: string
+  phone: string
+  comment: string
+  city: string
+}
+
 const ContactForm: FC = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     lastName: "",
@@ -29,6 +38,27 @@ const ContactForm: FC = () => {
     phone: "",
     isAgreed: false,
   })
+
+
+  const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
+    "/crm/store",
+    {
+      onSuccess: (data) => {
+        console.log("Запрос успешен:", data)
+
+        setFormData({
+          lastName: "",
+          firstName: "",
+          middleName: "",
+          phone: "",
+          isAgreed: false,
+        })
+      },
+      onError: (error) => {
+        console.log("Ошибка запроса:", error)
+      },
+    }
+  )
 
   const handleInputChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -41,7 +71,24 @@ const ContactForm: FC = () => {
   const handleSubmit = () => {
     if (!formData.isAgreed) return
 
-    console.log("Form submitted:", formData)
+    if (
+      !formData.lastName ||
+      !formData.firstName ||
+      !formData.middleName ||
+      !formData.phone
+    ) {
+      console.log("Пожалуйста, заполните все поля")
+      return
+    }
+
+    const apiData: ApiRequestData = {
+      name: `${formData.lastName} ${formData.firstName} ${formData.middleName}`.trim(),
+      phone: formData.phone,
+      comment: "Коммент",
+      city: "novosibirsk",
+    }
+
+    submitMutation.mutate(apiData)
   }
 
   return (
@@ -88,6 +135,8 @@ const ContactForm: FC = () => {
             onClick={handleSubmit}
             size="medium"
             absolute={true}
+            disabled={submitMutation.isPending}
+            loading={submitMutation.isPending}
             className={clsx(
               !formData.isAgreed
                 ? styles.contactForm__submitButton_disabled
@@ -104,11 +153,13 @@ const ContactForm: FC = () => {
             type="primary"
             svgWidth={20}
             svgHeight={20}
+            loading={submitMutation.isPending}
+            disabled={submitMutation.isPending}
             className={clsx(styles.borderRadius, styles.hideOnDesktop)}
             svgSrc="./images/icons/header/nextArrow.svg"
             svgDiscolored={true}
           >
-            Отправить
+            {submitMutation.isPending ? "Отправка..." : "Отправить"}
           </ActionButton>
         </FormRow>
 
@@ -119,8 +170,8 @@ const ContactForm: FC = () => {
             text="Нажимая на кнопку, вы даете согласие на обработку"
             linkText="своих персональных данных"
             linkHref="/privacy-policy"
-            name="personalData"
-            id="personalData"
+            name="personalDataFooter"
+            id="personalDataFooter"
           />
         </FormRow>
       </form>
