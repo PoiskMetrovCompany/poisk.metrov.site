@@ -1,13 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
-
 import { usePathname } from "next/navigation"
 
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import QueryProvider from "@/providers/query-provider"
-import { useLocationStore } from "@/stores/useLocationStore"
 
 interface LayoutClientProps {
   children: React.ReactNode
@@ -20,14 +17,6 @@ export default function LayoutClient({
 }: LayoutClientProps) {
   const pathname = usePathname()
   const hideHeader = pathname.includes("candidatesSecurityBlock")
-  const { selectedCity, setSelectedCity } = useLocationStore()
-
-  // Гидрация стора выбранным городом из server cookie
-  useEffect(() => {
-    if (initialCity && !selectedCity) {
-      setSelectedCity(initialCity)
-    }
-  }, [initialCity, selectedCity, setSelectedCity])
 
   return (
     <QueryProvider>
