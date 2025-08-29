@@ -1,14 +1,21 @@
 .header {
+  background: white;
   position: relative;
-  z-index: 3 !important;
+  width: 100%;
+  z-index: 1001 !important;
 }
 
 .top_bar {
   border-bottom: 2px solid rgb(228 228 228 / 100%);
   box-sizing: border-box;
-  margin: 0 50px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  margin: 0 auto;
+  max-width: 1920px;
+  padding: 10px 50px;
+
+  // margin: 0 50px;
+  // padding-bottom: 10px;
+  // padding-top: 10px;
+
   width: 100%;
 
   &__container {
@@ -48,10 +55,24 @@
 }
 
 .main_bar {
-  margin: 0 50px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+
+  backdrop-filter: blur(10px);
+  background: white;
+  // box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 auto;
+  max-width: 1920px;
+  padding: 10px 50px;
+  position: sticky;
+  top: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
+  z-index: 1000 !important;
+
+  // margin: 0 50px;
+  // padding-bottom: 10px;
+  // padding-top: 10px;
+  // width: 100%;
 
   &__container {
     display: flex;
@@ -323,6 +344,7 @@
     &--active {
       background-color: rgb(236 125 63 / 5%);
       font-weight: 400;
+
     }
   }
 }
@@ -612,6 +634,11 @@
     display: none;
   }
 
+  /* Скрываем TopBar при фиксированном header на мобильных */
+  .header_fixed .top_bar {
+    display: none;
+  }
+
   // .user-actions {
   //     &__text {
   //         font-size: 16px;
@@ -793,11 +820,13 @@
 
 @media (width <= 500px) {
   .top_bar {
-    margin: 0 10px;
+    margin: 0 auto;
+    padding: 10px 10px;
   }
 
   .main_bar {
-    margin: 0 10px;
+    margin: 0 auto;
+    padding: 10px 10px;
   }
 
   .logo {

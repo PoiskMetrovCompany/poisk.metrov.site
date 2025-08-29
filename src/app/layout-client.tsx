@@ -4,7 +4,9 @@ import { usePathname } from "next/navigation"
 
 import Footer from "@/components/footer"
 import Header from "@/components/header"
+
 import QueryProvider from "@/providers/query-provider"
+
 
 interface LayoutClientProps {
   children: React.ReactNode

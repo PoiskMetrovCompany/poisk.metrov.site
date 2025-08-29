@@ -2,7 +2,6 @@ import React, { FC, useMemo } from "react"
 
 import styles from "./filterBlocks.module.scss"
 
-import RangeInput from "../../rangeInput"
 import {
   BUILDER_OPTIONS,
   BUILDING_TYPE_OPTIONS,
@@ -12,6 +11,7 @@ import {
   PARKING_OPTIONS,
   SECURITY_OPTIONS,
 } from "../../types"
+import RangeInput from "../rangeInput"
 
 import FiltersButton from "@/components/ui/buttons/FiltersButton"
 import Heading3 from "@/components/ui/heading3"

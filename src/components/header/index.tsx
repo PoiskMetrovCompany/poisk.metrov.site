@@ -14,6 +14,7 @@ interface HeaderProps {
 
 const Header = ({ initialCity }: HeaderProps) => {
   const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false)
+
   return (
     <>
       <MenuPopup
@@ -21,10 +22,11 @@ const Header = ({ initialCity }: HeaderProps) => {
         onClose={() => setIsMenuPopupOpen(false)}
       />
       <header className={styles.header}>
-        <TopBar initialCity={initialCity} />
-        <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
+        <TopBar />
       </header>
+      <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
     </>
   )
 }
+
 export default Header
