@@ -4,16 +4,29 @@ import clsx from "clsx"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
+
 import FlatLayoutCard from "@/components/flatLayoutCard"
+
+import GetCatalogue from "@/components/getCatalogue"
+
+import Download from "@/app/components/download"
+
+
+
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import NotFound from "@/components/notFound"
 import Pagination from "@/components/pagination"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardSkeleton from "@/components/propertyCard/PropertyCardSkeleton"
 import PropertyCardList from "@/components/propertyCardList"
+
 import PropertyCardListSkeleton from "@/components/propertyCardList/PropertyCardListSkeleton"
+
+
+import { useStickyState } from "@/hooks/useStickyState"
+
+
 import { IProperty } from "@/types/PropertyCard"
 import { ApartmentSelectionResponse } from "@/types/api/apartment"
 import { ResidentialComplexDataResponse } from "@/types/api/complex"
@@ -45,6 +58,7 @@ const CatalogueList = () => {
     useState("Жилой комплекс")
   const [currentPage, setCurrentPage] = useState(1)
   const { isLaptop } = useScreenSize(0)
+  const { isSticky, isVisible, elementRef } = useStickyState()
 
   const handleSorting = (sort: SortType) => {
     setSelectedSorting(sort)
@@ -270,12 +284,20 @@ const CatalogueList = () => {
         </div>
       </div>
 
-      <div className={styles.catalogue__filtersNavbar}>
+      <div
+        ref={elementRef}
+        className={clsx(
+          styles.catalogue__filtersNavbar,
+          isSticky && styles.catalogue__filtersNavbar_sticky,
+          !isVisible && styles.catalogue__filtersNavbar_hidden
+        )}
+      >
         <CatalogueFilters
+          isSticky={isSticky}
           onShowFilters={handleShowFilters}
           onApplyFilters={applyFilters}
         />
-        <div className={styles.catalogue__filtersNavbar__buttonsMobile}>
+        {/* <div className={styles.catalogue__filtersNavbar__buttonsMobile}>
           <ActionButton
             type="primary"
             onClick={applyFilters}
@@ -299,7 +321,7 @@ const CatalogueList = () => {
           >
             <span className={styles.textFiltersMobile}>Все фильтры</span>
           </ActionButton>
-        </div>
+        </div> */}
       </div>
 
       <FiltersDialog open={showFilters} onOpenChange={setShowFilters} />

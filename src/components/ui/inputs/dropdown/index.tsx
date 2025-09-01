@@ -1,10 +1,13 @@
 "use client"
 
-import React from "react"
-import styles from "./dropdown.module.scss"
 import * as Select from "@radix-ui/react-select"
-import Image from "next/image"
 import clsx from "clsx"
+
+import React from "react"
+
+import Image from "next/image"
+
+import styles from "./dropdown.module.scss"
 
 interface DropdownProps {
   className?: string

@@ -4,7 +4,6 @@ import React, { FC, memo, useMemo } from "react"
 
 import styles from "./filterBlocks.module.scss"
 
-import RangeInput from "../../rangeInput"
 import {
   APARTMENTS_OPTIONS,
   BATHROOM_OPTIONS,
@@ -14,6 +13,7 @@ import {
   LAYOUT_OPTIONS,
   ROOMS_OPTIONS,
 } from "../../types"
+import RangeInput from "../rangeInput"
 
 import IconImage from "@/components/ui/IconImage"
 import FiltersButton from "@/components/ui/buttons/FiltersButton"

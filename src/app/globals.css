@@ -109,8 +109,18 @@ header {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 4rem;
   width: 100%;
+}
+
+/* MainBar - sticky часть header */
+.main_bar {
+  margin-bottom: 4rem;
+}
+
+/* Основной контейнер */
+main.container {
+  margin-top: 0;
+  padding-top: 4rem; /* Отступ сверху для контента */
 }
 
 footer {
@@ -163,7 +173,37 @@ article p {
 }
 
 @media (width <= 470px) {
-  header {
+  .main_bar {
     margin-bottom: 1rem;
+  }
+
+  main.container {
+    padding-top: 1rem; /* Меньший отступ для мобильных */
+  }
+}
+
+/* Адаптивные отступы для контента */
+@media (width <= 1024px) {
+  main.container {
+    padding-top: 2rem; /* Средний отступ для планшетов */
+  }
+}
+
+@media (width <= 768px) {
+  main.container {
+    padding-top: 1.5rem; /* Отступ для средних мобильных */
+  }
+}
+
+/* Мобильные стили для PropertyTypeSelect */
+@media screen and (width < 768px) {
+  [data-radix-popper-content-wrapper] {
+    bottom: 0 !important;
+    left: 0 !important;
+    position: fixed !important;
+    right: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
   }
 }
