@@ -120,6 +120,12 @@ const FiltersDialog: FC<FiltersDialogProps> = ({
           <Dialog.Title asChild>
             <VisuallyHidden>Фильтры поиска недвижимости</VisuallyHidden>
           </Dialog.Title>
+          <Dialog.Description asChild>
+            <VisuallyHidden>
+              Настройте параметры поиска для квартир, жилых комплексов и условий
+              покупки
+            </VisuallyHidden>
+          </Dialog.Description>
 
           <div className={styles.catalogue__filters__container}>
             {/* <div className={styles.catalogue__filters__container__head}>

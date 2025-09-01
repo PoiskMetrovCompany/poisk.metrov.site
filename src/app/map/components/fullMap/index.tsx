@@ -133,7 +133,6 @@ const FullMap = () => {
 
       <Map
         mapClassName={styles.fullMap__map}
-        // className={styles.location__map}
         points={points}
         activePointId={activePointId}
         onActivePointChange={(id) => setActivePointId(id)}

@@ -125,7 +125,7 @@ export const useFiltersForm = () => {
   const [multiSelectValues, setMultiSelectValues] = useState<MultiSelectValues>(
     {
       // Квартира
-      propertyType: "",
+      propertyType: "Квартира",
       rooms: [],
       floorOptions: [],
       layout: [],
