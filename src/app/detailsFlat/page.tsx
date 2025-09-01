@@ -13,6 +13,7 @@ import styles from "./details.module.scss"
 
 import Compilation from "../components/compilation"
 import AboutComplex from "./components/aboutComplex"
+import AboutComplexSkeleton from "./components/aboutComplex/AboutComplexSkeleton"
 import AboutObject from "./components/aboutObject"
 import AboutObjectSmall from "./components/aboutObjectSmall"
 import ConstructionProgress from "./components/constructionProgress"
@@ -21,7 +22,7 @@ import Estate from "./components/estate"
 import DetailsHeader from "./components/header"
 import Location from "./components/location"
 
-const FLAT_KEY = "cdcb265d-822d-11f0-8411-10f60a82b815"
+const FLAT_KEY = "cdc76d67-822d-11f0-8411-10f60a82b815"
 
 const DetailsPage = () => {
   const {
@@ -79,7 +80,17 @@ const DetailsPage = () => {
       />
 
       <AboutObject items={aboutObjectItems} />
-      <AboutComplex />
+      {apartmentLoading ? (
+        <AboutComplexSkeleton />
+      ) : (
+        <AboutComplex
+          text={
+            apartmentData?.attributes?.includes?.find(
+              isResidentialComplexInclude
+            )?.attributes?.[0]?.description ?? ""
+          }
+        />
+      )}
       <MapProvider>
         <Location />
       </MapProvider>
