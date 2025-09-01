@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react"
 
-import CatalogueFilters from "@/app/catalogue/components/catalogueFiltersNavbar"
+import CatalogueFiltersMap from "@/app/catalogue/components/catalogueFiltersNavbar/catalogueFiltersNavbarMap"
 import FiltersDialog from "@/app/catalogue/components/filters"
 import { Map } from "@/components/map/map"
 import { IPoint } from "@/components/map/variables/variables"
@@ -107,14 +107,17 @@ const FullMap = () => {
   return (
     <div className={styles.fullMap}>
       <div className={styles.fullMap__filtersNavbar}>
-        <CatalogueFilters
-          isMap
-          isSticky
+        <CatalogueFiltersMap
           onShowFilters={() => setShowFilters(true)}
           onApplyFilters={() => setShowFilters(false)}
         />
       </div>
-      <FiltersDialog open={showFilters} onOpenChange={setShowFilters} />
+      <FiltersDialog
+        haveToSelectType
+        isMap
+        open={showFilters}
+        onOpenChange={setShowFilters}
+      />
       <PointTypes
         activePoints={activePoints}
         handlePointClick={handlePointClick}
@@ -129,7 +132,8 @@ const FullMap = () => {
       ) : null}
 
       <Map
-        className={styles.location__map}
+        mapClassName={styles.fullMap__map}
+        // className={styles.location__map}
         points={points}
         activePointId={activePointId}
         onActivePointChange={(id) => setActivePointId(id)}

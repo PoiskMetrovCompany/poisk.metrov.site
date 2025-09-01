@@ -43,8 +43,8 @@ export const getSizesByZoom = (zoom: number): ZoomSizes => {
       dot: 10,
       wrapper: 16,
       markerH: 28,
-      labelFs: 14,
-      padX: 10,
+      labelFs: 16,
+      padX: 12,
       padY: 4,
     }
   }
@@ -53,19 +53,19 @@ export const getSizesByZoom = (zoom: number): ZoomSizes => {
       dot: 9,
       wrapper: 15,
       markerH: 26,
-      labelFs: 13,
-      padX: 8,
-      padY: 3,
+      labelFs: 16,
+      padX: 12,
+      padY: 4,
     }
   }
   if (zoom >= 12) {
     return {
-      dot: 8,
+      dot: 12,
       wrapper: 14,
-      markerH: 24,
-      labelFs: 12,
-      padX: 8,
-      padY: 3,
+      markerH: 32,
+      labelFs: 13,
+      padX: 12,
+      padY: 4,
     }
   }
   if (zoom >= 11) {

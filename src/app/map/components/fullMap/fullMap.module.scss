@@ -1,18 +1,23 @@
 .fullMap {
   height: calc(100vh - 127px);
 
-  margin-top: -4rem;
+  margin-top: -63px;
 
   position: relative;
   width: 100%;
 
-  @media screen and (width >= 1024px) and (width < 1024px) {
+  @media screen and (width >= 1024px) and (width < 1440px) {
     height: calc(100vh - 70px);
+    margin-top: -30px;
   }
 
   @media screen and (width < 768px) {
     height: calc(100vh - 57px);
     margin-top: -1rem;
+  }
+
+  &__map {
+    border-radius: 0 !important;
   }
 
   &__overlay {
@@ -50,7 +55,7 @@
     cursor: default;
     left: 24px;
     position: absolute;
-    top: 24px;
+    top: 94px;
     width: 480px;
     z-index: 11;
 
@@ -79,6 +84,7 @@
 
   &__map {
     height: 100%;
+    margin-top: 20px;
     width: 100%;
   }
 }

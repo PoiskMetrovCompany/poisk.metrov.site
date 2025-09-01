@@ -27,6 +27,7 @@ interface MapProps {
   selectedInfrastructure?: string[]
   viewLocation?: [number, number]
   className?: string
+  mapClassName?: string
   customIcon?: string
   points?: IPoint[]
   activePointId?: number | null
@@ -39,6 +40,7 @@ export const Map = ({
   selectedInfrastructure = [],
   viewLocation,
   className,
+  mapClassName,
   customIcon = "/images/icons/about/location.svg",
   points,
   activePointId,
@@ -101,7 +103,7 @@ export const Map = ({
   return (
     <div className={clsx(styles.mapContainer, className)}>
       <YMap
-        className={styles.map}
+        className={clsx(styles.map, mapClassName)}
         margin={[20, 20, 20, 20]}
         location={location}
         ref={mapRef}

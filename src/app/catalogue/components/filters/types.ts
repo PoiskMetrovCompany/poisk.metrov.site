@@ -20,6 +20,7 @@ export interface FiltersFormData {
   floorsInBuildingMax: number | null
 
   // Кнопки фильтров
+  propertyType: string
   rooms: string[]
   floorOptions: string[]
   layout: string[]
@@ -137,6 +138,8 @@ export const FINISH_OPTIONS = ["Без отделки", "Черновая", "Ч�
 export const BATHROOM_OPTIONS = ["Совмещённый", "Раздельный"]
 
 export const APARTMENTS_OPTIONS = ["Не показывать", "Только апартаменты"]
+
+export const PROPERTY_TYPE_OPTIONS = ["Квартира", "ЖК"]
 
 export const FEATURES_OPTIONS = [
   "С террасой",

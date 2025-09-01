@@ -62,6 +62,18 @@
         }
       }
 
+      &.map {
+        height: 72px;
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          height: 56px;
+        }
+
+        @media screen and (width < 768px) {
+          height: 48px;
+        }
+      }
+
       &__inputs {
         align-items: center;
         display: flex;
@@ -231,6 +243,7 @@
       }
 
       &__buttonsDesktop {
+        align-items: center;
         display: flex;
         gap: 16px;
 
@@ -363,6 +376,19 @@
               width: 40px !important;
             }
 
+            &__map {
+              height: 48px !important;
+
+              @media screen and (width >= 768px) and (width < 1920px) {
+                height: 40px !important;
+                padding: 0 20px !important;
+              }
+
+              @media screen and (width < 768px) {
+                height: 32px !important;
+              }
+            }
+
             &__icon {
               height: 28px;
               width: 28px;
@@ -375,6 +401,16 @@
               @media screen and (width < 768px) {
                 height: 18px !important;
                 width: 18px !important;
+              }
+
+              &__map {
+                height: 24px !important;
+                width: 24px !important;
+
+                @media screen and (width >= 768px) and (width < 1920px) {
+                  height: 20px !important;
+                  width: 20px !important;
+                }
               }
             }
           }
@@ -433,6 +469,19 @@
               width: 40px !important;
             }
 
+            &__map {
+              height: 48px;
+
+              @media screen and (width >= 768px) and (width < 1920px) {
+                height: 40px !important;
+                padding: 0 20px !important;
+              }
+
+              @media screen and (width < 768px) {
+                height: 32px !important;
+              }
+            }
+
             &__icon {
               height: 28px;
               width: 28px;
@@ -445,6 +494,16 @@
               @media screen and (width < 768px) {
                 height: 18px !important;
                 width: 18px !important;
+              }
+
+              &__map {
+                height: 24px !important;
+                width: 24px !important;
+
+                @media screen and (width >= 768px) and (width < 1920px) {
+                  height: 20px !important;
+                  width: 20px !important;
+                }
               }
             }
           }
