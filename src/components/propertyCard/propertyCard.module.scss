@@ -497,6 +497,12 @@
       @media (width <= 470px) {
         flex: 0.5;
       }
+
+      &_map {
+        @media (width <= 470px) {
+          flex: 1 !important;
+        }
+      }
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {

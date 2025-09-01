@@ -156,7 +156,10 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           )}
 
           <ActionButton
-            className={styles.property_card__actions__button}
+            className={clsx(
+              styles.property_card__actions__button,
+              isMap && styles.property_card__actions__button_map
+            )}
             type={isMap ? "primary" : "outline"}
             size="tiny"
           >

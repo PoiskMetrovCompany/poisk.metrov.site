@@ -69,6 +69,10 @@
           height: 56px;
         }
 
+        @media screen and (width >= 768px) and (width < 1440px) {
+          margin-left: -16px !important;
+        }
+
         @media screen and (width < 768px) {
           height: 48px;
         }
@@ -256,6 +260,13 @@
           gap: 4px;
         }
 
+        &__map {
+          @media screen and (width < 1024px) {
+            flex-direction: row;
+            gap: 4px;
+          }
+        }
+
         span {
           @media (width < 1920px) {
             display: none;
@@ -340,14 +351,23 @@
                 display: none !important;
               }
 
+              @media screen and (width < 1024px) {
+                display: none !important;
+              }
+
               &_map {
                 @media screen and (width >= 1920px) {
                   display: flex !important;
                 }
-              }
+                @media screen and (width >= 1024px) and (width < 1440px) {
+                  flex: 1;
+                }
 
-              @media screen and (width < 1024px) {
-                display: none !important;
+                @media screen and (width >= 768px) and (width < 1024px) {
+                  display: flex !important;
+                }
+
+                white-space: nowrap;
               }
             }
 
@@ -384,8 +404,15 @@
                 padding: 0 20px !important;
               }
 
+              @media screen and (width >= 768px) and (width < 1440px) {
+                flex: 1;
+                gap: 8px !important;
+                width: auto !important;
+              }
+
               @media screen and (width < 768px) {
                 height: 32px !important;
+                width: 32px !important;
               }
             }
 
@@ -410,6 +437,16 @@
                 @media screen and (width >= 768px) and (width < 1920px) {
                   height: 20px !important;
                   width: 20px !important;
+                }
+
+                @media screen and (width >= 768px) and (width < 1440px) {
+                  height: 16px !important;
+                  width: 16px !important;
+                }
+
+                @media screen and (width < 768px) {
+                  height: 16px !important;
+                  width: 16px !important;
                 }
               }
             }
@@ -436,6 +473,10 @@
               &_map {
                 @media screen and (width >= 1920px) {
                   display: flex !important;
+                }
+
+                @media screen and (width >= 1024px) and (width < 1440px) {
+                  display: none !important;
                 }
               }
 
@@ -477,8 +518,14 @@
                 padding: 0 20px !important;
               }
 
+              @media screen and (width >= 768px) and (width < 1024px) {
+                padding: 0 !important;
+                width: 40px !important;
+              }
+
               @media screen and (width < 768px) {
                 height: 32px !important;
+                width: 32px !important;
               }
             }
 
@@ -503,6 +550,11 @@
                 @media screen and (width >= 768px) and (width < 1920px) {
                   height: 20px !important;
                   width: 20px !important;
+                }
+
+                @media screen and (width < 768px) {
+                  height: 18px !important;
+                  width: 18px !important;
                 }
               }
             }

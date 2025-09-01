@@ -63,7 +63,12 @@ const CatalogueFiltersMap: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
           onSearchChange={handleSearchChange}
         />
       </div>
-      <div className={styles.catalogue__filters__container__buttonsDesktop}>
+      <div
+        className={clsx(
+          styles.catalogue__filters__container__buttonsDesktop,
+          styles.catalogue__filters__container__buttonsDesktop__map
+        )}
+      >
         <ActionButton
           // iconLink="/images/icons/filters-orange.svg"
           onClick={onShowFilters}
