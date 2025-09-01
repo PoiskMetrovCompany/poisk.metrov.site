@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-import React from "react"
+import React, { useState } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -18,7 +18,8 @@ interface IFlatLayoutCardProps {
 }
 
 const FlatLayoutCard = ({ listClassName, apartment }: IFlatLayoutCardProps) => {
-  // Если нет данных квартиры, показываем плейсхолдер
+  const [imageError, setImageError] = useState(false)
+
   if (!apartment) {
     return (
       <div className={styles.flatLayoutCard}>
@@ -29,7 +30,6 @@ const FlatLayoutCard = ({ listClassName, apartment }: IFlatLayoutCardProps) => {
     )
   }
 
-  // Формируем описание квартиры
   const description = [
     `Этаж ${apartment.floor}`,
     apartment.renovation,
@@ -60,12 +60,15 @@ const FlatLayoutCard = ({ listClassName, apartment }: IFlatLayoutCardProps) => {
         >
           <div className={styles.flatLayoutCard__content__image}>
             <Image
-              src={apartment.plan_URL || "/images/temporary/room.png"}
+              src={
+                imageError || !apartment.plan_URL
+                  ? "/images/temporary/room.png"
+                  : apartment.plan_URL
+              }
               alt="flat-layout-card"
               fill
-              onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.src = "/images/temporary/room.png"
+              onError={() => {
+                setImageError(true)
               }}
             />
           </div>
