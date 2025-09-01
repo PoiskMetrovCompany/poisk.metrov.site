@@ -2,36 +2,43 @@
 
 import React from "react"
 
+import { useSearchParams } from "next/navigation"
+
 import { MapProvider } from "@/providers/map-provider"
 import { IAboutObjectItem } from "@/types/Object"
 import { ApartmentResponse } from "@/types/api/apartment"
-import { IInclude } from "@/types/api/apartment"
+import { IDoc, IDocInclude, IInclude } from "@/types/api/apartment"
 import { IResidentialComplexInclude } from "@/types/api/apartment"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./details.module.scss"
 
 import Compilation from "../components/compilation"
+import Location from "../details/components/location"
 import AboutComplex from "./components/aboutComplex"
 import AboutComplexSkeleton from "./components/aboutComplex/AboutComplexSkeleton"
 import AboutObject from "./components/aboutObject"
 import AboutObjectSmall from "./components/aboutObjectSmall"
 import ConstructionProgress from "./components/constructionProgress"
 import Documents from "./components/documents"
+import DocumentsSkeleton from "./components/documents/DocumentsSkeleton"
 import Estate from "./components/estate"
 import DetailsHeader from "./components/header"
-import Location from "./components/location"
 
-const FLAT_KEY = "cdc76d67-822d-11f0-8411-10f60a82b815"
+const FLAT_KEY = "cdcaa3c4-822d-11f0-8411-10f60a82b815"
 
 const DetailsPage = () => {
+  const searchParams = useSearchParams()
+  const keyFromUrl = searchParams.get("key")
+  const flatKey = keyFromUrl || FLAT_KEY
+
   const {
     data: apartmentData,
     isLoading: apartmentLoading,
     isError: apartmentError,
   } = useApiQuery<ApartmentResponse>(
-    ["apartments"],
-    `/apartments/read?key=${FLAT_KEY}&includes=ResidentialComplex,Doc,Building`,
+    ["apartments", flatKey],
+    `/apartments/read?key=${flatKey}&includes=ResidentialComplex,Doc,Building`,
     {
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
@@ -41,6 +48,9 @@ const DetailsPage = () => {
     include: IInclude
   ): include is IResidentialComplexInclude => {
     return include.type === "residentialcomplex"
+  }
+  const isDocsInclude = (include: IInclude): include is IDocInclude => {
+    return include.type === "doc"
   }
 
   return (
@@ -92,12 +102,57 @@ const DetailsPage = () => {
         />
       )}
       <MapProvider>
-        <Location />
+        <Location
+          latitude={
+            apartmentData?.attributes?.includes?.find(
+              isResidentialComplexInclude
+            )?.attributes?.[0]?.latitude ?? 0
+          }
+          longitude={
+            apartmentData?.attributes?.includes?.find(
+              isResidentialComplexInclude
+            )?.attributes?.[0]?.longitude ?? 0
+          }
+          complexName={
+            apartmentData?.attributes?.includes?.find(
+              isResidentialComplexInclude
+            )?.attributes?.[0]?.h1 ?? ""
+          }
+        />
       </MapProvider>
-      {/* <AboutObjectSmall items={aboutObjectItemsSmall} /> */}
       <ConstructionProgress />
-      <Documents />
-      <Compilation header="Похожие квартиры" hasPromoCard={false} />
+      {apartmentLoading ? (
+        <DocumentsSkeleton />
+      ) : (
+        <Documents
+          docs={
+            (apartmentData?.attributes?.includes?.find(isDocsInclude)
+              ?.attributes as IDoc[]) ?? []
+          }
+        />
+      )}
+      <Compilation
+        header="Похожие квартиры"
+        hasPromoCard={false}
+        similarApartmentParams={
+          apartmentData?.attributes
+            ? {
+                city_code: "novosibirsk",
+                city: "novosibirsk",
+                price: apartmentData.attributes.price,
+                area: apartmentData.attributes.area,
+                living_space: apartmentData.attributes.living_space,
+                kitchen_space: apartmentData.attributes.kitchen_space,
+                room_count: apartmentData.attributes.room_count,
+                divergence: 5,
+                exclude_key: apartmentData.attributes.key,
+                exclude_offer_id: apartmentData.attributes.offer_id,
+                page: 1,
+                per_page: 15,
+              }
+            : undefined
+        }
+      />
     </div>
   )
 }
