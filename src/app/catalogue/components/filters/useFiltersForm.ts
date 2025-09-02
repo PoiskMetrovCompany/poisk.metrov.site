@@ -49,6 +49,7 @@ interface ShowOptionsState {
 // Интерфейс для значений мультивыбора
 interface MultiSelectValues {
   // Квартира
+  propertyType: string
   rooms: string[]
   floorOptions: string[]
   layout: string[]
@@ -124,6 +125,7 @@ export const useFiltersForm = () => {
   const [multiSelectValues, setMultiSelectValues] = useState<MultiSelectValues>(
     {
       // Квартира
+      propertyType: "Квартира",
       rooms: [],
       floorOptions: [],
       layout: [],
@@ -234,6 +236,7 @@ export const useFiltersForm = () => {
   const resetFilters = () => {
     form.reset()
     setMultiSelectValues({
+      propertyType: "",
       rooms: [],
       floorOptions: [],
       layout: [],
@@ -420,6 +423,14 @@ export const useFiltersForm = () => {
     }))
   }, [])
 
+  // Обработчик для типа жилья (взаимоисключающий выбор)
+  const handlePropertyTypeSelect = useCallback((propertyType: string) => {
+    setMultiSelectValues((prev) => ({
+      ...prev,
+      propertyType: prev.propertyType === propertyType ? "" : propertyType,
+    }))
+  }, [])
+
   // Обработчик для типа транспорта до метро (взаимоисключающий выбор)
   const handleMetroTransportTypeSelect = useCallback(
     (transportType: string) => {
@@ -517,6 +528,7 @@ export const useFiltersForm = () => {
 
     // Подсчет строковых значений (только непустые строки)
     const stringFields: (keyof typeof allData)[] = [
+      "propertyType",
       "apartments",
       "metroTransportType",
     ]
@@ -574,6 +586,7 @@ export const useFiltersForm = () => {
     handleRangeInputChange,
     handleMultiSelect,
     handleApartmentsSelect,
+    handlePropertyTypeSelect,
     handleMetroTransportTypeSelect,
   }
 }

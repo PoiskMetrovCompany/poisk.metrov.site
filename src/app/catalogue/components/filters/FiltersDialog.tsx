@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
-import React, { FC, useMemo } from "react"
+import React, { FC, useMemo, useState } from "react"
 
 import styles from "./filters.module.scss"
 
@@ -15,11 +15,21 @@ import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
 
 interface FiltersDialogProps {
+  isMap?: boolean
+  haveToSelectType?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
+const FiltersDialog: FC<FiltersDialogProps> = ({
+  isMap = false,
+  haveToSelectType = false,
+  open,
+  onOpenChange,
+}) => {
+  const [showApartmentTypeSelection, setShowApartmentTypeSelection] =
+    useState(false)
+
   const {
     form,
     formData,
@@ -30,6 +40,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
     handleRangeChange,
     handleRangeInputChange,
     handleMultiSelect,
+    handlePropertyTypeSelect,
     handleApartmentsSelect,
     handleMetroTransportTypeSelect,
   } = useFiltersForm()
@@ -37,6 +48,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
   // Мемоизируем данные для ApartmentFilters
   const apartmentFormData = useMemo(
     () => ({
+      propertyType: formData.propertyType || "",
       rooms: formData.rooms || [],
       priceMin: formData.priceMin,
       priceMax: formData.priceMax,
@@ -93,6 +105,7 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
 
   const handleClose = () => {
     onOpenChange(false)
+    setShowApartmentTypeSelection(false)
   }
 
   return (
@@ -107,6 +120,12 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
           <Dialog.Title asChild>
             <VisuallyHidden>Фильтры поиска недвижимости</VisuallyHidden>
           </Dialog.Title>
+          <Dialog.Description asChild>
+            <VisuallyHidden>
+              Настройте параметры поиска для квартир, жилых комплексов и условий
+              покупки
+            </VisuallyHidden>
+          </Dialog.Description>
 
           <div className={styles.catalogue__filters__container}>
             {/* <div className={styles.catalogue__filters__container__head}>
@@ -117,25 +136,35 @@ const FiltersDialog: FC<FiltersDialogProps> = ({ open, onOpenChange }) => {
               {/* Блок "Квартира" */}
               <ApartmentFilters
                 formData={apartmentFormData}
+                haveToSelectType={haveToSelectType}
+                showApartmentTypeSelection={showApartmentTypeSelection}
+                setShowApartmentTypeSelection={setShowApartmentTypeSelection}
                 handleMultiSelect={handleMultiSelect}
+                handlePropertyTypeSelect={handlePropertyTypeSelect}
                 handleApartmentsSelect={handleApartmentsSelect}
                 handleRangeInputChange={handleRangeInputChange}
                 onCloseDialog={handleClose}
               />
 
               {/* Блок "Жилой комплекс" */}
-              <ComplexFilters
-                formData={complexFormData}
-                handleMultiSelect={handleMultiSelect}
-                handleMetroTransportTypeSelect={handleMetroTransportTypeSelect}
-                handleRangeInputChange={handleRangeInputChange}
-              />
+              {!showApartmentTypeSelection && (
+                <ComplexFilters
+                  formData={complexFormData}
+                  handleMultiSelect={handleMultiSelect}
+                  handleMetroTransportTypeSelect={
+                    handleMetroTransportTypeSelect
+                  }
+                  handleRangeInputChange={handleRangeInputChange}
+                />
+              )}
 
               {/* Блок "Покупка" */}
-              <PurchaseFilters
-                formData={purchaseFormData}
-                handleMultiSelect={handleMultiSelect}
-              />
+              {!showApartmentTypeSelection && (
+                <PurchaseFilters
+                  formData={purchaseFormData}
+                  handleMultiSelect={handleMultiSelect}
+                />
+              )}
             </div>
 
             <div className={styles.catalogue__filters__container__showFlats}>

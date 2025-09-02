@@ -3,24 +3,36 @@
 import { YMap, YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap"
 import clsx from "clsx"
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useMemo, useRef, useState } from "react"
 
 import { useMap } from "@/providers/map-provider"
-import useDebounce from "@/utils/hooks/use-debounce"
+
+// import useDebounce from "@/utils/hooks/use-debounce"
 
 import styles from "./map.module.scss"
 
-import { getCachedInfrastructure } from "./helpers/api"
+// import { getCachedInfrastructure } from "./helpers/api"
 import MarkerWithPopup from "./marker/marker"
+import { getSizesByZoom } from "./utils/zoomSizes"
 import { cityCenterCooridnates } from "./variables/cityCoordinates"
-import { InfrastructureItem, Place } from "./variables/variables"
+import {
+  IPoint,
+  InfrastructureItem,
+  Place,
+  PointType,
+} from "./variables/variables"
 
 interface MapProps {
   places?: Place[]
   selectedInfrastructure?: string[]
   viewLocation?: [number, number]
   className?: string
+  mapClassName?: string
   customIcon?: string
+  points?: IPoint[]
+  activePointId?: number | null
+  onActivePointChange?: (id: number) => void
+  activePoints?: PointType[]
 }
 
 export const Map = ({
@@ -28,17 +40,22 @@ export const Map = ({
   selectedInfrastructure = [],
   viewLocation,
   className,
+  mapClassName,
   customIcon = "/images/icons/about/location.svg",
+  points,
+  activePointId,
+  onActivePointChange,
+  activePoints,
 }: MapProps) => {
   const mapRef = useRef<(YMap & { container: HTMLElement }) | null>(null)
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
-  const [bounds, setBounds] = useState<unknown>(null)
+  const [currentZoom, setCurrentZoom] = useState<number>(14)
 
-  const [infrastructureData, setInfrastructureData] = useState<
-    InfrastructureItem[]
-  >([])
-  const [loading, setLoading] = useState(false)
+  const [infrastructureData] = useState<InfrastructureItem[]>([])
+  const [loading] = useState(false)
+
+  const sizes = useMemo(() => getSizesByZoom(currentZoom), [currentZoom])
 
   const filteredInfrastructure = infrastructureData.filter((item) =>
     selectedInfrastructure.includes(item.type)
@@ -56,10 +73,16 @@ export const Map = ({
     [viewLocation]
   )
 
-  const setBoundsDebounced = useDebounce(
-    (value: unknown) => setBounds(value),
-    500
-  )
+  // const setBoundsDebounced = useDebounce(
+  //   (value: unknown) => setBounds(value),
+  //   500
+  // )
+
+  const filteredPoints = useMemo(() => {
+    if (!points || points.length === 0) return []
+    if (!activePoints || activePoints.length === 0) return []
+    return points.filter((p) => activePoints.includes(p.type))
+  }, [points, activePoints])
 
   const { reactifyApi } = useMap()
   if (!reactifyApi) return null
@@ -69,15 +92,18 @@ export const Map = ({
     YMapListener,
     YMapDefaultSchemeLayer,
     YMapDefaultFeaturesLayer,
+    YMapMarker,
   } = reactifyApi
 
   const hasDataToShow =
-    filteredInfrastructure.length > 0 || (places && places.length > 0)
+    filteredInfrastructure.length > 0 ||
+    (places && places.length > 0) ||
+    (filteredPoints && filteredPoints.length > 0)
 
   return (
     <div className={clsx(styles.mapContainer, className)}>
       <YMap
-        className={styles.map}
+        className={clsx(styles.map, mapClassName)}
         margin={[20, 20, 20, 20]}
         location={location}
         ref={mapRef}
@@ -87,7 +113,10 @@ export const Map = ({
 
         <YMapListener
           onUpdate={({ location }) => {
-            setBoundsDebounced(location.bounds)
+            // setBoundsDebounced(location.bounds)
+            if (typeof location.zoom === "number") {
+              setCurrentZoom(location.zoom)
+            }
           }}
         />
 
@@ -119,6 +148,74 @@ export const Map = ({
             selectPlace={selectPlace}
             icon={customIcon}
           />
+        ))}
+
+        {filteredPoints.map((point) => (
+          <YMapMarker key={point.id} coordinates={point.coords} zIndex={5}>
+            {currentZoom >= 14 ||
+            (point.priority === 1 && currentZoom >= 12) ? (
+              <div
+                className={styles.pointMarker}
+                onClick={() => onActivePointChange?.(point.id)}
+                style={{
+                  height: sizes.markerH,
+                  padding: `${sizes.padY}px ${sizes.padX}px ${sizes.padY}px 8px`,
+                }}
+              >
+                <div className={styles.pointWrapper}>
+                  <div
+                    className={
+                      point.type === PointType.IN_SALE
+                        ? `${styles.pointDot} ${styles.pointDot_sale} ${
+                            activePointId === point.id
+                              ? styles.pointDot_active
+                              : ""
+                          }`
+                        : `${styles.pointDot} ${styles.pointDot_announcements} ${
+                            activePointId === point.id
+                              ? styles.pointDot_active
+                              : ""
+                          }`
+                    }
+                    style={{ width: sizes.dot, height: sizes.dot }}
+                  />
+                </div>
+
+                <div
+                  className={styles.pointLabel}
+                  style={{ fontSize: sizes.labelFs }}
+                >
+                  {point.price ||
+                    (point.type === PointType.ANNOUNCEMENTS ? "Анонс" : "")}
+                </div>
+              </div>
+            ) : (
+              <div
+                className={clsx(
+                  styles.pointWrapper,
+                  styles.pointWrapper_onlyDot
+                )}
+                style={{ width: sizes.wrapper, height: sizes.wrapper }}
+              >
+                <div
+                  className={
+                    point.type === PointType.IN_SALE
+                      ? `${styles.pointDot} ${styles.pointDot_sale} ${
+                          activePointId === point.id
+                            ? styles.pointDot_active
+                            : ""
+                        }`
+                      : `${styles.pointDot} ${styles.pointDot_announcements} ${
+                          activePointId === point.id
+                            ? styles.pointDot_active
+                            : ""
+                        }`
+                  }
+                  style={{ width: sizes.dot, height: sizes.dot }}
+                />
+              </div>
+            )}
+          </YMapMarker>
         ))}
       </YMap>
 

@@ -205,11 +205,12 @@
                 gap: 12px;
               }
             }
+
             &__heart {
-              display: none;
+              display: none !important;
 
               @media screen and (width < 768px) {
-                display: flex;
+                display: flex !important;
               }
             }
           }
@@ -239,7 +240,7 @@
   max-height: calc(100vh - 32px);
   max-width: calc(100vw - 32px);
 
-  overflow-y: auto;
+  overflow-y: scroll;
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
