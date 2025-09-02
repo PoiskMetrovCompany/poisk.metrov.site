@@ -4,19 +4,14 @@ import clsx from "clsx"
 
 import React, { useEffect, useState } from "react"
 
+import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
 import GetCatalogue from "@/components/getCatalogue"
-
-import Download from "@/app/components/download"
-
-
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
-
 import { useStickyState } from "@/hooks/useStickyState"
-
 import { IProperty } from "@/types/PropertyCard"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
@@ -148,7 +143,7 @@ const CatalogueList = () => {
 
   const applyFilters = () => {
     console.log("Фильтры применены")
-    setShowFilters(false) // Закрываем фильтры при применении
+    setShowFilters(false)
   }
 
   useEffect(() => {
