@@ -30,8 +30,23 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   subtitleClassName,
   listClassName,
 }) => {
-  const { title, price, subtitle, badge, metro, driveTime, specifications } =
-    property
+  const {
+    title,
+    price,
+    subtitle,
+    badge,
+    metro,
+    driveTime,
+    metroType,
+    specifications,
+  } = property
+
+  // Выбираем иконку в зависимости от типа передвижения до метро
+  const getMetroIcon = () => {
+    return metroType === "on_foot"
+      ? "/images/icons/walk.svg"
+      : "/images/icons/car.svg"
+  }
 
   return (
     <article
@@ -92,8 +107,8 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             </span>
             <span className={clsx(styles.property_card__location__item)}>
               <IconImage
-                iconLink="/images/icons/car.svg"
-                alt="Drive time"
+                iconLink={getMetroIcon()}
+                alt={metroType === "on_foot" ? "Walking time" : "Drive time"}
                 className={styles.property_card__location__item__icon}
               />
               {driveTime}
