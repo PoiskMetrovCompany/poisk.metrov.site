@@ -22,7 +22,7 @@ const Header = ({ initialCity }: HeaderProps) => {
         onClose={() => setIsMenuPopupOpen(false)}
       />
       <header className={styles.header}>
-        <TopBar />
+        <TopBar initialCity={initialCity} />
       </header>
       <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
     </>

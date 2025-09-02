@@ -6,7 +6,11 @@ import React, { FC } from "react"
 
 import Image from "next/image"
 
+import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
+
 import styles from "../header.module.scss"
+
+import { useApiQuery } from "@/utils/hooks/use-api"
 
 interface IUserActionsProps {
   favoritesCount?: number
@@ -28,6 +32,10 @@ const UserActions: FC<IUserActionsProps> = ({
       onFavoritesClick()
     }
   }
+
+  const userData = useApiQuery<IFavoritesCountResponse>(
+    
+  )
 
   const handleLoginClick = (): void => {
     if (onLoginClick) {
