@@ -41,6 +41,11 @@
     right: 40px;
     top: 16px;
     z-index: 12;
+    @media screen and (width <= 768px) {
+      left: 16px;
+      margin: 0;
+      right: 16px;
+    }
     button {
       background-color: white;
       border: 1px solid var(--color-gray-white);
@@ -48,10 +53,15 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       color: var(--color-black);
       width: 303px;
-    }
-    @media screen and (width < 768px) {
-      right: 12px;
-      top: 12px;
+      @media screen and (width >= 1440px) and (width <= 1920px) {
+        width: 252px;
+      }
+      @media screen and (width >= 1024px) and (width <= 1440px) {
+        width: 200px;
+      }
+      @media screen and (width <=768px) {
+        width: 100%;
+      }
     }
   }
 
