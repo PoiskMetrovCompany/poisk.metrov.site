@@ -35,6 +35,26 @@
     z-index: 10;
   }
 
+  &__favouritesButton {
+    border-radius: 8px;
+    position: absolute;
+    right: 40px;
+    top: 16px;
+    z-index: 12;
+    button {
+      background-color: white;
+      border: 1px solid var(--color-gray-white);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      color: var(--color-black);
+      width: 303px;
+    }
+    @media screen and (width < 768px) {
+      right: 12px;
+      top: 12px;
+    }
+  }
+
   &__filtersNavbar {
     padding: 0 120px;
     position: sticky;
@@ -70,7 +90,7 @@
     cursor: default;
     left: 24px;
     position: absolute;
-    top: 94px;
+    top: 30px;
     width: 480px;
     z-index: 11;
 
@@ -102,4 +122,9 @@
     margin-top: 20px;
     width: 100%;
   }
+}
+
+.favouritesButton {
+  white-space: nowrap;
+  width: auto;
 }
