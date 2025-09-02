@@ -132,6 +132,11 @@
           @media screen and (width < 768px) {
             display: none;
           }
+
+          &__content {
+            margin-left: 50px;
+            margin-top: 10px !important;
+          }
         }
 
         &__price {

@@ -42,6 +42,9 @@ const CatalogueFiltersMap: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
     >
       <div className={styles.catalogue__filters__container__inputs}>
         <RoomCountDropdown
+          contentClassName={
+            styles.catalogue__filters__container__inputs__room__content
+          }
           className={styles.catalogue__filters__container__inputs__room}
           value={roomCount}
           onRoomCountChange={(newRoomCount: string[]) =>
