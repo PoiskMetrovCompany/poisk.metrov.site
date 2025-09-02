@@ -35,3 +35,64 @@
   text-align: center;
   width: 320px;
 }
+
+.pointMarker {
+  align-items: center;
+
+  background: var(--color-white);
+  border-radius: 50px;
+
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  height: 32px;
+
+  padding: 4px 12px 4px 8px;
+}
+
+.pointWrapper {
+  align-items: center;
+
+  background: var(--color-white);
+  border-radius: 50%;
+
+  display: flex;
+  height: 18px;
+  justify-content: center;
+
+  width: 18px;
+
+  &_onlyDot {
+    border: 1px solid var(--color-border-gray);
+    cursor: pointer;
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.1));
+  }
+}
+
+.pointDot {
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+
+  &_sale {
+    background: #ec7d3f;
+  }
+
+  &_announcements {
+    background: #0436b6;
+  }
+
+  &_active {
+    box-shadow: 0 0 0 3px #ffffff;
+    outline: 2px solid #0000001a;
+  }
+}
+
+.pointLabel {
+  background: var(--color-white);
+  color: var(--color-black);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+  white-space: nowrap;
+}

@@ -21,6 +21,7 @@ export interface IProperty {
   badge: IBadge
   metro: string
   driveTime: string
+  metroType: "on_foot" | "by_transport"
   specifications: ISpecification[]
   description: IDescription[]
   image: string

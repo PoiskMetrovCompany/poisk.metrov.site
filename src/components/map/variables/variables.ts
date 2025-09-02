@@ -13,3 +13,16 @@ export type InfrastructureItem = {
   latitude: number
   icon: string
 }
+
+export enum PointType {
+  IN_SALE = "В продаже",
+  ANNOUNCEMENTS = "Анонсы",
+}
+
+export type IPoint = {
+  id: number
+  type: PointType
+  coords: [number, number]
+  price?: string
+  priority?: 1 | 0 | null
+}

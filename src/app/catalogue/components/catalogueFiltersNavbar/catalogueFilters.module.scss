@@ -62,6 +62,22 @@
         }
       }
 
+      &.map {
+        height: 72px;
+
+        @media screen and (width >= 768px) and (width < 1920px) {
+          height: 56px;
+        }
+
+        @media screen and (width >= 768px) and (width < 1440px) {
+          margin-left: -16px !important;
+        }
+
+        @media screen and (width < 768px) {
+          height: 48px;
+        }
+      }
+
       &__inputs {
         align-items: center;
         display: flex;
@@ -115,6 +131,11 @@
 
           @media screen and (width < 768px) {
             display: none;
+          }
+
+          &__content {
+            margin-left: 50px;
+            margin-top: 10px !important;
           }
         }
 
@@ -231,6 +252,7 @@
       }
 
       &__buttonsDesktop {
+        align-items: center;
         display: flex;
         gap: 16px;
 
@@ -241,6 +263,13 @@
         @media screen and (width < 1024px) {
           flex-direction: row-reverse;
           gap: 4px;
+        }
+
+        &__map {
+          @media screen and (width < 1024px) {
+            flex-direction: row;
+            gap: 4px;
+          }
         }
 
         span {
@@ -330,6 +359,21 @@
               @media screen and (width < 1024px) {
                 display: none !important;
               }
+
+              &_map {
+                @media screen and (width >= 1920px) {
+                  display: flex !important;
+                }
+                @media screen and (width >= 1024px) and (width < 1440px) {
+                  flex: 1;
+                }
+
+                @media screen and (width >= 768px) and (width < 1024px) {
+                  display: flex !important;
+                }
+
+                white-space: nowrap;
+              }
             }
 
             @media screen and (width >= 1440px) and (width < 1920px) {
@@ -357,6 +401,26 @@
               width: 40px !important;
             }
 
+            &__map {
+              height: 48px !important;
+
+              @media screen and (width >= 768px) and (width < 1920px) {
+                height: 40px !important;
+                padding: 0 20px !important;
+              }
+
+              @media screen and (width >= 768px) and (width < 1440px) {
+                flex: 1;
+                gap: 8px !important;
+                width: auto !important;
+              }
+
+              @media screen and (width < 768px) {
+                height: 32px !important;
+                width: 32px !important;
+              }
+            }
+
             &__icon {
               height: 28px;
               width: 28px;
@@ -369,6 +433,134 @@
               @media screen and (width < 768px) {
                 height: 18px !important;
                 width: 18px !important;
+              }
+
+              &__map {
+                height: 24px !important;
+                width: 24px !important;
+
+                @media screen and (width >= 768px) and (width < 1920px) {
+                  height: 20px !important;
+                  width: 20px !important;
+                }
+
+                @media screen and (width >= 768px) and (width < 1440px) {
+                  height: 16px !important;
+                  width: 16px !important;
+                }
+
+                @media screen and (width < 768px) {
+                  height: 16px !important;
+                  width: 16px !important;
+                }
+              }
+            }
+          }
+
+          &__save {
+            border-radius: 40px;
+            color: var(--color-orange);
+            display: flex;
+            gap: 12px;
+            white-space: nowrap;
+
+            @media screen and (width >= 1920px) {
+              padding: 20px !important;
+            }
+
+            &__text {
+              display: flex !important;
+
+              @media screen and (width >= 1920px) {
+                display: none !important;
+              }
+
+              &_map {
+                @media screen and (width >= 1920px) {
+                  display: flex !important;
+                }
+
+                @media screen and (width >= 1024px) and (width < 1440px) {
+                  display: none !important;
+                }
+              }
+
+              @media screen and (width < 1024px) {
+                display: none !important;
+              }
+            }
+
+            @media screen and (width >= 1440px) and (width < 1920px) {
+              font-size: 15px !important;
+              height: 56px !important;
+            }
+
+            @media screen and (width >= 1024px) and (width < 1440px) {
+              font-size: 14px !important;
+              height: 48px !important;
+              padding: 0 24px !important;
+            }
+
+            @media screen and (width >= 768px) and (width < 1024px) {
+              gap: 0 !important;
+              height: 48px !important;
+              padding: 0 !important;
+              width: 48px !important;
+            }
+
+            @media screen and (width < 768px) {
+              gap: 0 !important;
+              height: 40px !important;
+              padding: 0 !important;
+              width: 40px !important;
+            }
+
+            &__map {
+              height: 48px;
+
+              @media screen and (width >= 768px) and (width < 1920px) {
+                height: 40px !important;
+                padding: 0 20px !important;
+              }
+
+              @media screen and (width >= 768px) and (width < 1024px) {
+                padding: 0 !important;
+                width: 40px !important;
+              }
+
+              @media screen and (width < 768px) {
+                height: 32px !important;
+                width: 32px !important;
+              }
+            }
+
+            &__icon {
+              height: 28px;
+              width: 28px;
+
+              @media screen and (width >= 768px) and (width < 1440px) {
+                height: 24px;
+                width: 24px;
+              }
+
+              @media screen and (width < 768px) {
+                height: 18px !important;
+                width: 18px !important;
+              }
+
+              &__map {
+                height: 24px !important;
+                width: 24px !important;
+
+                @media screen and (width >= 768px) and (width < 1920px) {
+                  height: 20px !important;
+                  width: 20px !important;
+                }
+
+                @media screen and (width < 768px) {
+                  height: 18px !important;
+                  width: 18px !important;
+                }
               }
             }
           }

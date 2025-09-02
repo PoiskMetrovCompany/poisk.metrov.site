@@ -13,9 +13,17 @@ body {
   background-color: var(--color-beige);
 }
 
-.container {
-  margin: 0 auto;
-  padding: 0 120px;
+/* Анимация для скелетона */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 button {
@@ -121,9 +129,6 @@ footer {
   width: 100%;
 }
 
-.container {
-  padding: 0;
-}
 
 button {
   border: none;
