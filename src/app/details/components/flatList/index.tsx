@@ -62,9 +62,12 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
 
       <LayoutList
         apartments={
-          flatListData.attributes.includes.find(
-            (include) => include.type === "apartment"
-          )?.attributes || []
+
+          (Array.isArray(flatListData.attributes)
+            ? flatListData.attributes[0]
+            : flatListData.attributes
+          )?.includes?.find((include: any) => include.type === "apartment")
+            ?.attributes || []
         }
       />
     </div>

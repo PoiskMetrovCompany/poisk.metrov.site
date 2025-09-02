@@ -1,11 +1,15 @@
+
 import { IMeta } from "./meta"
 
 export interface IApartment {
+
   id: number
   created_at: string
   updated_at: string
   deleted_at: string | null
+
   offer_id: number
+
   key: string
   complex_id: number
   apartment_type: string
@@ -29,6 +33,7 @@ export interface IApartment {
   h1: string
   complex_key: string
   building_key: string | null
+
   includes: IInclude[]
 }
 
@@ -105,3 +110,4 @@ export interface ApartmentResponse {
   attributes: IApartment
   meta: IMeta
 }
+
