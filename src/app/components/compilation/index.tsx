@@ -1,13 +1,19 @@
 "use client"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
+
 import "swiper/css"
 import "swiper/css/navigation"
-import styles from "./compilation.module.scss"
-import Heading2 from "@/components/ui/heading2"
-import FlatLayoutCard from "@/components/flatLayoutCard"
+import { Navigation } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+
 import Image from "next/image"
+
+import FlatLayoutCard from "@/components/flatLayoutCard"
+
+import styles from "./compilation.module.scss"
+
 import PromoCard from "./promoCard"
+
+import Heading2 from "@/components/ui/heading2"
 
 interface compilationProps {
   header: string
@@ -124,7 +130,11 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
         >
           {flatCards.map((card) => (
             <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              {card.id === 3 && hasPromoCard === true ? <PromoCard /> : <FlatLayoutCard />}
+              {card.id === 3 && hasPromoCard === true ? (
+                <PromoCard />
+              ) : (
+                <FlatLayoutCard />
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
