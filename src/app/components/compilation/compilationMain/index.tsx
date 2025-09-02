@@ -14,7 +14,7 @@ import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./compilation.module.scss"
 
-import PromoCard from "./promoCard"
+import PromoCard from "../promoCard"
 
 import Heading2 from "@/components/ui/heading2"
 

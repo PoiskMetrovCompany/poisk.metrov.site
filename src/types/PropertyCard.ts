@@ -1,14 +1,14 @@
-interface ISpecification {
+export interface ISpecification {
   type: string
   price: string
 }
 
-interface IBadge {
+export interface IBadge {
   developer: string
   period: string
 }
 
-interface IDescription {
+export interface IDescription {
   type: string
   status: string
 }
