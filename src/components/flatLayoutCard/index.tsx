@@ -33,8 +33,7 @@ const FlatLayoutCard = ({
     "Отделка улучшенная черновая",
   ],
   imageUrl = "/images/temporary/room.png",
-  linkUrl = "/details/1",
-  apartment,
+  linkUrl = `/detailsFlat?key='asdf1231sdas'`,
 }: IFlatLayoutCardProps) => {
   return (
     <div className={styles.flatLayoutCard}>
@@ -130,4 +129,3 @@ const FlatLayoutCard = ({
 }
 
 export default FlatLayoutCard
-

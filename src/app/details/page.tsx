@@ -15,13 +15,13 @@ import styles from "./details.module.scss"
 
 import Compilation from "../components/compilation"
 import Location from "../details/components/location"
+import AboutComplexSkeleton from "../detailsFlat/components/aboutComplex/AboutComplexSkeleton"
+import DocumentsSkeleton from "../detailsFlat/components/documents/DocumentsSkeleton"
 import AboutComplex from "./components/aboutComplex"
-import AboutComplexSkeleton from "./components/aboutComplex/AboutComplexSkeleton"
 import AboutObject from "./components/aboutObject"
 import AboutObjectSmall from "./components/aboutObjectSmall"
 import ConstructionProgress from "./components/constructionProgress"
 import Documents from "./components/documents"
-import DocumentsSkeleton from "./components/documents/DocumentsSkeleton"
 import Estate from "./components/estate"
 import DetailsHeader from "./components/header"
 
@@ -56,49 +56,53 @@ const DetailsPage = () => {
   return (
     <div className={styles.details}>
       <DetailsHeader
-        h1={apartmentData?.attributes?.h1 ?? ""}
-        mStation={
-          apartmentData?.attributes?.includes?.find(isResidentialComplexInclude)
-            ?.attributes?.[0]?.metro_station ?? ""
-        }
-        mType={
-          apartmentData?.attributes?.includes?.find(isResidentialComplexInclude)
-            ?.attributes?.[0]?.metro_type ?? ""
-        }
-        mTime={
-          apartmentData?.attributes?.includes?.find(isResidentialComplexInclude)
-            ?.attributes?.[0]?.metro_time ?? 0
-        }
-        resComplexname={
-          apartmentData?.attributes?.includes?.find(isResidentialComplexInclude)
-            ?.attributes?.[0]?.h1 ?? ""
-        }
-        isLoading={apartmentLoading}
-      />
-      <Estate
-        price={apartmentData?.attributes?.price ?? 0}
-        renovation={apartmentData?.attributes?.renovation ?? ""}
-        floor={apartmentData?.attributes?.floor ?? 0}
-        flatNumber={apartmentData?.attributes?.apartment_number ?? ""}
-        fullArea={apartmentData?.attributes?.area ?? 0}
-        livingArea={apartmentData?.attributes?.living_space ?? 0}
-        planUrl={
-          apartmentData?.attributes?.plan_URL ??
-          "/images/temporary/flatImage22.webp"
+        data={
+          apartmentData?.attributes
+            ? {
+                name: apartmentData.attributes.h1 ?? "",
+                address:
+                  apartmentData.attributes.includes?.find(
+                    isResidentialComplexInclude
+                  )?.attributes?.[0]?.h1 ?? "",
+                metroStation:
+                  apartmentData.attributes.includes?.find(
+                    isResidentialComplexInclude
+                  )?.attributes?.[0]?.metro_station ?? "",
+                metroType:
+                  apartmentData.attributes.includes?.find(
+                    isResidentialComplexInclude
+                  )?.attributes?.[0]?.metro_type ?? "",
+                metroTime:
+                  apartmentData.attributes.includes?.find(
+                    isResidentialComplexInclude
+                  )?.attributes?.[0]?.metro_time ?? 0,
+              }
+            : null
         }
         isLoading={apartmentLoading}
+        isError={apartmentError}
       />
+      <Estate />
 
       <AboutObject items={aboutObjectItems} />
       {apartmentLoading ? (
         <AboutComplexSkeleton />
       ) : (
         <AboutComplex
-          text={
+          data={
             apartmentData?.attributes?.includes?.find(
               isResidentialComplexInclude
-            )?.attributes?.[0]?.description ?? ""
+            )
+              ? {
+                  description:
+                    apartmentData.attributes.includes.find(
+                      isResidentialComplexInclude
+                    )?.attributes?.[0]?.description ?? "",
+                }
+              : null
           }
+          isLoading={apartmentLoading}
+          isError={apartmentError}
         />
       )}
       <MapProvider>
@@ -121,16 +125,7 @@ const DetailsPage = () => {
         />
       </MapProvider>
       <ConstructionProgress />
-      {apartmentLoading ? (
-        <DocumentsSkeleton />
-      ) : (
-        <Documents
-          docs={
-            (apartmentData?.attributes?.includes?.find(isDocsInclude)
-              ?.attributes as IDoc[]) ?? []
-          }
-        />
-      )}
+      {apartmentLoading ? <DocumentsSkeleton /> : <Documents />}
       <Compilation
         header="Похожие квартиры"
         hasPromoCard={false}
@@ -191,26 +186,3 @@ const aboutObjectItems: IAboutObjectItem[] = [
     icon: "/images/icons/building.svg",
   },
 ]
-
-// const aboutObjectItemsSmall: IAboutObjectItem[] = [
-//   {
-//     title: "Транспортная доступность",
-//     icon: "/images/icons/wall.svg",
-//   },
-//   {
-//     title: "Развитая инфраструктура",
-//     icon: "/images/icons/height.svg",
-//   },
-//   {
-//     title: "Благоустроенная придомовая территория",
-//     icon: "/images/icons/elevator.svg",
-//   },
-//   {
-//     title: "Просторные колясочные",
-//     icon: "/images/icons/stairs.svg",
-//   },
-//   {
-//     title: "Детские сады и школы",
-//     icon: "/images/icons/parking.svg",
-//   },
-// ]
