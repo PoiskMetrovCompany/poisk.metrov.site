@@ -1,23 +1,41 @@
-import React from "react"
-import styles from "./flatLayoutCard.module.scss"
-import Image from "next/image"
-import IconButton from "../ui/buttons/IconButton"
-import Link from "next/link"
-import IconImage from "../ui/IconImage"
 import clsx from "clsx"
 
-const description = [
-  "Этаж 8 из 17",
-  "I кв 2025",
-  "Дом кирпичный",
-  "Отделка улучшенная черновая",
-]
+import React from "react"
+
+import Image from "next/image"
+import Link from "next/link"
+
+import { IApartment } from "@/types/api/complex"
+
+import styles from "./flatLayoutCard.module.scss"
+
+import IconImage from "../ui/IconImage"
+import IconButton from "../ui/buttons/IconButton"
 
 interface IFlatLayoutCardProps {
   listClassName?: string
+  apartment?: IApartment
 }
 
-const FlatLayoutCard = ({ listClassName }: IFlatLayoutCardProps) => {
+const FlatLayoutCard = ({ listClassName, apartment }: IFlatLayoutCardProps) => {
+  // Если нет данных квартиры, показываем плейсхолдер
+  if (!apartment) {
+    return (
+      <div className={styles.flatLayoutCard}>
+        <div className={styles.flatLayoutCard__header}>
+          <span>Загрузка...</span>
+        </div>
+      </div>
+    )
+  }
+
+  // Формируем описание квартиры
+  const description = [
+    `Этаж ${apartment.floor}`,
+    apartment.renovation,
+    apartment.balcony !== "нет" ? apartment.balcony : "Без балкона",
+    `${apartment.bathroom_unit} санузел${apartment.bathroom_unit === "2" ? "а" : ""}`,
+  ].filter(Boolean)
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
@@ -37,19 +55,26 @@ const FlatLayoutCard = ({ listClassName }: IFlatLayoutCardProps) => {
       </div>
       <div className={styles.flatLayoutCard__content}>
         <Link
-          href="/details/1"
+          href={`/detailsFlat?key=${apartment.key}`}
           className={styles.flatLayoutCard__content__image__wrapper}
         >
           <div className={styles.flatLayoutCard__content__image}>
             <Image
-              src="/images/temporary/room.png"
+              src={apartment.plan_URL || "/images/temporary/room.png"}
               alt="flat-layout-card"
               fill
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = "/images/temporary/room.png"
+              }}
             />
           </div>
         </Link>
         <span className={styles.flatLayoutCard__content__title}>
-          Студия, 25 м²
+          {apartment.room_count === 0
+            ? "Студия"
+            : `${apartment.room_count}-комн`}
+          , {apartment.area} м²
         </span>
         <ul
           className={clsx(
@@ -74,10 +99,10 @@ const FlatLayoutCard = ({ listClassName }: IFlatLayoutCardProps) => {
         </ul>
         <div className={styles.flatLayoutCard__content__price}>
           <h4 className={styles.flatLayoutCard__content__price__value}>
-            4 359 990 ₽
+            {apartment.price.toLocaleString("ru-RU")} ₽
           </h4>
           <Link
-            href="/details/1"
+            href={`/detailsFlat?key=${apartment.key}`}
             className={styles.flatLayoutCard__content__price__change}
           >
             <div

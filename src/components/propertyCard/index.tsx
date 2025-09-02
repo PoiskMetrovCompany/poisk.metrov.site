@@ -127,7 +127,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             type="outline"
             size="tiny"
           >
-            Подробнее
+            <a href={`/details`}>Подробнее</a>
           </ActionButton>
           <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
         </div>
