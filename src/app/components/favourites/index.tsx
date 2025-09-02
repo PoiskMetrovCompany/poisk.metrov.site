@@ -39,9 +39,7 @@ const Favourites = () => {
     ? bestOffers.map(mapResidentialComplexToProperty)
     : []
 
-  const ads = true
-
-  if (isLoading || !cityCode || ads) {
+  if (isLoading || !cityCode) {
     return (
       <div className={styles.favourites}>
         <div className={styles.favourites__header}>

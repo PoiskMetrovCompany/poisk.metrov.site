@@ -11,6 +11,7 @@ import FlatLayoutCard from "@/components/flatLayoutCard"
 import FlatLayoutCardSkeleton from "@/components/flatLayoutCard/FlatLayoutCardSkeleton"
 import { IApartment, IResidentialComplex } from "@/types/api/apartment"
 import { useApiQuery } from "@/utils/hooks/use-api"
+import { useCityCode } from "@/utils/hooks/use-city-code"
 
 import styles from "./compilation.module.scss"
 
@@ -18,173 +19,37 @@ import PromoCard from "../promoCard"
 
 import Heading2 from "@/components/ui/heading2"
 
-export interface SimilarApartmentParams {
-  city_code: string
-  city: string
-  price: number
-  area: number
-  living_space: number
-  kitchen_space: number
-  room_count: number
-  divergence: number
-  exclude_key: string
-  exclude_offer_id: number
-  page?: number
-  per_page?: number
+interface SelectionsResponse {
+  identifier: string
+  attributes: IApartment[]
 }
 
 interface compilationProps {
   header: string
   hasPromoCard: boolean
-  similarApartmentParams?: SimilarApartmentParams
+  similarApartmentParams?: unknown
   compolationParams?: unknown
 }
 
-const Compilation = ({
-  header,
-  hasPromoCard,
-  similarApartmentParams,
-}: compilationProps) => {
-  const similarApartmentsUrl = similarApartmentParams
-    ? `http://localhost:1080/api/v1/apartments/similar?` +
-      `city_code=${encodeURIComponent(similarApartmentParams.city_code)}&` +
-      `city=${encodeURIComponent(similarApartmentParams.city)}&` +
-      `price=${similarApartmentParams.price}&` +
-      `area=${similarApartmentParams.area}&` +
-      `living_space=${similarApartmentParams.living_space}&` +
-      `kitchen_space=${similarApartmentParams.kitchen_space}&` +
-      `room_count=${similarApartmentParams.room_count}&` +
-      `divergence=${similarApartmentParams.divergence}&` +
-      `exclude_key=${encodeURIComponent(similarApartmentParams.exclude_key)}&` +
-      `exclude_offer_id=${similarApartmentParams.exclude_offer_id}&` +
-      `page=${similarApartmentParams.page || 1}&` +
-      `per_page=${similarApartmentParams.per_page || 15}`
-    : null
+const Compilation = ({ header, hasPromoCard }: compilationProps) => {
+  const cityCode = useCityCode()
+  const userKey = "06cf32b1-83c2-11f0-a013-10f60a82b815" // Статичный ключ
+
   const {
-    data: similarApartmentsResponse,
+    data: selectionsData,
     isLoading,
     error,
-  } = useApiQuery<
-    { attributes?: IApartment[]; data?: IApartment[] } | IApartment[] | null
-  >(
-    ["similar-apartments", similarApartmentsUrl || ""],
-    similarApartmentsUrl || "",
+  } = useApiQuery<SelectionsResponse>(
+    ["selections", cityCode, userKey],
+    `http://localhost:1080/api/v1/apartments/selections?city_code=${cityCode}&user_key=${userKey}`,
     {
-      enabled: !!similarApartmentsUrl,
+      enabled: !!cityCode,
+      staleTime: 5 * 60 * 1000, // 5 минут
+      gcTime: 10 * 60 * 1000, // 10 минут
     }
   )
-  const similarApartments = Array.isArray(similarApartmentsResponse)
-    ? similarApartmentsResponse
-    : similarApartmentsResponse?.attributes ||
-      similarApartmentsResponse?.data ||
-      []
 
-  const staticFlatCards = [
-    {
-      id: 1,
-      title: "Студия, 25 м2",
-      price: "4 359 990 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 8 из 17",
-        "I кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 2,
-      title: "1-комнатная, 35 м2",
-      price: "5 890 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 5 из 17",
-        "II кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 3,
-      title: "2-комнатная, 45 м2",
-      price: "7 200 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 12 из 17",
-        "III кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 4,
-      title: "Студия, 28 м2",
-      price: "4 800 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 3 из 17",
-        "I кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 5,
-      title: "1-комнатная, 38 м2",
-      price: "6 150 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 7 из 17",
-        "II кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 6,
-      title: "2-комнатная, 52 м2",
-      price: "8 100 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 15 из 17",
-        "III кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 7,
-      title: "Студия, 30 м2",
-      price: "5 200 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 10 из 17",
-        "I кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-    {
-      id: 8,
-      title: "1-комнатная, 42 м2",
-      price: "6 800 000 ₽",
-      complex: "Европейский берег",
-      description: [
-        "Этаж 6 из 17",
-        "II кв 2025",
-        "Дом кирпичный",
-        "Отделка улучшенная черновая",
-      ],
-      apartment: null,
-    },
-  ]
+  const apartments = selectionsData?.attributes || []
 
   const generateApartmentDescription = (apartment: IApartment) => {
     const description = []
@@ -220,7 +85,7 @@ const Compilation = ({
     return description
   }
 
-  const apiCards = similarApartments.map((apartment, index) => {
+  const getComplexName = (apartment: IApartment) => {
     let complexName = "Не указан"
 
     if (apartment.h1) {
@@ -240,22 +105,19 @@ const Compilation = ({
       }
     }
 
-    return {
-      id: apartment.id || index + 1,
-      title: `${apartment.room_count === 0 ? "Студия" : `${apartment.room_count}-комнатная`}, ${apartment.area} м²`,
-      price: `${apartment.price.toLocaleString("ru-RU")} ₽`,
-      complex: complexName,
-      description: generateApartmentDescription(apartment),
-      apartment: apartment,
-    }
-  })
+    return complexName
+  }
 
-  const flatCards =
-    similarApartmentParams && !isLoading && !error && apiCards.length > 0
-      ? apiCards
-      : staticFlatCards
+  const apartmentCards = apartments.map((apartment, index) => ({
+    id: apartment.id || index + 1,
+    title: `${apartment.room_count === 0 ? "Студия" : `${apartment.room_count}-комнатная`}, ${apartment.area} м²`,
+    price: `${apartment.price.toLocaleString("ru-RU")} ₽`,
+    complex: getComplexName(apartment),
+    description: generateApartmentDescription(apartment),
+    apartment: apartment,
+  }))
 
-  if (similarApartmentParams && isLoading) {
+  if (isLoading || !cityCode) {
     return (
       <div className={styles.compilation}>
         <div className={styles.compilation__header}>
@@ -290,58 +152,12 @@ const Compilation = ({
         </div>
 
         <div className={styles.compilation__content}>
-          <Swiper
-            modules={[Navigation]}
-            spaceBetween={20}
-            slidesPerView={1}
-            navigation={{
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 10,
-              },
-              1440: {
-                slidesPerView: 3,
-                spaceBetween: 15,
-              },
-              1920: {
-                slidesPerView: 4,
-                spaceBetween: 30,
-              },
-            }}
-            className={styles.swiper}
-          >
-            {[1, 2, 3, 4, 5, 6].map((index) => (
-              <SwiperSlide key={index} className={styles.swiper__slide}>
+          <div className={styles.skeletonContainer}>
+            {[1, 2, 3].map((index) => (
+              <div key={index} className={styles.skeletonCard}>
                 <FlatLayoutCardSkeleton />
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
-          <div
-            className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonDesktop}`}
-          >
-            <div className={styles.navigationButton__icon}>
-              <Image
-                src="/images/icons/arrow-slider.svg"
-                alt="arrow-left"
-                fill
-              />
-            </div>
-          </div>
-          <div
-            className={`swiper-button-next ${styles.navigationButton} ${styles.navigationButtonNext} ${styles.navigationButtonDesktop}`}
-          >
-            <div className={styles.navigationButton__icon}>
-              <Image
-                src="/images/icons/arrow-slider.svg"
-                alt="arrow-right"
-                fill
-                className={styles.navigationButton__icon__icon_next}
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -404,11 +220,62 @@ const Compilation = ({
           }}
           className={styles.swiper}
         >
-          {flatCards.map((card) => (
-            <SwiperSlide key={card.id} className={styles.swiper__slide}>
-              {card.id === 3 && hasPromoCard === true ? (
-                <PromoCard />
-              ) : (
+          {(() => {
+            if (hasPromoCard && apartmentCards.length >= 2) {
+              const firstTwo = apartmentCards.slice(0, 2)
+              const rest = apartmentCards.slice(2)
+
+              return (
+                <>
+                  {firstTwo.map((card) => (
+                    <SwiperSlide key={card.id} className={styles.swiper__slide}>
+                      <FlatLayoutCard
+                        title={card.title}
+                        price={card.price}
+                        complex={card.complex}
+                        description={card.description}
+                        imageUrl={
+                          card.apartment?.plan_URL ||
+                          "/images/temporary/room.png"
+                        }
+                        apartment={card.apartment}
+                        linkUrl={
+                          card.apartment
+                            ? `/detailsFlat?key=${card.apartment.key}`
+                            : "/details/1"
+                        }
+                      />
+                    </SwiperSlide>
+                  ))}
+                  <SwiperSlide className={styles.swiper__slide}>
+                    <PromoCard />
+                  </SwiperSlide>
+                  {rest.map((card) => (
+                    <SwiperSlide key={card.id} className={styles.swiper__slide}>
+                      <FlatLayoutCard
+                        title={card.title}
+                        price={card.price}
+                        complex={card.complex}
+                        description={card.description}
+                        imageUrl={
+                          card.apartment?.plan_URL ||
+                          "/images/temporary/room.png"
+                        }
+                        apartment={card.apartment}
+                        linkUrl={
+                          card.apartment
+                            ? `/detailsFlat?key=${card.apartment.key}`
+                            : "/details/1"
+                        }
+                      />
+                    </SwiperSlide>
+                  ))}
+                </>
+              )
+            }
+
+            return apartmentCards.map((card) => (
+              <SwiperSlide key={card.id} className={styles.swiper__slide}>
                 <FlatLayoutCard
                   title={card.title}
                   price={card.price}
@@ -424,9 +291,9 @@ const Compilation = ({
                       : "/details/1"
                   }
                 />
-              )}
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))
+          })()}
         </Swiper>
         <div
           className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev} ${styles.navigationButtonDesktop}`}

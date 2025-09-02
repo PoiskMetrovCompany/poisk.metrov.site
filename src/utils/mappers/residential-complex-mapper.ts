@@ -1,5 +1,6 @@
 import { IProperty } from "@/types/PropertyCard"
 import { IResidentialComplex } from "@/types/api/ResidentialComplex"
+import { pluralizeMinutes } from "@/utils/lib/pluralize"
 
 export const mapResidentialComplexToProperty = (
   complex: IResidentialComplex
@@ -18,7 +19,7 @@ export const mapResidentialComplexToProperty = (
       period: "I – IV 2026", // Можно получать из других полей если есть
     },
     metro: complex.metro_station,
-    driveTime: `${complex.metro_time} минут`,
+    driveTime: pluralizeMinutes(complex.metro_time),
     metroType: complex.metro_type,
     specifications:
       complex.apartments.length > 0
