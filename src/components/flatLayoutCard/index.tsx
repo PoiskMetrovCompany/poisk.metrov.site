@@ -1,148 +1,74 @@
 import clsx from "clsx"
 
-import React, { useState } from "react"
-
-import Image from "next/image"
-import Link from "next/link"
-
-import { IApartment } from "@/types/api/complex"
-
 import styles from "./flatLayoutCard.module.scss"
 
-import IconImage from "../ui/IconImage"
-import IconButton from "../ui/buttons/IconButton"
+import Skeleton from "../ui/skeleton"
 
-interface IFlatLayoutCardProps {
+interface IFlatLayoutCardSkeletonProps {
   listClassName?: string
-  apartment?: IApartment
 }
 
-const FlatLayoutCard = ({ listClassName, apartment }: IFlatLayoutCardProps) => {
-  const [imageError, setImageError] = useState(false)
-
-  if (!apartment) {
-    return (
-      <div className={styles.flatLayoutCard}>
-        <div className={styles.flatLayoutCard__header}>
-          <span>Загрузка...</span>
-        </div>
-      </div>
-    )
-  }
-
-  const description = [
-    `Этаж ${apartment.floor}`,
-    apartment.renovation,
-    apartment.balcony !== "нет" ? apartment.balcony : "Без балкона",
-    `${apartment.bathroom_unit} санузел${apartment.bathroom_unit === "2" ? "а" : ""}`,
-  ].filter(Boolean)
+const FlatLayoutCardSkeleton = ({
+  listClassName,
+}: IFlatLayoutCardSkeletonProps) => {
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
-        <span>Европейский берег</span>
+        <Skeleton width="60%" height="16px" />
         <div className={styles.flatLayoutCard__header__actions}>
-          <IconButton
-            size="sm"
-            type="secondary"
-            iconLink="/images/icons/heart.svg"
-          />
-          <IconButton
-            size="sm"
-            type="secondary"
-            iconLink="/images/icons/share.svg"
-          />
+          <Skeleton width="32px" height="32px" border="8px" />
+          <Skeleton width="32px" height="32px" border="8px" />
         </div>
       </div>
       <div className={styles.flatLayoutCard__content}>
-        <Link
-          href={`/detailsFlat?key=${apartment.key}`}
-          className={styles.flatLayoutCard__content__image__wrapper}
-        >
+        <div className={styles.flatLayoutCard__content__image__wrapper}>
           <div className={styles.flatLayoutCard__content__image}>
-            <Image
-              src={
-                imageError || !apartment.plan_URL
-                  ? "/images/temporary/room.png"
-                  : apartment.plan_URL
-              }
-              alt="flat-layout-card"
-              fill
-              onError={() => {
-                setImageError(true)
-              }}
-            />
+            <Skeleton width="100%" height="100%" border="12px" />
           </div>
-        </Link>
-        <span className={styles.flatLayoutCard__content__title}>
-          {apartment.room_count === 0
-            ? "Студия"
-            : `${apartment.room_count}-комн`}
-          , {apartment.area} м²
-        </span>
+        </div>
+        <Skeleton
+          className={styles.flatLayoutCard__content__title}
+          width="80%"
+          height="20px"
+        />
         <ul
           className={clsx(
             styles.flatLayoutCard__content__description,
             listClassName
           )}
         >
-          {description.map((item, index) => (
-            <React.Fragment key={item}>
-              <li className={styles.flatLayoutCard__content__description__item}>
-                {item}
-              </li>
-              {index < description.length - 1 && (
-                <div
-                  className={
-                    styles.flatLayoutCard__content__description__separator
-                  }
-                />
-              )}
-            </React.Fragment>
+          {[1, 2, 3, 4].map((index) => (
+            <li
+              key={index}
+              className={styles.flatLayoutCard__content__description__item}
+            >
+              <Skeleton width={`${60 + Math.random() * 40}%`} height="14px" />
+            </li>
           ))}
         </ul>
         <div className={styles.flatLayoutCard__content__price}>
-          <h4 className={styles.flatLayoutCard__content__price__value}>
-            {apartment.price.toLocaleString("ru-RU")} ₽
-          </h4>
-          <Link
-            href={`/detailsFlat?key=${apartment.key}`}
-            className={styles.flatLayoutCard__content__price__change}
-          >
+          <Skeleton
+            className={styles.flatLayoutCard__content__price__value}
+            width="70%"
+            height="24px"
+          />
+          <div className={styles.flatLayoutCard__content__price__change}>
             <div
               className={styles.flatLayoutCard__content__price__change__info}
             >
-              <IconImage
-                className={
-                  styles.flatLayoutCard__content__price__change__info__icon
-                }
-                iconLink="/images/icons/price-graph.svg"
-                alt="price-graph"
-              />
-              <span
-                className={
-                  styles.flatLayoutCard__content__price__change__info__text
-                }
-              >
-                + 73 350 ₽ изменение цены
-              </span>
+              <Skeleton width="16px" height="16px" />
+              <Skeleton width="140px" height="14px" />
             </div>
-
             <div
               className={styles.flatLayoutCard__content__price__change__button}
             >
-              <IconImage
-                iconLink="/images/icons/arrow-right.svg"
-                alt="arrow-right"
-                className={
-                  styles.flatLayoutCard__content__price__change__button__icon
-                }
-              />
+              <Skeleton width="20px" height="20px" />
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default FlatLayoutCard
+export default FlatLayoutCardSkeleton

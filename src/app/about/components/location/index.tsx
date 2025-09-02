@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react"
 
-import styles from "./location.module.scss"
+import { Map } from "@/components/map/map"
+import { Place } from "@/components/map/variables/variables"
 
-import { Map } from "../../../../components/map/map"
-import { Place } from "../../../../components/map/variables/variables"
+import styles from "./location.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"

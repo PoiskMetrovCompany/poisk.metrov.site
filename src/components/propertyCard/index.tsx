@@ -16,6 +16,7 @@ import IconImage from "../ui/IconImage"
 interface IPropertyCardProps {
   property: IProperty
   className?: string
+  isMap?: boolean
   imageClassName?: string
   subtitleClassName?: string
   listClassName?: string
@@ -24,6 +25,7 @@ interface IPropertyCardProps {
 const PropertyCard: FC<IPropertyCardProps> = ({
   property,
   className,
+  isMap,
   imageClassName,
   subtitleClassName,
   listClassName,
@@ -47,10 +49,21 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   }
 
   return (
-    <article className={clsx(styles.property_card, className)}>
-      <div className={styles.property_card__image}>
+    <article
+      className={clsx(
+        styles.property_card,
+        className,
+        isMap && styles.property_card_map
+      )}
+    >
+      <div
+        className={clsx(
+          styles.property_card__image,
+          isMap && styles.property_card__image_map
+        )}
+      >
         <img
-          className={imageClassName}
+          className={clsx(imageClassName)}
           src={property.image}
           alt={`Изображение ЖК ${title}`}
         />
@@ -74,7 +87,8 @@ const PropertyCard: FC<IPropertyCardProps> = ({
         <div
           className={clsx(
             styles.property_card__row,
-            styles.property_card__row_subtitle
+            styles.property_card__row_subtitle,
+            isMap && styles.property_card__row_subtitle_map
           )}
         >
           <div
@@ -102,13 +116,19 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           </div>
         </div>
 
-        <div className={styles.property_card__divider}></div>
+        <div
+          className={clsx(
+            styles.property_card__divider,
+            isMap && styles.property_card__divider_map
+          )}
+        ></div>
 
         <div className={styles.property_card__specifications}>
           <div
             className={clsx(
               styles.property_card__specifications__list,
-              listClassName
+              listClassName,
+              isMap && styles.property_card__specifications__list_map
             )}
           >
             {specifications.map((spec, index) => (
@@ -135,16 +155,27 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           </div>
         </div>
 
-        <div className={styles.property_card__actions}>
+        <div
+          className={clsx(
+            styles.property_card__actions,
+            isMap && styles.property_card__actions_map
+          )}
+        >
+          {!isMap && (
+            <ActionButton
+              size="tiny"
+              className={styles.property_card__actions__button}
+            >
+              Каталог
+            </ActionButton>
+          )}
+
           <ActionButton
-            size="tiny"
-            className={styles.property_card__actions__button}
-          >
-            Каталог
-          </ActionButton>
-          <ActionButton
-            className={styles.property_card__actions__button}
-            type="outline"
+            className={clsx(
+              styles.property_card__actions__button,
+              isMap && styles.property_card__actions__button_map
+            )}
+            type={isMap ? "primary" : "outline"}
             size="tiny"
           >
             <a href={`/details`}>Подробнее</a>

@@ -62,6 +62,7 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
 
       <LayoutList
         apartments={
+
           (Array.isArray(flatListData.attributes)
             ? flatListData.attributes[0]
             : flatListData.attributes

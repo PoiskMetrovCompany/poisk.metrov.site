@@ -11,18 +11,19 @@ import styles from "./catalogueFilters.module.scss"
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
+import PriceDropdown from "@/components/ui/inputs/filters/priceDropdown"
 import RoomCountDropdown from "@/components/ui/inputs/filters/roomCountDropdown"
-
-import PriceDropdown from "../../../../components/ui/inputs/filters/priceDropdown"
-import SearchDropdown from "../../../../components/ui/inputs/filters/searchDropdown"
+import SearchDropdown from "@/components/ui/inputs/filters/searchDropdown"
 
 interface CatalogueFiltersProps {
+  isMap?: boolean
   onShowFilters: () => void
   onApplyFilters: () => void
   isSticky?: boolean
 }
 
 const CatalogueFilters: FC<CatalogueFiltersProps> = ({
+  isMap = false,
   onShowFilters,
   isSticky = false,
 }) => {
@@ -101,29 +102,32 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
         />
       </div>
       <div className={styles.catalogue__filters__container__buttonsDesktop}>
-        <ActionButton
-          type="primary"
-          onClick={applyFilters}
-          className={
-            styles.catalogue__filters__container__buttonsDesktop__button__show
-          }
-          size="medium"
-        >
-          <IconImage
-            iconLink="/images/icons/search-white.svg"
-            alt="Показать"
+        {!isMap && (
+          <ActionButton
+            type="primary"
+            onClick={applyFilters}
             className={
-              styles.catalogue__filters__container__buttonsDesktop__button__show__icon
+              styles.catalogue__filters__container__buttonsDesktop__button__show
             }
-          />
-          <div
-            className={
-              styles.catalogue__filters__container__buttonsDesktop__button__show__text
-            }
+            size="medium"
           >
-            Показать <span>12166 квартир</span>
-          </div>
-        </ActionButton>
+            <IconImage
+              iconLink="/images/icons/search-white.svg"
+              alt="Показать"
+              className={
+                styles.catalogue__filters__container__buttonsDesktop__button__show__icon
+              }
+            />
+            <div
+              className={
+                styles.catalogue__filters__container__buttonsDesktop__button__show__text
+              }
+            >
+              Показать <span>12166 квартир</span>
+            </div>
+          </ActionButton>
+        )}
+
         <ActionButton
           // iconLink="/images/icons/filters-orange.svg"
           onClick={onShowFilters}
@@ -141,13 +145,42 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
             alt="Показать фильтры"
           />
           <span
-            className={
-              styles.catalogue__filters__container__buttonsDesktop__button__filter__text
-            }
+            className={clsx(
+              styles.catalogue__filters__container__buttonsDesktop__button__filter__text,
+              isMap &&
+                styles.catalogue__filters__container__buttonsDesktop__button__filter__text_map
+            )}
           >
             Все фильтры
           </span>
         </ActionButton>
+        {isMap && (
+          <ActionButton
+            onClick={onShowFilters}
+            className={
+              styles.catalogue__filters__container__buttonsDesktop__button__save
+            }
+            size="small"
+            type="outline-white"
+          >
+            <IconImage
+              className={
+                styles.catalogue__filters__container__buttonsDesktop__button__save__icon
+              }
+              iconLink="/images/icons/heartOrange.svg"
+              alt="Сохранить поиск"
+            />
+            <span
+              className={clsx(
+                styles.catalogue__filters__container__buttonsDesktop__button__save__text,
+                isMap &&
+                  styles.catalogue__filters__container__buttonsDesktop__button__save__text_map
+              )}
+            >
+              Сохранить поиск
+            </span>
+          </ActionButton>
+        )}
         {/* <ActionButton
           type="secondary"
           onClick={onShowFilters}

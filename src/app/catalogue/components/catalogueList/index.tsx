@@ -4,13 +4,16 @@ import clsx from "clsx"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
+import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"
 
 import GetCatalogue from "@/components/getCatalogue"
 
+
 import Download from "@/app/components/download"
+
 
 
 
@@ -21,10 +24,12 @@ import PropertyCard from "@/components/propertyCard"
 import PropertyCardSkeleton from "@/components/propertyCard/PropertyCardSkeleton"
 import PropertyCardList from "@/components/propertyCardList"
 
+
 import PropertyCardListSkeleton from "@/components/propertyCardList/PropertyCardListSkeleton"
 
 
 import { useStickyState } from "@/hooks/useStickyState"
+
 
 
 import { IProperty } from "@/types/PropertyCard"
@@ -71,10 +76,12 @@ const CatalogueList = () => {
   const applyFilters = () => {
     console.log("Фильтры применены")
     setShowFilters(false)
+
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+
   }
 
   useEffect(() => {
