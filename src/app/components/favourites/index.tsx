@@ -19,6 +19,11 @@ import PropertyCard from "../../../components/propertyCard"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import Heading2 from "@/components/ui/heading2"
+
+import PropertyCard from "../../../components/propertyCard"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Heading2 from "@/components/ui/heading2"
 import Skeleton from "@/components/ui/skeleton"
 
 const Favourites = () => {

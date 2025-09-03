@@ -11,7 +11,6 @@ interface ITopBarLink {
   text: string
   href: string
 }
-
 interface TopBarProps {
   initialCity: { name: string; id: string; slug: string } | null
 }

@@ -55,7 +55,6 @@
 }
 
 .main_bar {
-
   backdrop-filter: blur(10px);
   background: white;
   // box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -143,7 +142,15 @@
 
     width: 16px;
   }
-
+  &__skeleton {
+    background: rgb(236 125 63 / 100%);
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    left: 30px;
+    top: 0;
+    position: absolute;
+  }
   &__login {
     align-items: center;
 
@@ -344,7 +351,6 @@
     &--active {
       background-color: rgb(236 125 63 / 5%);
       font-weight: 400;
-
     }
   }
 }
