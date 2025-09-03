@@ -78,30 +78,30 @@ const UserActions: FC<IUserActionsProps> = ({
         <span className={styles.user_actions__label}>Избранное</span>
       </button>
 
-      <ProfilePopover
+      {/* <ProfilePopover
         isOpen={isProfilePopoverOpen}
         onOpenChange={setIsProfilePopoverOpen}
         userName="Фамилия Имя"
         onSettingsClick={handleSettingsClick}
         onLogoutClick={handleLogoutClick}
+      > */}
+      <button
+        className={styles.user_actions__login}
+        type="button"
+        onClick={handleLoginClick}
       >
-        <button
-          className={styles.user_actions__login}
-          type="button"
-          onClick={handleLoginClick}
-        >
-          <Image
-            className={styles.user_actions__icon}
-            src="/images/icons/header/profile.svg"
-            alt="User"
-            width={20}
-            height={20}
-          />
-          <span className={styles.user_actions__text}>
-            {isLoggedIn ? "Профиль" : "Войти"}
-          </span>
-        </button>
-      </ProfilePopover>
+        <Image
+          className={styles.user_actions__icon}
+          src="/images/icons/header/profile.svg"
+          alt="User"
+          width={20}
+          height={20}
+        />
+        <span className={styles.user_actions__text}>
+          {isLoggedIn ? "Профиль" : "Войти"}
+        </span>
+      </button>
+      {/* </ProfilePopover> */}
 
       <button
         className={styles.user_actions__showMenu}
