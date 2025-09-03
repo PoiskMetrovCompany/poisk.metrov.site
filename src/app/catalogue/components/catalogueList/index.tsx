@@ -12,7 +12,7 @@ import FlatLayoutCard from "@/components/flatLayoutCard"
 import GetCatalogue from "@/components/getCatalogue"
 
 
-import Download from "@/app/components/download"
+
 
 
 
