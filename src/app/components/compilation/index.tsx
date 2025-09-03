@@ -67,7 +67,7 @@ const Compilation = ({
     { attributes?: IApartment[]; data?: IApartment[] } | IApartment[] | null
   >(
     ["similar-apartments", similarApartmentsUrl || ""],
-    similarApartmentsUrl || "",
+    similarApartmentsUrl || "/api/empty",
     {
       enabled: !!similarApartmentsUrl,
     }
