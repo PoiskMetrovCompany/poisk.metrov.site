@@ -19,7 +19,7 @@ import FlatList from "./components/flatList"
 import DetailsHeader from "./components/header"
 import Location from "./components/location"
 
-const RESIDENTIAL_COMPLEX_KEY = "e92e332a-822b-11f0-8411-10f60a82b815"
+const RESIDENTIAL_COMPLEX_KEY = "06fa20d1-83c2-11f0-a013-10f60a82b815"
 
 const aboutObjectItems: IAboutObjectItem[] = [
   {
