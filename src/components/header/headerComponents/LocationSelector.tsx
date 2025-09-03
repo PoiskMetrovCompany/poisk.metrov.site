@@ -1,6 +1,7 @@
 "use client"
 
 import * as Dialog from "@radix-ui/react-dialog"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import clsx from "clsx"
 
 import React, { useState } from "react"
@@ -90,6 +91,11 @@ const LocationSelector = ({ initialCity }: LocationSelectorProps) => {
             <Dialog.Title className={styles.location_dialog__title}>
               Выберите город
             </Dialog.Title>
+            <Dialog.Description asChild>
+              <VisuallyHidden>
+                Выберите город для поиска недвижимости
+              </VisuallyHidden>
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className={styles.location_dialog__close} type="button">
                 <IconImage

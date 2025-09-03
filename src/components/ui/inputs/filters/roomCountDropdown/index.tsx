@@ -16,6 +16,7 @@ interface RoomCount {
 interface RoomCountDropdownProps {
   onRoomCountChange?: (selectedCounts: string[]) => void
   className?: string
+  contentClassName?: string
   value?: string[]
 }
 
@@ -31,6 +32,7 @@ const roomCounts: RoomCount[] = [
 const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   onRoomCountChange,
   className,
+  contentClassName,
   value = [],
 }) => {
   const [selectedCounts, setSelectedCounts] = useState<string[]>(value)
@@ -157,7 +159,7 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
 
       {isOpen && (
         <div
-          className={styles.roomCountDropdown__content}
+          className={clsx(styles.roomCountDropdown__content, contentClassName)}
           role="listbox"
           aria-multiselectable="true"
         >

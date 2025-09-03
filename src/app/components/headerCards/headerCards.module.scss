@@ -175,6 +175,12 @@
 
       background-color: var(--color-dark-orange);
 
+      &__skeleton {
+        margin-top: 32px;
+        border-radius: 20px;
+        
+      }
+
       &__time {
         display: flex;
         gap: 4px;

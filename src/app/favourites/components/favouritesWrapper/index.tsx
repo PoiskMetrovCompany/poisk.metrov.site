@@ -16,6 +16,8 @@ import Heading1 from "@/components/ui/heading1"
 const FavouritesWrapper = () => {
   const [isComparison, setIsComparison] = useState(false)
   const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
+  const [flatCount, setFlatCount] = useState(0)
+  const [complexCount, setComplexCount] = useState(0)
 
   return (
     <>
@@ -25,6 +27,8 @@ const FavouritesWrapper = () => {
 
       <div className={styles.favouritesWrapper}>
         <FavouritesActions
+          flatCount={flatCount}
+          complexCount={complexCount}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
         />
@@ -37,6 +41,8 @@ const FavouritesWrapper = () => {
         ) : (
           <FavouritesList
             selectedView={selectedView}
+            setFlatCount={setFlatCount}
+            setComplexCount={setComplexCount}
             setIsComparison={setIsComparison}
           />
         )}

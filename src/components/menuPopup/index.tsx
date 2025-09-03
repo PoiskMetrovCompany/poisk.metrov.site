@@ -1,10 +1,14 @@
 "use client"
+
+import * as Dialog from "@radix-ui/react-dialog"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+
 import React from "react"
-import { Dialog } from "radix-ui"
+
 import styles from "./menuPopup.module.scss"
 
-import MenuSlider from "./menuSlider"
 import MenuInfo from "./menuInfo"
+import MenuSlider from "./menuSlider"
 
 interface IMenuPopupProps {
   isOpen: boolean
@@ -17,7 +21,14 @@ const MenuPopup = ({ isOpen, onClose }: IMenuPopupProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className={styles.Overlay} onClick={onClose}>
           <Dialog.Content className={styles.Content}>
-            <Dialog.Title className={styles.Title}>Info menu</Dialog.Title>
+            <Dialog.Title asChild>
+              <VisuallyHidden>Info menu</VisuallyHidden>
+            </Dialog.Title>
+            <Dialog.Description asChild>
+              <VisuallyHidden>
+                Информационное меню с дополнительными опциями
+              </VisuallyHidden>
+            </Dialog.Description>
             <MenuInfo onClick={(e) => e.stopPropagation()} />
             <MenuSlider onClick={(e) => e.stopPropagation()} />
           </Dialog.Content>
