@@ -7,6 +7,7 @@ import React, { useState } from "react"
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
+import { Coordinate } from "@/types/Coordintes"
 import { IFavouriteView } from "@/types/Favourites"
 import { IProperty } from "@/types/PropertyCard"
 import { FListResponse } from "@/types/api/favouritesList"
@@ -27,6 +28,10 @@ interface IFavouritesListProps {
   setIsComparison: (isComparison: boolean) => void
   setFlatCount: (flatCount: number) => void
   setComplexCount: (complexCount: number) => void
+  setCoordinates: (coordinates: Coordinate[]) => void
+  setShowMap: (showMap: boolean) => void
+  setComplexes: (complexes: any[]) => void
+  setApartments: (apartments: any[]) => void
 }
 
 const FavoutiresList = ({
@@ -34,6 +39,10 @@ const FavoutiresList = ({
   setIsComparison,
   setFlatCount,
   setComplexCount,
+  setCoordinates,
+  setShowMap,
+  setComplexes,
+  setApartments,
 }: IFavouritesListProps) => {
   const [isEmpty, setIsEmpty] = useState(false)
   const USER_KEY = "e8ff1372-822b-11f0-8411-10f60a82b815"
@@ -56,6 +65,18 @@ const FavoutiresList = ({
 
   setComplexCount(complexes.length)
   setFlatCount(apartments.length)
+  setComplexes(complexes)
+  setApartments(apartments)
+
+  React.useEffect(() => {
+    if (complexes.length > 0) {
+      const coordinates: Coordinate[] = complexes.map((complex) => ({
+        longitude: complex.longitude,
+        latitude: complex.latitude,
+      }))
+      setCoordinates(coordinates)
+    }
+  }, [complexes, setCoordinates])
 
   if (!isLoading && complexes.length === 0 && apartments.length === 0) {
     setIsEmpty(true)
@@ -111,7 +132,7 @@ const FavoutiresList = ({
 
   return (
     <div className={styles.favouritesList}>
-      <ListFilter setIsComparison={setIsComparison} />
+      <ListFilter setIsComparison={setIsComparison} setShowMap={setShowMap} />
       <div
         className={clsx(styles.favouritesList__list, {
           [styles.favouritesList__list_complexes]: selectedView === "layouts",

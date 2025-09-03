@@ -17,6 +17,7 @@ export type InfrastructureItem = {
 export enum PointType {
   IN_SALE = "В продаже",
   ANNOUNCEMENTS = "Анонсы",
+  FAVOURITES = "Избранное",
 }
 
 export type IPoint = {

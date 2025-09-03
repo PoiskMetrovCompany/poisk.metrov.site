@@ -1,14 +1,20 @@
 "use client"
 
-import React from "react"
-import styles from "./favourites.module.scss"
-import PropertyCard from "../../../components/propertyCard"
-import Heading2 from "@/components/ui/heading2"
-import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+
+import React from "react"
+
 import Image from "next/image"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+
 import { IProperty } from "@/types/PropertyCard"
+
+import styles from "./favourites.module.scss"
+
+import PropertyCard from "../../../components/propertyCard"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Heading2 from "@/components/ui/heading2"
 
 const cards: IProperty[] = [
   {
@@ -155,7 +161,11 @@ const Favourites = () => {
             className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
           >
             <div className={styles.navigationButton__icon}>
-              <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-left"
+                fill
+              />
             </div>
           </div>
           <div

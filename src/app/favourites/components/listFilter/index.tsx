@@ -6,9 +6,10 @@ import IconImage from "@/components/ui/IconImage"
 
 interface IListFilterProps {
   setIsComparison: (isComparison: boolean) => void
+  setShowMap: (showMap: boolean) => void
 }
 
-const ListFilter = ({ setIsComparison }: IListFilterProps) => {
+const ListFilter = ({ setIsComparison, setShowMap }: IListFilterProps) => {
   return (
     <div className={styles.listFilter}>
       <DropdownFilter
@@ -43,6 +44,7 @@ const ListFilter = ({ setIsComparison }: IListFilterProps) => {
           type="outline-white"
           size="small"
           className={styles.listFilter__show__button}
+          onClick={() => setShowMap(true)}
         >
           <div className={styles.listFilter__show__button__content}>
             <IconImage
