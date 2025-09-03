@@ -16,7 +16,7 @@ interface FlatListProps {
 }
 
 const FlatList: FC<FlatListProps> = ({ complexKey }) => {
-  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${complexKey}&includes=Apartment`
+  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.room`
   const {
     data: flatListData,
     isLoading,
@@ -62,7 +62,6 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
 
       <LayoutList
         apartments={
-
           (Array.isArray(flatListData.attributes)
             ? flatListData.attributes[0]
             : flatListData.attributes
