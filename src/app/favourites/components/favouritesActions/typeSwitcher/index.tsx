@@ -9,11 +9,15 @@ import clsx from "clsx"
 interface ITypeSwitcherProps {
   selectedView: IFavouriteView
   setSelectedView: (view: IFavouriteView) => void
+  flatCount: number
+  complexCount: number
 }
 
 const TypeSwitcher = ({
   selectedView,
   setSelectedView,
+  flatCount,
+  complexCount,
 }: ITypeSwitcherProps) => {
   return (
     <div className={styles.typeSwitcher}>
@@ -34,7 +38,7 @@ const TypeSwitcher = ({
             Планировка
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>0</span>
+        <span className={styles.typeSwitcher__item__count}>{flatCount}</span>
       </button>
 
       <button
@@ -54,7 +58,7 @@ const TypeSwitcher = ({
             Жилые комплексы
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>3</span>
+        <span className={styles.typeSwitcher__item__count}>{complexCount}</span>
       </button>
     </div>
   )
