@@ -2,11 +2,13 @@
 
 import clsx from "clsx"
 
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 
 import Image from "next/image"
 
 import styles from "../header.module.scss"
+
+import ProfilePopover from "./profilePopover/ProfilePopover"
 
 interface IUserActionsProps {
   favoritesCount?: number
@@ -23,6 +25,8 @@ const UserActions: FC<IUserActionsProps> = ({
   onLoginClick,
   onMenuClick,
 }) => {
+  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
       onFavoritesClick()
@@ -30,7 +34,9 @@ const UserActions: FC<IUserActionsProps> = ({
   }
 
   const handleLoginClick = (): void => {
-    if (onLoginClick) {
+    if (isLoggedIn) {
+      setIsProfilePopoverOpen(true)
+    } else if (onLoginClick) {
       onLoginClick()
     }
   }
@@ -39,6 +45,17 @@ const UserActions: FC<IUserActionsProps> = ({
     if (onMenuClick) {
       onMenuClick()
     }
+  }
+
+  const handleSettingsClick = (): void => {
+    // Обработка клика по настройкам профиля
+    console.log("Настройки профиля")
+  }
+
+  const handleLogoutClick = (): void => {
+    // Обработка выхода из личного кабинета
+    console.log("Выход из личного кабинета")
+    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -61,22 +78,30 @@ const UserActions: FC<IUserActionsProps> = ({
         <span className={styles.user_actions__label}>Избранное</span>
       </button>
 
-      <button
-        className={styles.user_actions__login}
-        type="button"
-        onClick={handleLoginClick}
+      <ProfilePopover
+        isOpen={isProfilePopoverOpen}
+        onOpenChange={setIsProfilePopoverOpen}
+        userName="Фамилия Имя"
+        onSettingsClick={handleSettingsClick}
+        onLogoutClick={handleLogoutClick}
       >
-        <Image
-          className={styles.user_actions__icon}
-          src="/images/icons/header/profile.svg"
-          alt="User"
-          width={20}
-          height={20}
-        />
-        <span className={styles.user_actions__text}>
-          {isLoggedIn ? "Профиль" : "Войти"}
-        </span>
-      </button>
+        <button
+          className={styles.user_actions__login}
+          type="button"
+          onClick={handleLoginClick}
+        >
+          <Image
+            className={styles.user_actions__icon}
+            src="/images/icons/header/profile.svg"
+            alt="User"
+            width={20}
+            height={20}
+          />
+          <span className={styles.user_actions__text}>
+            {isLoggedIn ? "Профиль" : "Войти"}
+          </span>
+        </button>
+      </ProfilePopover>
 
       <button
         className={styles.user_actions__showMenu}
