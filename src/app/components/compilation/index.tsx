@@ -37,6 +37,7 @@ interface compilationProps {
   header: string
   hasPromoCard: boolean
   similarApartmentParams?: SimilarApartmentParams
+  compolationParams?: unknown
 }
 
 const Compilation = ({

@@ -2,13 +2,15 @@
 
 import clsx from "clsx"
 
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 
 import Image from "next/image"
 
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 
 import styles from "../header.module.scss"
+
+import ProfilePopover from "./profilePopover/ProfilePopover"
 
 import LoginForm from "../loginForm"
 import { useApiQuery } from "@/utils/hooks/use-api"
@@ -25,6 +27,8 @@ const UserActions: FC<IUserActionsProps> = ({
   onFavoritesClick,
   onMenuClick,
 }) => {
+  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
       onFavoritesClick()
@@ -45,7 +49,9 @@ const UserActions: FC<IUserActionsProps> = ({
   let favoritesCount = fCountData?.attributes
   
   const handleLoginClick = (): void => {
-    if (onLoginClick) {
+    if (isLoggedIn) {
+      setIsProfilePopoverOpen(true)
+    } else if (onLoginClick) {
       onLoginClick()
     }
   }
@@ -54,6 +60,17 @@ const UserActions: FC<IUserActionsProps> = ({
     if (onMenuClick) {
       onMenuClick()
     }
+  }
+
+  const handleSettingsClick = (): void => {
+    // Обработка клика по настройкам профиля
+    console.log("Настройки профиля")
+  }
+
+  const handleLogoutClick = (): void => {
+    // Обработка выхода из личного кабинета
+    console.log("Выход из личного кабинета")
+    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -74,7 +91,14 @@ const UserActions: FC<IUserActionsProps> = ({
       
         <span className={styles.user_actions__label}>Избранное</span>
       </button>
-
+      {/* <ProfilePopover
+        isOpen={isProfilePopoverOpen}
+        onOpenChange={setIsProfilePopoverOpen}
+        userName="Фамилия Имя"
+        onSettingsClick={handleSettingsClick}
+        onLogoutClick={handleLogoutClick}
+      > */}
+      {/* </ProfilePopover> */}
       {isLoggedIn ? (
         <button className={styles.user_actions__login} type="button">
           <Image
