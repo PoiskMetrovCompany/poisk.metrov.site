@@ -10,20 +10,19 @@ import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 
 import styles from "../header.module.scss"
 
+import LoginForm from "../loginForm"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import Skeleton from "@/components/ui/skeleton"
 
 interface IUserActionsProps {
   isLoggedIn?: boolean
   onFavoritesClick?: () => void
-  onLoginClick?: () => void
   onMenuClick?: () => void
 }
 
 const UserActions: FC<IUserActionsProps> = ({
   isLoggedIn = false,
   onFavoritesClick,
-  onLoginClick,
   onMenuClick,
 }) => {
   const handleFavoritesClick = (): void => {
@@ -31,6 +30,7 @@ const UserActions: FC<IUserActionsProps> = ({
       onFavoritesClick()
     }
   }
+
   const USER_KEY = "e8fe3d65-822b-11f0-8411-10f60a82b815"
   const {
     data: fCountData,
@@ -75,22 +75,33 @@ const UserActions: FC<IUserActionsProps> = ({
         <span className={styles.user_actions__label}>Избранное</span>
       </button>
 
-      <button
-        className={styles.user_actions__login}
-        type="button"
-        onClick={handleLoginClick}
-      >
-        <Image
-          className={styles.user_actions__icon}
-          src="/images/icons/header/profile.svg"
-          alt="User"
-          width={20}
-          height={20}
+      {isLoggedIn ? (
+        <button className={styles.user_actions__login} type="button">
+          <Image
+            className={styles.user_actions__icon}
+            src="/images/icons/header/profile.svg"
+            alt="User"
+            width={20}
+            height={20}
+          />
+          <span className={styles.user_actions__text}>Профиль</span>
+        </button>
+      ) : (
+        <LoginForm
+          trigger={
+            <button className={styles.user_actions__login} type="button">
+              <Image
+                className={styles.user_actions__icon}
+                src="/images/icons/header/profile.svg"
+                alt="User"
+                width={20}
+                height={20}
+              />
+              <span className={styles.user_actions__text}>Войти</span>
+            </button>
+          }
         />
-        <span className={styles.user_actions__text}>
-          {isLoggedIn ? "Профиль" : "Войти"}
-        </span>
-      </button>
+      )}
 
       <button
         className={styles.user_actions__showMenu}
