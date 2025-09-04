@@ -2,13 +2,15 @@ import clsx from "clsx"
 
 import React from "react"
 
+import { FiltersResponse } from "@/types/api/filters"
+
 import styles from "../catalogueList.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
 import Heading3 from "@/components/ui/heading3"
 
 interface CatalogueResultsHeaderProps {
-  filtersData: any
+  filtersData: FiltersResponse | null | undefined
   selectedPropertyType: string
   selectedSorting: "cards" | "list"
   isLaptop: boolean
