@@ -14,10 +14,11 @@ interface RoomCount {
 }
 
 interface RoomCountDropdownProps {
-  onRoomCountChange?: (selectedCounts: string[]) => void
+  showCount?: boolean
+  onRoomCountChange?: (selectedCount: string) => void
   className?: string
   contentClassName?: string
-  value?: string[]
+  value?: string
 }
 
 const roomCounts: RoomCount[] = [
@@ -31,19 +32,20 @@ const roomCounts: RoomCount[] = [
 
 const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   onRoomCountChange,
+  showCount = true,
   className,
   contentClassName,
-  value = [],
+  value = "",
 }) => {
-  const [selectedCounts, setSelectedCounts] = useState<string[]>(value)
+  const [selectedCount, setSelectedCount] = useState<string>(value)
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { isLaptop } = useScreenSize()
 
-  const valueString = useMemo(() => JSON.stringify(value), [value])
+  const valueString = useMemo(() => value, [value])
 
   useEffect(() => {
-    setSelectedCounts(value)
+    setSelectedCount(value)
   }, [valueString])
 
   useEffect(() => {
@@ -65,57 +67,22 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
     }
   }, [isOpen])
 
-  const handleCountToggle = (countValue: string) => {
-    const newSelectedCounts = selectedCounts.includes(countValue)
-      ? selectedCounts.filter((count) => count !== countValue)
-      : [...selectedCounts, countValue]
-
-    setSelectedCounts(newSelectedCounts)
-    onRoomCountChange?.(newSelectedCounts)
+  const handleCountSelect = (countValue: string) => {
+    const newSelectedCount = selectedCount === countValue ? "" : countValue
+    setSelectedCount(newSelectedCount)
+    onRoomCountChange?.(newSelectedCount)
+    setIsOpen(false)
   }
 
   const getDisplayText = () => {
-    if (selectedCounts.length === 0)
-      return isLaptop ? "Кол-во комнат" : "Комнат"
+    if (!selectedCount) return isLaptop ? "Кол-во комнат" : "Комнат"
 
-    // Разделяем числовые значения и студию
-    const numericValues = selectedCounts
-      .filter((count) => count !== "studio")
-      .map((count) => parseInt(count))
-      .sort((a, b) => a - b)
-
-    const hasStudio = selectedCounts.includes("studio")
-
-    // Формируем диапазоны из последовательных чисел
-    const ranges: string[] = []
-    let start = numericValues[0]
-    let end = start
-
-    for (let i = 1; i < numericValues.length; i++) {
-      if (numericValues[i] === end + 1) {
-        end = numericValues[i]
-      } else {
-        ranges.push(start === end ? start.toString() : `${start}-${end}`)
-        start = numericValues[i]
-        end = start
-      }
-    }
-
-    if (numericValues.length > 0) {
-      ranges.push(start === end ? start.toString() : `${start}-${end}`)
-    }
-
-    // Добавляем студию в конец через запятую
-    const result = [...ranges]
-    if (hasStudio) {
-      result.push("Студия")
-    }
-
-    return result.join(", ")
+    const count = roomCounts.find((c) => c.value === selectedCount)
+    return count ? count.label : selectedCount
   }
 
   const getSelectedCount = () => {
-    return selectedCounts.length
+    return selectedCount ? 1 : 0
   }
 
   return (
@@ -134,14 +101,14 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
           <span
             className={clsx(
               styles.roomCountDropdown__trigger__text,
-              (selectedCounts.length > 0 || isOpen) &&
+              (selectedCount || isOpen) &&
                 styles["roomCountDropdown__trigger__text--selected"],
               isOpen && styles["roomCountDropdown__trigger__text--open"]
             )}
           >
             {getDisplayText()}
           </span>
-          {selectedCounts.length > 1 && (
+          {selectedCount && showCount && (
             <span className={styles.roomCountDropdown__trigger__badge}>
               {getSelectedCount()}
             </span>
@@ -161,7 +128,7 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
         <div
           className={clsx(styles.roomCountDropdown__content, contentClassName)}
           role="listbox"
-          aria-multiselectable="true"
+          aria-multiselectable="false"
         >
           <div className={styles.roomCountDropdown__content__inner}>
             <div className={styles.roomCountDropdown__row}>
@@ -170,13 +137,13 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
                   key={count.value}
                   className={clsx(
                     styles.roomCountDropdown__chip,
-                    selectedCounts.includes(count.value) &&
+                    selectedCount === count.value &&
                       styles["roomCountDropdown__chip--selected"]
                   )}
-                  onClick={() => handleCountToggle(count.value)}
+                  onClick={() => handleCountSelect(count.value)}
                   type="button"
                   role="option"
-                  aria-selected={selectedCounts.includes(count.value)}
+                  aria-selected={selectedCount === count.value}
                 >
                   {count.label}
                 </button>
@@ -187,13 +154,13 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
                 className={clsx(
                   styles.roomCountDropdown__chip,
                   styles.roomCountDropdown__chip__studio,
-                  selectedCounts.includes("studio") &&
+                  selectedCount === "studio" &&
                     styles["roomCountDropdown__chip--selected"]
                 )}
-                onClick={() => handleCountToggle("studio")}
+                onClick={() => handleCountSelect("studio")}
                 type="button"
                 role="option"
-                aria-selected={selectedCounts.includes("studio")}
+                aria-selected={selectedCount === "studio"}
               >
                 Студия
               </button>

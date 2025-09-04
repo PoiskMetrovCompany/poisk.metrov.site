@@ -18,13 +18,12 @@ interface IFlatLayoutCardProps {
   description?: string[]
   imageUrl?: string
   linkUrl?: string
-  apartment?: any
 }
 
 const FlatLayoutCard = ({
   listClassName,
   title = "Студия, 25 м²",
-  price = "4 359 990 ₽",
+  price,
   complex = "Европейский берег",
   description = [
     "Этаж 8 из 17",
@@ -33,7 +32,9 @@ const FlatLayoutCard = ({
     "Отделка улучшенная черновая",
   ],
   imageUrl = "/images/temporary/room.png",
+
   linkUrl = `/detailsFlat?key=asdf1231sdas`,
+
 }: IFlatLayoutCardProps) => {
   return (
     <div className={styles.flatLayoutCard}>

@@ -2,6 +2,8 @@ import clsx from "clsx"
 
 import React from "react"
 
+import Link from "next/link"
+
 import {
   IPropertyCardApartments,
   IPropertyCardConveniences,
@@ -13,8 +15,8 @@ import {
 
 import styles from "./comparisonCards.module.scss"
 
-import PropertyCardData from "./propertyData"
-import { propertyCardTranslations } from "./translations"
+import PropertyCardData from "./data/propertyData"
+import { propertyCardTranslations } from "./data/translations"
 
 import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
@@ -24,11 +26,13 @@ import Heading3 from "../ui/heading3"
 interface PropertyCardComparisonProps {
   data?: IPropertyCardFull
   isLast?: boolean
+  isInView?: boolean
 }
 
 const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   data = PropertyCardData,
   isLast = false,
+  isInView = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -119,15 +123,25 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
     >
       <div className={styles.comparisonCards__content}>
         <div className={styles.comparisonCards__content__heading}>
-          <div className={styles.comparisonCards__content__heading__image}>
-            <IconImage
-              iconLink={data.image}
-              alt="image"
-              className={styles.comparisonCards__content__heading__image__icon}
-            />
+          <div
+            className={styles.comparisonCards__content__heading__imageContainer}
+          >
+            <Link
+              href="/details/1"
+              className={styles.comparisonCards__content__heading__imageFlat}
+            >
+              <IconImage
+                iconLink={data.image}
+                alt="image"
+                className={
+                  styles.comparisonCards__content__heading__image__icon
+                }
+              />
+            </Link>
             <IconButton
               size="sm"
               iconLink={"/images/icons/trash.svg"}
+              type="secondary"
               alt="trash"
               iconClassName={
                 styles.comparisonCards__content__heading__image__delete__icon
@@ -138,7 +152,11 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>
-            <Heading3>{data.title}</Heading3>
+            <Heading3
+              className={styles.comparisonCards__content__heading__text__title}
+            >
+              {data.title}
+            </Heading3>
             <span
               className={
                 styles.comparisonCards__content__heading__text__address
@@ -192,7 +210,13 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
             {Object.entries(data.location).map(([key, value]) => (
               <li
                 key={key}
-                className={styles.comparisonCards__content__block__list__item}
+                className={clsx(
+                  styles.comparisonCards__content__block__list__item,
+                  {
+                    [styles.comparisonCards__content__block__list__item_active]:
+                      isInView,
+                  }
+                )}
               >
                 <span
                   className={

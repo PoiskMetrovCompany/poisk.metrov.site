@@ -11,8 +11,8 @@ import {
 
 import styles from "./comparisonCards.module.scss"
 
-import FlatLayoutCardData from "./flatData"
-import { propertyCardTranslations } from "./translations"
+import FlatLayoutCardData from "./data/flatData"
+import { propertyCardTranslations } from "./data/translations"
 
 import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
@@ -22,11 +22,13 @@ import Heading3 from "../ui/heading3"
 interface FlatLayoutCardComparisonProps {
   data: IFlatLayoutCardFull
   isLast?: boolean
+  isInView?: boolean
 }
 
 const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
   data = FlatLayoutCardData,
   isLast = false,
+  isInView = false,
 }) => {
   // Функция для рендеринга значения в зависимости от типа
   const renderValue = (key: string, value: unknown): React.ReactNode => {
@@ -137,6 +139,7 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             <IconButton
               size="sm"
               iconLink={"/images/icons/trash.svg"}
+              type="secondary"
               alt="trash"
               iconClassName={
                 styles.comparisonCards__content__heading__image__delete__icon
@@ -148,7 +151,11 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>
-            <Heading3>{data.title}</Heading3>
+            <Heading3
+              className={styles.comparisonCards__content__heading__text__title}
+            >
+              {data.title}
+            </Heading3>
             <span
               className={
                 styles.comparisonCards__content__heading__text__address
