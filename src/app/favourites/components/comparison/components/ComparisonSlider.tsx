@@ -58,6 +58,9 @@ const ComparisonSlider: React.FC<IComparisonSliderProps> = ({
         className={styles.comparison__swiper}
         onSwiper={onSwiperInit}
         onSlideChange={onSlideChange}
+        watchSlidesProgress={true}
+        observer={true}
+        observeParents={true}
       >
         {selectedView === "complexes" &&
           typedData?.type === "complexes" &&

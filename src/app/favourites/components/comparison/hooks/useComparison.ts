@@ -42,6 +42,14 @@ export const useComparisonSlider = () => {
     setIsEnd(swiper.isEnd)
   }
 
+  // Функция для обновления состояния слайдера
+  const updateSliderState = () => {
+    if (swiperRef.current) {
+      setIsBeginning(swiperRef.current.isBeginning)
+      setIsEnd(swiperRef.current.isEnd)
+    }
+  }
+
   return {
     isBeginning,
     isEnd,
@@ -51,6 +59,7 @@ export const useComparisonSlider = () => {
     handlePrevClick,
     handleNextClick,
     handleSwiperInit,
+    updateSliderState,
   }
 }
 

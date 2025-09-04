@@ -38,6 +38,7 @@ const Comparison: React.FC<IComparisonProps> = ({
     handlePrevClick,
     handleNextClick,
     handleSwiperInit,
+    updateSliderState,
   } = useComparisonSlider()
 
   // Получаем все данные сравнения
@@ -67,6 +68,18 @@ const Comparison: React.FC<IComparisonProps> = ({
     setComparisonFlatCount,
     setComparisonComplexCount,
   ])
+
+  // Обновляем состояние слайдера при изменении данных
+  React.useEffect(() => {
+    if (typedData && typedData.data.attributes.length > 0) {
+      // Небольшая задержка для корректного обновления состояния
+      const timer = setTimeout(() => {
+        updateSliderState()
+      }, 100)
+
+      return () => clearTimeout(timer)
+    }
+  }, [typedData, updateSliderState])
 
   const handleBackClick = () => setIsComparison(false)
 
