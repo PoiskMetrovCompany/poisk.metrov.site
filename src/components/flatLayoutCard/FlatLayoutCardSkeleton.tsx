@@ -42,7 +42,7 @@ const FlatLayoutCardSkeleton = ({
               key={index}
               className={styles.flatLayoutCard__content__description__item}
             >
-              <Skeleton width={`${60 + Math.random() * 40}%`} height="14px" />
+              <Skeleton width={`${65 + index * 5}%`} height="14px" />
             </li>
           ))}
         </ul>

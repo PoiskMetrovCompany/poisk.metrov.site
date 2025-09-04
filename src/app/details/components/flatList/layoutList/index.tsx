@@ -10,13 +10,41 @@ import { IApartment } from "@/types/api/complex"
 import LayoutItem from "./layoutItem"
 
 interface LayoutListProps {
-  apartments: IApartment[]
+  apartmentTypes: Record<string, IApartment[]> | IApartment[]
 }
 
-const LayoutList = ({ apartments }: LayoutListProps) => {
-  const [openId, setOpenId] = useState<string[]>(["apartments-list"])
+const LayoutList = ({ apartmentTypes }: LayoutListProps) => {
+  const typeNames: Record<string, string> = {
+    study: "Студии",
+    "1_rooms": "1-комнатные",
+    "2_rooms": "2-комнатные",
+    "3_rooms": "3-комнатные",
+    "4_rooms": "4-комнатные",
+  }
 
-  if (apartments.length === 0) {
+  // Проверяем тип данных и обрабатываем соответственно
+  let availableTypes: [string, IApartment[]][]
+
+  if (Array.isArray(apartmentTypes)) {
+    // Если пришел массив квартир одного типа (старый формат)
+    availableTypes = [["apartments", apartmentTypes]]
+  } else if (
+    typeof apartmentTypes === "object" &&
+    apartmentTypes !== null &&
+    !Array.isArray(apartmentTypes)
+  ) {
+    // Если пришел объект с типами квартир (новый формат)
+    availableTypes = Object.entries(apartmentTypes).filter(
+      ([, apartments]) => apartments && apartments.length > 0
+    )
+  } else {
+    // Если данных нет
+    availableTypes = []
+  }
+
+  const [openId, setOpenId] = useState<string[]>([])
+
+  if (availableTypes.length === 0) {
     return (
       <NotFound
         title="Подходящих вариантов нет"
@@ -32,11 +60,15 @@ const LayoutList = ({ apartments }: LayoutListProps) => {
       value={openId}
       onValueChange={(value) => setOpenId(value as string[])}
     >
-      <LayoutItem
-        name="apartments-list"
-        isOpen={openId.includes("apartments-list")}
-        apartments={apartments}
-      />
+      {availableTypes.map(([type, apartments]) => (
+        <LayoutItem
+          key={type}
+          name={type}
+          isOpen={openId.includes(type)}
+          apartments={apartments}
+          title={typeNames[type] || type}
+        />
+      ))}
     </Accordion.Root>
   )
 }

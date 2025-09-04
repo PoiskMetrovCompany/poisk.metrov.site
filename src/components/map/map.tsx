@@ -5,6 +5,8 @@ import clsx from "clsx"
 
 import React, { useCallback, useMemo, useRef, useState } from "react"
 
+import Image from "next/image"
+
 import { useMap } from "@/providers/map-provider"
 
 // import useDebounce from "@/utils/hooks/use-debounce"
@@ -163,22 +165,34 @@ export const Map = ({
                 }}
               >
                 <div className={styles.pointWrapper}>
-                  <div
-                    className={
-                      point.type === PointType.IN_SALE
-                        ? `${styles.pointDot} ${styles.pointDot_sale} ${
-                            activePointId === point.id
-                              ? styles.pointDot_active
-                              : ""
-                          }`
-                        : `${styles.pointDot} ${styles.pointDot_announcements} ${
-                            activePointId === point.id
-                              ? styles.pointDot_active
-                              : ""
-                          }`
-                    }
-                    style={{ width: sizes.dot, height: sizes.dot }}
-                  />
+                  {point.type === PointType.FAVOURITES ? (
+                    <div className={styles.favouriteIconWrapper}>
+                      <Image
+                        src="/images/icons/favoriteHeart.svg"
+                        alt="Избранное"
+                        width={14}
+                        height={14}
+                        className={styles.favouriteIcon}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={
+                        point.type === PointType.IN_SALE
+                          ? `${styles.pointDot} ${styles.pointDot_sale} ${
+                              activePointId === point.id
+                                ? styles.pointDot_active
+                                : ""
+                            }`
+                          : `${styles.pointDot} ${styles.pointDot_announcements} ${
+                              activePointId === point.id
+                                ? styles.pointDot_active
+                                : ""
+                            }`
+                      }
+                      style={{ width: sizes.dot, height: sizes.dot }}
+                    />
+                  )}
                 </div>
 
                 <div
@@ -197,22 +211,34 @@ export const Map = ({
                 )}
                 style={{ width: sizes.wrapper, height: sizes.wrapper }}
               >
-                <div
-                  className={
-                    point.type === PointType.IN_SALE
-                      ? `${styles.pointDot} ${styles.pointDot_sale} ${
-                          activePointId === point.id
-                            ? styles.pointDot_active
-                            : ""
-                        }`
-                      : `${styles.pointDot} ${styles.pointDot_announcements} ${
-                          activePointId === point.id
-                            ? styles.pointDot_active
-                            : ""
-                        }`
-                  }
-                  style={{ width: sizes.dot, height: sizes.dot }}
-                />
+                {point.type === PointType.FAVOURITES ? (
+                  <div className={styles.favouriteIconWrapper}>
+                    <Image
+                      src="/images/icons/favoriteHeart.svg"
+                      alt="Избранное"
+                      width={14}
+                      height={14}
+                      className={styles.favouriteIcon}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className={
+                      point.type === PointType.IN_SALE
+                        ? `${styles.pointDot} ${styles.pointDot_sale} ${
+                            activePointId === point.id
+                              ? styles.pointDot_active
+                              : ""
+                          }`
+                        : `${styles.pointDot} ${styles.pointDot_announcements} ${
+                            activePointId === point.id
+                              ? styles.pointDot_active
+                              : ""
+                          }`
+                    }
+                    style={{ width: sizes.dot, height: sizes.dot }}
+                  />
+                )}
               </div>
             )}
           </YMapMarker>
