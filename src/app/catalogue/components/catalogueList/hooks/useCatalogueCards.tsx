@@ -4,7 +4,13 @@ import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
 import { IProperty } from "@/types/PropertyCard"
-import { FiltersResponse } from "@/types/api/filters"
+import {
+  ApartmentItem,
+  ComplexItem,
+  FiltersResponse,
+  isApartmentResponse,
+  isComplexResponse,
+} from "@/types/api/filters"
 
 import styles from "../catalogueList.module.scss"
 
@@ -47,14 +53,11 @@ interface FilterItem {
 export const useCatalogueCards = () => {
   // Мемоизируем создание объекта property для комплексов
   const createComplexProperty = useCallback(
-    (itemData: FilterItem, index: number): IProperty => ({
+    (itemData: ComplexItem, index: number): IProperty => ({
       id: Number(itemData.id) || index,
       title: itemData.name || "Жилой комплекс",
       subtitle: itemData.code || "",
-      price:
-        typeof itemData.price === "number"
-          ? `${itemData.price.toLocaleString()} ₽`
-          : "Цена не указана",
+      price: "Цена не указана", // У комплексов нет поля price
       image: "/images/temporary/house.png",
       badge: {
         developer: "Застройщик",
@@ -78,16 +81,18 @@ export const useCatalogueCards = () => {
             : "Не указано",
         },
       ],
+      linkKey: itemData.key,
     }),
     []
   )
 
   // Мемоизируем создание объекта property для квартир
   const createApartmentProperty = useCallback(
-    (itemData: FilterItem, index: number): IProperty => ({
+    (itemData: ApartmentItem, index: number): IProperty => ({
       id: Number(itemData.id) || index,
       title: `Квартира ${itemData.apartment_number || index}`,
-      subtitle: itemData.address || "Адрес не указан",
+      subtitle: "Адрес не указан", // У квартир нет поля address
+      // subtitle: itemData.complex_key || "Адрес не указан", // У квартир нет поля address
       price:
         typeof itemData.price === "number"
           ? `${itemData.price.toLocaleString()} ₽`
@@ -97,8 +102,8 @@ export const useCatalogueCards = () => {
         developer: "Жилой комплекс",
         period: "2024",
       },
-      metro: itemData.metro_station || "",
-      driveTime: itemData.metro_time ? `${itemData.metro_time} мин` : "",
+      metro: "",
+      driveTime: "",
       metroType: "on_foot",
       specifications: [
         { type: "Студии", price: "от 5,6 млн ₽" },
@@ -125,6 +130,7 @@ export const useCatalogueCards = () => {
           status: itemData.renovation || "Не указано",
         },
       ],
+      linkKey: itemData.key,
     }),
     []
   )
@@ -174,14 +180,13 @@ export const useCatalogueCards = () => {
 
   const renderComplexCards = useCallback(
     (
-      data: unknown[],
+      data: ComplexItem[],
       selectedSorting: SortType,
       selectedPropertyType: string
     ): React.ReactNode[] => {
       return data
-        .map((item: unknown, index: number) => {
-          const itemData = item as FilterItem
-          const property = createComplexProperty(itemData, index)
+        .map((item: ComplexItem, index: number) => {
+          const property = createComplexProperty(item, index)
           const result: React.ReactNode[] = [
             renderComplexCard(property, selectedSorting),
           ]
@@ -199,14 +204,13 @@ export const useCatalogueCards = () => {
 
   const renderApartmentCards = useCallback(
     (
-      data: unknown[],
+      data: ApartmentItem[],
       selectedSorting: SortType,
       selectedPropertyType: string
     ): React.ReactNode[] => {
       return data
-        .map((item: unknown, index: number) => {
-          const itemData = item as FilterItem
-          const property = createApartmentProperty(itemData, index)
+        .map((item: ApartmentItem, index: number) => {
+          const property = createApartmentProperty(item, index)
           const result: React.ReactNode[] = [
             renderApartmentCard(property, selectedSorting),
           ]
@@ -232,13 +236,14 @@ export const useCatalogueCards = () => {
         return []
       }
 
-      if (selectedPropertyType === "Жилой комплекс") {
+      // Используем type guards для определения типа данных
+      if (isComplexResponse(filtersData)) {
         return renderComplexCards(
           filtersData.data,
           selectedSorting,
           selectedPropertyType
         )
-      } else if (selectedPropertyType === "Квартира") {
+      } else if (isApartmentResponse(filtersData)) {
         return renderApartmentCards(
           filtersData.data,
           selectedSorting,

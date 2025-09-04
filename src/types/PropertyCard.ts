@@ -25,6 +25,7 @@ export interface IProperty {
   specifications: ISpecification[]
   description: IDescription[]
   image: string
+  linkKey?: string
 }
 
 export interface IPropertyCardGeneral {

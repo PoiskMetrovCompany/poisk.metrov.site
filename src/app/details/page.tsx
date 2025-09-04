@@ -15,13 +15,16 @@ import styles from "./details.module.scss"
 
 import Compilation from "../components/compilation"
 import Location from "../details/components/location"
+import AboutComplexSkeleton from "../detailsFlat/components/aboutComplex/AboutComplexSkeleton"
+import DocumentsSkeleton from "../detailsFlat/components/documents/DocumentsSkeleton"
 import AboutComplex from "./components/aboutComplex"
-import AboutComplexSkeleton from "./components/aboutComplex/AboutComplexSkeleton"
+// import AboutComplexSkeleton from "./components/aboutComplex/AboutComplexSkeleton"
+// import DocumentsSkeleton from "./components/documents/DocumentsSkeleton"
+
 import AboutObject from "./components/aboutObject"
 import AboutObjectSmall from "./components/aboutObjectSmall"
 import ConstructionProgress from "./components/constructionProgress"
 import Documents from "./components/documents"
-import DocumentsSkeleton from "./components/documents/DocumentsSkeleton"
 import Estate from "./components/estate"
 import DetailsHeader from "./components/header"
 

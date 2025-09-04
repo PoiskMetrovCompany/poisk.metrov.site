@@ -28,14 +28,70 @@ export interface FiltersRequest {
   search?: string // Свободный текстовый поиск: район, метро, улица, застройщик, ЖК
 }
 
-export interface FiltersResponse {
-  data: unknown[] // Результаты фильтрации
+// Тип для квартиры в ответе API
+export interface ApartmentItem {
+  id: number
+  key: string
+  complex_id: number | null
+  complex_key: string
+  apartment_number: string
+  floor: number
+  room_count: number
+  price: number
+  area: number
+  living_space: number
+  ceiling_height: number
+  renovation: string
+  balcony: string
+  bathroom_unit: string
+  created_at: string
+  updated_at: string
+  residential_complex: unknown | null
+}
+
+// Тип для жилого комплекса в ответе API
+export interface ComplexItem {
+  id: number
+  key: string
+  name: string
+  code: string
+  address: string
+  latitude: number
+  longitude: number
+  parking: string
+  elevator: string | null
+  floors: number | null
+  primary_ceiling_height: number | null
+  metro_station: string
+  metro_time: number
+  created_at: string
+  updated_at: string
+}
+
+// Union тип для элементов данных в зависимости от типа сущности
+export type FiltersDataItem = ApartmentItem | ComplexItem
+
+// Базовый интерфейс ответа API
+export interface BaseFiltersResponse {
   total: number // Общее количество результатов
   page: number // Текущая страница
   per_page: number // Количество элементов на странице
   success: boolean
   message?: string
 }
+
+// Типизированный ответ для квартир
+export interface ApartmentFiltersResponse extends BaseFiltersResponse {
+  data: ApartmentItem[]
+}
+
+// Типизированный ответ для жилых комплексов
+export interface ComplexFiltersResponse extends BaseFiltersResponse {
+  data: ComplexItem[]
+}
+
+// Union тип для ответа API в зависимости от типа сущности
+export type FiltersResponse = ApartmentFiltersResponse | ComplexFiltersResponse
 
 // Вспомогательные типы для преобразования формы в API запрос
 export interface FiltersFormToApiMapper {
@@ -64,3 +120,26 @@ export const ELEVATOR_TYPES = {
   AVAILABLE: "Есть",
   NOT_AVAILABLE: "Нет",
 } as const
+
+// Type guards для определения типа данных
+export const isApartmentItem = (
+  item: FiltersDataItem
+): item is ApartmentItem => {
+  return "apartment_number" in item && "room_count" in item
+}
+
+export const isComplexItem = (item: FiltersDataItem): item is ComplexItem => {
+  return "name" in item && "code" in item
+}
+
+export const isApartmentResponse = (
+  response: FiltersResponse
+): response is ApartmentFiltersResponse => {
+  return response.data.length > 0 && isApartmentItem(response.data[0])
+}
+
+export const isComplexResponse = (
+  response: FiltersResponse
+): response is ComplexFiltersResponse => {
+  return response.data.length > 0 && isComplexItem(response.data[0])
+}

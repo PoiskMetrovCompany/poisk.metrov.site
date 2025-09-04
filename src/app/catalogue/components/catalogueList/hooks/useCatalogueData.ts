@@ -4,7 +4,14 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
 import { useFiltersStore } from "@/stores/useFiltersStore"
-import { FiltersRequest, FiltersResponse } from "@/types/api/filters"
+import {
+  ApartmentFiltersResponse,
+  ComplexFiltersResponse,
+  FiltersRequest,
+  FiltersResponse,
+  isApartmentResponse,
+  isComplexResponse,
+} from "@/types/api/filters"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import {
   createFiltersUrl,
@@ -80,6 +87,31 @@ export const useCatalogueData = (
     }
   )
 
+  // Определяем тип данных и типизированные данные в одном месте
+  const { isApartmentData, isComplexData, apartmentData, complexData } =
+    useMemo(() => {
+      if (!filtersData) {
+        return {
+          isApartmentData: false,
+          isComplexData: false,
+          apartmentData: null,
+          complexData: null,
+        }
+      }
+
+      const isApartment = isApartmentResponse(filtersData)
+      const isComplex = isComplexResponse(filtersData)
+
+      return {
+        isApartmentData: isApartment,
+        isComplexData: isComplex,
+        apartmentData: isApartment
+          ? (filtersData as ApartmentFiltersResponse)
+          : null,
+        complexData: isComplex ? (filtersData as ComplexFiltersResponse) : null,
+      }
+    }, [filtersData])
+
   const handleSorting = useCallback((sort: SortType) => {
     setSelectedSorting(sort)
   }, [])
@@ -115,6 +147,10 @@ export const useCatalogueData = (
     selectedSorting,
     currentPage,
     filtersData,
+    apartmentData,
+    complexData,
+    isApartmentData,
+    isComplexData,
     isLoadingFilters,
     errorFilters,
     handleSorting,
