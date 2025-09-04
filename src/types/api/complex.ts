@@ -33,7 +33,7 @@ export interface IApartment {
 
 export interface IInclude {
   type: string
-  attributes: IApartment[]
+  attributes: IApartment[] | Record<string, IApartment[]>
 }
 
 export interface IResidentialComplex {
