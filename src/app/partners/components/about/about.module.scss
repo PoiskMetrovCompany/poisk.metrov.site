@@ -3,8 +3,8 @@
   gap: 180px;
 
   &__title {
-    width: 538px;
     font-weight: 400;
+    width: 538px;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       width: 352px;
@@ -34,16 +34,16 @@
       gap: 45px;
 
       &__item {
+        align-items: center;
         display: flex;
         flex-direction: column;
         gap: 4px;
-        align-items: center;
 
         &__number {
+          color: var(--color-black);
           font-size: 18px;
           font-weight: 500;
           line-height: 150%;
-          color: var(--color-black);
 
           @media screen and (width < 1920px) {
             font-size: 15px;
@@ -51,9 +51,9 @@
         }
 
         &__line {
-          width: 2px;
-          height: 86px;
           background-color: var(--color-border-gray-light);
+          height: 86px;
+          width: 2px;
 
           @media screen and (width < 768px) {
             height: 159px;
@@ -110,10 +110,10 @@
         height: 128px;
 
         &__title {
+          color: var(--color-black);
           font-size: 28px;
           font-weight: 400;
           line-height: 130%;
-          color: var(--color-black);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
             font-size: 20px;
@@ -133,12 +133,12 @@
         }
 
         &__text {
-          margin: 0;
+          color: var(--color-text-gray);
 
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
-          color: var(--color-text-gray);
+          margin: 0;
 
           @media screen and (width < 1920px) {
             font-size: 15px;
@@ -189,21 +189,21 @@
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 22px;
       gap: 48px;
       margin-right: 10px;
-      font-size: 22px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
+      font-size: 22px;
       gap: 48px;
       margin-right: 10px;
-      font-size: 22px;
     }
 
     @media screen and (width < 768px) {
+      font-size: 22px;
       gap: 24px;
       margin-right: 10px;
-      font-size: 22px;
     }
   }
 

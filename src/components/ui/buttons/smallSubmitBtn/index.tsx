@@ -1,5 +1,7 @@
 import clsx from "clsx"
+
 import Image from "next/image"
+
 import styles from "./arrowButton.module.scss"
 
 interface ArrowButtonProps {
@@ -7,7 +9,8 @@ interface ArrowButtonProps {
   className?: string
   disabled?: boolean
   size?: "small" | "medium" | "large"
-  absolute?: boolean;
+  absolute?: boolean
+  loading?: boolean
 }
 
 const ArrowButton = ({
@@ -16,6 +19,7 @@ const ArrowButton = ({
   disabled = false,
   size = "medium",
   absolute = false,
+  loading = false,
 }: ArrowButtonProps) => {
   return (
     <button
@@ -26,6 +30,7 @@ const ArrowButton = ({
           [styles.arrowButton_medium]: size === "medium",
           [styles.arrowButton_large]: size === "large",
           [styles.arrowButton_absolute]: absolute,
+          [styles.arrowButton_loading]: loading,
         },
         className
       )}
@@ -34,7 +39,7 @@ const ArrowButton = ({
       type="button"
     >
       <Image
-        src="/svgFiles/nextArrow.svg"
+        src="/images/icons/header/nextArrow.svg"
         alt="Arrow"
         width={24}
         height={24}

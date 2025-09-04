@@ -1,6 +1,8 @@
-import { CSSProperties, memo } from "react"
-import cls from "./skeleton.module.scss"
 import clsx from "clsx"
+
+import { CSSProperties, memo } from "react"
+
+import cls from "./skeleton.module.scss"
 
 interface SkeletonProps {
   className?: string
@@ -18,7 +20,7 @@ const Skeleton = memo((props: SkeletonProps) => {
     borderRadius: border,
   }
 
-  return <div className={clsx(cls.skeleton, {}, [className])} style={styles} />
+  return <div className={clsx(cls.Skeleton, {}, [className])} style={styles} />
 })
 
 Skeleton.displayName = "Skeleton"

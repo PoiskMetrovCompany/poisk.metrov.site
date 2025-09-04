@@ -1,7 +1,10 @@
-import React, { FC } from "react"
+import React, { FC, useMemo } from "react"
+
 import styles from "./ranges.module.scss"
+
+import RangeInput from "../rangeInput"
+
 import Range from "@/components/ui/inputs/range"
-import RangeInput from "../../rangeInput"
 
 interface FilterRangesProps {
   // Данные формы для ranges
@@ -27,6 +30,34 @@ const FilterRanges: FC<FilterRangesProps> = ({
   formData,
   handleRangeInputChange,
 }) => {
+  // Мемоизируем значения для RangeInput, чтобы избежать создания новых массивов при каждом рендере
+  const priceRange = useMemo(
+    () =>
+      [formData.priceMin, formData.priceMax] as [number | null, number | null],
+    [formData.priceMin, formData.priceMax]
+  )
+  const floorRange = useMemo(
+    () =>
+      [formData.floorMin, formData.floorMax] as [number | null, number | null],
+    [formData.floorMin, formData.floorMax]
+  )
+  const flatAreaRange = useMemo(
+    () =>
+      [formData.flatAreaMin, formData.flatAreaMax] as [
+        number | null,
+        number | null,
+      ],
+    [formData.flatAreaMin, formData.flatAreaMax]
+  )
+  const kitchenAreaRange = useMemo(
+    () =>
+      [formData.kitchenAreaMin, formData.kitchenAreaMax] as [
+        number | null,
+        number | null,
+      ],
+    [formData.kitchenAreaMin, formData.kitchenAreaMax]
+  )
+
   const rangeConfigs = [
     {
       field: "price",
@@ -34,7 +65,7 @@ const FilterRanges: FC<FilterRangesProps> = ({
       min: 4,
       max: 15,
       step: 1,
-      value: [formData.priceMin, formData.priceMax],
+      value: priceRange,
       formatLabel: (value: number) => `${value}`,
     },
     {
@@ -43,7 +74,7 @@ const FilterRanges: FC<FilterRangesProps> = ({
       min: 1,
       max: 30,
       step: 1,
-      value: [formData.floorMin, formData.floorMax],
+      value: floorRange,
       formatLabel: (value: number) => `${value}`,
     },
     {
@@ -52,7 +83,7 @@ const FilterRanges: FC<FilterRangesProps> = ({
       min: 20,
       max: 200,
       step: 5,
-      value: [formData.flatAreaMin, formData.flatAreaMax],
+      value: flatAreaRange,
       formatLabel: (value: number) => `${value}м²`,
     },
     {
@@ -61,7 +92,7 @@ const FilterRanges: FC<FilterRangesProps> = ({
       min: 5,
       max: 30,
       step: 1,
-      value: [formData.kitchenAreaMin, formData.kitchenAreaMax],
+      value: kitchenAreaRange,
       formatLabel: (value: number) => `${value}м²`,
     },
   ]

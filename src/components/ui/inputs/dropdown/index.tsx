@@ -1,10 +1,13 @@
 "use client"
 
-import React from "react"
-import styles from "./dropdown.module.scss"
-import { Select } from "radix-ui"
-import Image from "next/image"
+import * as Select from "@radix-ui/react-select"
 import clsx from "clsx"
+
+import React from "react"
+
+import Image from "next/image"
+
+import styles from "./dropdown.module.scss"
 
 interface DropdownProps {
   className?: string
@@ -47,7 +50,7 @@ const Dropdown = ({
           align="center"
           position="popper"
           alignOffset={300}
-          sideOffset={0}
+          sideOffset={4}
         >
           <Select.ScrollUpButton className={styles.ScrollButton}>
             <Image

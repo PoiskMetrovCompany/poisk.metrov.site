@@ -1,83 +1,121 @@
 "use client"
 
-import React, {FC, useState} from "react"
-import styles from "./rightSide.module.scss"
-import { FormRow } from "@/components/ui/forms/formRow/FormRow";
-import InputContainer from "@/components/ui/inputs/inputContainer";
-import ActionButton from "@/components/ui/buttons/ActionButton";
+import clsx from "clsx"
 
-import clsx from "clsx";
-import CheckboxRow from "@/components/ui/checkbox/personalProcessing";
+import React, { FC, useState } from "react"
+
+import { useApiMutation } from "@/utils/hooks/use-api"
+
+import styles from "./rightSide.module.scss"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
+import { FormRow } from "@/components/ui/forms/formRow/FormRow"
+import InputContainer from "@/components/ui/inputs/inputContainer"
 
 interface DreamFlatData {
-    firstName: string;
-    phoneNumber: string;
-    isAgreed: boolean;
+  firstName: string
+  phoneNumber: string
+  isAgreed: boolean
 }
 
-const RightSide:FC = () => {
-    const [formData, setFormData] = useState<DreamFlatData>({
+interface ApiData {
+  name: string
+  phone: string
+  comment: string
+  city: string
+}
+
+const RightSide: FC = () => {
+  const [formData, setFormData] = useState<DreamFlatData>({
+    firstName: "",
+    phoneNumber: "",
+    isAgreed: false,
+  })
+
+  const submitMutation = useApiMutation<ApiData, ApiData>("/crm/store", {
+    onSuccess: (data) => {
+      console.log("Запрос отправлен", data)
+      setFormData({
         firstName: "",
         phoneNumber: "",
         isAgreed: false,
-    })
+      })
+    },
+    onError: (error) => {
+      console.log("Ошибка отправки запроса", error)
+    },
+  })
 
-    const handleInputChange = (name: string, value: string) =>{
-        setFormData(prev => ({...prev, [name]: value}))
+  const handleInputChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  }
+
+  const handleSubmit = () => {
+    if (!formData.isAgreed) return
+    if (!formData.firstName || !formData.phoneNumber) {
+      console.log("Пожалуйста заполните все поля")
+      return
     }
-
-    const handleCheckboxChange = (checked:boolean) => {
-        setFormData(prev => ({...prev, isAgreed: checked}))
+    const apiData: ApiData = {
+      name: formData.firstName,
+      phone: formData.phoneNumber,
+      comment:
+        "Пользователь запросил консультацию по получению персональной скидки от застройщика",
+      city: "novosibirsk",
     }
+    submitMutation.mutate(apiData)
+  }
 
-    const handleSubmit = () => {
-        if(!formData.isAgreed) return
+  return (
+    <div className={styles.rightSide}>
+      <FormRow className={clsx(styles.mt_0, styles.smallWrap)}>
+        <InputContainer
+          placeholder="Ваше имя"
+          value={formData.firstName}
+          onChange={(value) => handleInputChange("firstName", value)}
+          name="firstNameDreamFlat"
+        />
+        <InputContainer
+          placeholder="Номер телефона"
+          value={formData.phoneNumber}
+          onChange={(value) => handleInputChange("phoneNumber", value)}
+          name="phoneDreamFlat"
+          type="phone"
+          className={styles.w_50}
+        />
 
-        console.log("Form submited, need back", formData)
-    }
+        <ActionButton
+          onClick={handleSubmit}
+          loading={submitMutation.isPending}
+          disabled={submitMutation.isPending}
+          size="medium"
+          type={formData.isAgreed ? "primary" : "gray"}
+        >
+          {submitMutation.isPending ? "Отправка..." : "Отправить"}
+        </ActionButton>
+      </FormRow>
 
-    return (
-        <div className= {styles.rightSide}>
-            <FormRow className={clsx(styles.mt_0, styles.smallWrap)}>
-                <InputContainer
-                    label=""
-                    placeholder="Ваше имя"
-                    value={formData.firstName}
-                    onChange={((value) => handleInputChange("firstName", value))}
-                    name = "firstNameDreamFlat"
-                />
-                <InputContainer
-                    label=""
-                    placeholder=""
-                    value={formData.phoneNumber}
-                    onChange={(value) => handleInputChange("phone", value)}
-                    name="phoneDreamFlat"
-                    prefix="+7"
-                    className={styles.w_50}
-                />
-
-                <ActionButton
-                onClick={handleSubmit}
-                size="medium"
-                type="primary"
-                >
-                Отправить
-                </ActionButton>
-            </FormRow>
-
-            <FormRow className={clsx(styles.mt_0, styles.smallWrap)} justifyContent="flex-start">
-                <CheckboxRow
-                    checked = {formData.isAgreed}
-                    onChange={handleCheckboxChange}
-                    text = "Нажимая на кнопку вы даете согласие"
-                    linkText="своих персональных данных"
-                    linkHref="/privatePolicy"
-                    name="personalDataDreamFlat"
-                    id="personalDataDreamFlat"
-                />
-            </FormRow>
-        </div>
-    )
+      <FormRow
+        className={clsx(styles.mt_0, styles.smallWrap)}
+        justifyContent="flex-start"
+      >
+        <CheckboxRow
+          checked={formData.isAgreed}
+          onChange={handleCheckboxChange}
+          text="Нажимая на кнопку вы даете согласие"
+          linkText="своих персональных данных"
+          linkHref="/privatePolicy"
+          name="personalDataDreamFlat"
+          id="personalDataDreamFlat"
+        />
+      </FormRow>
+    </div>
+  )
 }
 
 export default RightSide

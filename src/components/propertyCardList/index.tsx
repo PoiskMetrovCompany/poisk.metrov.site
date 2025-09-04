@@ -1,18 +1,29 @@
 "use client"
 
-import React, { FC } from "react"
-import styles from "./propertyCardList.module.scss"
-import { IProperty } from "@/types/PropertyCard"
-import IconImage from "../ui/IconImage"
 import clsx from "clsx"
-import IconButton from "../ui/buttons/IconButton"
+
+import React, { FC } from "react"
+
+import { IProperty } from "@/types/PropertyCard"
+
+import styles from "./propertyCardList.module.scss"
+
+import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
+import IconButton from "../ui/buttons/IconButton"
 
 interface IPropertyCardListProps {
   property: IProperty
 }
 
 const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
+  // Выбираем иконку в зависимости от типа передвижения до метро
+  const getMetroIcon = () => {
+    return property.metroType === "on_foot"
+      ? "/images/icons/walk.svg"
+      : "/images/icons/car.svg"
+  }
+
   return (
     <div className={styles.property_card_list}>
       <IconImage
@@ -29,7 +40,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                 styles.property_card_list__content__info__header__title
               }
             >
-              Квартал «Европейский берег»
+              {property.title}
             </h3>
             <div
               className={
@@ -41,7 +52,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   styles.property_card_list__content__info__header__location__adress
                 }
               >
-                Микрорайон на набережной Оби
+                {property.subtitle}
                 <button
                   className={
                     styles.property_card_list__content__info__header__location__adress__button
@@ -80,7 +91,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                       styles.property_card_list__content__info__header__location__way__item__text
                     }
                   >
-                    Октябрьская
+                    {property.metro}
                   </span>
                 </div>
                 <div
@@ -92,15 +103,15 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                     className={
                       styles.property_card_list__content__info__header__location__way__item__icon
                     }
-                    iconLink={"/images/icons/car.svg"}
-                    alt={"car"}
+                    iconLink={getMetroIcon()}
+                    alt={property.metroType === "on_foot" ? "walking" : "car"}
                   />
                   <span
                     className={
                       styles.property_card_list__content__info__header__location__way__item__text
                     }
                   >
-                    25 минут
+                    {property.driveTime}
                   </span>
                 </div>
               </div>
@@ -240,7 +251,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   styles.property_card_list__content__actions__builder__header__title
                 }
               >
-                Брусника
+                {property.badge.developer}
               </h3>
               <IconImage
                 className={

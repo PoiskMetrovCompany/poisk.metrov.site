@@ -1,22 +1,28 @@
-import React, { FC, memo } from "react"
+import clsx from "clsx"
+
+import React, { FC, memo, useMemo } from "react"
+
 import styles from "./filterBlocks.module.scss"
-import FiltersButton from "@/components/ui/buttons/FiltersButton"
-import RangeInput from "../../rangeInput"
+
 import {
-  ROOMS_OPTIONS,
+  APARTMENTS_OPTIONS,
+  BATHROOM_OPTIONS,
+  FEATURES_OPTIONS,
+  FINISH_OPTIONS,
   FLOOR_OPTIONS,
   LAYOUT_OPTIONS,
-  FINISH_OPTIONS,
-  BATHROOM_OPTIONS,
-  APARTMENTS_OPTIONS,
-  FEATURES_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  ROOMS_OPTIONS,
 } from "../../types"
-import Heading3 from "@/components/ui/heading3"
+import RangeInput from "../rangeInput"
+
 import IconImage from "@/components/ui/IconImage"
-import clsx from "clsx"
+import FiltersButton from "@/components/ui/buttons/FiltersButton"
+import Heading3 from "@/components/ui/heading3"
 
 interface ApartmentFiltersProps {
   formData: {
+    propertyType: string
     rooms: string[]
     priceMin: number | null
     priceMax: number | null
@@ -34,6 +40,9 @@ interface ApartmentFiltersProps {
     apartments: string
     features: string[]
   }
+  haveToSelectType?: boolean
+  showApartmentTypeSelection?: boolean
+  setShowApartmentTypeSelection?: (show: boolean) => void
   handleMultiSelect: (
     field:
       | "rooms"
@@ -45,6 +54,18 @@ interface ApartmentFiltersProps {
       | "ceilingHeight",
     value: string
   ) => void
+  handleSingleSelect: (
+    field:
+      | "rooms"
+      | "floorOptions"
+      | "layout"
+      | "finish"
+      | "bathroom"
+      | "features"
+      | "ceilingHeight",
+    value: string
+  ) => void
+  handlePropertyTypeSelect: (propertyType: string) => void
   handleApartmentsSelect: (apartments: string) => void
   handleRangeInputChange: (
     field: "price" | "floor" | "flatArea" | "livingArea",
@@ -56,19 +77,83 @@ interface ApartmentFiltersProps {
 const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
   ({
     formData,
+    haveToSelectType = false,
+    showApartmentTypeSelection = false,
+    setShowApartmentTypeSelection,
     handleMultiSelect,
+    handleSingleSelect,
+    handlePropertyTypeSelect,
     handleApartmentsSelect,
     handleRangeInputChange,
     onCloseDialog,
   }) => {
     const ceilingHeightOptions = ["От 2,5 м", "От 2,7 м", "От 3 м", "От 4 м"]
 
+    // Мемоизируем значения для RangeInput, чтобы избежать создания новых массивов при каждом рендере
+    const priceRange = useMemo(
+      () =>
+        [formData.priceMin, formData.priceMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.priceMin, formData.priceMax]
+    )
+    const floorRange = useMemo(
+      () =>
+        [formData.floorMin, formData.floorMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.floorMin, formData.floorMax]
+    )
+    const flatAreaRange = useMemo(
+      () =>
+        [formData.flatAreaMin, formData.flatAreaMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.flatAreaMin, formData.flatAreaMax]
+    )
+    const livingAreaRange = useMemo(
+      () =>
+        [formData.livingAreaMin, formData.livingAreaMax] as [
+          number | null,
+          number | null,
+        ],
+      [formData.livingAreaMin, formData.livingAreaMax]
+    )
+
+    const handleBackClick = () => {
+      if (setShowApartmentTypeSelection) {
+        setShowApartmentTypeSelection(false)
+      }
+    }
+
+    const handleSelectApartmentClick = () => {
+      if (setShowApartmentTypeSelection) {
+        setShowApartmentTypeSelection(true)
+      }
+    }
+
     return (
       <div className={styles.filterBlock}>
         <div className={styles.filterBlock__title}>
           <Heading3 className={styles.filterBlock__title__heading}>
-            Квартира
+            {showApartmentTypeSelection && (
+              <button
+                onClick={handleBackClick}
+                className={styles.filterBlock__title__back}
+              >
+                <IconImage
+                  iconLink="/images/icons/arrow-right-orange.svg"
+                  alt="назад"
+                  className={styles.filterBlock__title__back__icon}
+                />
+              </button>
+            )}
+            {showApartmentTypeSelection ? "Тип жилья" : "Квартира"}
           </Heading3>
+
           <button
             onClick={onCloseDialog}
             className={styles.filterBlock__title__close}
@@ -81,185 +166,268 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
           </button>
         </div>
 
-        {/* Количество комнат */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>
-            Количество комнат
-          </div>
-          <div className={styles.filterBlock__section__options}>
-            {ROOMS_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.rooms.includes(option)}
-                onClick={() => handleMultiSelect("rooms", option)}
-              />
+        {/* Тип жилья */}
+        {haveToSelectType && showApartmentTypeSelection && (
+          <div className={styles.filterBlock__sectionType__wrapper}>
+            {PROPERTY_TYPE_OPTIONS.map((type) => (
+              <label
+                key={type}
+                className={styles.filterBlock__sectionType__item}
+                role="option"
+                aria-selected={formData.propertyType === type}
+              >
+                <div
+                  className={styles.filterBlock__sectionType__checkboxWrapper}
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.propertyType === type}
+                    onChange={() => handlePropertyTypeSelect(type)}
+                    className={styles.filterBlock__sectionType__checkbox}
+                    aria-label={`Выбрать ${type}`}
+                  />
+                  {formData.propertyType === type && (
+                    <IconImage
+                      className={styles.filterBlock__sectionType__checkboxIcon}
+                      iconLink="/images/icons/checkMark-white.svg"
+                      alt="check"
+                    />
+                  )}
+                </div>
+                <span className={styles.filterBlock__sectionType__item__label}>
+                  {type}
+                </span>
+              </label>
             ))}
           </div>
-        </div>
+        )}
 
-        {/* Цена */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Цена</div>
-          <div className={styles.filterBlock__section__range}>
-            <RangeInput
-              value={[formData.priceMin, formData.priceMax]}
-              onValueChange={(range) => handleRangeInputChange("price", range)}
-              unit="₽"
-            />
-          </div>
-        </div>
+        {/* Кнопка "Выбрать квартиру" */}
+        {showApartmentTypeSelection && (
+          <div className={styles.filterBlock__section}>
+            <div className={styles.filterBlock__section__label}>Тип жилья</div>
+            <div
+              className={styles.filterBlock__section__type}
+              onClick={handleSelectApartmentClick}
+            >
+              <span>{formData.propertyType}</span>
+              <IconImage
+                iconLink="/images/icons/arrow-down-black.svg"
+                alt="Выберите"
+                className={styles.filterBlock__section__type__icon}
+              />
+            </div>
 
-        {/* Этаж */}
-        <div
-          className={clsx(
-            styles.filterBlock__section,
-            styles.filterBlock__section_start
-          )}
-        >
-          <div className={styles.filterBlock__section__label}>Этаж</div>
-          <div className={styles.filterBlock__section__optionsRange}>
-            <RangeInput
-              value={[formData.floorMin, formData.floorMax]}
-              onValueChange={(range) => handleRangeInputChange("floor", range)}
-              unit=""
-            />
-            <div className={styles.filterBlock__section__optionsRange__options}>
-              {FLOOR_OPTIONS.map((option) => (
+            {/* <div className={styles.filterBlock__section__options}> */}
+            {/* {ROOMS_OPTIONS.map((option) => (
                 <FiltersButton
                   key={option}
                   text={option}
-                  isActive={formData.floorOptions.includes(option)}
-                  onClick={() => handleMultiSelect("floorOptions", option)}
+                  isActive={formData.rooms.includes(option)}
+                  onClick={() => handleMultiSelect("rooms", option)}
                 />
-              ))}
+              ))} */}
+            {/* </div> */}
+          </div>
+        )}
+
+        {/* Остальные фильтры показываются только если не выбран тип жилья */}
+        {!showApartmentTypeSelection && (
+          <>
+            {/* Количество комнат */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Количество комнат
+              </div>
+
+              <div className={styles.filterBlock__section__options}>
+                {ROOMS_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.rooms.includes(option)}
+                    onClick={() => handleSingleSelect("rooms", option)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Площадь общая */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>
-            Площадь общая
-          </div>
-          <div className={styles.filterBlock__section__range}>
-            <RangeInput
-              value={[formData.flatAreaMin, formData.flatAreaMax]}
-              onValueChange={(range) =>
-                handleRangeInputChange("flatArea", range)
-              }
-              unit="м²"
-            />
-          </div>
-        </div>
+            {/* Цена */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>Цена</div>
+              <div className={styles.filterBlock__section__range}>
+                <RangeInput
+                  value={priceRange}
+                  onValueChange={(range) =>
+                    handleRangeInputChange("price", range)
+                  }
+                  unit="₽"
+                />
+              </div>
+            </div>
 
-        {/* Площадь жилая */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>
-            Площадь жилая
-          </div>
-          <div className={styles.filterBlock__section__range}>
-            <RangeInput
-              value={[formData.livingAreaMin, formData.livingAreaMax]}
-              onValueChange={(range) =>
-                handleRangeInputChange("livingArea", range)
-              }
-              unit="м²"
-            />
-          </div>
-        </div>
+            {/* Этаж */}
+            <div
+              className={clsx(
+                styles.filterBlock__section,
+                styles.filterBlock__section_start
+              )}
+            >
+              <div className={styles.filterBlock__section__label}>Этаж</div>
+              <div className={styles.filterBlock__section__optionsRange}>
+                <RangeInput
+                  value={floorRange}
+                  onValueChange={(range) =>
+                    handleRangeInputChange("floor", range)
+                  }
+                  unit=""
+                />
+                {/* <div
+                  className={styles.filterBlock__section__optionsRange__options}
+                >
+                  {FLOOR_OPTIONS.map((option) => (
+                    <FiltersButton
+                      key={option}
+                      text={option}
+                      isActive={formData.floorOptions.includes(option)}
+                      onClick={() => handleMultiSelect("floorOptions", option)}
+                    />
+                  ))}
+                </div> */}
+              </div>
+            </div>
 
-        {/* Высота потолков */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>
-            Высота потолков
-          </div>
-          <div className={styles.filterBlock__section__options}>
-            {ceilingHeightOptions.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.ceilingHeight.includes(option)}
-                onClick={() => handleMultiSelect("ceilingHeight", option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Площадь общая */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Площадь общая
+              </div>
+              <div className={styles.filterBlock__section__range}>
+                <RangeInput
+                  value={flatAreaRange}
+                  onValueChange={(range) =>
+                    handleRangeInputChange("flatArea", range)
+                  }
+                  unit="м²"
+                />
+              </div>
+            </div>
 
-        {/* Планировка */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Планировка</div>
-          <div className={styles.filterBlock__section__options}>
-            {LAYOUT_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.layout.includes(option)}
-                onClick={() => handleMultiSelect("layout", option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Площадь жилая */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Площадь жилая
+              </div>
+              <div className={styles.filterBlock__section__range}>
+                <RangeInput
+                  value={livingAreaRange}
+                  onValueChange={(range) =>
+                    handleRangeInputChange("livingArea", range)
+                  }
+                  unit="м²"
+                />
+              </div>
+            </div>
 
-        {/* Отделка */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Отделка</div>
-          <div className={styles.filterBlock__section__options}>
-            {FINISH_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.finish.includes(option)}
-                onClick={() => handleMultiSelect("finish", option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Высота потолков */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Высота потолков
+              </div>
+              <div className={styles.filterBlock__section__options}>
+                {ceilingHeightOptions.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.ceilingHeight.includes(option)}
+                    onClick={() => handleSingleSelect("ceilingHeight", option)}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Санузел */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Санузел</div>
-          <div className={styles.filterBlock__section__options}>
-            {BATHROOM_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.bathroom.includes(option)}
-                onClick={() => handleMultiSelect("bathroom", option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Планировка */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Планировка
+              </div>
+              <div className={styles.filterBlock__section__options}>
+                {LAYOUT_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.layout.includes(option)}
+                    onClick={() => handleSingleSelect("layout", option)}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Апартаменты */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Апартаменты</div>
-          <div className={styles.filterBlock__section__options}>
-            {APARTMENTS_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.apartments === option}
-                onClick={() => handleApartmentsSelect(option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Отделка */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>Отделка</div>
+              <div className={styles.filterBlock__section__options}>
+                {FINISH_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.finish.includes(option)}
+                    onClick={() => handleSingleSelect("finish", option)}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Особенности */}
-        <div className={styles.filterBlock__section}>
-          <div className={styles.filterBlock__section__label}>Особенности</div>
-          <div className={styles.filterBlock__section__options}>
-            {FEATURES_OPTIONS.map((option) => (
-              <FiltersButton
-                key={option}
-                text={option}
-                isActive={formData.features.includes(option)}
-                onClick={() => handleMultiSelect("features", option)}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Санузел */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>Санузел</div>
+              <div className={styles.filterBlock__section__options}>
+                {BATHROOM_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.bathroom.includes(option)}
+                    onClick={() => handleSingleSelect("bathroom", option)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Апартаменты */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Апартаменты
+              </div>
+              <div className={styles.filterBlock__section__options}>
+                {APARTMENTS_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.apartments === option}
+                    onClick={() => handleApartmentsSelect(option)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Особенности */}
+            <div className={styles.filterBlock__section}>
+              <div className={styles.filterBlock__section__label}>
+                Особенности
+              </div>
+              <div className={styles.filterBlock__section__options}>
+                {FEATURES_OPTIONS.map((option) => (
+                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={formData.features.includes(option)}
+                    onClick={() => handleSingleSelect("features", option)}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     )
   }

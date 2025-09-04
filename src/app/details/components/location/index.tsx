@@ -1,32 +1,33 @@
 "use client"
-import styles from "./location.module.scss"
-import Heading2 from "@/components/ui/heading2"
-import { Map } from "./map/map"
-import { Place } from "./map/variables"
+
 import { useState } from "react"
+
+import styles from "./location.module.scss"
+
+import { Map } from "../../../../components/map/map"
+import { Place } from "../../../../components/map/variables/variables"
 import Infrastructure from "./infrastructure"
 import InfrastructureDialog from "./infrastructure/infrastructureDialog"
 
-export const places: Place[] = [[55.00844174651645, 82.93779287001264]].map(
-  ([longitude, latitude], i) => ({
+import Heading2 from "@/components/ui/heading2"
+
+interface LocationProps {
+  latitude?: number
+  longitude?: number
+  complexName?: string
+}
+
+const Location = ({ latitude, longitude, complexName }: LocationProps) => {
+  const defaultCoordinates = [82.93779287001264, 55.00844174651645]
+  const coordinates =
+    latitude && longitude ? [longitude, latitude] : defaultCoordinates
+
+  const places: Place[] = [coordinates].map(([longitude, latitude], i) => ({
     id: `${i}`,
-    label: `Place ${i + 1}`,
+    label: complexName || `Place ${i + 1}`,
     longitude,
     latitude,
-    text: `Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry standard dummy text
-          ever since the 1500s, when an unknown printer took a galley of
-          type and scrambled it to make a type specimen book. It has
-          survived not only five centuries, but also the leap into
-          electronic typesetting, remaining essentially unchanged. It was
-          popularised in the 1960s with the release of Letraset sheets
-          containing Lorem Ipsum passages, and more recently with desktop
-          publishing software like Aldus PageMaker including versions of
-          Lorem Ipsum.`,
-  })
-)
-
-const Location = () => {
+  }))
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<
     string[]
   >([])
@@ -49,6 +50,7 @@ const Location = () => {
           <Map
             places={places}
             selectedInfrastructure={selectedInfrastructure}
+            viewLocation={coordinates as [number, number]}
           />
         </div>
 

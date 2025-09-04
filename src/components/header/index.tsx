@@ -1,12 +1,21 @@
 "use client"
-import React, { useState } from "react"
-import styles from "./header.module.scss"
-import TopBar from "./headerComponents/TopBar"
-import MainBar from "./headerComponents/MainBar"
-import MenuPopup from "../menuPopup"
 
-const Header = () => {
+import React, { useState } from "react"
+
+import styles from "./header.module.scss"
+
+import MenuPopup from "../menuPopup"
+import MainBar from "./headerComponents/MainBar"
+import TopBar from "./headerComponents/TopBar"
+
+interface HeaderProps {
+  initialCity: { name: string; id: string; slug: string } | null
+  hideTopBar?: boolean
+}
+
+const Header = ({ initialCity, hideTopBar = false }: HeaderProps) => {
   const [isMenuPopupOpen, setIsMenuPopupOpen] = useState(false)
+
   return (
     <>
       <MenuPopup
@@ -14,10 +23,11 @@ const Header = () => {
         onClose={() => setIsMenuPopupOpen(false)}
       />
       <header className={styles.header}>
-        <TopBar />
-        <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
+        {!hideTopBar && <TopBar initialCity={initialCity} />}
       </header>
+      <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
     </>
   )
 }
+
 export default Header

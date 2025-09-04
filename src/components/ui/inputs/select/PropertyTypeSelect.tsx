@@ -1,9 +1,15 @@
 "use client"
 
-import React, { useState } from "react"
 import * as Select from "@radix-ui/react-select"
-import Image from "next/image"
+
+import React, { useState } from "react"
+
+import { useFiltersStore } from "@/stores/useFiltersStore"
+
 import styles from "./propertyTypeSelect.module.scss"
+
+import ActionButton from "../../buttons/ActionButton"
+
 import IconImage from "@/components/ui/IconImage"
 
 interface PropertyTypeSelectProps {
@@ -15,9 +21,8 @@ interface PropertyTypeSelectProps {
 }
 
 const propertyTypeOptions = [
-  { value: "Жилой комплекс", label: "Жилой комплекс" },
+  { value: "Жилой комплекс", label: "ЖК" },
   { value: "Квартира", label: "Квартира" },
-  { value: "Апартаменты", label: "Апартаменты" },
 ]
 
 const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
@@ -27,11 +32,24 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
   label,
   className,
 }) => {
-  const [value, setValue] = useState(defaultValue)
+  const { selectedPropertyType, setSelectedPropertyType } = useFiltersStore()
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleValueChange = (newValue: string) => {
-    setValue(newValue)
+    setSelectedPropertyType(newValue)
     onValueChange?.(newValue)
+  }
+
+  const handleApply = () => {
+    setIsOpen(false)
+  }
+
+  // Функция для отображения правильного текста в селекте
+  const getDisplayValue = (value: string) => {
+    if (value === "Жилой комплекс") {
+      return "Жилой комплекс"
+    }
+    return value
   }
 
   return (
@@ -39,9 +57,18 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
       className={`${styles.selectRoot} ${className ? styles[className] : ""}`}
     >
       {label && <div className={styles.selectLabel}>{label}</div>}
-      <Select.Root value={value} onValueChange={handleValueChange}>
+      <Select.Root
+        value={selectedPropertyType}
+        onValueChange={handleValueChange}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
         <Select.Trigger className={styles.selectTrigger}>
-          <Select.Value placeholder={placeholder} />
+          <Select.Value placeholder={placeholder}>
+            {selectedPropertyType
+              ? getDisplayValue(selectedPropertyType)
+              : placeholder}
+          </Select.Value>
           <Select.Icon className={styles.selectIcon}>
             <IconImage
               iconLink="/images/icons/chevron-down-orange.svg"
@@ -55,6 +82,9 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
             className={styles.selectContent}
             position="popper"
             sideOffset={5}
+            side="bottom"
+            align="start"
+            avoidCollisions={false}
           >
             <Select.Viewport className={styles.selectViewport}>
               {propertyTypeOptions.map((option) => (

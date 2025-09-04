@@ -1,8 +1,12 @@
 "use client"
-import React, { FC } from "react"
-import styles from "../header.module.scss"
-import Image from "next/image"
+
 import clsx from "clsx"
+
+import React, { FC } from "react"
+
+import Image from "next/image"
+
+import styles from "../header.module.scss"
 
 interface IUserActionsProps {
   favoritesCount?: number
@@ -46,7 +50,7 @@ const UserActions: FC<IUserActionsProps> = ({
       >
         <Image
           className={styles.user_actions__icon}
-          src="/svgFiles/favorite.svg"
+          src="/images/icons/header/favorite.svg"
           alt="Favorites"
           width={20}
           height={20}
@@ -64,7 +68,7 @@ const UserActions: FC<IUserActionsProps> = ({
       >
         <Image
           className={styles.user_actions__icon}
-          src="/svgFiles/profile.svg"
+          src="/images/icons/header/profile.svg"
           alt="User"
           width={20}
           height={20}
@@ -81,7 +85,7 @@ const UserActions: FC<IUserActionsProps> = ({
       >
         <Image
           className="showMenuSvg"
-          src="/svgFiles/showMenu.svg"
+          src="/images/icons/header/showMenu.svg"
           alt="Menu"
           width={16}
           height={16}

@@ -1,0 +1,105 @@
+.fullMap {
+  height: calc(100vh - 127px);
+
+  margin-top: -63px;
+
+  position: relative;
+  width: 100%;
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    height: calc(100vh - 70px);
+    margin-top: -64px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    height: calc(100vh - 33px);
+  }
+
+  @media screen and (width < 768px) {
+    height: calc(100vh - 57px);
+    margin-top: -24px;
+  }
+
+  &__map {
+    border-radius: 0 !important;
+  }
+
+  &__overlay {
+    // background-color: rgba(0, 0, 0, 0.3);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+  }
+
+  &__filtersNavbar {
+    padding: 0 120px;
+    position: sticky;
+    top: 81px; // совпадает с каталогом: TopBar + MainBar
+    z-index: 12; // выше оверлея и карты
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      padding: 0 80px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      padding: 0 16px;
+      top: 0px;
+    }
+
+    @media screen and (width >= 768px) and (width < 906px) {
+      padding: 0 16px;
+      top: 65px;
+    }
+
+    @media screen and (width >= 906px) and (width < 1024px) {
+      padding: 0 16px;
+      top: 70px;
+    }
+
+    @media screen and (width < 768px) {
+      padding: 0 16px;
+      top: 0px;
+    }
+  }
+
+  &__propertyCard {
+    cursor: default;
+    left: 24px;
+    position: absolute;
+    top: 94px;
+    width: 480px;
+    z-index: 11;
+
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 400px;
+    }
+
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 360px;
+    }
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      bottom: 0;
+      left: 0;
+      top: auto;
+      width: 100vw;
+    }
+
+    @media screen and (width < 768px) {
+      bottom: 0;
+      left: 0;
+      top: auto;
+      width: 100vw;
+    }
+  }
+
+  &__map {
+    height: 100%;
+    margin-top: 20px;
+    width: 100%;
+  }
+}

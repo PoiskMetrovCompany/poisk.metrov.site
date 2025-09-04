@@ -1,0 +1,6 @@
+export { CatalogueHeader } from "./CatalogueHeader"
+export { CatalogueFiltersSection } from "./CatalogueFiltersSection"
+export { CatalogueResultsHeader } from "./CatalogueResultsHeader"
+export { CatalogueCardsContainer } from "./CatalogueCardsContainer"
+export { CataloguePagination } from "./CataloguePagination"
+export { CatalogueNotFound } from "./CatalogueNotFound"
