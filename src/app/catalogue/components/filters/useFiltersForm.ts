@@ -673,7 +673,7 @@ export const useFiltersForm = () => {
     ).length
     count += stringCount
 
-    return count
+    return count <= 2 ? 0 : count - 2
   }, [form.state.values, multiSelectValues])
 
   // Effect для закрытия селектов при клике вне их

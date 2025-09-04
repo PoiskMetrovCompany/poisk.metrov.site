@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { useFiltersStore } from "@/stores/useFiltersStore"
 import { getCurrentUrlParams, hasActiveFiltersInUrl } from "@/utils/urlParams"
@@ -10,28 +10,33 @@ const FiltersDebugPanel: React.FC = () => {
     useFiltersStore()
 
   const [isClient, setIsClient] = useState(false)
-  const [currentUrlParams, setCurrentUrlParams] = useState<URLSearchParams>(
-    new URLSearchParams()
-  )
-  const [hasFilters, setHasFilters] = useState(false)
+
+  // Мемоизируем URL параметры и состояние фильтров
+  const currentUrlParams = useMemo(() => getCurrentUrlParams(), [])
+  const hasFilters = useMemo(() => hasActiveFiltersInUrl(), [])
 
   useEffect(() => {
     setIsClient(true)
-    setCurrentUrlParams(getCurrentUrlParams())
-    setHasFilters(hasActiveFiltersInUrl())
   }, [])
 
-  const handleLoadFromUrl = () => {
+  // Мемоизируем обработчики
+  const handleLoadFromUrl = useCallback(() => {
     loadFromUrl()
-  }
+  }, [loadFromUrl])
 
-  const handleSyncToUrl = () => {
+  const handleSyncToUrl = useCallback(() => {
     syncWithUrl()
-  }
+  }, [syncWithUrl])
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     resetFilters()
-  }
+  }, [resetFilters])
+
+  // Мемоизируем JSON строку для предотвращения лишних ререндеров
+  const filtersDataString = useMemo(
+    () => JSON.stringify(filtersData, null, 2),
+    [filtersData]
+  )
 
   // Не рендерим ничего до гидратации
   if (!isClient) {
@@ -83,7 +88,7 @@ const FiltersDebugPanel: React.FC = () => {
       <div style={{ marginTop: "10px" }}>
         <strong>Состояние фильтров:</strong>
         <pre style={{ fontSize: "10px", overflow: "auto", maxHeight: "100px" }}>
-          {JSON.stringify(filtersData, null, 2)}
+          {filtersDataString}
         </pre>
       </div>
     </div>

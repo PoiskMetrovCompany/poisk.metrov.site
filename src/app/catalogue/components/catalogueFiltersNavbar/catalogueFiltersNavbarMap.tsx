@@ -18,18 +18,18 @@ interface CatalogueFiltersProps {
 }
 
 const CatalogueFiltersMap: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
-  const [roomCount, setRoomCount] = useState<string[]>([])
+  const [roomCount, setRoomCount] = useState<string>("")
 
   const applyFilters = () => {
-    console.log("Фильтры применены")
+    // Фильтры применены
   }
 
   const handlePriceChange = (range: [number | null, number | null]) => {
-    console.log("Диапазон цен изменен:", range)
+    // Диапазон цен изменен
   }
 
   const handleSearchChange = (value: string) => {
-    console.log("Поисковый запрос:", value)
+    // Поисковый запрос
   }
 
   return (
@@ -47,7 +47,7 @@ const CatalogueFiltersMap: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
           }
           className={styles.catalogue__filters__container__inputs__room}
           value={roomCount}
-          onRoomCountChange={(newRoomCount: string[]) =>
+          onRoomCountChange={(newRoomCount: string) =>
             setRoomCount(newRoomCount)
           }
         />

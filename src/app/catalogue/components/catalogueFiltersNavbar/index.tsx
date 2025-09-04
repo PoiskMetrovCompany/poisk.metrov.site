@@ -23,6 +23,7 @@ interface CatalogueFiltersProps {
   onShowFilters: () => void
   onApplyFilters: (formData: FiltersFormData) => void
   isSticky?: boolean
+  isLoadingFilters?: boolean
 }
 
 const CatalogueFilters: FC<CatalogueFiltersProps> = ({
@@ -30,6 +31,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
   onShowFilters,
   onApplyFilters,
   isSticky = false,
+  isLoadingFilters = false,
 }) => {
   const [shouldApplySticky, setShouldApplySticky] = useState(false)
   const stickyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -108,6 +110,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
               styles.catalogue__filters__container__buttonsDesktop__button__show
             }
             size="medium"
+            disabled={isLoadingFilters}
           >
             <IconImage
               iconLink="/images/icons/search-white.svg"
@@ -121,7 +124,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
                 styles.catalogue__filters__container__buttonsDesktop__button__show__text
               }
             >
-              Показать{" "}
+              {isLoadingFilters ? "Загрузка..." : "Показать"}{" "}
               <span>
                 {filtersData.propertyType === "Квартира" ? "квартиры" : "ЖК"}
               </span>
@@ -137,6 +140,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
           }
           size="small"
           type="secondary"
+          disabled={isLoadingFilters}
         >
           <IconImage
             className={
@@ -163,6 +167,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
             }
             size="small"
             type="outline-white"
+            disabled={isLoadingFilters}
           >
             <IconImage
               className={

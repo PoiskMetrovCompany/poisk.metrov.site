@@ -10,6 +10,7 @@ import {
   createFiltersUrl,
   mapFiltersFormToApi,
 } from "@/utils/mappers/filtersMapper"
+import { hasActiveFiltersInUrl } from "@/utils/urlParams"
 
 type SortType = "cards" | "list"
 
@@ -37,12 +38,24 @@ export const useCatalogueData = (
         activeFilters.entity_type !==
           (storeFiltersData.propertyType === "Квартира" ? "Квартиры" : "ЖК"))
     ) {
-      // Создаем фильтры на основе текущих данных store
-      const filtersParams = mapFiltersFormToApi(
-        storeFiltersData as FiltersFormData,
-        storeFiltersData.propertyType
-      )
-      setActiveFilters(filtersParams)
+      // Проверяем, есть ли активные фильтры в URL
+      const hasActiveFilters = hasActiveFiltersInUrl()
+
+      if (hasActiveFilters) {
+        // Создаем фильтры на основе текущих данных store
+        const filtersParams = mapFiltersFormToApi(
+          storeFiltersData as FiltersFormData,
+          storeFiltersData.propertyType
+        )
+        setActiveFilters(filtersParams)
+      } else {
+        // Если нет активных фильтров, создаем базовые фильтры для типа недвижимости
+        const baseFilters = mapFiltersFormToApi(
+          storeFiltersData as FiltersFormData,
+          storeFiltersData.propertyType
+        )
+        setActiveFilters(baseFilters)
+      }
     }
   }, [
     activeFilters,
@@ -73,14 +86,11 @@ export const useCatalogueData = (
 
   const handleApplyFilters = useCallback(
     (formData: FiltersFormData) => {
-      console.log("Применение фильтров:", formData)
-
       // Преобразуем данные формы в параметры API
       const filtersParams = mapFiltersFormToApi(
         formData,
         storeFiltersData.propertyType
       )
-      console.log("Параметры API фильтров:", filtersParams)
 
       // Сохраняем активные фильтры
       setActiveFilters(filtersParams)
@@ -94,15 +104,12 @@ export const useCatalogueData = (
     setCurrentPage(page)
   }, [])
 
-  // Логирование результата запроса фильтров
+  // Логирование ошибок запроса фильтров
   useEffect(() => {
-    if (filtersData) {
-      console.log("Результат запроса фильтров:", filtersData)
-    }
     if (errorFilters) {
       console.error("Ошибка запроса фильтров:", errorFilters)
     }
-  }, [filtersData, errorFilters])
+  }, [errorFilters])
 
   return {
     selectedSorting,

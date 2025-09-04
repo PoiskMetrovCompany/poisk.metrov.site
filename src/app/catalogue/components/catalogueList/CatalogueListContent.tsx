@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
 import { useInitialFiltersFromUrl } from "@/hooks/useInitialFiltersFromUrl"
@@ -46,11 +46,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
   // Синхронизация с URL
   useUrlSync()
-
-  // Обработка изменений URL при навигации
   useUrlChangeListener()
-
-  // Инициализация фильтров из URL при загрузке страницы
   useInitialFiltersFromUrl()
 
   const {
@@ -83,6 +79,14 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
     setShowFilters(false)
   }
 
+  // Мемоизируем условие для показа блоков
+  const shouldShowBlocks = useMemo(() => {
+    return !(
+      !isLoadingFilters &&
+      (!filtersData?.data || filtersData.data.length === 0)
+    )
+  }, [isLoadingFilters, filtersData?.data])
+
   return (
     <div className={styles.catalogue}>
       <CatalogueHeader
@@ -103,6 +107,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
         elementRef={elementRef}
         onShowFilters={handleShowFilters}
         onApplyFilters={handleApplyFiltersWithClose}
+        isLoadingFilters={isLoadingFilters}
       />
 
       <FiltersDialog
@@ -116,40 +121,45 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
         filtersData={filtersData}
       />
 
-      <CatalogueResultsHeader
-        filtersData={filtersData}
-        selectedPropertyType={storeFiltersData.propertyType}
-        selectedSorting={selectedSorting}
-        isLaptop={isLaptop}
-        onSortingChange={handleSorting}
-      />
+      {/* Показываем блоки только если нет ошибки "не найдено" */}
+      {shouldShowBlocks && (
+        <>
+          <CatalogueResultsHeader
+            filtersData={filtersData}
+            selectedPropertyType={storeFiltersData.propertyType}
+            selectedSorting={selectedSorting}
+            isLaptop={isLaptop}
+            onSortingChange={handleSorting}
+          />
 
-      <CatalogueCardsContainer
-        selectedSorting={selectedSorting}
-        selectedPropertyType={storeFiltersData.propertyType}
-      >
-        {isLoadingFilters
-          ? renderSkeletons(selectedSorting)
-          : renderCards(
-              filtersData,
-              storeFiltersData.propertyType,
-              selectedSorting
-            )}
-      </CatalogueCardsContainer>
+          <CatalogueCardsContainer
+            selectedSorting={selectedSorting}
+            selectedPropertyType={storeFiltersData.propertyType}
+          >
+            {isLoadingFilters
+              ? renderSkeletons(selectedSorting)
+              : renderCards(
+                  filtersData,
+                  storeFiltersData.propertyType,
+                  selectedSorting
+                )}
+          </CatalogueCardsContainer>
 
-      <CataloguePagination
-        isLoadingFilters={isLoadingFilters}
-        filtersData={filtersData}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+          <CataloguePagination
+            isLoadingFilters={isLoadingFilters}
+            filtersData={filtersData}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
 
-      <CatalogueCardsContainer
-        selectedSorting={selectedSorting}
-        selectedPropertyType={storeFiltersData.propertyType}
-      >
-        {renderAdditionalComponents(selectedSorting)}
-      </CatalogueCardsContainer>
+          <CatalogueCardsContainer
+            selectedSorting={selectedSorting}
+            selectedPropertyType={storeFiltersData.propertyType}
+          >
+            {renderAdditionalComponents(selectedSorting)}
+          </CatalogueCardsContainer>
+        </>
+      )}
     </div>
   )
 }
