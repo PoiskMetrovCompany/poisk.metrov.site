@@ -104,12 +104,6 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
                 </Select.Item>
               ))}
             </Select.Viewport>
-            <ActionButton
-              className={styles.selectMobileApplyButton}
-              onClick={handleApply}
-            >
-              Применить
-            </ActionButton>
           </Select.Content>
         </Select.Portal>
       </Select.Root>

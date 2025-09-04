@@ -70,7 +70,6 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
   }, [isSticky])
 
   const handleApplyFilters = () => {
-    console.log("Применение фильтров из CatalogueFilters:", filtersData)
     onApplyFilters(filtersData)
   }
 
@@ -93,6 +92,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
         />
         <PriceDropdown
           className={styles.catalogue__filters__container__inputs__price}
+          value={[filtersData.priceMin || null, filtersData.priceMax || null]}
           onPriceChange={updatePriceRange}
         />
         <div
