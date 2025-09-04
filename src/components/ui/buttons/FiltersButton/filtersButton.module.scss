@@ -1,79 +1,50 @@
 .filtersButton {
-  align-items: center;
-
-  background-color: transparent;
-  border: 1px solid var(--color-border-gray);
-  border-radius: 20px;
-  color: var(--color-black);
   cursor: pointer;
 
   display: flex;
-
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
 
   height: 56px;
-  justify-content: center;
-  line-height: 150%;
   padding: 0 24px;
+  border: 1px solid var(--color-border-gray);
+  border-radius: 20px;
+
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 150%;
+  color: var(--color-black);
+
+  background-color: transparent;
 
   transition: all 0.3s ease;
 
-  @media screen and (width >= 1440px) and (width < 1920px) {
-    border-radius: 16px;
-    font-size: 15px;
-    height: 48px;
-    padding: 0 20px;
-  }
-
-  @media screen and (width >= 1024px) and (width < 1440px) {
-    border-radius: 12px;
-    font-size: 15px;
-    height: 40px;
-    padding: 0 17px;
-  }
-
-  @media screen and (width >= 768px) and (width < 1024px) {
-    border-radius: 12px;
-    font-size: 15px;
-    height: 40px;
-    padding: 0 17px;
-  }
-
-  @media screen and (width < 768px) {
-    border-radius: 12px;
-    font-size: 14px;
-    height: 40px;
-    padding: 0 17px;
-  }
-
   &__icon {
-    height: 24px;
     width: 24px;
-
-    @media screen and (width >= 1440px) and (width < 1920px) {
-      height: 20px;
-      width: 20px;
-    }
-
-    @media screen and (width < 1440px) {
-      height: 16px;
-      width: 16px;
-    }
+    height: 24px;
   }
 
   &:hover {
-    background: var(--color-gray-0);
     border: 1px solid var(--color-border-gray-hover);
+    background: var(--color-gray-0);
+  }
+
+  @media (width <= 1024px) {
+    padding: 14px 32px;
+    font-size: 13px;
+  }
+
+  @media (width <= 768px) {
+    padding: 10px 20px;
   }
 }
 
 .filtersButton_active {
-  background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
   border: 1px solid var(--orange-orange-10010, rgb(236 125 63 / 10%));
   color: var(--color-orange);
+  background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
 
   .filtersButton__icon {
     filter: brightness(0) saturate(100%) invert(50%) sepia(100%) saturate(2878%)
@@ -81,7 +52,7 @@
   }
 
   &:hover {
-    background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
     border: 1px solid var(--orange-orange-10010, rgb(236 125 63 / 10%));
+    background: var(--orange-orange-10010, rgb(236 125 63 / 10%));
   }
 }

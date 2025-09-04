@@ -1,43 +1,27 @@
+import React from "react"
+import styles from "./flatLayoutCard.module.scss"
+import Image from "next/image"
+import IconButton from "../ui/buttons/IconButton"
+import Link from "next/link"
+import IconImage from "../ui/IconImage"
 import clsx from "clsx"
 
-import React from "react"
-
-import Image from "next/image"
-import Link from "next/link"
-
-import styles from "./flatLayoutCard.module.scss"
-
-import IconImage from "../ui/IconImage"
-import IconButton from "../ui/buttons/IconButton"
+const description = [
+  "Этаж 8 из 17",
+  "I кв 2025",
+  "Дом кирпичный",
+  "Отделка улучшенная черновая",
+]
 
 interface IFlatLayoutCardProps {
   listClassName?: string
-  title?: string
-  price?: string
-  complex?: string
-  description?: string[]
-  imageUrl?: string
-  linkUrl?: string
 }
 
-const FlatLayoutCard = ({
-  listClassName,
-  title = "Студия, 25 м²",
-  price,
-  complex = "Европейский берег",
-  description = [
-    "Этаж 8 из 17",
-    "I кв 2025",
-    "Дом кирпичный",
-    "Отделка улучшенная черновая",
-  ],
-  imageUrl = "/images/temporary/room.png",
-  linkUrl = "/details/1",
-}: IFlatLayoutCardProps) => {
+const FlatLayoutCard = ({ listClassName }: IFlatLayoutCardProps) => {
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
-        <span>{complex}</span>
+        <span>Европейский берег</span>
         <div className={styles.flatLayoutCard__header__actions}>
           <IconButton
             size="sm"
@@ -53,14 +37,20 @@ const FlatLayoutCard = ({
       </div>
       <div className={styles.flatLayoutCard__content}>
         <Link
-          href={linkUrl}
+          href="/details/1"
           className={styles.flatLayoutCard__content__image__wrapper}
         >
           <div className={styles.flatLayoutCard__content__image}>
-            <Image src={imageUrl} alt="flat-layout-card" fill />
+            <Image
+              src="/images/temporary/room.png"
+              alt="flat-layout-card"
+              fill
+            />
           </div>
         </Link>
-        <span className={styles.flatLayoutCard__content__title}>{title}</span>
+        <span className={styles.flatLayoutCard__content__title}>
+          Студия, 25 м²
+        </span>
         <ul
           className={clsx(
             styles.flatLayoutCard__content__description,
@@ -84,10 +74,10 @@ const FlatLayoutCard = ({
         </ul>
         <div className={styles.flatLayoutCard__content__price}>
           <h4 className={styles.flatLayoutCard__content__price__value}>
-            {price}
+            4 359 990 ₽
           </h4>
           <Link
-            href={linkUrl}
+            href="/details/1"
             className={styles.flatLayoutCard__content__price__change}
           >
             <div

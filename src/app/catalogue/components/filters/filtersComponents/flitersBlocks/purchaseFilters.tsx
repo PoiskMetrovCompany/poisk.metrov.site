@@ -1,16 +1,13 @@
 import React, { FC } from "react"
-
 import styles from "./filterBlocks.module.scss"
-
-import {
-  DOWN_PAYMENT_OPTIONS,
-  INSTALLMENT_PERIOD_OPTIONS,
-  MORTGAGE_PROGRAMS_OPTIONS,
-  MORTGAGE_TYPE_OPTIONS,
-  PAYMENT_METHOD_OPTIONS,
-} from "../../types"
-
 import FiltersButton from "@/components/ui/buttons/FiltersButton"
+import {
+  PAYMENT_METHOD_OPTIONS,
+  MORTGAGE_TYPE_OPTIONS,
+  INSTALLMENT_PERIOD_OPTIONS,
+  DOWN_PAYMENT_OPTIONS,
+  MORTGAGE_PROGRAMS_OPTIONS,
+} from "../../types"
 import Heading3 from "@/components/ui/heading3"
 
 interface PurchaseFiltersProps {
@@ -30,21 +27,11 @@ interface PurchaseFiltersProps {
       | "mortgagePrograms",
     value: string
   ) => void
-  handleSingleSelect: (
-    field:
-      | "paymentMethod"
-      | "mortgageType"
-      | "installmentPeriod"
-      | "downPayment"
-      | "mortgagePrograms",
-    value: string
-  ) => void
 }
 
 const PurchaseFilters: FC<PurchaseFiltersProps> = ({
   formData,
   handleMultiSelect,
-  handleSingleSelect,
 }) => {
   return (
     <div className={styles.filterBlock}>
@@ -63,7 +50,7 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.paymentMethod.includes(option)}
-              onClick={() => handleSingleSelect("paymentMethod", option)}
+              onClick={() => handleMultiSelect("paymentMethod", option)}
             />
           ))}
         </div>
@@ -78,7 +65,7 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.mortgageType.includes(option)}
-              onClick={() => handleSingleSelect("mortgageType", option)}
+              onClick={() => handleMultiSelect("mortgageType", option)}
             />
           ))}
         </div>
@@ -93,7 +80,7 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.installmentPeriod.includes(option)}
-              onClick={() => handleSingleSelect("installmentPeriod", option)}
+              onClick={() => handleMultiSelect("installmentPeriod", option)}
             />
           ))}
         </div>
@@ -110,7 +97,7 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.downPayment.includes(option)}
-              onClick={() => handleSingleSelect("downPayment", option)}
+              onClick={() => handleMultiSelect("downPayment", option)}
             />
           ))}
         </div>
@@ -127,7 +114,7 @@ const PurchaseFilters: FC<PurchaseFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.mortgagePrograms.includes(option)}
-              onClick={() => handleSingleSelect("mortgagePrograms", option)}
+              onClick={() => handleMultiSelect("mortgagePrograms", option)}
             />
           ))}
         </div>

@@ -1,7 +1,5 @@
 import { useForm } from "@tanstack/react-form"
-
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-
+import { useState, useRef, useEffect, useMemo, useCallback } from "react"
 import { FiltersFormData, INITIAL_RANGES } from "./types"
 
 // Типы для селектов
@@ -49,7 +47,6 @@ interface ShowOptionsState {
 // Интерфейс для значений мультивыбора
 interface MultiSelectValues {
   // Квартира
-  propertyType: string
   rooms: string[]
   floorOptions: string[]
   layout: string[]
@@ -125,7 +122,6 @@ export const useFiltersForm = () => {
   const [multiSelectValues, setMultiSelectValues] = useState<MultiSelectValues>(
     {
       // Квартира
-      propertyType: "Квартира",
       rooms: [],
       floorOptions: [],
       layout: [],
@@ -236,7 +232,6 @@ export const useFiltersForm = () => {
   const resetFilters = () => {
     form.reset()
     setMultiSelectValues({
-      propertyType: "",
       rooms: [],
       floorOptions: [],
       layout: [],
@@ -423,14 +418,6 @@ export const useFiltersForm = () => {
     }))
   }, [])
 
-  // Обработчик для типа жилья (взаимоисключающий выбор)
-  const handlePropertyTypeSelect = useCallback((propertyType: string) => {
-    setMultiSelectValues((prev) => ({
-      ...prev,
-      propertyType: prev.propertyType === propertyType ? "" : propertyType,
-    }))
-  }, [])
-
   // Обработчик для типа транспорта до метро (взаимоисключающий выбор)
   const handleMetroTransportTypeSelect = useCallback(
     (transportType: string) => {
@@ -439,19 +426,6 @@ export const useFiltersForm = () => {
         metroTransportType:
           prev.metroTransportType === transportType ? "" : transportType,
       }))
-    },
-    []
-  )
-
-  // Обработчик для одиночного выбора (взаимоисключающий выбор для кнопок фильтров)
-  const handleSingleSelect = useCallback(
-    (field: MultiSelectField, value: string) => {
-      setMultiSelectValues((prev) => {
-        const currentValues = prev[field] || []
-        // Если значение уже выбрано, убираем его, иначе заменяем весь массив на одно значение
-        const newValues = currentValues.includes(value) ? [] : [value]
-        return { ...prev, [field]: newValues }
-      })
     },
     []
   )
@@ -541,7 +515,6 @@ export const useFiltersForm = () => {
 
     // Подсчет строковых значений (только непустые строки)
     const stringFields: (keyof typeof allData)[] = [
-      "propertyType",
       "apartments",
       "metroTransportType",
     ]
@@ -570,14 +543,9 @@ export const useFiltersForm = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [refs, closeAllSelects])
 
-  // Мемоизируем formData, чтобы избежать создания нового объекта при каждом рендере
-  const formData = useMemo(() => {
-    return { ...form.state.values, ...multiSelectValues }
-  }, [form.state.values, multiSelectValues])
-
   return {
     form,
-    formData,
+    formData: { ...form.state.values, ...multiSelectValues },
 
     // Состояния показа опций селектов
     showOptions,
@@ -598,9 +566,7 @@ export const useFiltersForm = () => {
     handleRangeMaxChange,
     handleRangeInputChange,
     handleMultiSelect,
-    handleSingleSelect,
     handleApartmentsSelect,
-    handlePropertyTypeSelect,
     handleMetroTransportTypeSelect,
   }
 }

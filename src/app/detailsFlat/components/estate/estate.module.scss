@@ -1,76 +1,46 @@
 .info {
-  align-items: center;
   display: flex;
   gap: 40px;
+  align-items: center;
   margin-top: 32px;
 
   &__slider {
-    align-items: center;
-
-    background-color: var(--color-white);
-    border-radius: 32px;
+    position: relative;
 
     display: flex;
     flex: 1;
-    height: 748px;
+    align-items: center;
 
     max-width: 70%;
+    height: 748px;
     padding: 40px 208px 84px;
-    position: relative;
+    border-radius: 32px;
 
-    &__skeleton {
-      align-items: center;
-      display: flex;
-      height: 100%;
-      justify-content: center;
-      padding: 40px 208px 84px;
-      width: 100%;
-
-      &__image {
-        height: 100% !important;
-        width: 100% !important;
-      }
-
-      @media (width <= 1440px) {
-        padding: 0;
-      }
-
-      @media screen and (width >= 1440px) and (width < 1920px) {
-        height: 632px;
-      }
-
-      @media screen and (width >= 1024px) and (width < 1440px) {
-        height: 591px;
-      }
-
-      @media screen and (width < 1024px) {
-        height: 336px;
-      }
-    }
+    background-color: var(--color-white);
 
     :global(.swiper-slide) {
-      align-items: center !important;
       display: flex !important;
+      align-items: center !important;
       justify-content: center !important;
     }
 
     &__navigation {
+      position: absolute;
       bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
 
       display: flex;
       gap: 8px;
       justify-content: center;
-      left: 50%;
-      position: absolute;
-      transform: translateX(-50%);
 
       width: 40%;
 
       &__item {
-        background-color: var(--color-gray);
-        border-radius: 2px;
         flex: 1;
         height: 4px;
+        border-radius: 2px;
+        background-color: var(--color-gray);
 
         &.active {
           background-color: var(--color-orange);
@@ -102,27 +72,28 @@
 
     @media screen and (width < 1024px) {
       flex: auto;
-      height: 336px;
-      max-width: 100%;
       width: 100%;
+      max-width: 100%;
+      height: 336px;
 
       img {
-        max-height: 252px;
         max-width: 274px;
+        max-height: 252px;
       }
     }
   }
 
   &__description {
-    background-color: var(--color-white);
-    border-radius: 32px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 620px;
-    padding: 32px;
 
     width: 533px;
+    min-height: 620px;
+    padding: 32px;
+    border-radius: 32px;
+
+    background-color: var(--color-white);
 
     &__price {
       display: flex;
@@ -134,10 +105,10 @@
         justify-content: space-between;
 
         &__title {
-          color: var(--color-text-gray);
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
+          color: var(--color-text-gray);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
             font-size: 15px;
@@ -157,10 +128,10 @@
         }
 
         &__price {
-          color: var(--color-black);
           font-size: 24px;
           font-weight: 500;
           line-height: 130%;
+          color: var(--color-black);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
             font-size: 18px;
@@ -181,40 +152,41 @@
       }
 
       &__hasChanged {
-        align-items: center;
-
-        background: var(--color-beige);
-        border-radius: 16px;
         display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         height: 48px;
-        justify-content: space-between;
         padding: 12px 16px 12px 24px;
+        border-radius: 16px;
+
+        background: var(--color-beige);
 
         &__text {
-          color: var(--color-text-gray);
+          position: relative;
+
+          padding-left: 23px;
 
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
-
-          padding-left: 23px;
-          position: relative;
+          color: var(--color-text-gray);
 
           &::before {
-            background-color: var(--color-orange);
-            border-radius: 50%;
             content: "";
-
-            display: block;
-            height: 8px;
-            left: 0;
 
             position: absolute;
             top: 50%;
+            left: 0;
             transform: translateY(-50%);
 
+            display: block;
+
             width: 8px;
+            height: 8px;
+            border-radius: 50%;
+
+            background-color: var(--color-orange);
           }
 
           @media screen and (width >= 1440px) and (width < 1920px) {
@@ -230,58 +202,58 @@
           }
 
           @media screen and (width < 768px) {
-            font-size: 12px;
             padding-left: 20px;
+            font-size: 12px;
           }
         }
 
         &__button {
-          align-items: center;
-
-          background-color: var(--color-white);
-          border: none;
-          border-radius: 50%;
           cursor: pointer;
 
           display: flex;
-          height: 24px;
+          align-items: center;
           justify-content: center;
 
           width: 24px;
+          height: 24px;
+          border: none;
+          border-radius: 50%;
+
+          background-color: var(--color-white);
 
           &__icon {
-            height: 10px;
             width: 7px;
+            height: 10px;
 
             @media screen and (width >= 1024px) and (width < 1440px) {
-              height: 8px;
               width: 6px;
+              height: 8px;
             }
 
             @media screen and (width >= 768px) and (width < 1024px) {
-              height: 8px;
               width: 6px;
+              height: 8px;
             }
 
             @media screen and (width < 768px) {
-              height: 8px;
               width: 6px;
+              height: 8px;
             }
           }
 
           @media screen and (width >= 1024px) and (width < 1440px) {
-            height: 16px;
             width: 16px;
+            height: 16px;
           }
 
           @media screen and (width >= 768px) and (width < 1024px) {
-            height: 16px;
             width: 16px;
+            height: 16px;
           }
 
           @media screen and (width < 768px) {
-            height: 16px;
             width: 16px;
+            height: 16px;
           }
         }
 
@@ -294,9 +266,9 @@
         }
 
         @media screen and (width < 768px) {
-          border-radius: 12px;
           height: 32px;
           padding: 12px 12px 12px 20px;
+          border-radius: 12px;
         }
       }
 
@@ -321,21 +293,21 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      margin-bottom: 24px;
 
       margin-top: 24px;
+      margin-bottom: 24px;
 
       &__item {
-        align-items: center;
         display: flex;
         gap: 12px;
+        align-items: center;
         justify-content: space-between;
 
         &__title {
-          color: var(--color-text-gray);
           font-size: 18px;
           font-weight: 400;
           line-height: 150%;
+          color: var(--color-text-gray);
 
           @media screen and (width >= 768px) and (width < 1920px) {
             font-size: 15px;
@@ -347,10 +319,10 @@
         }
 
         &__value {
-          color: var(--color-black);
           font-size: 18px;
           font-weight: 500;
           line-height: 150%;
+          color: var(--color-black);
           text-align: right;
 
           @media screen and (width < 1920px) {
@@ -398,18 +370,18 @@
         }
 
         @media screen and (width >= 1024px) and (width < 1440px) {
-          font-size: 14px !important;
           height: 48px !important;
+          font-size: 14px !important;
         }
 
         @media screen and (width >= 768px) and (width < 1024px) {
-          font-size: 14px !important;
           height: 48px !important;
+          font-size: 14px !important;
         }
 
         @media screen and (width < 768px) {
-          font-size: 14px !important;
           height: 48px !important;
+          font-size: 14px !important;
         }
       }
 
@@ -419,28 +391,28 @@
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 405px;
       min-height: 492px;
       padding: 24px;
-      width: 405px;
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 380px;
       min-height: 458px;
       padding: 20px;
-      width: 380px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
+      width: 100%;
       min-height: 428px;
       padding: 20px;
-      width: 100%;
     }
 
     @media screen and (width < 768px) {
-      border-radius: 24px;
+      width: 100%;
       min-height: 441px;
       padding: 16px;
-      width: 100%;
+      border-radius: 24px;
     }
   }
 

@@ -1,15 +1,9 @@
 "use client"
-
-import * as Dialog from "@radix-ui/react-dialog"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-
 import React, { useState } from "react"
-
+import { Dialog } from "radix-ui"
 import styles from "./infrastructure.module.scss"
-
-import Infrastructure from "."
-
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import Infrastructure from "."
 
 interface InfrastructureDialogProps {
   selectedInfrastructure: string[]
@@ -39,11 +33,6 @@ const InfrastructureDialog = ({
         <Dialog.Overlay className={styles.Overlay} />
         <Dialog.Content className={styles.Content}>
           <Dialog.Title className={styles.Title}>Инфраструктура</Dialog.Title>
-          <Dialog.Description asChild>
-            <VisuallyHidden>
-              Выберите типы инфраструктуры для фильтрации объектов
-            </VisuallyHidden>
-          </Dialog.Description>
           <Infrastructure
             selectedInfrastructure={selectedInfrastructure}
             toggleInfrastructure={toggleInfrastructure}

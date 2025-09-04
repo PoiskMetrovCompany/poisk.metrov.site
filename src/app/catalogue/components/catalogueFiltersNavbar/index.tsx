@@ -1,191 +1,57 @@
-"use client"
-
-import clsx from "clsx"
-
-import React, { FC, useEffect, useRef, useState } from "react"
-
-import Image from "next/image"
-
-import { FiltersFormData } from "@/app/catalogue/components/filters/types"
-import { useFiltersStore } from "@/stores/useFiltersStore"
-
+import React, { FC } from "react"
 import styles from "./catalogueFilters.module.scss"
-
-import IconImage from "@/components/ui/IconImage"
+import clsx from "clsx"
+import Image from "next/image"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import IconImage from "@/components/ui/IconImage"
 import IconButton from "@/components/ui/buttons/IconButton"
-import PriceDropdown from "@/components/ui/inputs/filters/priceDropdown"
-import RoomCountDropdown from "@/components/ui/inputs/filters/roomCountDropdown"
-import SearchDropdown from "@/components/ui/inputs/filters/searchDropdown"
+import PriceDropdown from "../../../../components/ui/inputs/filters/priceDropdown"
+import SearchDropdown from "../../../../components/ui/inputs/filters/searchDropdown"
 
 interface CatalogueFiltersProps {
-  isMap?: boolean
   onShowFilters: () => void
-  onApplyFilters: (formData: FiltersFormData) => void
-  isSticky?: boolean
+  onApplyFilters: () => void
 }
 
-const CatalogueFilters: FC<CatalogueFiltersProps> = ({
-  isMap = false,
-  onShowFilters,
-  onApplyFilters,
-  isSticky = false,
-}) => {
-  const [shouldApplySticky, setShouldApplySticky] = useState(false)
-  const stickyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const {
-    selectedPropertyType,
-    filtersData,
-    updatePriceRange,
-    updateRoomCount,
-    updateSearchQuery,
-  } = useFiltersStore()
+const CatalogueFilters: FC<CatalogueFiltersProps> = ({ onShowFilters }) => {
+  const applyFilters = () => {
+    console.log("Фильтры применены")
+  }
 
-  useEffect(() => {
-    if (isSticky) {
-      // Очищаем предыдущий таймаут
-      if (stickyTimeoutRef.current) {
-        clearTimeout(stickyTimeoutRef.current)
-      }
+  const handlePriceChange = (range: [number | null, number | null]) => {
+    console.log("Диапазон цен изменен:", range)
+  }
 
-      // Устанавливаем таймаут на 1 секунду для применения класса sticky
-      stickyTimeoutRef.current = setTimeout(() => {
-        setShouldApplySticky(true)
-      }, 500)
-    } else {
-      // Очищаем таймаут и сразу убираем класс
-      if (stickyTimeoutRef.current) {
-        clearTimeout(stickyTimeoutRef.current)
-        stickyTimeoutRef.current = null
-      }
-      setShouldApplySticky(false)
-    }
-
-    // Очистка таймаута при размонтировании
-    return () => {
-      if (stickyTimeoutRef.current) {
-        clearTimeout(stickyTimeoutRef.current)
-      }
-    }
-  }, [isSticky])
-
-  const handleApplyFilters = () => {
-    onApplyFilters(filtersData)
+  const handleSearchChange = (value: string) => {
+    console.log("Поисковый запрос:", value)
   }
 
   return (
-    <div
-      className={clsx(
-        styles.catalogue__filters__container,
-        shouldApplySticky && styles.sticky
-      )}
-    >
+    <div className={styles.catalogue__filters__container}>
       <div className={styles.catalogue__filters__container__inputs}>
-        <RoomCountDropdown
-          showCount={false}
-          className={styles.catalogue__filters__container__inputs__room}
-          value={filtersData.rooms[0] || ""}
-          onRoomCountChange={updateRoomCount}
-        />
-        <div
-          className={styles.catalogue__filters__container__inputs__separator}
-        />
-        <PriceDropdown
-          className={styles.catalogue__filters__container__inputs__price}
-          value={[filtersData.priceMin || null, filtersData.priceMax || null]}
-          onPriceChange={updatePriceRange}
-        />
-        <div
-          className={styles.catalogue__filters__container__inputs__separator}
-        />
-        <SearchDropdown
-          className={styles.catalogue__filters__container__inputs__search}
-          onSearchChange={updateSearchQuery}
-        />
+        <PriceDropdown onPriceChange={handlePriceChange} />
+        <SearchDropdown onSearchChange={handleSearchChange} />
       </div>
       <div className={styles.catalogue__filters__container__buttonsDesktop}>
-        {!isMap && (
-          <ActionButton
-            type="primary"
-            onClick={handleApplyFilters}
-            className={
-              styles.catalogue__filters__container__buttonsDesktop__button__show
-            }
-            size="medium"
-          >
-            <IconImage
-              iconLink="/images/icons/search-white.svg"
-              alt="Показать"
-              className={
-                styles.catalogue__filters__container__buttonsDesktop__button__show__icon
-              }
-            />
-            <div
-              className={
-                styles.catalogue__filters__container__buttonsDesktop__button__show__text
-              }
-            >
-              Показать{" "}
-              <span>
-                {selectedPropertyType === "Квартира" ? "квартиры" : "ЖК"}
-              </span>
-            </div>
-          </ActionButton>
-        )}
-
         <ActionButton
-          // iconLink="/images/icons/filters-orange.svg"
+          type="primary"
+          onClick={applyFilters}
+          className={
+            styles.catalogue__filters__container__buttonsDesktop__button__show
+          }
+          size="medium"
+        >
+          Показать 12166 квартир
+        </ActionButton>
+        <IconButton
+          iconLink="/images/icons/filters-orange.svg"
           onClick={onShowFilters}
           className={
             styles.catalogue__filters__container__buttonsDesktop__button__filter
           }
-          size="small"
-          type="secondary"
-        >
-          <IconImage
-            className={
-              styles.catalogue__filters__container__buttonsDesktop__button__filter__icon
-            }
-            iconLink="/images/icons/filters-orange.svg"
-            alt="Показать фильтры"
-          />
-          <span
-            className={clsx(
-              styles.catalogue__filters__container__buttonsDesktop__button__filter__text,
-              isMap &&
-                styles.catalogue__filters__container__buttonsDesktop__button__filter__text_map
-            )}
-          >
-            Все фильтры
-          </span>
-        </ActionButton>
-        {isMap && (
-          <ActionButton
-            onClick={onShowFilters}
-            className={
-              styles.catalogue__filters__container__buttonsDesktop__button__save
-            }
-            size="small"
-            type="outline-white"
-          >
-            <IconImage
-              className={
-                styles.catalogue__filters__container__buttonsDesktop__button__save__icon
-              }
-              iconLink="/images/icons/heartOrange.svg"
-              alt="Сохранить поиск"
-            />
-            <span
-              className={clsx(
-                styles.catalogue__filters__container__buttonsDesktop__button__save__text,
-                isMap &&
-                  styles.catalogue__filters__container__buttonsDesktop__button__save__text_map
-              )}
-            >
-              Сохранить поиск
-            </span>
-          </ActionButton>
-        )}
+          size="md"
+          type="orange-light"
+        />
         {/* <ActionButton
           type="secondary"
           onClick={onShowFilters}

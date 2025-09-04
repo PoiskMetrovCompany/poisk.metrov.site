@@ -6,10 +6,9 @@ import Work from "./components/work"
 import Partners from "./components/partners"
 import Rating from "./components/rating"
 import Download from "./components/download"
-import Selection from "../components/apartmentSelection"
+import Selection from "./components/selection"
 import Favourites from "./components/favourites"
 import Filter from "./components/filter"
-import MonthlyPayment from "./components/monthlyPayment"
 
 const partnersData = [
   { src: "/images/partners/akvilon.webp", alt: "Akvilon" },
@@ -34,15 +33,10 @@ export default function Home() {
         <HeaderCards />
         <Filter />
         <Favourites />
-        <MonthlyPayment />
         <Mortage />
         <Compilation header="Подборка квартир" hasPromoCard={true} />
         <Work />
-        <Partners
-          logos={partnersData}
-          headingText="Партнеры, которые нам"
-          highlightedText="доверяют"
-        />
+        <Partners logos={partnersData} headingText="Партнеры, которые нам" highlightedText="доверяют" />
         <Rating />
         <Download />
         <Selection />

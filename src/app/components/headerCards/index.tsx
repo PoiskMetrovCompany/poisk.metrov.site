@@ -1,64 +1,10 @@
-"use client"
-
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-} from "date-fns"
-
-import React, { useEffect, useState } from "react"
-
-import { difference } from "next/dist/build/utils"
-import Link from "next/link"
-
-import { CbrResponse } from "@/types/api/cbr"
-import { useApiQuery } from "@/utils/hooks/use-api"
-
+import React from "react"
 import styles from "./headerCards.module.scss"
-
+import Link from "next/link"
 import IconImage from "@/components/ui/IconImage"
 import Button from "@/components/ui/buttons/ActionButton"
-import Skeleton from "@/components/ui/skeleton"
 
 const HeaderCards = () => {
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const CITY = "novosibirsk"
-  const API_URL = "http://localhost:1080/api/v1/cbr/actual-date/"
-  const {
-    data: cbrData,
-    isLoading: cbrLoading,
-    error: cbrError,
-  } = useApiQuery<CbrResponse>([CITY], API_URL, {
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  })
-  const cbrDate = cbrData?.attributes?.date
-    ? new Date(cbrData.attributes.date)
-    : null
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
-
-  const dateDiff = cbrDate ? differenceInMinutes(cbrDate, currentTime) : 0
-
-  const splitNumber = (number: number) => {
-    const intPart = Math.floor(number)
-    const decPart = number - intPart
-    return {
-      integer: intPart,
-      decimal: decPart,
-    }
-  }
-
-  const days = splitNumber(dateDiff / 1440)
-  const hours = splitNumber(days.decimal * 24)
-  const minutes = splitNumber(hours.decimal * 60)
-
   return (
     <div className={styles.headerCards}>
       <div className={styles.headerCards__title}>
@@ -83,56 +29,38 @@ const HeaderCards = () => {
               Изменение процентных ставок
             </h3>
           </div>
-          {cbrLoading ? (
-            <Skeleton
-              width={310}
-              height={96}
-              className={styles.headerCards__percent__date__skeleton}
-            />
-          ) : (
-            <div className={styles.headerCards__percent__date}>
-              <div className={styles.headerCards__percent__date__time}>
-                <span
-                  className={styles.headerCards__percent__date__time__number}
-                >
-                  {days.integer}
-                </span>{" "}
-                <span
-                  className={styles.headerCards__percent__date__time__colon}
-                >
-                  :
-                </span>
-                <span
-                  className={styles.headerCards__percent__date__time__number}
-                >
-                  {hours.integer}
-                </span>
-                <span
-                  className={styles.headerCards__percent__date__time__colon}
-                >
-                  :
-                </span>
-                <span
-                  className={styles.headerCards__percent__date__time__number}
-                >
-                  {minutes.integer}
-                </span>
-              </div>
-              <div className={styles.headerCards__percent__date__desc}>
-                <span className={styles.headerCards__percent__date__desc__item}>
-                  дней
-                </span>
-                <span className={styles.headerCards__percent__date__desc__item}>
-                  часов
-                </span>
-                <span className={styles.headerCards__percent__date__desc__item}>
-                  минут
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
 
+          <div className={styles.headerCards__percent__date}>
+            <div className={styles.headerCards__percent__date__time}>
+              <span className={styles.headerCards__percent__date__time__number}>
+                23
+              </span>{" "}
+              <span className={styles.headerCards__percent__date__time__colon}>
+                :
+              </span>
+              <span className={styles.headerCards__percent__date__time__number}>
+                12
+              </span>
+              <span className={styles.headerCards__percent__date__time__colon}>
+                :
+              </span>
+              <span className={styles.headerCards__percent__date__time__number}>
+                18
+              </span>
+            </div>
+            <div className={styles.headerCards__percent__date__desc}>
+              <span className={styles.headerCards__percent__date__desc__item}>
+                дней
+              </span>
+              <span className={styles.headerCards__percent__date__desc__item}>
+                часов
+              </span>
+              <span className={styles.headerCards__percent__date__desc__item}>
+                минут
+              </span>
+            </div>
+          </div>
+        </div>
         <Button type="beige" className={styles.headerCards__percent__button}>
           Узнать об ипотеке
         </Button>

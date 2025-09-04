@@ -1,16 +1,11 @@
+import React, { FC, useState, useEffect, useRef } from "react"
 import * as Popover from "@radix-ui/react-popover"
-import clsx from "clsx"
-
-import React, { FC, useEffect, useRef, useState } from "react"
-
 import styles from "./searchDropdown.module.scss"
-
 import IconImage from "@/components/ui/IconImage"
 
 interface SearchDropdownProps {
   onSearchChange?: (value: string) => void
   value?: string
-  className?: string
 }
 
 type searchItemType = "metro" | "complex" | "adress"
@@ -47,12 +42,12 @@ const searchItemsAdress: IsearchItem[] = [
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
   { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
+  { title: "Метро Речной вокзал", address: "Ленинская линия, Новосибирск" },
 ]
 
 const SearchDropdown: FC<SearchDropdownProps> = ({
   onSearchChange,
   value = "",
-  className,
 }) => {
   const [inputValue, setInputValue] = useState(value)
   const [isOpen, setIsOpen] = useState(false)
@@ -127,7 +122,7 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
   return (
     <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
       <Popover.Anchor asChild>
-        <div className={clsx(styles.searchDropdown__trigger, className)}>
+        <div className={styles.searchDropdown__trigger}>
           <IconImage
             className={styles.searchDropdown__trigger__icon}
             iconLink="/images/icons/search-gray.svg"
@@ -174,7 +169,6 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
-                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={
@@ -211,7 +205,6 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
-                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={
@@ -248,7 +241,6 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
-                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={

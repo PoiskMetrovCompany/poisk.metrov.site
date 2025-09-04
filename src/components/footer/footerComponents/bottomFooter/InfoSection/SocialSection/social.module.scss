@@ -1,42 +1,42 @@
 .social {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .social__title {
-  color: var(--color-gray);
-  font-size: 14px;
-  font-weight: 400;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-gray);
 }
 
 .social__list {
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
 }
 
 .social__item {
-  margin-top: 0.625rem;
-  padding-left: 25px;
-  position: relative;
-
-  &::before {
-    background-image: url("/images/icons/header/linkArrow.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    content: "";
-    height: 16px;
-    left: 0;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-  }
+    margin-top: 0.625rem;
+    position: relative;
+    padding-left: 25px; 
+    
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background-image: url('/svgFiles/linkArrow.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 }
 @media (max-width: 380px) {
-  .social__title {
-    font-size: 13px;
-  }
+    .social__title{
+        font-size: 13px;
+    }
 }

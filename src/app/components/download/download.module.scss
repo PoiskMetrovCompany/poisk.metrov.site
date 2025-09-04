@@ -1,31 +1,23 @@
 .download {
+  position: relative;
+
+  overflow: hidden;
+
+  margin: 120px 0;
+  padding: 120px;
+  border-radius: 40px;
+
   background-image: url("/images/cardDownload/card-background.webp");
   background-position: center;
   background-size: cover;
-  border-radius: 40px;
-
-  margin-bottom: 120px;
-  @media (width >= 1440px) and (width < 1920px) {
-    margin-bottom: 100px;
-  }
-  @media (width >= 1024px) and (width < 1440px) {
-    margin-bottom: 80px;
-  }
-  @media (width < 1024px) {
-    margin-bottom: 64px;
-  }
-
-  overflow: hidden;
-  padding: 120px;
-  position: relative;
 
   &__catalogue {
     display: flex;
     flex-direction: column;
     gap: 32px;
-    height: 100%;
 
     width: 668px;
+    height: 100%;
 
     &__header {
       display: flex;
@@ -33,10 +25,10 @@
       gap: 0;
 
       &__title {
-        color: var(--color-black);
         font-size: 56px;
         font-weight: 400;
         line-height: 130%;
+        color: var(--color-black);
 
         @media screen and (width >= 1440px) and (width < 1920px) {
           font-size: 40px;
@@ -56,76 +48,76 @@
       }
 
       &__description {
-        align-items: center;
         display: flex;
         gap: 24px;
+        align-items: center;
 
         &__text {
-          align-items: center;
-
-          background-color: var(--color-orange);
-          border-radius: 32px;
-          color: #fff;
+          transform: rotate(-5deg);
 
           display: flex;
+          align-items: center;
+          justify-content: center;
+
+          padding: 12px 24px;
+          border-radius: 32px;
 
           font-size: 34px;
           font-weight: 300;
-          justify-content: center;
           line-height: 130%;
+          color: #fff;
 
-          padding: 12px 24px;
-          transform: rotate(-5deg);
+          background-color: var(--color-orange);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
-            font-size: 22px;
             padding: 8px 16px;
+            font-size: 22px;
           }
 
           @media screen and (width >= 1024px) and (width < 1440px) {
-            font-size: 22px;
             padding: 8px 16px;
+            font-size: 22px;
           }
 
           @media screen and (width >= 768px) and (width < 1024px) {
-            font-size: 20px;
             padding: 8px 12px;
+            font-size: 20px;
           }
 
           @media screen and (width < 768px) {
-            font-size: 20px;
-            padding: 8px 12px;
             transform: rotate(0deg);
+            padding: 8px 12px;
+            font-size: 20px;
           }
         }
 
         @media screen and (width >= 1440px) and (width < 1920px) {
-          font-size: 26px;
           gap: 20px;
+          font-size: 26px;
         }
 
         @media screen and (width >= 1024px) and (width < 1440px) {
-          font-size: 22px;
           gap: 16px;
+          font-size: 22px;
         }
 
         @media screen and (width >= 768px) and (width < 1024px) {
-          font-size: 22px;
           gap: 8px;
+          font-size: 22px;
         }
 
         @media screen and (width < 768px) {
-          align-items: start;
           flex-direction: column;
           gap: 12px;
+          align-items: start;
         }
       }
     }
 
     &__statistics {
       display: grid;
-      gap: 16px;
       grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
       margin-top: 32px;
 
       @media screen and (width >= 1440px) and (width < 1920px) {
@@ -134,8 +126,8 @@
       }
 
       @media screen and (width >= 1024px) and (width < 1440px) {
-        gap: 12px;
         grid-template-columns: 1fr;
+        gap: 12px;
         margin-top: 16px;
       }
 
@@ -145,8 +137,8 @@
       }
 
       @media screen and (width < 768px) {
-        gap: 12px;
         grid-template-columns: 1fr;
+        gap: 12px;
         margin-top: 8px;
       }
     }
@@ -162,72 +154,68 @@
       gap: 24px;
 
       &__button {
-        align-items: center;
         display: flex;
-
-        font-weight: 400;
         gap: 12px;
+        align-items: center;
         justify-content: center;
 
-        transition: opacity 0.3s ease-in-out;
+        font-weight: 400;
 
-        &__send {
-          margin-top: 40px;
-        }
+        transition: opacity 0.3s ease-in-out;
 
         &:hover {
           opacity: 0.9;
         }
 
         &__icon {
-          height: 32px;
           width: 32px;
+          height: 32px;
 
           @media screen and (width >= 1440px) and (width < 1920px) {
-            height: 28px;
             width: 28px;
+            height: 28px;
           }
 
           @media screen and (width >= 1024px) and (width < 1440px) {
-            height: 28px;
             width: 28px;
+            height: 28px;
           }
 
           @media screen and (width >= 768px) and (width < 1024px) {
-            height: 24px;
             width: 24px;
+            height: 24px;
           }
 
           @media screen and (width < 768px) {
-            height: 24px;
             width: 24px;
+            height: 24px;
           }
         }
 
         @media screen and (width >= 1440px) and (width < 1920px) {
-          font-size: 16px !important;
           gap: 12px;
           padding: 0 23px !important;
+          font-size: 16px !important;
         }
 
         @media screen and (width >= 1024px) and (width < 1440px) {
-          font-size: 15px !important;
           gap: 8px;
           height: 56px !important;
+          font-size: 15px !important;
         }
 
         @media screen and (width >= 768px) and (width < 1024px) {
-          font-size: 13px !important;
           gap: 6px;
           height: 48px !important;
           padding: 0 23px !important;
+          font-size: 13px !important;
         }
 
         @media screen and (width < 768px) {
-          font-size: 14px !important;
           gap: 6px;
           height: 48px !important;
           padding: 0 23px !important;
+          font-size: 14px !important;
         }
       }
 
@@ -288,24 +276,25 @@
   }
 
   &__image {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 816px;
+    height: 100%;
+
     background-image: url("/images/cardDownload/card-download.webp");
     background-position: center;
     background-size: cover;
-    height: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    width: 816px;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
-      background-position: left;
       width: 600px;
+      background-position: left;
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
-      background-position: left;
       width: 484px;
+      background-position: left;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
@@ -326,16 +315,16 @@
   }
 
   @media screen and (width >= 768px) and (width < 1024px) {
+    padding: 40px;
+    border-radius: 24px;
     background: #fff;
     background-image: none;
-    border-radius: 24px;
-    padding: 40px;
   }
 
   @media screen and (width < 768px) {
+    padding: 24px 16px;
+    border-radius: 24px;
     background: #fff;
     background-image: none;
-    border-radius: 24px;
-    padding: 24px 16px;
   }
 }

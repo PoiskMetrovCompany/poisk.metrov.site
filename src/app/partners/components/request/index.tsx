@@ -1,29 +1,12 @@
 "use client"
-
 import React, { useState } from "react"
-
-import { useApiMutation } from "@/utils/hooks/use-api"
-
 import styles from "./request.module.scss"
-
-import ActionButton from "@/components/ui/buttons/ActionButton"
-import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
 import Heading2 from "@/components/ui/heading2"
 import Heading3 from "@/components/ui/heading3"
-import Dropdown from "@/components/ui/inputs/dropdown"
 import InputContainer from "@/components/ui/inputs/inputContainer"
-
-interface ApiData {
-  last_name: string
-  first_name: string
-  middle_name: string
-  phone: string
-  client_last_name: string
-  client_first_name: string
-  client_middle_name: string
-  client_phone: string
-  city: string
-}
+import Dropdown from "@/components/ui/inputs/dropdown"
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import CheckboxRow from "@/components/ui/checkbox/personalProcessing"
 
 const Request = () => {
   const [formData, setFormData] = useState({
@@ -44,61 +27,6 @@ const Request = () => {
 
   const handleInputChange = (name: string, value: string | boolean) => {
     setFormData({ ...formData, [name]: value })
-  }
-
-  const submitMutation = useApiMutation<ApiData, ApiData>(
-    "/crm/client-transfer",
-    {
-      onSuccess: (data) => {
-        console.log("Запрос отправлен", data)
-        setFormData({
-          agentLastname: "",
-          agentFirstname: "",
-          agentPatronymic: "",
-          agentPhone: "",
-          clientLastname: "",
-          clientFirstname: "",
-          clientPatronymic: "",
-          clientPhone: "",
-          city: "",
-          checked: false,
-        })
-      },
-      onError: (error) => {
-        console.log("Ошибка запроса", error)
-      },
-    }
-  )
-
-  const handleSubmit = () => {
-    if (!formData.checked) return
-    if (
-      !formData.agentLastname ||
-      !formData.agentFirstname ||
-      !formData.agentPatronymic ||
-      !formData.agentPhone ||
-      !formData.clientLastname ||
-      !formData.clientFirstname ||
-      !formData.clientPatronymic ||
-      !formData.clientPhone ||
-      !formData.city
-    ) {
-      console.log("Пожалуйста, заполните все поля")
-      return
-    }
-
-    const ApiData: ApiData = {
-      last_name: formData.agentLastname,
-      first_name: formData.agentFirstname,
-      middle_name: formData.agentPatronymic,
-      phone: formData.agentPhone,
-      client_last_name: formData.clientLastname,
-      client_first_name: formData.clientFirstname,
-      client_middle_name: formData.clientPatronymic,
-      client_phone: formData.clientPhone,
-      city: formData.city,
-    }
-    submitMutation.mutate(ApiData)
   }
 
   return (
@@ -192,13 +120,10 @@ const Request = () => {
         </div>
         <div className={styles.request__form__submit}>
           <ActionButton
-            loading={submitMutation.isPending}
-            disabled={submitMutation.isPending}
+            disabled={isDisabled}
             className={styles.request__form__submit__button}
-            onClick={handleSubmit}
-            type= {formData.checked ? "primary" : "gray"}
           >
-            {submitMutation.isPending ? "Отправка..." : "Отправить"}
+            Отправить заявку
           </ActionButton>
           <CheckboxRow
             checked={formData.checked}

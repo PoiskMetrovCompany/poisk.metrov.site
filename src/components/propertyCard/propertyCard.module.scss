@@ -1,54 +1,13 @@
 .property_card {
-  background-color: white;
-  border-radius: 40px;
+  position: relative;
+
+  overflow-y: hidden;
 
   height: 728px;
   margin-bottom: 24px;
+  border-radius: 40px;
 
-  overflow-y: hidden;
-  position: relative;
-
-  @media screen and (width >= 1440px) and (width < 1920px) {
-    height: 594px;
-  }
-
-  @media screen and (width >= 1024px) and (width < 1440px) {
-    height: 570px;
-  }
-
-  @media screen and (width >= 768px) and (width < 1024px) {
-    height: 643px;
-  }
-
-  @media screen and (width < 768px) {
-    border-radius: 32px;
-    height: auto;
-    min-height: 555px;
-  }
-
-  &_map {
-    height: 802px;
-
-    @media screen and (width >= 1440px) and (width < 1920px) {
-      height: 646px;
-    }
-
-    @media screen and (width >= 1024px) and (width < 1440px) {
-      height: 646px;
-    }
-
-    @media screen and (width >= 768px) and (width < 1024px) {
-      border-radius: 40px 40px 0 0;
-      height: 659px;
-      margin-bottom: 0 !important;
-    }
-
-    @media screen and (width < 768px) {
-      border-radius: 40px 40px 0 0;
-      height: 579px;
-      margin-bottom: 0 !important;
-    }
-  }
+  background-color: white;
 
   &__content {
     margin: auto;
@@ -97,29 +56,20 @@
         gap: 4px;
         margin-top: 12px;
       }
-
-      &_map {
-        flex-direction: column;
-        gap: 12px;
-
-        @media screen and (width >= 768px) and (width < 1024px) {
-          flex-direction: row;
-        }
-      }
     }
   }
 
   &__image > img {
-    border-radius: 40px;
+    overflow: hidden;
+
+    width: 100%;
     height: 600px;
+    border-radius: 40px;
 
     object-fit: cover;
     object-position: center;
-    overflow: hidden;
 
     transition: height 0.5s ease-in-out;
-
-    width: 100%;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       height: 480px;
@@ -134,28 +84,8 @@
     }
 
     @media screen and (width < 768px) {
-      border-radius: 32px;
       height: 220px;
-    }
-  }
-
-  &__image_map > img {
-    height: 354px !important;
-
-    @media screen and (width >= 1440px) and (width < 1920px) {
-      height: 239px !important;
-    }
-
-    @media screen and (width >= 1024px) and (width < 1440px) {
-      height: 260px !important;
-    }
-
-    @media screen and (width >= 768px) and (width < 1024px) {
-      height: 360px !important;
-    }
-
-    @media screen and (width < 768px) {
-      height: 220px !important;
+      border-radius: 32px;
     }
   }
 
@@ -180,56 +110,57 @@
   }
 
   &__badge {
-    color: white;
+    position: absolute;
+    top: 24px;
+    left: 24px;
 
     display: flex;
     gap: 6px;
-    left: 24px;
-    position: absolute;
-    top: 24px;
+
+    color: white;
 
     span {
-      backdrop-filter: blur(10px);
-
-      background: rgb(0 0 0 / 40%);
+      padding: 8px 16px;
       border-radius: 64px;
 
       font-size: 16px;
       font-weight: 300;
       line-height: 150%;
-      padding: 8px 16px;
+
+      background: rgb(0 0 0 / 40%);
+      backdrop-filter: blur(10px);
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         font-size: 14px;
       }
 
       @media screen and (width >= 1024px) and (width < 1440px) {
-        font-size: 14px;
         padding: 8px 12px;
+        font-size: 14px;
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
-        font-size: 14px;
         padding: 8px 12px;
+        font-size: 14px;
       }
 
       @media screen and (width < 768px) {
-        font-size: 13px;
         padding: 8px 12px;
+        font-size: 13px;
       }
     }
 
     @media screen and (width < 768px) {
-      left: 16px;
       top: 16px;
+      left: 16px;
     }
   }
 
   &__title {
-    color: var(--color-black);
     font-size: 24px;
     font-weight: 500;
     line-height: 130%;
+    color: var(--color-black);
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       font-size: 18px;
@@ -271,10 +202,10 @@
   }
 
   &__subtitle {
-    color: var(--color-text-black);
     font-size: 18px;
     font-weight: 400;
     line-height: 150%;
+    color: var(--color-text-black);
     text-align: left;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
@@ -299,71 +230,71 @@
     gap: 12px;
 
     &__item {
-      align-items: center;
-      color: var(--color-text-gray);
       display: flex;
+      gap: 10px;
+      align-items: center;
 
       font-size: 18px;
       font-weight: 300;
-      gap: 10px;
+      color: var(--color-text-gray);
 
       &__icon {
-        height: 24px;
         width: 24px;
+        height: 24px;
 
         @media screen and (width >= 1440px) and (width < 1920px) {
-          height: 24px;
           width: 24px;
+          height: 24px;
         }
 
         @media screen and (width >= 1024px) and (width < 1440px) {
-          height: 20px;
           width: 20px;
+          height: 20px;
         }
 
         @media screen and (width >= 768px) and (width < 1024px) {
-          height: 20px;
           width: 20px;
+          height: 20px;
         }
 
         @media screen and (width < 768px) {
-          height: 20px;
           width: 20px;
+          height: 20px;
         }
       }
 
       @media screen and (width >= 1440px) and (width < 1920px) {
-        font-size: 15px;
         gap: 8px;
+        font-size: 15px;
       }
 
       @media screen and (width >= 1024px) and (width < 1440px) {
-        font-size: 15px;
         gap: 4px;
+        font-size: 15px;
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
-        font-size: 15px;
         gap: 4px;
+        font-size: 15px;
       }
 
       @media screen and (width < 768px) {
-        font-size: 14px;
         gap: 4px;
+        font-size: 14px;
       }
     }
   }
 
   &__icon {
-    height: 24px !important;
     width: 24px !important;
+    height: 24px !important;
   }
 
   &__divider {
-    border-bottom: 1px solid var(--color-gray);
-    margin-bottom: 24px;
-    margin-top: 32px;
     width: 100%;
+    margin-top: 32px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--color-gray);
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       margin: 24px 0 20px;
@@ -380,11 +311,6 @@
     @media screen and (width < 768px) {
       margin: 16px 0;
     }
-
-    &_map {
-      margin-bottom: 24px;
-      margin-top: 24px;
-    }
   }
 
   &__specifications {
@@ -392,19 +318,9 @@
 
     &__list {
       display: grid;
-      gap: 8px 80px;
       grid-template-columns: 1fr 1fr;
+      gap: 8px 80px;
       width: 90%;
-
-      &_map {
-        gap: 8px;
-        grid-template-columns: 1fr;
-
-        @media screen and (width >= 768px) and (width < 1024px) {
-          gap: 8px 48px;
-          grid-template-columns: 1fr 1fr;
-        }
-      }
 
       &__item {
         display: grid;
@@ -412,10 +328,10 @@
         text-align: left;
 
         &__type {
-          color: var(--color-black);
           font-size: 16px;
           font-weight: 400;
           line-height: 150%;
+          color: var(--color-black);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
             font-size: 14px;
@@ -435,10 +351,10 @@
         }
 
         &__price {
-          color: var(--color-black);
           font-size: 16px;
           font-weight: 400;
           line-height: 150%;
+          color: var(--color-black);
           white-space: nowrap;
 
           @media screen and (width >= 1440px) and (width < 1920px) {
@@ -475,8 +391,8 @@
       }
 
       @media screen and (width < 768px) {
-        gap: 6px;
         grid-template-columns: 1fr;
+        gap: 6px;
       }
     }
   }
@@ -487,21 +403,11 @@
     justify-content: space-between;
     margin-top: 50px;
 
-    &_map {
-      margin-top: 40px;
-    }
-
     &__button {
       flex: 1;
 
       @media (width <= 470px) {
         flex: 0.5;
-      }
-
-      &_map {
-        @media (width <= 470px) {
-          flex: 1 !important;
-        }
       }
     }
 
@@ -527,38 +433,57 @@
   }
 
   &__button {
+    width: 326px;
+    height: 56px;
     border: none;
     border-radius: 40px;
 
     font-size: 16px;
     font-weight: 600;
-    height: 56px;
-    width: 326px;
 
     &_primary {
-      background: rgb(236 125 63 / 100%);
       color: white;
+      background: rgb(236 125 63 / 100%);
     }
 
     &_secondary {
-      background: none;
       border: 1.5px rgb(233 233 233 / 100%) solid;
+      background: none;
     }
   }
 
   &__favorite {
-    background: none;
-    border: 1.5px rgb(233 233 233 / 100%) solid;
-    border-radius: 40px;
     display: flex;
-    height: 56px;
 
     width: 56px;
+    height: 56px;
+    border: 1.5px rgb(233 233 233 / 100%) solid;
+    border-radius: 40px;
+
+    background: none;
 
     svg {
+      width: 25px;
       height: 25px;
       margin: auto;
-      width: 25px;
     }
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    height: 594px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    height: 570px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    height: 643px;
+  }
+
+  @media screen and (width < 768px) {
+    height: auto;
+    min-height: 555px;
+    border-radius: 32px;
   }
 }

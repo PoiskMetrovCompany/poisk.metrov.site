@@ -36,8 +36,8 @@
 }
 
 .position {
-  right: -70px;
   top: 2px;
+  right: -70px;
 }
 
 .borderRadius {
@@ -72,126 +72,4 @@
   .contactForm {
     width: 100%;
   }
-}
-
-// Стили для секции жилых комплексов
-.complexesSection {
-  margin-top: 24px;
-}
-
-.complexesContainer {
-  width: 100%;
-}
-
-.sectionTitle {
-  color: #2c3e50;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.complexesList {
-  .complexesTitle {
-    color: #333;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-}
-
-.complexItem {
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  padding: 16px;
-
-  .complexName {
-    color: #2c3e50;
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-  }
-
-  .complexAddress {
-    color: #555;
-    font-size: 14px;
-    margin: 0 0 6px 0;
-  }
-
-  .complexDeveloper {
-    color: #666;
-    font-size: 14px;
-    margin: 0 0 4px 0;
-  }
-
-  .completionDate {
-    color: #777;
-    font-size: 13px;
-    font-style: italic;
-    margin: 0;
-  }
-}
-
-// Стили для скелетонов
-.complexNameSkeleton {
-  margin-bottom: 8px;
-}
-
-.complexAddressSkeleton {
-  margin-bottom: 6px;
-}
-
-.complexDeveloperSkeleton {
-  margin-bottom: 4px;
-}
-
-// Стили для состояний ошибки и отсутствия данных
-.errorContainer {
-  background-color: #fff5f5;
-  border: 1px solid #ff6b6b;
-  border-radius: 8px;
-  margin: 16px 0;
-  padding: 20px;
-  text-align: center;
-
-  .errorTitle {
-    color: #d63031;
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-  }
-
-  .errorMessage {
-    color: #d63031;
-    font-size: 14px;
-    line-height: 1.4;
-    margin: 0 0 16px 0;
-  }
-}
-
-.retryButton {
-  background-color: #ff6b6b;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 8px 16px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #ee5253;
-  }
-}
-
-.noData {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  color: #666;
-  font-style: italic;
-  margin: 0;
-  padding: 24px;
-  text-align: center;
 }

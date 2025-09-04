@@ -1,12 +1,8 @@
-import clsx from "clsx"
-
-import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-
-import { useScreenSize } from "@/utils/hooks/use-screen-size"
-
+import React, { FC, useState, useRef, useEffect } from "react"
 import styles from "./roomCountDropdown.module.scss"
-
 import IconImage from "@/components/ui/IconImage"
+import clsx from "clsx"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface RoomCount {
   value: string
@@ -14,11 +10,9 @@ interface RoomCount {
 }
 
 interface RoomCountDropdownProps {
-  showCount?: boolean
-  onRoomCountChange?: (selectedCount: string) => void
+  onRoomCountChange?: (selectedCounts: string[]) => void
   className?: string
-  contentClassName?: string
-  value?: string
+  value?: string[]
 }
 
 const roomCounts: RoomCount[] = [
@@ -32,21 +26,17 @@ const roomCounts: RoomCount[] = [
 
 const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
   onRoomCountChange,
-  showCount = true,
   className,
-  contentClassName,
-  value = "",
+  value = [],
 }) => {
-  const [selectedCount, setSelectedCount] = useState<string>(value)
+  const [selectedCounts, setSelectedCounts] = useState<string[]>(value)
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { isLaptop } = useScreenSize()
 
-  const valueString = useMemo(() => value, [value])
-
   useEffect(() => {
-    setSelectedCount(value)
-  }, [valueString])
+    setSelectedCounts(value)
+  }, [value])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,22 +57,57 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
     }
   }, [isOpen])
 
-  const handleCountSelect = (countValue: string) => {
-    const newSelectedCount = selectedCount === countValue ? "" : countValue
-    setSelectedCount(newSelectedCount)
-    onRoomCountChange?.(newSelectedCount)
-    setIsOpen(false)
+  const handleCountToggle = (countValue: string) => {
+    const newSelectedCounts = selectedCounts.includes(countValue)
+      ? selectedCounts.filter((count) => count !== countValue)
+      : [...selectedCounts, countValue]
+
+    setSelectedCounts(newSelectedCounts)
+    onRoomCountChange?.(newSelectedCounts)
   }
 
   const getDisplayText = () => {
-    if (!selectedCount) return isLaptop ? "Кол-во комнат" : "Комнат"
+    if (selectedCounts.length === 0)
+      return isLaptop ? "Кол-во комнат" : "Комнат"
 
-    const count = roomCounts.find((c) => c.value === selectedCount)
-    return count ? count.label : selectedCount
+    // Разделяем числовые значения и студию
+    const numericValues = selectedCounts
+      .filter((count) => count !== "studio")
+      .map((count) => parseInt(count))
+      .sort((a, b) => a - b)
+
+    const hasStudio = selectedCounts.includes("studio")
+
+    // Формируем диапазоны из последовательных чисел
+    const ranges: string[] = []
+    let start = numericValues[0]
+    let end = start
+
+    for (let i = 1; i < numericValues.length; i++) {
+      if (numericValues[i] === end + 1) {
+        end = numericValues[i]
+      } else {
+        ranges.push(start === end ? start.toString() : `${start}-${end}`)
+        start = numericValues[i]
+        end = start
+      }
+    }
+
+    if (numericValues.length > 0) {
+      ranges.push(start === end ? start.toString() : `${start}-${end}`)
+    }
+
+    // Добавляем студию в конец через запятую
+    const result = [...ranges]
+    if (hasStudio) {
+      result.push("Студия")
+    }
+
+    return result.join(", ")
   }
 
   const getSelectedCount = () => {
-    return selectedCount ? 1 : 0
+    return selectedCounts.length
   }
 
   return (
@@ -91,7 +116,7 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
       ref={dropdownRef}
     >
       <button
-        className={clsx(styles.roomCountDropdown__trigger, className)}
+        className={styles.roomCountDropdown__trigger}
         onClick={() => setIsOpen(!isOpen)}
         type="button"
         aria-expanded={isOpen}
@@ -101,14 +126,14 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
           <span
             className={clsx(
               styles.roomCountDropdown__trigger__text,
-              (selectedCount || isOpen) &&
+              (selectedCounts.length > 0 || isOpen) &&
                 styles["roomCountDropdown__trigger__text--selected"],
               isOpen && styles["roomCountDropdown__trigger__text--open"]
             )}
           >
             {getDisplayText()}
           </span>
-          {selectedCount && showCount && (
+          {selectedCounts.length > 1 && (
             <span className={styles.roomCountDropdown__trigger__badge}>
               {getSelectedCount()}
             </span>
@@ -126,9 +151,9 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
 
       {isOpen && (
         <div
-          className={clsx(styles.roomCountDropdown__content, contentClassName)}
+          className={styles.roomCountDropdown__content}
           role="listbox"
-          aria-multiselectable="false"
+          aria-multiselectable="true"
         >
           <div className={styles.roomCountDropdown__content__inner}>
             <div className={styles.roomCountDropdown__row}>
@@ -137,13 +162,13 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
                   key={count.value}
                   className={clsx(
                     styles.roomCountDropdown__chip,
-                    selectedCount === count.value &&
+                    selectedCounts.includes(count.value) &&
                       styles["roomCountDropdown__chip--selected"]
                   )}
-                  onClick={() => handleCountSelect(count.value)}
+                  onClick={() => handleCountToggle(count.value)}
                   type="button"
                   role="option"
-                  aria-selected={selectedCount === count.value}
+                  aria-selected={selectedCounts.includes(count.value)}
                 >
                   {count.label}
                 </button>
@@ -154,13 +179,13 @@ const RoomCountDropdown: FC<RoomCountDropdownProps> = ({
                 className={clsx(
                   styles.roomCountDropdown__chip,
                   styles.roomCountDropdown__chip__studio,
-                  selectedCount === "studio" &&
+                  selectedCounts.includes("studio") &&
                     styles["roomCountDropdown__chip--selected"]
                 )}
-                onClick={() => handleCountSelect("studio")}
+                onClick={() => handleCountToggle("studio")}
                 type="button"
                 role="option"
-                aria-selected={selectedCount === "studio"}
+                aria-selected={selectedCounts.includes("studio")}
               >
                 Студия
               </button>

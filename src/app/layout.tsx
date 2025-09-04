@@ -1,10 +1,6 @@
 import type { Metadata } from "next"
-
 import { Onest } from "next/font/google"
-import { cookies } from "next/headers"
-
 import "./globals.css"
-
 import LayoutClient from "./layout-client"
 
 const onest = Onest({
@@ -52,25 +48,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Читаем город из cookie на сервере
-  const cookieStore = await cookies()
-  const selectedCityCookie = cookieStore.get("selectedCity")?.value
-
-  let initialCity: { name: string; id: string; slug: string } | null = null
-  if (selectedCityCookie) {
-    try {
-      const decoded = decodeURIComponent(selectedCityCookie)
-      initialCity = JSON.parse(decoded)
-    } catch {
-      initialCity = null
-    }
-  }
-
   return (
     <html lang="ru">
       <head>
@@ -92,7 +74,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={onest.className}>
-        <LayoutClient initialCity={initialCity}>{children}</LayoutClient>
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   )

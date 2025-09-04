@@ -1,14 +1,15 @@
 .banner {
-  background-image: url("/images/partners.webp");
-  background-position: 0 -190px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 40px;
   display: flex;
   gap: 240px;
 
   height: 500px;
   padding: 92px 92px 10px;
+  border-radius: 40px;
+
+  background-image: url("/images/partners.webp");
+  background-repeat: no-repeat;
+  background-position: 0 -190px;
+  background-size: cover;
 
   &__container {
     display: flex;
@@ -18,13 +19,13 @@
   }
 
   &__title {
-    font-weight: 500 !important;
-    margin: 0;
     width: 440px;
+    margin: 0;
+    font-weight: 500 !important;
 
     b {
-      color: var(--color-orange);
       font-weight: 500;
+      color: var(--color-orange);
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
@@ -45,16 +46,15 @@
   }
 
   &__subtitle {
-    color: var(--color-black);
+    width: 700px;
+    margin: 0;
 
     font-size: 18px;
     font-weight: 300;
     line-height: 150%;
-    margin: 0;
-    width: 700px;
+    color: var(--color-black);
 
     &_mobile {
-      display: none;
       @media screen and (width < 768px) {
         display: block !important;
         width: 95% !important;
@@ -63,58 +63,60 @@
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       flex: 1;
-      font-size: 15px;
       width: auto;
+      font-size: 15px;
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
       flex: 1;
-      font-size: 15px;
       width: auto;
+      font-size: 15px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      font-size: 15px;
       width: 488px;
+      font-size: 15px;
     }
 
     @media screen and (width < 768px) {
       display: none;
-      font-size: 14px;
       width: 100%;
+      font-size: 14px;
     }
   }
 
   @media screen and (width >= 1440px) and (width < 1920px) {
-    background-position: 0 -130px;
     gap: 142px;
     height: 380px;
     padding: 80px 80px 10px;
+    background-position: 0 -130px;
   }
 
   @media screen and (width >= 1024px) and (width < 1440px) {
-    background-position: 0 -70px;
     gap: 104px;
     height: 320px;
     padding: 64px 64px 10px;
+    background-position: 0 -70px;
   }
 
   @media screen and (width >= 768px) and (width < 1024px) {
-    background-image: url("/images/partners-md.webp");
-    background-position: center;
-    border-radius: 32px;
     flex-direction: column;
     gap: 24px;
 
     height: 228px;
     padding: 32px 32px 10px;
+    border-radius: 32px;
+
+    background-image: url("/images/partners-md.webp");
+    background-position: center;
   }
 
   @media screen and (width < 768px) {
-    background-image: url("/images/partners-sm.webp");
-    background-position: center;
-    border-radius: 24px;
     height: 220px;
     padding: 16px 16px 10px;
+    border-radius: 24px;
+
+    background-image: url("/images/partners-sm.webp");
+    background-position: center;
   }
 }

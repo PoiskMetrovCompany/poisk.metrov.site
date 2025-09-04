@@ -1,12 +1,8 @@
 "use client"
-
-import clsx from "clsx"
-
-import React, { useEffect, useRef, useState } from "react"
-
+import React, { useState, useEffect } from "react"
 import styles from "./range.module.scss"
-
 import RangeSlider from "@/components/ui/rangeSlider"
+import clsx from "clsx"
 
 interface RangeProps {
   title?: string
@@ -27,21 +23,15 @@ const Range: React.FC<RangeProps> = ({
   className,
   value,
   onValueChange,
-  formatLabel = (value: number) => `${value}`,
+  formatLabel = (value: number) => `${value}`
 }) => {
   const [internalRange, setInternalRange] = useState<[number, number]>(
     value || [min, max]
   )
 
-  // Используем ref для отслеживания предыдущего значения
-  const prevValueRef = useRef<[number, number] | undefined>(value)
-
   useEffect(() => {
-    const prevValue = prevValueRef.current
-    // Проверяем, действительно ли значения изменились
-    if (value && (prevValue?.[0] !== value[0] || prevValue?.[1] !== value[1])) {
+    if (value) {
       setInternalRange(value)
-      prevValueRef.current = value
     }
   }, [value])
 
@@ -103,9 +93,7 @@ const Range: React.FC<RangeProps> = ({
           max={max}
           step={step}
           value={internalRange}
-          onValueChange={(values) =>
-            handleRangeChange(values as [number, number])
-          }
+          onValueChange={(values) => handleRangeChange(values as [number, number])}
           formatLabel={formatLabel}
         />
       </div>

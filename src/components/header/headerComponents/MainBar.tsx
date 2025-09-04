@@ -1,13 +1,10 @@
 "use client"
-
-import React from "react"
-
+import React, { FC } from "react"
 import styles from "../header.module.scss"
-
-import ContactInfo from "./ContactInfo"
-import Logo from "./Logo"
 import Navigation from "./Navigation"
+import ContactInfo from "./ContactInfo"
 import UserActions from "./UserActions"
+import Logo from "./Logo"
 
 interface IMainBarProps {
   onCatalogClick: () => void

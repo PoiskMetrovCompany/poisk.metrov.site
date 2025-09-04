@@ -1,44 +1,58 @@
 "use client"
-
-import clsx from "clsx"
+import React, { useState, useEffect } from "react"
 import { Accordion } from "radix-ui"
-
-import React from "react"
-
-import FlatLayoutCard from "@/components/flatLayoutCard"
-import { IApartment } from "@/types/api/complex"
-
+import Image from "next/image"
+import clsx from "clsx"
 import styles from "./layoutItem.module.scss"
-
+import FlatLayoutCard from "@/components/flatLayoutCard"
+import Pagination from "@/components/pagination"
 import IconImage from "@/components/ui/IconImage"
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 interface ILayoutItemProps {
   isOpen: boolean
   name: string
-  apartments: IApartment[]
 }
 
-const LayoutItem = ({ isOpen, name, apartments }: ILayoutItemProps) => {
-  const minPrice = Math.min(...apartments.map((apt) => apt.price))
-  const minArea = Math.min(...apartments.map((apt) => apt.area))
-  const apartmentsCount = apartments.length
+const itemsPerPageByResolution = {
+  isDesktop: 8,
+  isLaptop: 6,
+  isTablet: 6,
+  isMobile: 4,
+  isSmallMobile: 2,
+}
+
+const LayoutItem = ({ isOpen, name }: ILayoutItemProps) => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(30)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const { isDesktop, isLaptop, isTablet, isSmallMobile } = useScreenSize()
+
+  useEffect(() => {
+    const getItemsPerPage = () => {
+      if (isDesktop) return itemsPerPageByResolution.isDesktop
+      if (isLaptop) return itemsPerPageByResolution.isLaptop
+      if (isTablet) return itemsPerPageByResolution.isTablet
+      if (isSmallMobile) return itemsPerPageByResolution.isSmallMobile
+      return itemsPerPageByResolution.isMobile
+    }
+
+    setItemsPerPage(getItemsPerPage())
+  }, [isDesktop, isLaptop, isTablet, isSmallMobile])
 
   return (
     <Accordion.Item className={styles.Item} value={name}>
       <AccordionTrigger className={styles.layoutList__header}>
         <span className={styles.layoutList__header__title}>
-          Все квартиры{" "}
+          Студии{" "}
           <b className={styles.layoutList__header__title__price}>
-            от {minPrice.toLocaleString("ru-RU")} ₽
+            от 4 359 990 ₽
           </b>
         </span>
+        <span>130 квартир</span>
+        <span>от 24.9 м2</span>
         <span>
-          {apartmentsCount} квартир
-          {apartmentsCount === 1 ? "а" : apartmentsCount < 5 ? "ы" : ""}
-        </span>
-        <span>от {minArea.toFixed(1)} м²</span>
-        <span>
-          от {minPrice.toLocaleString("ru-RU")} ₽
+          от 4 359 990 ₽
           <IconImage
             className={clsx(styles.arrow, isOpen && styles.arrow_open)}
             iconLink="/images/icons/arrow-top-price.svg"
@@ -48,10 +62,16 @@ const LayoutItem = ({ isOpen, name, apartments }: ILayoutItemProps) => {
       </AccordionTrigger>
       <AccordionContent className={styles.layoutList__wrapper}>
         <div className={styles.layoutList__content}>
-          {apartments.map((apartment) => (
-            <FlatLayoutCard key={apartment.key} apartment={apartment} />
+          {Array.from({ length: itemsPerPage }).map((_, index) => (
+            <FlatLayoutCard key={index} />
           ))}
         </div>
+        <Pagination
+          totalPages={totalPages}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </AccordionContent>
     </Accordion.Item>
   )

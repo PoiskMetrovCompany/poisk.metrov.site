@@ -1,12 +1,9 @@
+import React, { FC, useState } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-
-import React, { FC, useState } from "react"
-
 import styles from "./filterDialog.module.scss"
-
-import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
+import IconImage from "@/components/ui/IconImage"
 
 interface FilterDialogProps {
   open: boolean
@@ -113,12 +110,6 @@ const FilterDialog: FC<FilterDialogProps> = ({
           <Dialog.Title asChild>
             <VisuallyHidden>Фильтры поиска недвижимости</VisuallyHidden>
           </Dialog.Title>
-          <Dialog.Description asChild>
-            <VisuallyHidden>
-              Настройте фильтры для поиска: тип жилья, количество комнат и
-              ценовой диапазон
-            </VisuallyHidden>
-          </Dialog.Description>
 
           <div className={styles.filterDialog}>
             {/* Header с кнопкой закрытия */}
