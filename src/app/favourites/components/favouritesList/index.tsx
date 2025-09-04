@@ -45,7 +45,7 @@ const FavoutiresList = ({
   setApartments,
 }: IFavouritesListProps) => {
   const [isEmpty, setIsEmpty] = useState(false)
-  const USER_KEY = "06cf4246-83c2-11f0-a013-10f60a82b815"
+  const USER_KEY = "06cf32b1-83c2-11f0-a013-10f60a82b815"
 
   const prevComplexesLength = useRef(0)
   const prevApartmentsLength = useRef(0)
