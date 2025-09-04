@@ -6,8 +6,8 @@
 
   &__list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
 
     &__flatList {
@@ -15,26 +15,26 @@
     }
 
     &_complexes {
-      grid-template-columns: repeat(3, 1fr);
       gap: 40px;
+      grid-template-columns: repeat(3, 1fr);
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         grid-template-columns: repeat(2, 1fr);
       }
 
       @media screen and (width >= 1024px) and (width < 1440px) {
-        grid-template-columns: repeat(2, 1fr);
         gap: 24px;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       @media screen and (width >= 768px) and (width < 1024px) {
-        grid-template-columns: repeat(2, 1fr) !important;
         gap: 24px;
+        grid-template-columns: repeat(2, 1fr) !important;
       }
 
       @media screen and (width < 768px) {
-        grid-template-columns: repeat(1, 1fr) !important;
         gap: 16px;
+        grid-template-columns: repeat(1, 1fr) !important;
       }
     }
 
@@ -84,19 +84,46 @@
       @media screen and (width >= 1440px) and (width < 1920px) {
         height: 445px !important;
       }
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+      }
     }
 
     &__card__subtitle {
       @media screen and (width >= 1024px) {
         overflow: hidden;
-        width: 228px;
         text-overflow: ellipsis;
         white-space: nowrap;
+        width: 228px;
       }
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         width: 132px;
       }
+    }
+
+    &__flatCard {
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    &__flatImage {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    &__flatContent {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
@@ -108,13 +135,13 @@
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      grid-template-columns: repeat(1, 1fr);
       gap: 24px;
+      grid-template-columns: repeat(1, 1fr);
     }
 
     @media screen and (width < 768px) {
-      grid-template-columns: repeat(1, 1fr);
       gap: 16px;
+      grid-template-columns: repeat(1, 1fr);
     }
   }
 

@@ -57,7 +57,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Читаем город из cookie на сервере
   const cookieStore = await cookies()
   const selectedCityCookie = cookieStore.get("selectedCity")?.value
 

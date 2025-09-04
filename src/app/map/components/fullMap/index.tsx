@@ -8,10 +8,133 @@ import { Map } from "@/components/map/map"
 import { IPoint } from "@/components/map/variables/variables"
 import { PointType } from "@/components/map/variables/variables"
 import PropertyCard from "@/components/propertyCard"
+import { Coordinate } from "@/types/Coordintes"
 
 import styles from "./fullMap.module.scss"
 
 import PointTypes from "../pointTypes"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
+
+const transformApiDataToCard = (
+  complexId: number,
+  complexesData: any,
+  apartmentsData?: any
+) => {
+  if (!complexesData || complexesData.length === 0) {
+    return {
+      id: 1,
+      title: "Нет данных",
+      price: "",
+      subtitle: "",
+      badge: { developer: "", period: "" },
+      metro: "",
+      driveTime: "",
+      specifications: [],
+      description: [],
+      image: "/images/buildingCarousel/buidingExpandImg.webp",
+    }
+  }
+
+  const complex = complexesData.find((c: any) => c.id === complexId)
+  if (!complex) {
+    return {
+      id: complexId,
+      title: "Комплекс не найден",
+      price: "",
+      subtitle: "",
+      badge: { developer: "", period: "" },
+      metro: "",
+      driveTime: "",
+      specifications: [],
+      description: [],
+      image: "/images/buildingCarousel/buidingExpandImg.webp",
+    }
+  }
+
+  const complexApartments =
+    apartmentsData?.filter((apt: any) => apt.complex_id === complexId) || []
+
+  let minPrice = Infinity
+  let maxPrice = 0
+  if (complexApartments.length > 0) {
+    complexApartments.forEach((apartment: any) => {
+      if (apartment.price) {
+        minPrice = Math.min(minPrice, apartment.price)
+        maxPrice = Math.max(maxPrice, apartment.price)
+      }
+    })
+  }
+
+  const priceRange =
+    minPrice !== Infinity && maxPrice !== 0
+      ? `от ${Math.round(minPrice / 1000000)} млн ₽`
+      : ""
+
+  const roomStats: { [key: number]: { count: number; minPrice: number } } = {}
+  if (complexApartments.length > 0) {
+    complexApartments.forEach((apartment: any) => {
+      const rooms = apartment.room_count || 0
+      if (!roomStats[rooms]) {
+        roomStats[rooms] = { count: 0, minPrice: Infinity }
+      }
+      roomStats[rooms].count++
+      if (apartment.price) {
+        roomStats[rooms].minPrice = Math.min(
+          roomStats[rooms].minPrice,
+          apartment.price
+        )
+      }
+    })
+  }
+
+  const specifications = Object.entries(roomStats)
+    .map(([rooms, stats]) => {
+      const roomText =
+        rooms === "0"
+          ? "Студии"
+          : rooms === "1"
+            ? "1-комн. кв"
+            : rooms === "2"
+              ? "2-комн. кв"
+              : rooms === "3"
+                ? "3-комн. кв"
+                : `${rooms}+ комн. кв`
+      return {
+        type: roomText,
+        price:
+          stats.minPrice !== Infinity
+            ? `от ${Math.round(stats.minPrice / 1000000)} млн ₽`
+            : "",
+      }
+    })
+    .slice(0, 5)
+
+  return {
+    id: complex.id,
+    title: complex.name || "Название не указано",
+    price: priceRange,
+    subtitle: complex.description
+      ? complex.description.substring(0, 80) + "..."
+      : "",
+    badge: {
+      developer: complex.builder || "Застройщик не указан",
+      period: "Сроки не указаны",
+    },
+    metro: complex.metro_station || "Метро не указано",
+    driveTime: `${complex.metro_time || 0} минут`,
+    specifications: specifications,
+    description: [
+      { type: "Недвижимость", status: "Жилая" },
+      {
+        type: "Квартир",
+        status: complexApartments.length.toString(),
+      },
+      { type: "Парковка", status: complex.parking || "Не указано" },
+    ],
+    image: "/images/buildingCarousel/buidingExpandImg.webp",
+  }
+}
 
 const card = {
   id: 1,
@@ -65,16 +188,72 @@ const points: IPoint[] = [
     id: 14,
   },
 ]
-const FullMap = () => {
+
+interface FullMapProps {
+  hideFilters?: boolean
+  coordinates?: Coordinate[]
+  onShowFavourites?: () => void
+  cardData?: {
+    complexes?: any[]
+    apartments?: any[]
+  }
+}
+
+const FullMap: React.FC<FullMapProps> = ({
+  hideFilters = false,
+  coordinates = [],
+  onShowFavourites,
+  cardData,
+}) => {
+  const [, forceUpdate] = React.useReducer((x) => x + 1, 0)
   const [activePointId, setActivePointId] = useState<number | null>(null)
   const [activePoints, setActivePoints] = useState<PointType[]>([
     PointType.IN_SALE,
     PointType.ANNOUNCEMENTS,
+    PointType.FAVOURITES,
   ])
   const [showFilters, setShowFilters] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  // Блокировка скролла при показе карточки
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      forceUpdate()
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [cardData?.complexes?.length])
+
+  const favouritesPoints: IPoint[] =
+    cardData?.complexes?.map((complex: any, index: number) => {
+      const complexApartments =
+        cardData.apartments?.filter(
+          (apt: any) => apt.complex_id === complex.id
+        ) || []
+      let minPrice = Infinity
+      if (complexApartments.length > 0) {
+        complexApartments.forEach((apartment: any) => {
+          if (apartment.price) {
+            minPrice = Math.min(minPrice, apartment.price)
+          }
+        })
+      }
+      const priceText =
+        minPrice !== Infinity
+          ? `от ${Math.round(minPrice / 1000000)} млн ₽`
+          : "Цена не указана"
+
+      return {
+        type: PointType.FAVOURITES,
+        coords: [complex.longitude, complex.latitude],
+        id: complex.id,
+        priority: 1,
+        price: priceText,
+      }
+    }) || []
+
+  const allPoints: IPoint[] = hideFilters
+    ? favouritesPoints
+    : [...points, ...favouritesPoints]
+
   useEffect(() => {
     if (activePointId) {
       document.body.style.overflow = "hidden"
@@ -87,7 +266,6 @@ const FullMap = () => {
     }
   }, [activePointId])
 
-  // Обработчик клика по внешней области
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
       setActivePointId(null)
@@ -106,34 +284,60 @@ const FullMap = () => {
 
   return (
     <div className={styles.fullMap}>
-      <div className={styles.fullMap__filtersNavbar}>
-        <CatalogueFiltersMap
-          onShowFilters={() => setShowFilters(true)}
-          onApplyFilters={() => setShowFilters(false)}
-        />
-      </div>
+      {hideFilters && (
+        <div className={styles.fullMap__favouritesButton}>
+          <ActionButton
+            onClick={onShowFavourites}
+            className={styles.favouritesButton}
+            type="secondary"
+          >
+            Показать избранное текстом
+          </ActionButton>
+        </div>
+      )}
+      {!hideFilters && (
+        <div className={styles.fullMap__filtersNavbar}>
+          <CatalogueFiltersMap
+            onShowFilters={() => setShowFilters(true)}
+            onApplyFilters={() => setShowFilters(false)}
+          />
+        </div>
+      )}
       <FiltersDialog
         haveToSelectType
         isMap
         open={showFilters}
         onOpenChange={setShowFilters}
       />
-      <PointTypes
-        activePoints={activePoints}
-        handlePointClick={handlePointClick}
-      />
+      {!hideFilters && (
+        <PointTypes
+          activePoints={activePoints}
+          handlePointClick={handlePointClick}
+        />
+      )}
 
       {activePointId ? (
         <div className={styles.fullMap__overlay} onClick={handleOutsideClick}>
           <div className={styles.fullMap__propertyCard} ref={cardRef}>
-            <PropertyCard isMap property={card} />
+            <PropertyCard
+              isMap
+              property={
+                cardData?.complexes && activePointId
+                  ? transformApiDataToCard(
+                      activePointId,
+                      cardData.complexes,
+                      cardData.apartments
+                    )
+                  : card
+              }
+            />
           </div>
         </div>
       ) : null}
 
       <Map
         mapClassName={styles.fullMap__map}
-        points={points}
+        points={allPoints}
         activePointId={activePointId}
         onActivePointChange={(id) => setActivePointId(id)}
         activePoints={activePoints}

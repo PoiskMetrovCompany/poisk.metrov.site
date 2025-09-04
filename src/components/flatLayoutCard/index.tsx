@@ -32,7 +32,9 @@ const FlatLayoutCard = ({
     "Отделка улучшенная черновая",
   ],
   imageUrl = "/images/temporary/room.png",
-  linkUrl = "/details/1",
+
+  linkUrl = `/detailsFlat?key=asdf1231sdas`,
+
 }: IFlatLayoutCardProps) => {
   return (
     <div className={styles.flatLayoutCard}>
@@ -86,7 +88,7 @@ const FlatLayoutCard = ({
           <h4 className={styles.flatLayoutCard__content__price__value}>
             {price}
           </h4>
-          <Link
+          <a
             href={linkUrl}
             className={styles.flatLayoutCard__content__price__change}
           >
@@ -120,7 +122,7 @@ const FlatLayoutCard = ({
                 }
               />
             </div>
-          </Link>
+          </a>
         </div>
       </div>
     </div>

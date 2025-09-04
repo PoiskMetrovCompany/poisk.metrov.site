@@ -1,15 +1,16 @@
 import styles from "./page.module.scss"
-import HeaderCards from "./components/headerCards"
-import Mortage from "./components/mortgage"
-import Compilation from "./components/compilation"
-import Work from "./components/work"
-import Partners from "./components/partners"
-import Rating from "./components/rating"
-import Download from "./components/download"
+
 import Selection from "../components/apartmentSelection"
+import Compilation from "./components/compilation/compilationMain"
+import Download from "./components/download"
 import Favourites from "./components/favourites"
 import Filter from "./components/filter"
+import HeaderCards from "./components/headerCards"
 import MonthlyPayment from "./components/monthlyPayment"
+import Mortage from "./components/mortgage"
+import Partners from "./components/partners"
+import Rating from "./components/rating"
+import Work from "./components/work"
 
 const partnersData = [
   { src: "/images/partners/akvilon.webp", alt: "Akvilon" },
