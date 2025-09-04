@@ -1,12 +1,16 @@
 "use client"
 
 import React, { useState } from "react"
-import styles from "./filter.module.scss"
+
 import { useFilters } from "@/utils/hooks/use-filters"
+
+import styles from "./filter.module.scss"
+
 import ActiveFilters from "./ActiveFilters"
-import FilterLinks from "./FilterLinks"
 import FilterContent from "./FilterContent"
 import FilterDialog from "./FilterDialog"
+import FilterLinks from "./FilterLinks"
+
 import Heading2 from "@/components/ui/heading2"
 
 const Filter = () => {
@@ -26,10 +30,14 @@ const Filter = () => {
     getPriceDisplayText,
     hasActiveFilters,
     getCurrentValues,
+    navigateToCatalogue,
   } = useFilters()
 
   const applyFilters = () => {
-    form.handleSubmit()
+    console.log("Кнопка 'Показать' нажата")
+    console.log("Текущие значения фильтров:", currentValues)
+    // Вместо отправки формы, переходим на каталог с фильтрами
+    navigateToCatalogue()
   }
 
   const onShowFilters = () => {

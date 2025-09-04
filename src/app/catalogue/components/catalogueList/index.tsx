@@ -14,17 +14,17 @@ const CatalogueList = () => {
   )
   const [showFilters, setShowFilters] = useState(false)
 
-  const applyFilters = (formData: FiltersFormData) => {
-    console.log("Применение фильтров:", formData)
+  // const applyFilters = (formData: FiltersFormData) => {
+  //   console.log("Применение фильтров:", formData)
 
-    // Преобразуем данные формы в параметры API
-    const filtersParams = mapFiltersFormToApi(formData)
-    console.log("Параметры API фильтров:", filtersParams)
+  //   // Преобразуем данные формы в параметры API
+  //   const filtersParams = mapFiltersFormToApi(formData)
+  //   console.log("Параметры API фильтров:", filtersParams)
 
-    // Сохраняем активные фильтры
-    setActiveFilters(filtersParams)
-    setShowFilters(false)
-  }
+  //   // Сохраняем активные фильтры
+  //   setActiveFilters(filtersParams)
+  //   setShowFilters(false)
+  // }
 
   return (
     <CatalogueListContent

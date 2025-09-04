@@ -2,6 +2,8 @@ import clsx from "clsx"
 
 import React, { FC, memo, useMemo } from "react"
 
+import { useFiltersStore } from "@/stores/useFiltersStore"
+
 import styles from "./filterBlocks.module.scss"
 
 import {
@@ -87,40 +89,45 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
     handleRangeInputChange,
     onCloseDialog,
   }) => {
+    const { filtersData } = useFiltersStore()
+
     const ceilingHeightOptions = ["От 2,5 м", "От 2,7 м", "От 3 м", "От 4 м"]
+
+    // Используем данные из store для всех операций
+    const activeFormData = filtersData
 
     // Мемоизируем значения для RangeInput, чтобы избежать создания новых массивов при каждом рендере
     const priceRange = useMemo(
       () =>
-        [formData.priceMin, formData.priceMax] as [
+        [filtersData.priceMin, filtersData.priceMax] as [
           number | null,
           number | null,
         ],
-      [formData.priceMin, formData.priceMax]
+      [filtersData.priceMin, filtersData.priceMax]
     )
     const floorRange = useMemo(
       () =>
-        [formData.floorMin, formData.floorMax] as [
+        [filtersData.floorMin, filtersData.floorMax] as [
           number | null,
           number | null,
         ],
-      [formData.floorMin, formData.floorMax]
+      [filtersData.floorMin, filtersData.floorMax]
     )
     const flatAreaRange = useMemo(
       () =>
-        [formData.flatAreaMin, formData.flatAreaMax] as [
+        [filtersData.flatAreaMin, filtersData.flatAreaMax] as [
           number | null,
           number | null,
         ],
-      [formData.flatAreaMin, formData.flatAreaMax]
+      [filtersData.flatAreaMin, filtersData.flatAreaMax]
     )
     const livingAreaRange = useMemo(
       () =>
-        [formData.livingAreaMin, formData.livingAreaMax] as [
+        [filtersData.livingAreaMin, filtersData.livingAreaMax] as [
           number | null,
           number | null,
         ],
-      [formData.livingAreaMin, formData.livingAreaMax]
+      [filtersData.livingAreaMin, filtersData.livingAreaMax]
     )
 
     const handleBackClick = () => {
@@ -174,19 +181,19 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                 key={type}
                 className={styles.filterBlock__sectionType__item}
                 role="option"
-                aria-selected={formData.propertyType === type}
+                aria-selected={filtersData.propertyType === type}
               >
                 <div
                   className={styles.filterBlock__sectionType__checkboxWrapper}
                 >
                   <input
                     type="checkbox"
-                    checked={formData.propertyType === type}
+                    checked={filtersData.propertyType === type}
                     onChange={() => handlePropertyTypeSelect(type)}
                     className={styles.filterBlock__sectionType__checkbox}
                     aria-label={`Выбрать ${type}`}
                   />
-                  {formData.propertyType === type && (
+                  {filtersData.propertyType === type && (
                     <IconImage
                       className={styles.filterBlock__sectionType__checkboxIcon}
                       iconLink="/images/icons/checkMark-white.svg"
@@ -210,7 +217,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
               className={styles.filterBlock__section__type}
               onClick={handleSelectApartmentClick}
             >
-              <span>{formData.propertyType}</span>
+              <span>{filtersData.propertyType}</span>
               <IconImage
                 iconLink="/images/icons/arrow-down-black.svg"
                 alt="Выберите"
@@ -220,12 +227,12 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
 
             {/* <div className={styles.filterBlock__section__options}> */}
             {/* {ROOMS_OPTIONS.map((option) => (
-                <FiltersButton
-                  key={option}
-                  text={option}
-                  isActive={formData.rooms.includes(option)}
-                  onClick={() => handleMultiSelect("rooms", option)}
-                />
+                                  <FiltersButton
+                    key={option}
+                    text={option}
+                    isActive={filtersData.rooms.includes(option)}
+                    onClick={() => handleMultiSelect("rooms", option)}
+                  />
               ))} */}
             {/* </div> */}
           </div>
@@ -245,7 +252,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.rooms.includes(option)}
+                    isActive={filtersData.rooms.includes(option)}
                     onClick={() => handleSingleSelect("rooms", option)}
                   />
                 ))}
@@ -289,7 +296,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     <FiltersButton
                       key={option}
                       text={option}
-                      isActive={formData.floorOptions.includes(option)}
+                      isActive={filtersData.floorOptions.includes(option)}
                       onClick={() => handleMultiSelect("floorOptions", option)}
                     />
                   ))}
@@ -339,7 +346,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.ceilingHeight.includes(option)}
+                    isActive={filtersData.ceilingHeight.includes(option)}
                     onClick={() => handleSingleSelect("ceilingHeight", option)}
                   />
                 ))}
@@ -356,7 +363,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.layout.includes(option)}
+                    isActive={filtersData.layout.includes(option)}
                     onClick={() => handleSingleSelect("layout", option)}
                   />
                 ))}
@@ -371,7 +378,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.finish.includes(option)}
+                    isActive={filtersData.finish.includes(option)}
                     onClick={() => handleSingleSelect("finish", option)}
                   />
                 ))}
@@ -386,7 +393,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.bathroom.includes(option)}
+                    isActive={filtersData.bathroom.includes(option)}
                     onClick={() => handleSingleSelect("bathroom", option)}
                   />
                 ))}
@@ -403,7 +410,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.apartments === option}
+                    isActive={filtersData.apartments === option}
                     onClick={() => handleApartmentsSelect(option)}
                   />
                 ))}
@@ -420,7 +427,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   <FiltersButton
                     key={option}
                     text={option}
-                    isActive={formData.features.includes(option)}
+                    isActive={filtersData.features.includes(option)}
                     onClick={() => handleSingleSelect("features", option)}
                   />
                 ))}

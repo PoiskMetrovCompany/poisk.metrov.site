@@ -33,13 +33,8 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
 }) => {
   const [shouldApplySticky, setShouldApplySticky] = useState(false)
   const stickyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const {
-    selectedPropertyType,
-    filtersData,
-    updatePriceRange,
-    updateRoomCount,
-    updateSearchQuery,
-  } = useFiltersStore()
+  const { filtersData, updatePriceRange, updateRoomCount, updateSearchQuery } =
+    useFiltersStore()
 
   useEffect(() => {
     if (isSticky) {
@@ -100,6 +95,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
         />
         <SearchDropdown
           className={styles.catalogue__filters__container__inputs__search}
+          value={filtersData.district || ""}
           onSearchChange={updateSearchQuery}
         />
       </div>
@@ -127,7 +123,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
             >
               Показать{" "}
               <span>
-                {selectedPropertyType === "Квартира" ? "квартиры" : "ЖК"}
+                {filtersData.propertyType === "Квартира" ? "квартиры" : "ЖК"}
               </span>
             </div>
           </ActionButton>

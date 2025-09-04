@@ -32,11 +32,14 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
   label,
   className,
 }) => {
-  const { selectedPropertyType, setSelectedPropertyType } = useFiltersStore()
+  const { filtersData, setFiltersData } = useFiltersStore()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleValueChange = (newValue: string) => {
-    setSelectedPropertyType(newValue)
+    setFiltersData({
+      ...filtersData,
+      propertyType: newValue,
+    })
     onValueChange?.(newValue)
   }
 
@@ -58,15 +61,15 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
     >
       {label && <div className={styles.selectLabel}>{label}</div>}
       <Select.Root
-        value={selectedPropertyType}
+        value={filtersData.propertyType}
         onValueChange={handleValueChange}
         open={isOpen}
         onOpenChange={setIsOpen}
       >
         <Select.Trigger className={styles.selectTrigger}>
           <Select.Value placeholder={placeholder}>
-            {selectedPropertyType
-              ? getDisplayValue(selectedPropertyType)
+            {filtersData.propertyType
+              ? getDisplayValue(filtersData.propertyType)
               : placeholder}
           </Select.Value>
           <Select.Icon className={styles.selectIcon}>

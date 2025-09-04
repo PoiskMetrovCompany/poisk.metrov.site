@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query"
+
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
@@ -17,36 +19,38 @@ export const useCatalogueData = (
 ) => {
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const [currentPage, setCurrentPage] = useState(1)
-  const { selectedPropertyType } = useFiltersStore()
+  const { filtersData: storeFiltersData, isLoadedFromUrl } = useFiltersStore()
+  const queryClient = useQueryClient()
 
-  // Создаем начальные фильтры для автоматического запроса
-  const initialFilters = useMemo(
-    () => ({
-      entity_type: selectedPropertyType === "Квартира" ? "Квартиры" : "ЖК",
-    }),
-    [selectedPropertyType]
-  )
-
-  // Устанавливаем начальные фильтры при первой загрузке
+  // Сбрасываем кэш при монтировании компонента
   useEffect(() => {
-    if (!activeFilters) {
-      setActiveFilters(initialFilters)
-    }
-  }, [activeFilters, initialFilters, setActiveFilters])
+    // Удаляем все кэшированные запросы фильтров при переходе на страницу
+    queryClient.removeQueries({ queryKey: ["filters"] })
+  }, [queryClient])
 
-  // Обновляем фильтры при изменении типа недвижимости
+  // Устанавливаем начальные фильтры при первой загрузке или изменении типа недвижимости
   useEffect(() => {
-    if (activeFilters) {
-      // Сохраняем текущие фильтры, но обновляем entity_type
-      const updatedFilters = {
-        ...activeFilters,
-        entity_type: selectedPropertyType === "Квартира" ? "Квартиры" : "ЖК",
-      }
-      setActiveFilters(updatedFilters)
-    } else {
-      setActiveFilters(initialFilters)
+    // Ждем загрузки данных из URL и устанавливаем фильтры
+    if (
+      isLoadedFromUrl &&
+      (!activeFilters ||
+        activeFilters.entity_type !==
+          (storeFiltersData.propertyType === "Квартира" ? "Квартиры" : "ЖК"))
+    ) {
+      // Создаем фильтры на основе текущих данных store
+      const filtersParams = mapFiltersFormToApi(
+        storeFiltersData as FiltersFormData,
+        storeFiltersData.propertyType
+      )
+      setActiveFilters(filtersParams)
     }
-  }, [selectedPropertyType, setActiveFilters, initialFilters])
+  }, [
+    activeFilters,
+    setActiveFilters,
+    storeFiltersData.propertyType,
+    storeFiltersData,
+    isLoadedFromUrl,
+  ])
 
   // Запрос фильтров
   const {
@@ -72,13 +76,18 @@ export const useCatalogueData = (
       console.log("Применение фильтров:", formData)
 
       // Преобразуем данные формы в параметры API
-      const filtersParams = mapFiltersFormToApi(formData, selectedPropertyType)
+      const filtersParams = mapFiltersFormToApi(
+        formData,
+        storeFiltersData.propertyType
+      )
       console.log("Параметры API фильтров:", filtersParams)
 
       // Сохраняем активные фильтры
       setActiveFilters(filtersParams)
+
+      // URL уже обновляется автоматически через store
     },
-    [selectedPropertyType, setActiveFilters]
+    [storeFiltersData.propertyType, setActiveFilters]
   )
 
   const handlePageChange = useCallback((page: number) => {

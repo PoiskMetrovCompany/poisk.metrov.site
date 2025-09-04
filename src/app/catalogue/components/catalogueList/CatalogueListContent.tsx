@@ -1,7 +1,10 @@
 import React, { useEffect } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
+import { useInitialFiltersFromUrl } from "@/hooks/useInitialFiltersFromUrl"
 import { useStickyState } from "@/hooks/useStickyState"
+import { useUrlChangeListener } from "@/hooks/useUrlChangeListener"
+import { useUrlSync } from "@/hooks/useUrlSync"
 import { useFiltersStore } from "@/stores/useFiltersStore"
 import { FiltersRequest } from "@/types/api/filters"
 
@@ -38,8 +41,17 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   setActiveFilters,
 }) => {
   const { isSticky, isVisible, elementRef } = useStickyState()
-  const { selectedPropertyType, setSelectedPropertyType } = useFiltersStore()
+  const { filtersData: storeFiltersData } = useFiltersStore()
   const { isLaptop } = useCatalogueSorting()
+
+  // Синхронизация с URL
+  useUrlSync()
+
+  // Обработка изменений URL при навигации
+  useUrlChangeListener()
+
+  // Инициализация фильтров из URL при загрузке страницы
+  useInitialFiltersFromUrl()
 
   const {
     selectedSorting,
@@ -74,8 +86,15 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   return (
     <div className={styles.catalogue}>
       <CatalogueHeader
-        selectedPropertyType={selectedPropertyType}
-        setSelectedPropertyType={setSelectedPropertyType}
+        selectedPropertyType={storeFiltersData.propertyType}
+        setSelectedPropertyType={(type) => {
+          // Обновляем propertyType в фильтрах
+          const { setFiltersData } = useFiltersStore.getState()
+          setFiltersData({
+            ...storeFiltersData,
+            propertyType: type,
+          })
+        }}
       />
 
       <CatalogueFiltersSection
@@ -99,7 +118,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
       <CatalogueResultsHeader
         filtersData={filtersData}
-        selectedPropertyType={selectedPropertyType}
+        selectedPropertyType={storeFiltersData.propertyType}
         selectedSorting={selectedSorting}
         isLaptop={isLaptop}
         onSortingChange={handleSorting}
@@ -107,11 +126,15 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
       <CatalogueCardsContainer
         selectedSorting={selectedSorting}
-        selectedPropertyType={selectedPropertyType}
+        selectedPropertyType={storeFiltersData.propertyType}
       >
         {isLoadingFilters
           ? renderSkeletons(selectedSorting)
-          : renderCards(filtersData, selectedPropertyType, selectedSorting)}
+          : renderCards(
+              filtersData,
+              storeFiltersData.propertyType,
+              selectedSorting
+            )}
       </CatalogueCardsContainer>
 
       <CataloguePagination
@@ -123,7 +146,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
       <CatalogueCardsContainer
         selectedSorting={selectedSorting}
-        selectedPropertyType={selectedPropertyType}
+        selectedPropertyType={storeFiltersData.propertyType}
       >
         {renderAdditionalComponents(selectedSorting)}
       </CatalogueCardsContainer>

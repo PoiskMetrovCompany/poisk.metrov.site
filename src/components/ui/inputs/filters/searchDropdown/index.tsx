@@ -57,28 +57,42 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
   const [inputValue, setInputValue] = useState(value)
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const popoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Синхронизируем inputValue с value из props
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputValue(value)
+    const newValue = e.target.value
+    setInputValue(newValue) // Обновляем локальное состояние сразу
 
-    // Очищаем предыдущий таймаут
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
+    // Очищаем предыдущий таймаут для popover
+    if (popoverTimeoutRef.current) {
+      clearTimeout(popoverTimeoutRef.current)
     }
 
-    if (value.length > 0) {
+    // Очищаем предыдущий таймаут для debounce
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+
+    if (newValue.length > 0) {
       // Добавляем небольшую задержку для открытия popover
-      timeoutRef.current = setTimeout(() => {
+      popoverTimeoutRef.current = setTimeout(() => {
         setIsOpen(true)
       }, 100)
     } else {
       setIsOpen(false)
     }
 
+    // Вызываем onSearchChange с debounce для обновления store
     if (onSearchChange) {
-      onSearchChange(value)
+      debounceTimeoutRef.current = setTimeout(() => {
+        onSearchChange(newValue)
+      }, 500)
     }
   }
 
@@ -110,16 +124,14 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
     }, 0)
   }
 
-  // Синхронизируем локальное состояние с внешним значением
-  useEffect(() => {
-    setInputValue(value)
-  }, [value])
-
-  // Очищаем таймаут при размонтировании
+  // Очищаем таймауты при размонтировании
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+      if (popoverTimeoutRef.current) {
+        clearTimeout(popoverTimeoutRef.current)
+      }
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current)
       }
     }
   }, [])

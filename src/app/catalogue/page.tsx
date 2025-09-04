@@ -1,5 +1,7 @@
 import React from "react"
 
+import FiltersDebugPanel from "@/components/FiltersDebugPanel"
+
 import styles from "./catalogue.module.scss"
 
 import CatalogueList from "./components/catalogueList"
@@ -8,6 +10,7 @@ const Catalogue = () => {
   return (
     <div className={styles.catalogue}>
       <CatalogueList />
+      <FiltersDebugPanel />
     </div>
   )
 }

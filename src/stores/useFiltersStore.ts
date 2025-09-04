@@ -2,15 +2,20 @@ import { create } from "zustand"
 import { devtools } from "zustand/middleware"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
+import {
+  clearUrlParams,
+  getCurrentUrlParams,
+  parseFiltersFromUrl,
+  updateUrlParams,
+} from "@/utils/urlParams"
 
 export interface FiltersState {
   // Состояние фильтров
   filtersData: FiltersFormData
-  selectedPropertyType: string
+  isLoadedFromUrl: boolean
 
   // Действия
   setFiltersData: (data: FiltersFormData) => void
-  setSelectedPropertyType: (type: string) => void
 
   // Функции для обновления отдельных полей
   updatePriceRange: (range: [number | null, number | null]) => void
@@ -19,6 +24,11 @@ export interface FiltersState {
 
   // Сброс фильтров
   resetFilters: () => void
+
+  // Синхронизация с URL
+  syncWithUrl: () => void
+  updateUrlFromState: () => void
+  loadFromUrl: () => void
 }
 
 const initialFiltersData: FiltersFormData = {
@@ -74,12 +84,22 @@ export const useFiltersStore = create<FiltersState>()(
     (set, get) => ({
       // Начальное состояние
       filtersData: initialFiltersData,
-      selectedPropertyType: "Жилой комплекс",
+      isLoadedFromUrl: false,
 
       // Действия
-      setFiltersData: (data) => set({ filtersData: data }),
-
-      setSelectedPropertyType: (type) => set({ selectedPropertyType: type }),
+      setFiltersData: (data) => {
+        set((state) => ({
+          filtersData: {
+            ...state.filtersData,
+            ...data,
+          },
+        }))
+        // Автоматически обновляем URL при изменении фильтров
+        setTimeout(() => {
+          const { filtersData } = get()
+          updateUrlParams(filtersData, filtersData.propertyType)
+        }, 0)
+      },
 
       // Функции для обновления отдельных полей
       updatePriceRange: (range) => {
@@ -90,6 +110,11 @@ export const useFiltersStore = create<FiltersState>()(
             priceMax: range[1],
           },
         }))
+        // Автоматически обновляем URL
+        setTimeout(() => {
+          const { filtersData } = get()
+          updateUrlParams(filtersData, filtersData.propertyType)
+        }, 0)
       },
 
       updateRoomCount: (room) => {
@@ -99,6 +124,11 @@ export const useFiltersStore = create<FiltersState>()(
             rooms: room ? [room] : [],
           },
         }))
+        // Автоматически обновляем URL
+        setTimeout(() => {
+          const { filtersData } = get()
+          updateUrlParams(filtersData, filtersData.propertyType)
+        }, 0)
       },
 
       updateSearchQuery: (query) => {
@@ -108,14 +138,63 @@ export const useFiltersStore = create<FiltersState>()(
             district: query, // Используем district для поискового запроса
           },
         }))
+        // Автоматически обновляем URL
+        setTimeout(() => {
+          const { filtersData } = get()
+          updateUrlParams(filtersData, filtersData.propertyType)
+        }, 0)
       },
 
       // Сброс фильтров
-      resetFilters: () =>
+      resetFilters: () => {
         set({
           filtersData: initialFiltersData,
-          selectedPropertyType: "Жилой комплекс",
-        }),
+        })
+        // Очищаем URL при сбросе фильтров
+        setTimeout(() => {
+          clearUrlParams()
+        }, 0)
+      },
+
+      // Синхронизация с URL
+      syncWithUrl: () => {
+        const { filtersData } = get()
+        updateUrlParams(filtersData, filtersData.propertyType)
+      },
+
+      updateUrlFromState: () => {
+        const { filtersData } = get()
+        updateUrlParams(filtersData, filtersData.propertyType)
+      },
+
+      loadFromUrl: () => {
+        try {
+          const urlParams = getCurrentUrlParams()
+          const {
+            filtersData: urlFiltersData,
+            selectedPropertyType: urlPropertyType,
+          } = parseFiltersFromUrl(urlParams)
+
+          // Объединяем с начальными данными, чтобы заполнить недостающие поля
+          const mergedFiltersData = {
+            ...initialFiltersData,
+            ...urlFiltersData,
+            propertyType: urlPropertyType, // Используем propertyType из URL
+          }
+
+          set({
+            filtersData: mergedFiltersData,
+            isLoadedFromUrl: true,
+          })
+        } catch (error) {
+          console.error("Ошибка при загрузке фильтров из URL:", error)
+          // В случае ошибки устанавливаем начальные значения
+          set({
+            filtersData: initialFiltersData,
+            isLoadedFromUrl: true,
+          })
+        }
+      },
     }),
     {
       name: "filters-store",

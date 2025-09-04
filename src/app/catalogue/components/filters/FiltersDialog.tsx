@@ -52,13 +52,16 @@ const FiltersDialog: FC<FiltersDialogProps> = ({
   } = useFiltersForm()
 
   // Синхронизируем данные из store
-  const { filtersData, setFiltersData, selectedPropertyType } =
-    useFiltersStore()
+  const { filtersData, setFiltersData } = useFiltersStore()
 
-  // Обновляем formData при изменении filtersData
+  // Обновляем formData при изменении filtersData из URL
   useEffect(() => {
-    setFiltersData(formData)
-  }, [formData, setFiltersData])
+    // Инициализируем форму данными из store только при первом открытии
+    if (open) {
+      // Обновляем store с данными из URL, если они есть
+      // Это будет сделано автоматически через useInitialFiltersFromUrl
+    }
+  }, [open])
 
   // Мемоизируем данные для ApartmentFilters
   const apartmentFormData = useMemo(
@@ -116,7 +119,13 @@ const FiltersDialog: FC<FiltersDialogProps> = ({
   const handleApplyFilters = () => {
     form.handleSubmit()
     if (onApplyFilters) {
-      onApplyFilters(filtersData)
+      // Обновляем store с данными формы, сохраняя существующие значения
+      const updatedFiltersData = {
+        ...filtersData,
+        ...formData,
+      }
+      setFiltersData(updatedFiltersData)
+      onApplyFilters(updatedFiltersData)
     }
     onOpenChange(false)
   }
@@ -239,7 +248,9 @@ const FiltersDialog: FC<FiltersDialogProps> = ({
                   >
                     Показать{" "}
                     <span>
-                      {selectedPropertyType === "Квартира" ? "квартиры" : "ЖК"}
+                      {filtersData.propertyType === "Квартира"
+                        ? "квартиры"
+                        : "ЖК"}
                     </span>
                   </ActionButton>
 

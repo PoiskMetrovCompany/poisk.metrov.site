@@ -1,12 +1,15 @@
 import React from "react"
-import styles from "./filter.module.scss"
-import IconImage from "@/components/ui/IconImage"
+
 import { FilterValues } from "@/utils/hooks/use-filters"
+
+import styles from "./filter.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface ActiveFiltersProps {
   currentValues: FilterValues
   onRemoveHouseType: (type: string) => void
-  onRemoveRoomCount: (count: string) => void
+  onRemoveRoomCount: () => void
   onRemovePriceRange: () => void
   onRemoveSearchValue: () => void
   getPriceDisplayText: () => string
@@ -21,10 +24,8 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   getPriceDisplayText,
 }) => {
   const houseTypeLabels: { [key: string]: string } = {
-    "residential-complex": "ЖК",
-    apartment: "Квартира",
-    apartments: "Апартаменты",
-    house: "Дома",
+    "Жилой комплекс": "ЖК",
+    Квартира: "Квартира",
   }
 
   const roomCountLabels: { [key: string]: string } = {
@@ -38,39 +39,19 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
 
   return (
     <div className={styles.filter__activeFilters}>
-      {currentValues.houseTypes.map((type) => (
-        <div key={`house-type-${type}`} className={styles.filter__activeFilter}>
-          <span className={styles.filter__activeFilter__text}>
-            {houseTypeLabels[type]}
-          </span>
-          <button
-            className={styles.filter__activeFilter__remove}
-            onClick={() => onRemoveHouseType(type)}
-            type="button"
-            aria-label={`Удалить фильтр ${houseTypeLabels[type]}`}
-          >
-            <IconImage
-              iconLink="/images/icons/close.svg"
-              alt="удалить"
-              className={styles.filter__activeFilter__remove__icon}
-            />
-          </button>
-        </div>
-      ))}
-
-      {currentValues.roomCounts.map((count) => (
+      {currentValues.houseType && (
         <div
-          key={`room-count-${count}`}
+          key={`house-type-${currentValues.houseType}`}
           className={styles.filter__activeFilter}
         >
           <span className={styles.filter__activeFilter__text}>
-            {roomCountLabels[count]}
+            {houseTypeLabels[currentValues.houseType]}
           </span>
           <button
             className={styles.filter__activeFilter__remove}
-            onClick={() => onRemoveRoomCount(count)}
+            onClick={onRemoveHouseType}
             type="button"
-            aria-label={`Удалить фильтр ${roomCountLabels[count]}`}
+            aria-label={`Удалить фильтр ${houseTypeLabels[currentValues.houseType]}`}
           >
             <IconImage
               iconLink="/images/icons/close.svg"
@@ -79,7 +60,30 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
             />
           </button>
         </div>
-      ))}
+      )}
+
+      {currentValues.roomCount && (
+        <div
+          key={`room-count-${currentValues.roomCount}`}
+          className={styles.filter__activeFilter}
+        >
+          <span className={styles.filter__activeFilter__text}>
+            {roomCountLabels[currentValues.roomCount]}
+          </span>
+          <button
+            className={styles.filter__activeFilter__remove}
+            onClick={onRemoveRoomCount}
+            type="button"
+            aria-label={`Удалить фильтр ${roomCountLabels[currentValues.roomCount]}`}
+          >
+            <IconImage
+              iconLink="/images/icons/close.svg"
+              alt="удалить"
+              className={styles.filter__activeFilter__remove__icon}
+            />
+          </button>
+        </div>
+      )}
 
       {getPriceDisplayText() && (
         <div className={styles.filter__activeFilter}>
