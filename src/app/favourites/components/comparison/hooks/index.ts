@@ -1,1 +1,5 @@
-export { useComparisonSlider, useComparisonData } from "./useComparison"
+export {
+  useComparisonSlider,
+  useComparisonData,
+  useAllComparisonData,
+} from "./useComparison"

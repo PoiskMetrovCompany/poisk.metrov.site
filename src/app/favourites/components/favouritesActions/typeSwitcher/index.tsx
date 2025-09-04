@@ -1,16 +1,23 @@
 "use client"
 
-import React from "react"
-import styles from "./typeSwitcher.module.scss"
-import IconImage from "@/components/ui/IconImage"
-import { IFavouriteView } from "@/types/Favourites"
 import clsx from "clsx"
+
+import React from "react"
+
+import { IFavouriteView } from "@/types/Favourites"
+
+import styles from "./typeSwitcher.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface ITypeSwitcherProps {
   selectedView: IFavouriteView
   setSelectedView: (view: IFavouriteView) => void
   flatCount: number
   complexCount: number
+  isComparison?: boolean
+  comparisonFlatCount?: number
+  comparisonComplexCount?: number
 }
 
 const TypeSwitcher = ({
@@ -18,7 +25,19 @@ const TypeSwitcher = ({
   setSelectedView,
   flatCount,
   complexCount,
+  isComparison = false,
+  comparisonFlatCount = 0,
+  comparisonComplexCount = 0,
 }: ITypeSwitcherProps) => {
+  // Определяем какое количество показывать в зависимости от режима
+  const getFlatCount = () => {
+    return isComparison ? comparisonFlatCount : flatCount
+  }
+
+  const getComplexCount = () => {
+    return isComparison ? comparisonComplexCount : complexCount
+  }
+
   return (
     <div className={styles.typeSwitcher}>
       <button
@@ -38,7 +57,9 @@ const TypeSwitcher = ({
             Планировка
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>{flatCount}</span>
+        <span className={styles.typeSwitcher__item__count}>
+          {getFlatCount()}
+        </span>
       </button>
 
       <button
@@ -58,7 +79,9 @@ const TypeSwitcher = ({
             Жилые комплексы
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>{complexCount}</span>
+        <span className={styles.typeSwitcher__item__count}>
+          {getComplexCount()}
+        </span>
       </button>
     </div>
   )

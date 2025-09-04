@@ -27,6 +27,8 @@ const FavouritesWrapper: React.FC<FavouritesWrapperProps> = ({
   const [selectedView, setSelectedView] = useState<IFavouriteView>("layouts")
   const [flatCount, setFlatCount] = useState(0)
   const [complexCount, setComplexCount] = useState(0)
+  const [comparisonFlatCount, setComparisonFlatCount] = useState(0)
+  const [comparisonComplexCount, setComparisonComplexCount] = useState(0)
   const [coordinates, setCoordinates] = useState<Coordinate[]>([
     { longitude: 82.93668458845691, latitude: 55.01091579282242 },
   ])
@@ -71,12 +73,17 @@ const FavouritesWrapper: React.FC<FavouritesWrapperProps> = ({
           complexCount={complexCount}
           selectedView={selectedView}
           setSelectedView={setSelectedView}
+          isComparison={isComparison}
+          comparisonFlatCount={comparisonFlatCount}
+          comparisonComplexCount={comparisonComplexCount}
         />
 
         {isComparison ? (
           <Comparison
             selectedView={selectedView}
             setIsComparison={setIsComparison}
+            setComparisonFlatCount={setComparisonFlatCount}
+            setComparisonComplexCount={setComparisonComplexCount}
           />
         ) : (
           <FavouritesList

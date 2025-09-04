@@ -141,6 +141,10 @@
       align-items: center;
       display: flex;
       justify-content: center;
+
+      &__block {
+        margin-bottom: 0 !important;
+      }
     }
   }
 
