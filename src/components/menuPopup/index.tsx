@@ -29,7 +29,7 @@ const MenuPopup = ({ isOpen, onClose }: IMenuPopupProps) => {
                 Информационное меню с дополнительными опциями
               </VisuallyHidden>
             </Dialog.Description>
-            <MenuInfo onClick={(e) => e.stopPropagation()} />
+            <MenuInfo onClick={(e) => e.stopPropagation()} onClose={onClose} />
             <MenuSlider onClick={(e) => e.stopPropagation()} />
           </Dialog.Content>
         </Dialog.Overlay>

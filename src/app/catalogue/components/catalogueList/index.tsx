@@ -3,7 +3,6 @@
 import React, { useState } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
-import { FiltersProvider } from "@/contexts/FiltersContext"
 import { FiltersRequest } from "@/types/api/filters"
 import { mapFiltersFormToApi } from "@/utils/mappers/filtersMapper"
 
@@ -28,14 +27,12 @@ const CatalogueList = () => {
   }
 
   return (
-    <FiltersProvider onApplyFilters={applyFilters}>
-      <CatalogueListContent
-        showFilters={showFilters}
-        setShowFilters={setShowFilters}
-        activeFilters={activeFilters}
-        setActiveFilters={setActiveFilters}
-      />
-    </FiltersProvider>
+    <CatalogueListContent
+      showFilters={showFilters}
+      setShowFilters={setShowFilters}
+      activeFilters={activeFilters}
+      setActiveFilters={setActiveFilters}
+    />
   )
 }
 

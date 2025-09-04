@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
-import { useFilters } from "@/contexts/FiltersContext"
+import { useFiltersStore } from "@/stores/useFiltersStore"
 import { FiltersRequest, FiltersResponse } from "@/types/api/filters"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import {
@@ -17,7 +17,7 @@ export const useCatalogueData = (
 ) => {
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const [currentPage, setCurrentPage] = useState(1)
-  const { selectedPropertyType } = useFilters()
+  const { selectedPropertyType } = useFiltersStore()
 
   // Создаем начальные фильтры для автоматического запроса
   const initialFilters = useMemo(

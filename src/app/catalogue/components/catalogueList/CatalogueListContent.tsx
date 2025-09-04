@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
-import { useFilters } from "@/contexts/FiltersContext"
 import { useStickyState } from "@/hooks/useStickyState"
+import { useFiltersStore } from "@/stores/useFiltersStore"
 import { FiltersRequest } from "@/types/api/filters"
 
 import styles from "./catalogueList.module.scss"
@@ -38,7 +38,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   setActiveFilters,
 }) => {
   const { isSticky, isVisible, elementRef } = useStickyState()
-  const { selectedPropertyType, setSelectedPropertyType } = useFilters()
+  const { selectedPropertyType, setSelectedPropertyType } = useFiltersStore()
   const { isLaptop } = useCatalogueSorting()
 
   const {

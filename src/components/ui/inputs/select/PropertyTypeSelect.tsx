@@ -4,7 +4,7 @@ import * as Select from "@radix-ui/react-select"
 
 import React, { useState } from "react"
 
-import { useFilters } from "@/contexts/FiltersContext"
+import { useFiltersStore } from "@/stores/useFiltersStore"
 
 import styles from "./propertyTypeSelect.module.scss"
 
@@ -32,7 +32,7 @@ const PropertyTypeSelect: React.FC<PropertyTypeSelectProps> = ({
   label,
   className,
 }) => {
-  const { selectedPropertyType, setSelectedPropertyType } = useFilters()
+  const { selectedPropertyType, setSelectedPropertyType } = useFiltersStore()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleValueChange = (newValue: string) => {

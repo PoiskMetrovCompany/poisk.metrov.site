@@ -1,6 +1,5 @@
 import React, { useCallback } from "react"
 
-import FlatLayoutCard from "@/components/flatLayoutCard"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardList from "@/components/propertyCardList"
@@ -130,45 +129,59 @@ export const useCatalogueCards = () => {
 
       data.forEach((item: unknown, index: number) => {
         const itemData = item as FilterItem
-        // Создаем объект apartment для совместимости с FlatLayoutCard
-        const apartment = {
+        // Создаем объект property для совместимости с PropertyCard
+        const property: IProperty = {
           id: Number(itemData.id) || index,
           title: `Квартира ${itemData.apartment_number || index}`,
-          address: itemData.address || "Адрес не указан",
+          subtitle: itemData.address || "Адрес не указан",
           price:
             typeof itemData.price === "number"
               ? `${itemData.price.toLocaleString()} ₽`
               : "Цена не указана",
           image: "/images/temporary/flat.png", // Мокаем изображение
-          // Добавляем реальные данные
-          floor: itemData.floor,
-          room_count: itemData.room_count,
-          area: itemData.area,
-          living_space: itemData.living_space,
-          ceiling_height: itemData.ceiling_height,
-          renovation: itemData.renovation,
-          balcony: itemData.balcony,
-          bathroom_unit: itemData.bathroom_unit,
-          // Добавляем другие необходимые поля
-          ...itemData,
-        } as unknown as IApartment
+          badge: {
+            developer: "Жилой комплекс", // Мокаем застройщика
+            period: "2024", // Мокаем период
+          },
+          metro: itemData.metro_station || "",
+          driveTime: itemData.metro_time ? `${itemData.metro_time} мин` : "",
+          metroType: "on_foot", // Мокаем тип метро
+          specifications: [
+            { type: "Студии", price: "от 5,6 млн ₽" },
+            { type: "1-комн. кв", price: "от 7,1 млн ₽" },
+            { type: "2-комн. кв", price: "от 8,5 млн ₽" },
+            { type: "3-комн. кв", price: "от 10,8 млн ₽" },
+            { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
+          ],
+          description: [
+            {
+              type: "Этаж",
+              status: itemData.floor ? `${itemData.floor}` : "Не указано",
+            },
+            {
+              type: "Площадь",
+              status: itemData.area ? `${itemData.area} м²` : "Не указано",
+            },
+            {
+              type: "Комнат",
+              status: itemData.room_count
+                ? `${itemData.room_count}`
+                : "Не указано",
+            },
+            {
+              type: "Отделка",
+              status: itemData.renovation || "Не указано",
+            },
+          ],
+        }
 
-        result.push(
-          <FlatLayoutCard
-            key={apartment.id}
-            title={`Квартира ${apartment.apartment_number}`}
-            price={`${apartment.price.toLocaleString()} ₽`}
-            complex="Жилой комплекс"
-            description={[
-              `Этаж ${apartment.floor}`,
-              `Площадь ${apartment.area} м²`,
-              `Комнат ${apartment.room_count}`,
-              apartment.renovation || "Отделка не указана",
-            ]}
-            imageUrl="/images/temporary/flat.png"
-            linkUrl={`/details/${apartment.id}`}
-          />
-        )
+        if (selectedSorting === "cards") {
+          result.push(<PropertyCard key={property.id} property={property} />)
+        } else {
+          result.push(
+            <PropertyCardList key={property.id} property={property} />
+          )
+        }
 
         if (index === 3) {
           result.push(

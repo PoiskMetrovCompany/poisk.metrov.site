@@ -3,7 +3,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 import React, { FC, useEffect, useMemo, useState } from "react"
 
-import { useFilters } from "@/contexts/FiltersContext"
+import { useFiltersStore } from "@/stores/useFiltersStore"
 
 import styles from "./filters.module.scss"
 
@@ -51,8 +51,9 @@ const FiltersDialog: FC<FiltersDialogProps> = ({
     handleMetroTransportTypeSelect,
   } = useFiltersForm()
 
-  // Синхронизируем данные из контекста
-  const { filtersData, setFiltersData, selectedPropertyType } = useFilters()
+  // Синхронизируем данные из store
+  const { filtersData, setFiltersData, selectedPropertyType } =
+    useFiltersStore()
 
   // Обновляем formData при изменении filtersData
   useEffect(() => {

@@ -7,7 +7,7 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
-import { useFilters } from "@/contexts/FiltersContext"
+import { useFiltersStore } from "@/stores/useFiltersStore"
 
 import styles from "./catalogueFilters.module.scss"
 
@@ -39,7 +39,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
     updatePriceRange,
     updateRoomCount,
     updateSearchQuery,
-  } = useFilters()
+  } = useFiltersStore()
 
   useEffect(() => {
     if (isSticky) {
