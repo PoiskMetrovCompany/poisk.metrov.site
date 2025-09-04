@@ -18,23 +18,58 @@ interface IFlatLayoutCardProps {
   description?: string[]
   imageUrl?: string
   linkUrl?: string
-  apartment?: any
+  apartment?: {
+    id: number
+    apartment_type: string
+    area: number
+    price: number
+    floor: number
+    apartment_number: string
+    renovation: string
+    plan_URL: string
+    key: string
+  }
 }
 
 const FlatLayoutCard = ({
   listClassName,
-  title = "Студия, 25 м²",
-  price = "4 359 990 ₽",
+  title,
+  price,
   complex = "Европейский берег",
-  description = [
-    "Этаж 8 из 17",
-    "I кв 2025",
-    "Дом кирпичный",
-    "Отделка улучшенная черновая",
-  ],
-  imageUrl = "/images/temporary/room.png",
-  linkUrl = `/detailsFlat?key=asdf1231sdas`,
+  description,
+  imageUrl,
+  linkUrl,
+  apartment,
 }: IFlatLayoutCardProps) => {
+  const apartmentData = apartment
+    ? {
+        title: `${apartment.apartment_type}, ${apartment.area} м²`,
+        price: apartment.price
+          ? apartment.price.toLocaleString("ru-RU") + " ₽"
+          : "Цена не указана",
+        description: [
+          `Этаж ${apartment.floor}`,
+          `№${apartment.apartment_number}`,
+          apartment.renovation || "Отделка не указана",
+        ],
+        imageUrl: apartment.plan_URL || "/images/temporary/room.png",
+        linkUrl: `/detailsFlat?key=${apartment.key}`,
+      }
+    : null
+
+  const finalTitle = apartmentData?.title || title || "Студия, 25 м²"
+  const finalPrice = apartmentData?.price || price || "4 359 990 ₽"
+  const finalDescription = apartmentData?.description ||
+    description || [
+      "Этаж 8 из 17",
+      "I кв 2025",
+      "Дом кирпичный",
+      "Отделка улучшенная черновая",
+    ]
+  const finalImageUrl =
+    apartmentData?.imageUrl || imageUrl || "/images/temporary/room.png"
+  const finalLinkUrl =
+    apartmentData?.linkUrl || linkUrl || `/detailsFlat?key=asdf1231sdas`
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
@@ -54,26 +89,28 @@ const FlatLayoutCard = ({
       </div>
       <div className={styles.flatLayoutCard__content}>
         <Link
-          href={linkUrl}
+          href={finalLinkUrl}
           className={styles.flatLayoutCard__content__image__wrapper}
         >
           <div className={styles.flatLayoutCard__content__image}>
-            <Image src={imageUrl} alt="flat-layout-card" fill />
+            <Image src={finalImageUrl} alt="flat-layout-card" fill />
           </div>
         </Link>
-        <span className={styles.flatLayoutCard__content__title}>{title}</span>
+        <span className={styles.flatLayoutCard__content__title}>
+          {finalTitle}
+        </span>
         <ul
           className={clsx(
             styles.flatLayoutCard__content__description,
             listClassName
           )}
         >
-          {description.map((item, index) => (
+          {finalDescription.map((item, index) => (
             <React.Fragment key={item}>
               <li className={styles.flatLayoutCard__content__description__item}>
                 {item}
               </li>
-              {index < description.length - 1 && (
+              {index < finalDescription.length - 1 && (
                 <div
                   className={
                     styles.flatLayoutCard__content__description__separator
@@ -85,10 +122,10 @@ const FlatLayoutCard = ({
         </ul>
         <div className={styles.flatLayoutCard__content__price}>
           <h4 className={styles.flatLayoutCard__content__price__value}>
-            {price}
+            {finalPrice}
           </h4>
           <a
-            href={linkUrl}
+            href={finalLinkUrl}
             className={styles.flatLayoutCard__content__price__change}
           >
             <div
