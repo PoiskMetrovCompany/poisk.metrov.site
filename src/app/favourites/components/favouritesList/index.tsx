@@ -2,7 +2,7 @@
 
 import clsx from "clsx"
 
-import React, { useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import NotFound from "@/components/notFound"
@@ -45,7 +45,12 @@ const FavoutiresList = ({
   setApartments,
 }: IFavouritesListProps) => {
   const [isEmpty, setIsEmpty] = useState(false)
-  const USER_KEY = "e8ff1372-822b-11f0-8411-10f60a82b815"
+  const USER_KEY = "06cf4246-83c2-11f0-a013-10f60a82b815"
+
+  const prevComplexesLength = useRef(0)
+  const prevApartmentsLength = useRef(0)
+  const prevComplexes = useRef<any[]>([])
+  const prevApartments = useRef<any[]>([])
 
   const {
     data: responseData,
@@ -63,24 +68,63 @@ const FavoutiresList = ({
   const complexes = responseData?.attributes?.residential_complexes || []
   const apartments = responseData?.attributes?.apartments || []
 
-  setComplexCount(complexes.length)
-  setFlatCount(apartments.length)
-  setComplexes(complexes)
-  setApartments(apartments)
-
-  React.useEffect(() => {
+  const coordinates = useMemo(() => {
     if (complexes.length > 0) {
-      const coordinates: Coordinate[] = complexes.map((complex) => ({
+      return complexes.map((complex) => ({
         longitude: complex.longitude,
         latitude: complex.latitude,
       }))
+    }
+    return []
+  }, [complexes])
+
+  useEffect(() => {
+    const complexesLengthChanged =
+      prevComplexesLength.current !== complexes.length
+    const apartmentsLengthChanged =
+      prevApartmentsLength.current !== apartments.length
+
+    if (complexesLengthChanged) {
+      setComplexCount(complexes.length)
+      prevComplexesLength.current = complexes.length
+    }
+
+    if (apartmentsLengthChanged) {
+      setFlatCount(apartments.length)
+      prevApartmentsLength.current = apartments.length
+    }
+  }, [complexes.length, apartments.length])
+
+  useEffect(() => {
+    const complexesChanged =
+      JSON.stringify(prevComplexes.current) !== JSON.stringify(complexes)
+    const apartmentsChanged =
+      JSON.stringify(prevApartments.current) !== JSON.stringify(apartments)
+
+    if (complexesChanged) {
+      setComplexes(complexes)
+      prevComplexes.current = complexes
+    }
+
+    if (apartmentsChanged) {
+      setApartments(apartments)
+      prevApartments.current = apartments
+    }
+  }, [complexes, apartments])
+
+  useEffect(() => {
+    if (coordinates.length > 0) {
       setCoordinates(coordinates)
     }
-  }, [complexes, setCoordinates])
+  }, [coordinates])
 
-  if (!isLoading && complexes.length === 0 && apartments.length === 0) {
-    setIsEmpty(true)
-  }
+  useEffect(() => {
+    if (!isLoading && complexes.length === 0 && apartments.length === 0) {
+      setIsEmpty(true)
+    } else {
+      setIsEmpty(false)
+    }
+  }, [isLoading, complexes.length, apartments.length])
 
   if (isEmpty) {
     return (

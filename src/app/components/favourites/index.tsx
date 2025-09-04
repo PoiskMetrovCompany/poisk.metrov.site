@@ -30,12 +30,12 @@ const Favourites = () => {
     `/residential-complex/best-offers/?city_code=${cityCode}`,
     {
       enabled: !!cityCode,
-      staleTime: 5 * 60 * 1000, // 5 минут
-      gcTime: 10 * 60 * 1000, // 10 минут
+      staleTime: 5 * 60 * 1000, 
+      gcTime: 10 * 60 * 1000, 
     }
   )
 
-  // Маппинг данных из API в формат PropertyCard
+
   const apiCards: IProperty[] = bestOffers
     ? bestOffers.map(mapResidentialComplexToProperty)
     : []

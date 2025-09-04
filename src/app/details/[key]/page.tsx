@@ -7,19 +7,17 @@ import { IAboutObjectItem } from "@/types/Object"
 import { ResidentialComplexDataResponse } from "@/types/api/complex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
-import styles from "./details.module.scss"
+import styles from "../details.module.scss"
 
-import AboutComplex from "./components/aboutComplex"
-import AboutObject from "./components/aboutObject"
-import AboutObjectSmall from "./components/aboutObjectSmall"
-import ConstructionProgress from "./components/constructionProgress"
-import Documents from "./components/documents"
-import Estate from "./components/estate"
-import FlatList from "./components/flatList"
-import DetailsHeader from "./components/header"
-import Location from "./components/location"
-
-const RESIDENTIAL_COMPLEX_KEY = "06fa20d1-83c2-11f0-a013-10f60a82b815"
+import AboutComplex from "../components/aboutComplex"
+import AboutObject from "../components/aboutObject"
+import AboutObjectSmall from "../components/aboutObjectSmall"
+import ConstructionProgress from "../components/constructionProgress"
+import Documents from "../components/documents"
+import Estate from "../components/estate"
+import FlatList from "../components/flatList"
+import DetailsHeader from "../components/header"
+import Location from "../components/location"
 
 const aboutObjectItems: IAboutObjectItem[] = [
   {
@@ -77,29 +75,48 @@ const aboutObjectItemsSmall: IAboutObjectItem[] = [
   },
 ]
 
-const DetailsPage = () => {
-  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${RESIDENTIAL_COMPLEX_KEY}`
+interface DetailsPageProps {
+  params: {
+    key: string
+  }
+}
+
+const DetailsPage = ({ params }: DetailsPageProps) => {
+  const { key } = params
+
+  if (!key) {
+    return (
+      <div className={styles.details}>
+        <DetailsHeader isError={true} />
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h2>Ошибка</h2>
+          <p>Ключ ЖК не найден</p>
+        </div>
+      </div>
+    )
+  }
+
+  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${key}`
 
   const {
     data: complexData,
     isLoading,
     error,
   } = useApiQuery<ResidentialComplexDataResponse>(
-    ["residential-complex", RESIDENTIAL_COMPLEX_KEY],
+    ["residential-complex", key],
     FULL_API_URL,
     {
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
     }
   )
+
   if (isLoading) {
     return (
       <div className={styles.details}>
         <DetailsHeader isLoading={true} />
         <Estate />
-        <FlatList
-          complexKey={RESIDENTIAL_COMPLEX_KEY}
-        />
+        <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex isLoading={true} />
         <MapProvider>
@@ -111,14 +128,13 @@ const DetailsPage = () => {
       </div>
     )
   }
+
   if (error || !complexData) {
     return (
       <div className={styles.details}>
         <DetailsHeader isError={true} />
         <Estate />
-        <FlatList
-          complexKey={RESIDENTIAL_COMPLEX_KEY}
-        />
+        <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex />
         <MapProvider>
@@ -130,6 +146,7 @@ const DetailsPage = () => {
       </div>
     )
   }
+
   const headerData = {
     name: complexData.attributes.name,
     address: complexData.attributes.address,
@@ -137,16 +154,16 @@ const DetailsPage = () => {
     metroType: complexData.attributes.metro_type,
     metroTime: complexData.attributes.metro_time,
   }
+
   const aboutComplexData = {
     description: complexData.attributes.description,
   }
+
   return (
     <div className={styles.details}>
       <DetailsHeader data={headerData} />
       <Estate />
-      <FlatList
-        complexKey={RESIDENTIAL_COMPLEX_KEY}
-      />
+      <FlatList complexKey={key} />
       <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
       <MapProvider>
