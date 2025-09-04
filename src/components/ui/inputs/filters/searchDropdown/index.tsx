@@ -112,10 +112,8 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
 
   // Синхронизируем локальное состояние с внешним значением
   useEffect(() => {
-    if (inputValue !== value) {
-      setInputValue(value)
-    }
-  }, [value, inputValue])
+    setInputValue(value)
+  }, [value])
 
   // Очищаем таймаут при размонтировании
   useEffect(() => {
@@ -176,6 +174,7 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
+                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={
@@ -212,6 +211,7 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
+                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={
@@ -248,6 +248,7 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
                 <div
                   key={index}
                   className={styles.searchDropdown__content__inner__block__item}
+                  onClick={() => handleItemClick(item.title)}
                 >
                   <span
                     className={

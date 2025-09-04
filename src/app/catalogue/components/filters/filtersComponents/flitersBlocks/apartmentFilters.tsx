@@ -54,6 +54,17 @@ interface ApartmentFiltersProps {
       | "ceilingHeight",
     value: string
   ) => void
+  handleSingleSelect: (
+    field:
+      | "rooms"
+      | "floorOptions"
+      | "layout"
+      | "finish"
+      | "bathroom"
+      | "features"
+      | "ceilingHeight",
+    value: string
+  ) => void
   handlePropertyTypeSelect: (propertyType: string) => void
   handleApartmentsSelect: (apartments: string) => void
   handleRangeInputChange: (
@@ -70,6 +81,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
     showApartmentTypeSelection = false,
     setShowApartmentTypeSelection,
     handleMultiSelect,
+    handleSingleSelect,
     handlePropertyTypeSelect,
     handleApartmentsSelect,
     handleRangeInputChange,
@@ -191,7 +203,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
         )}
 
         {/* Кнопка "Выбрать квартиру" */}
-        {!showApartmentTypeSelection && (
+        {showApartmentTypeSelection && (
           <div className={styles.filterBlock__section}>
             <div className={styles.filterBlock__section__label}>Тип жилья</div>
             <div
@@ -234,7 +246,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.rooms.includes(option)}
-                    onClick={() => handleMultiSelect("rooms", option)}
+                    onClick={() => handleSingleSelect("rooms", option)}
                   />
                 ))}
               </div>
@@ -270,7 +282,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                   }
                   unit=""
                 />
-                <div
+                {/* <div
                   className={styles.filterBlock__section__optionsRange__options}
                 >
                   {FLOOR_OPTIONS.map((option) => (
@@ -281,7 +293,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                       onClick={() => handleMultiSelect("floorOptions", option)}
                     />
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -328,7 +340,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.ceilingHeight.includes(option)}
-                    onClick={() => handleMultiSelect("ceilingHeight", option)}
+                    onClick={() => handleSingleSelect("ceilingHeight", option)}
                   />
                 ))}
               </div>
@@ -345,7 +357,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.layout.includes(option)}
-                    onClick={() => handleMultiSelect("layout", option)}
+                    onClick={() => handleSingleSelect("layout", option)}
                   />
                 ))}
               </div>
@@ -360,7 +372,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.finish.includes(option)}
-                    onClick={() => handleMultiSelect("finish", option)}
+                    onClick={() => handleSingleSelect("finish", option)}
                   />
                 ))}
               </div>
@@ -375,7 +387,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.bathroom.includes(option)}
-                    onClick={() => handleMultiSelect("bathroom", option)}
+                    onClick={() => handleSingleSelect("bathroom", option)}
                   />
                 ))}
               </div>
@@ -409,7 +421,7 @@ const ApartmentFilters: FC<ApartmentFiltersProps> = memo(
                     key={option}
                     text={option}
                     isActive={formData.features.includes(option)}
-                    onClick={() => handleMultiSelect("features", option)}
+                    onClick={() => handleSingleSelect("features", option)}
                   />
                 ))}
               </div>

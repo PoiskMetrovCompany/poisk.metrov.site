@@ -330,11 +330,11 @@
     &_apartments {
       display: grid;
       gap: 24px;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
 
       @media screen and (width >= 1440px) and (width < 1920px) {
         gap: 20px;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
 
       @media screen and (width >= 1024px) and (width < 1440px) {

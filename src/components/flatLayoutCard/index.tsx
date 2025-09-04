@@ -33,6 +33,7 @@ interface IFlatLayoutCardProps {
 
 const FlatLayoutCard = ({
   listClassName,
+
   title,
   price,
   complex = "Европейский берег",

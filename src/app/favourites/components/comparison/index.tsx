@@ -11,8 +11,8 @@ import {
   FlatLayoutCardComparison,
   PropertyCardComparison,
 } from "@/components/ComparisonCards"
-import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/flatData"
-import { PropertyCardDataArray } from "@/components/ComparisonCards/propertyData"
+import { FlatLayoutCardDataArray } from "@/components/ComparisonCards/data/flatData"
+import { PropertyCardDataArray } from "@/components/ComparisonCards/data/propertyData"
 import { IFavouriteView } from "@/types/Favourites"
 
 import styles from "./comparison.module.scss"
@@ -31,11 +31,14 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
   const [isOnlyDifferences, setIsOnlyDifferences] = useState(false)
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+
   const swiperRef = useRef<SwiperType | null>(null)
 
   const handleSlideChange = (swiper: SwiperType) => {
     setIsBeginning(swiper.isBeginning)
     setIsEnd(swiper.isEnd)
+    setActiveSlideIndex(swiper.activeIndex)
   }
 
   const handlePrevClick = () => {
@@ -59,7 +62,7 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
           onClick={() => setIsComparison(false)}
         >
           <IconImage
-            iconLink="/images/icons/arrow-left.svg"
+            iconLink="/images/icons/arrow-left-dark.svg"
             alt="arrow-left"
             className={styles.comparison__header__button__icon}
           />
@@ -115,6 +118,9 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
                 <PropertyCardComparison
                   data={cardData}
                   isLast={index === PropertyCardDataArray.length - 1}
+                  isInView={
+                    index >= activeSlideIndex && index < activeSlideIndex + 2
+                  }
                 />
               </SwiperSlide>
             ))}
@@ -127,6 +133,9 @@ const Comparison = ({ selectedView, setIsComparison }: IComparisonProps) => {
                 <FlatLayoutCardComparison
                   data={cardData}
                   isLast={index === FlatLayoutCardDataArray.length - 1}
+                  isInView={
+                    index >= activeSlideIndex && index < activeSlideIndex + 2
+                  }
                 />
               </SwiperSlide>
             ))}

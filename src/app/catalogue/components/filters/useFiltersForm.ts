@@ -443,6 +443,19 @@ export const useFiltersForm = () => {
     []
   )
 
+  // Обработчик для одиночного выбора (взаимоисключающий выбор для кнопок фильтров)
+  const handleSingleSelect = useCallback(
+    (field: MultiSelectField, value: string) => {
+      setMultiSelectValues((prev) => {
+        const currentValues = prev[field] || []
+        // Если значение уже выбрано, убираем его, иначе заменяем весь массив на одно значение
+        const newValues = currentValues.includes(value) ? [] : [value]
+        return { ...prev, [field]: newValues }
+      })
+    },
+    []
+  )
+
   // Функция для подсчета количества примененных фильтров
   const getActiveFiltersCount = useCallback(() => {
     const formValues = form.state.values
@@ -585,6 +598,7 @@ export const useFiltersForm = () => {
     handleRangeMaxChange,
     handleRangeInputChange,
     handleMultiSelect,
+    handleSingleSelect,
     handleApartmentsSelect,
     handlePropertyTypeSelect,
     handleMetroTransportTypeSelect,
