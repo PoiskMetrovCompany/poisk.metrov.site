@@ -40,6 +40,7 @@ export const mapFavoriteComplexToProperty = (
       },
     ],
     image: "/images/temporary/house.png",
+    key: complex.key,
   }
 }
 
@@ -73,7 +74,7 @@ export const mapFavoriteApartmentToFlatLayout = (
       apartment.plan_URL ||
       apartment.floor_plan_url ||
       "/images/temporary/room.png",
-    linkUrl: `/detailsFlat/${apartment.id}`,
+    linkUrl: `/detailsFlat/${apartment.key}`,
     apartment,
   }
 }

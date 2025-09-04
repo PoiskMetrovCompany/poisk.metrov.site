@@ -178,7 +178,9 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             type={isMap ? "primary" : "outline"}
             size="tiny"
           >
-            <a href={`/details`}>Подробнее</a>
+            <a href={property.key ? `/details/${property.key}` : "#"}>
+              Подробнее
+            </a>
           </ActionButton>
           <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
         </div>
