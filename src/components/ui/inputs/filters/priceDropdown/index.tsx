@@ -1,6 +1,7 @@
 import * as Popover from "@radix-ui/react-popover"
 import clsx from "clsx"
 
+
 import React, { FC, useEffect, useRef, useState } from "react"
 
 import RangeInput from "@/app/catalogue/components/filters/filtersComponents/rangeInput"
