@@ -136,6 +136,16 @@
       border-radius: 24px;
       padding: 12px 0px;
     }
+
+    &__notFound {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      &__block {
+        margin-bottom: 0 !important;
+      }
+    }
   }
 
   &__swiper {
