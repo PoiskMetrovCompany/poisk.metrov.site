@@ -217,14 +217,13 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             >
               {data.apartmentInfo.price} ₽
             </span>
-            <span
+            {/* <span
               className={
                 styles.comparisonCards__content__price__value__pricePerMonth
               }
             >
-              {/* В данных квартир нет цены за месяц */}
               Не указано ₽/мес
-            </span>
+            </span> */}
           </div>
           <div className={styles.comparisonCards__content__buttons}>
             <ActionButton>Записаться на просмотр</ActionButton>

@@ -46,6 +46,10 @@ export function useApiQuery<T>(
     retryDelay?: number
     useMock?: boolean
     mockFn?: () => Promise<T>
+    refetchOnWindowFocus?: boolean
+    refetchOnMount?: boolean
+    refetchInterval?: number
+    refetchIntervalInBackground?: boolean
   }
 ) {
   return useQuery({
@@ -87,6 +91,10 @@ export function useApiQuery<T>(
     gcTime: options?.gcTime,
     retry: options?.retry ?? 2,
     retryDelay: options?.retryDelay ?? 1000,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus,
+    refetchOnMount: options?.refetchOnMount,
+    refetchInterval: options?.refetchInterval,
+    refetchIntervalInBackground: options?.refetchIntervalInBackground ?? false,
   })
 }
 

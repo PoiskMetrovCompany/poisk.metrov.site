@@ -236,7 +236,7 @@ export const adaptComparisonToFlatLayoutCard = (
     },
     complex: {
       name: attribute.name.value,
-      code: attribute.code,
+      // code: attribute.code,
       address: attribute.address.value,
     },
     extra: {
@@ -304,7 +304,7 @@ export const adaptApartmentComparisonToFlatLayoutCard = (
     },
     complex: {
       name: attribute.extra.complex.name,
-      code: attribute.extra.complex.code,
+      // code: attribute.extra.complex.code,
       address: attribute.extra.complex.address,
     },
     extra: {

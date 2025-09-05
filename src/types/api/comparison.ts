@@ -153,6 +153,31 @@ export const isComplexesComparison = (
  * Получение типизированных данных сравнения
  */
 export const getTypedComparisonData = (data: ComparisonResponse) => {
+  // Если массив пустой, определяем тип по URL или другим параметрам
+  if (data.attributes.length === 0) {
+    // Проверяем meta.request для определения типа
+    const requestType = data.meta?.request?.attributes?.type_comparison
+
+    if (requestType === "Apartments") {
+      return {
+        type: "apartments" as const,
+        data: data as ApartmentsComparisonResponse,
+      }
+    }
+
+    if (requestType === "ResidentialComplexes") {
+      return {
+        type: "complexes" as const,
+        data: data as ComplexesComparisonResponse,
+      }
+    }
+
+    return {
+      type: "unknown" as const,
+      data,
+    }
+  }
+
   if (isApartmentsComparison(data)) {
     return {
       type: "apartments" as const,

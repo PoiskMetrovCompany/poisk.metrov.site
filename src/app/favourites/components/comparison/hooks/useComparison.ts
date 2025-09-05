@@ -75,11 +75,15 @@ export const useComparisonData = (selectedView: IFavouriteView) => {
   const { data: comparisonData } = useApiQuery<ComparisonResponse>(
     ["comparison", typeComparison],
     `/comparison?user_key=06cf5002-83c2-11f0-a013-10f60a82b815&type_comparison=${typeComparison}`,
-    // `/comparison?user_key=06cf32b1-83c2-11f0-a013-10f60a82b815&type_comparison=${typeComparison}`,
     {
       enabled: true,
-      staleTime: 5 * 60 * 1000, // 5 минут
+      staleTime: 10 * 60 * 1000, // 10 минут
+      gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
       retry: 2,
+      refetchOnWindowFocus: false, // Отключаем рефетч при фокусе окна
+      refetchOnMount: false, // Отключаем рефетч при монтировании
+      refetchInterval: 9 * 60 * 1000, // Перезапрашиваем каждые 9 минут
+      refetchIntervalInBackground: false, // Не перезапрашиваем в фоне
     }
   )
 
@@ -100,26 +104,38 @@ export const useComparisonData = (selectedView: IFavouriteView) => {
  */
 export const useAllComparisonData = () => {
   // Запрос данных сравнения квартир
-  const { data: apartmentsData } = useApiQuery<ComparisonResponse>(
-    ["comparison", "Apartments"],
-    `/comparison?user_key=06cf5002-83c2-11f0-a013-10f60a82b815&type_comparison=Apartments`,
-    {
-      enabled: true,
-      staleTime: 5 * 60 * 1000, // 5 минут
-      retry: 2,
-    }
-  )
+  const { data: apartmentsData, isLoading: isLoadingApartments } =
+    useApiQuery<ComparisonResponse>(
+      ["comparison", "Apartments"],
+      `/comparison?user_key=06cf5002-83c2-11f0-a013-10f60a82b815&type_comparison=Apartments`,
+      {
+        enabled: true,
+        staleTime: 10 * 60 * 1000, // 10 минут
+        gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
+        retry: 2,
+        refetchOnWindowFocus: false, // Отключаем рефетч при фокусе окна
+        refetchOnMount: false, // Отключаем рефетч при монтировании
+        refetchInterval: 9 * 60 * 1000, // Перезапрашиваем каждые 9 минут
+        refetchIntervalInBackground: false, // Не перезапрашиваем в фоне
+      }
+    )
 
   // Запрос данных сравнения комплексов
-  const { data: complexesData } = useApiQuery<ComparisonResponse>(
-    ["comparison", "ResidentialComplexes"],
-    `/comparison?user_key=06cf32b1-83c2-11f0-a013-10f60a82b815&type_comparison=ResidentialComplexes`,
-    {
-      enabled: true,
-      staleTime: 5 * 60 * 1000, // 5 минут
-      retry: 2,
-    }
-  )
+  const { data: complexesData, isLoading: isLoadingComplexes } =
+    useApiQuery<ComparisonResponse>(
+      ["comparison", "ResidentialComplexes"],
+      `/comparison?user_key=06cf32b1-83c2-11f0-a013-10f60a82b815&type_comparison=ResidentialComplexes`,
+      {
+        enabled: true,
+        staleTime: 10 * 60 * 1000, // 10 минут
+        gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
+        retry: 2,
+        refetchOnWindowFocus: false, // Отключаем рефетч при фокусе окна
+        refetchOnMount: false, // Отключаем рефетч при монтировании
+        refetchInterval: 9 * 60 * 1000, // Перезапрашиваем каждые 9 минут
+        refetchIntervalInBackground: false, // Не перезапрашиваем в фоне
+      }
+    )
 
   // Получаем типизированные данные
   const apartmentsTypedData = apartmentsData
@@ -134,5 +150,7 @@ export const useAllComparisonData = () => {
     complexesData: complexesData || undefined,
     apartmentsTypedData,
     complexesTypedData,
+    isLoadingApartments,
+    isLoadingComplexes,
   }
 }

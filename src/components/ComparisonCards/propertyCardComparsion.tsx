@@ -390,7 +390,7 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
                       styles.comparisonCards__content__block__list__item__value
                     }
                   >
-                    от {value} млн ₽
+                    {value === "Не указано" ? value : `от ${value} ₽`}
                   </div>
                 </li>
               ) : null

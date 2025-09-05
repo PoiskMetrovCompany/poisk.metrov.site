@@ -20,6 +20,8 @@ interface IComparisonProps {
   setIsComparison: (isComparison: boolean) => void
   setComparisonFlatCount: (count: number) => void
   setComparisonComplexCount: (count: number) => void
+  setIsLoadingComparisonFlats: (isLoading: boolean) => void
+  setIsLoadingComparisonComplexes: (isLoading: boolean) => void
 }
 
 const Comparison: React.FC<IComparisonProps> = ({
@@ -27,6 +29,8 @@ const Comparison: React.FC<IComparisonProps> = ({
   setIsComparison,
   setComparisonFlatCount,
   setComparisonComplexCount,
+  setIsLoadingComparisonFlats,
+  setIsLoadingComparisonComplexes,
 }) => {
   const [isOnlyDifferences, setIsOnlyDifferences] = useState(false)
 
@@ -42,7 +46,12 @@ const Comparison: React.FC<IComparisonProps> = ({
   } = useComparisonSlider()
 
   // Получаем все данные сравнения
-  const { apartmentsTypedData, complexesTypedData } = useAllComparisonData()
+  const {
+    apartmentsTypedData,
+    complexesTypedData,
+    isLoadingApartments,
+    isLoadingComplexes,
+  } = useAllComparisonData()
 
   // Получаем данные для текущей вкладки
   const { comparisonData, typedData } = useComparisonData(selectedView)
@@ -81,6 +90,15 @@ const Comparison: React.FC<IComparisonProps> = ({
     }
   }, [typedData, updateSliderState])
 
+  // Обновляем состояния загрузки в родительском компоненте
+  React.useEffect(() => {
+    setIsLoadingComparisonFlats(isLoadingApartments)
+  }, [isLoadingApartments, setIsLoadingComparisonFlats])
+
+  React.useEffect(() => {
+    setIsLoadingComparisonComplexes(isLoadingComplexes)
+  }, [isLoadingComplexes, setIsLoadingComparisonComplexes])
+
   const handleBackClick = () => setIsComparison(false)
 
   // Показываем скелетон во время загрузки
@@ -103,8 +121,12 @@ const Comparison: React.FC<IComparisonProps> = ({
     )
   }
 
-  // Показываем NotFound если данных нет
-  if (typedData.data.attributes.length === 0) {
+  // Показываем NotFound если данных нет или тип unknown
+  if (
+    !typedData ||
+    typedData.type === "unknown" ||
+    typedData.data.attributes.length === 0
+  ) {
     return (
       <div className={styles.comparison}>
         <ComparisonHeader

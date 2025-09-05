@@ -142,7 +142,7 @@ export interface IFlatLayoutCardFullWithDifferences {
   // Информация о комплексе
   complex: {
     name: string
-    code: string
+    // code: string
     address: string
   }
   // Дополнительная информация

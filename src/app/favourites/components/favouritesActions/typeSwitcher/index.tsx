@@ -9,6 +9,7 @@ import { IFavouriteView } from "@/types/Favourites"
 import styles from "./typeSwitcher.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
+import Skeleton from "@/components/ui/skeleton"
 
 interface ITypeSwitcherProps {
   selectedView: IFavouriteView
@@ -18,6 +19,9 @@ interface ITypeSwitcherProps {
   isComparison?: boolean
   comparisonFlatCount?: number
   comparisonComplexCount?: number
+  isLoading?: boolean
+  isLoadingComparisonFlats?: boolean
+  isLoadingComparisonComplexes?: boolean
 }
 
 const TypeSwitcher = ({
@@ -28,6 +32,9 @@ const TypeSwitcher = ({
   isComparison = false,
   comparisonFlatCount = 0,
   comparisonComplexCount = 0,
+  isLoading = true,
+  isLoadingComparisonFlats = true,
+  isLoadingComparisonComplexes = true,
 }: ITypeSwitcherProps) => {
   // Определяем какое количество показывать в зависимости от режима
   const getFlatCount = () => {
@@ -57,9 +64,18 @@ const TypeSwitcher = ({
             Планировка
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>
-          {getFlatCount()}
-        </span>
+        {isLoadingComparisonFlats && isLoading ? (
+          <Skeleton
+            className={styles.typeSwitcher__item__count}
+            width={32}
+            height={32}
+            border="50px"
+          />
+        ) : (
+          <span className={styles.typeSwitcher__item__count}>
+            {getFlatCount()}
+          </span>
+        )}
       </button>
 
       <button
@@ -79,9 +95,18 @@ const TypeSwitcher = ({
             Жилые комплексы
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>
-          {getComplexCount()}
-        </span>
+        {isLoadingComparisonComplexes && isLoading ? (
+          <Skeleton
+            className={styles.typeSwitcher__item__count}
+            width={28}
+            height={28}
+            border="50px"
+          />
+        ) : (
+          <span className={styles.typeSwitcher__item__count}>
+            {getComplexCount()}
+          </span>
+        )}
       </button>
     </div>
   )

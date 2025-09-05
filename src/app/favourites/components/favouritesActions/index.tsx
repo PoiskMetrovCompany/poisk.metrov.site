@@ -17,6 +17,9 @@ interface IFavouritesActionsProps {
   isComparison?: boolean
   comparisonFlatCount?: number
   comparisonComplexCount?: number
+  isLoading?: boolean
+  isLoadingComparisonFlats?: boolean
+  isLoadingComparisonComplexes?: boolean
 }
 
 const FavouritesActions = ({
@@ -27,6 +30,9 @@ const FavouritesActions = ({
   isComparison = false,
   comparisonFlatCount = 0,
   comparisonComplexCount = 0,
+  isLoading = true,
+  isLoadingComparisonFlats = true,
+  isLoadingComparisonComplexes = true,
 }: IFavouritesActionsProps) => {
   return (
     <div className={styles.favouritesActions}>
@@ -38,6 +44,9 @@ const FavouritesActions = ({
         isComparison={isComparison}
         comparisonFlatCount={comparisonFlatCount}
         comparisonComplexCount={comparisonComplexCount}
+        isLoading={isLoading}
+        isLoadingComparisonFlats={isLoadingComparisonFlats}
+        isLoadingComparisonComplexes={isLoadingComparisonComplexes}
       />
       <RequestsWrapper isHiddenMobile={true} />
     </div>
