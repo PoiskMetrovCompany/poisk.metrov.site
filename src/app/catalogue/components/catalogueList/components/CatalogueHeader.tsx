@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-import React from "react"
+import React, { memo } from "react"
 
 import styles from "../catalogueList.module.scss"
 
@@ -13,32 +13,33 @@ interface CatalogueHeaderProps {
   setSelectedPropertyType: (type: string) => void
 }
 
-export const CatalogueHeader: React.FC<CatalogueHeaderProps> = ({
-  selectedPropertyType,
-  setSelectedPropertyType,
-}) => {
-  return (
-    <div className={styles.catalogue__choose}>
-      <div className={styles.catalogue__choose__livingSet}>
-        <Heading2>
-          Подобрать{" "}
-          <PropertyTypeSelect
-            defaultValue={selectedPropertyType}
-            onValueChange={setSelectedPropertyType}
-            placeholder="Выберите тип недвижимости"
-            className="inlineSelect"
-          />
-        </Heading2>
-      </div>
+export const CatalogueHeader: React.FC<CatalogueHeaderProps> = memo(
+  ({ selectedPropertyType, setSelectedPropertyType }) => {
+    return (
+      <div className={styles.catalogue__choose}>
+        <div className={styles.catalogue__choose__livingSet}>
+          <Heading2>
+            Подобрать{" "}
+            <PropertyTypeSelect
+              defaultValue={selectedPropertyType}
+              onValueChange={setSelectedPropertyType}
+              placeholder="Выберите тип недвижимости"
+              className="inlineSelect"
+            />
+          </Heading2>
+        </div>
 
-      <div className={styles.catalogue__choose__favorite}>
-        <IconImage
-          iconLink="/images/icons/heartOrange.svg"
-          alt="Сохранить поиск"
-          className={styles.catalogue__choose__favorite__icon}
-        />
-        Сохранить поиск
+        <div className={styles.catalogue__choose__favorite}>
+          <IconImage
+            iconLink="/images/icons/heartOrange.svg"
+            alt="Сохранить поиск"
+            className={styles.catalogue__choose__favorite__icon}
+          />
+          Сохранить поиск
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
+
+CatalogueHeader.displayName = "CatalogueHeader"
