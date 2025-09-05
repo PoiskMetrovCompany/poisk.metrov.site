@@ -12,13 +12,13 @@ interface FilterDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   currentValues: {
-    houseTypes: string[]
-    roomCounts: string[]
+    houseType: string
+    roomCount: string
     priceRange: [number | null, number | null]
     searchValue: string
   }
-  onHouseTypeChange: (types: string[]) => void
-  onRoomCountChange: (counts: string[]) => void
+  onHouseTypeChange: (type: string) => void
+  onRoomCountChange: (count: string) => void
   onPriceChange: (range: [number | null, number | null]) => void
   onSearchChange: (value: string) => void
   onApplyFilters: () => void
@@ -26,10 +26,8 @@ interface FilterDialogProps {
 }
 
 const houseTypes = [
-  { value: "residential-complex", label: "ЖК" },
-  { value: "apartment", label: "Квартира" },
-  { value: "apartments", label: "Апартаменты" },
-  { value: "house", label: "Дома" },
+  { value: "Жилой комплекс", label: "ЖК" },
+  { value: "Квартира", label: "Квартира" },
 ]
 
 const roomCounts = [
@@ -80,17 +78,13 @@ const FilterDialog: FC<FilterDialogProps> = ({
   }
 
   const handleHouseTypeToggle = (value: string) => {
-    const newTypes = currentValues.houseTypes.includes(value)
-      ? currentValues.houseTypes.filter((type) => type !== value)
-      : [...currentValues.houseTypes, value]
-    onHouseTypeChange(newTypes)
+    const newType = currentValues.houseType === value ? "" : value
+    onHouseTypeChange(newType)
   }
 
   const handleRoomCountToggle = (value: string) => {
-    const newCounts = currentValues.roomCounts.includes(value)
-      ? currentValues.roomCounts.filter((count) => count !== value)
-      : [...currentValues.roomCounts, value]
-    onRoomCountChange(newCounts)
+    const newCount = currentValues.roomCount === value ? "" : value
+    onRoomCountChange(newCount)
   }
 
   const handlePriceMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,7 +144,7 @@ const FilterDialog: FC<FilterDialogProps> = ({
                       <button
                         key={type.value}
                         className={`${styles.filterDialog__chip} ${
-                          currentValues.houseTypes.includes(type.value)
+                          currentValues.houseType === type.value
                             ? styles.filterDialog__chip_active
                             : ""
                         }`}
@@ -174,7 +168,7 @@ const FilterDialog: FC<FilterDialogProps> = ({
                       <button
                         key={room.value}
                         className={`${styles.filterDialog__chip} ${
-                          currentValues.roomCounts.includes(room.value)
+                          currentValues.roomCount === room.value
                             ? styles.filterDialog__chip_active
                             : ""
                         }`}

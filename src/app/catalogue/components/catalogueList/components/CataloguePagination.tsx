@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-import React from "react"
+import React, { memo, useMemo } from "react"
 
 import Pagination from "@/components/pagination"
 import { FiltersResponse } from "@/types/api/filters"
@@ -14,22 +14,28 @@ interface CataloguePaginationProps {
 
 const PER_PAGE = "4"
 
-export const CataloguePagination: React.FC<CataloguePaginationProps> = ({
-  isLoadingFilters,
-  filtersData,
-  currentPage,
-  onPageChange,
-}) => {
-  if (isLoadingFilters || !filtersData?.data || filtersData.data.length === 0) {
-    return null
-  }
+export const CataloguePagination: React.FC<CataloguePaginationProps> = memo(
+  ({ isLoadingFilters, filtersData, currentPage, onPageChange }) => {
+    // Мемоизируем условие отображения
+    const shouldShowPagination = useMemo(
+      () =>
+        !isLoadingFilters && filtersData?.data && filtersData.data.length > 0,
+      [isLoadingFilters, filtersData?.data]
+    )
 
-  return (
-    <Pagination
-      totalPages={25}
-      currentPage={currentPage}
-      itemsPerPage={parseInt(PER_PAGE)}
-      onPageChange={onPageChange}
-    />
-  )
-}
+    if (!shouldShowPagination) {
+      return null
+    }
+
+    return (
+      <Pagination
+        totalPages={25}
+        currentPage={currentPage}
+        itemsPerPage={parseInt(PER_PAGE)}
+        onPageChange={onPageChange}
+      />
+    )
+  }
+)
+
+CataloguePagination.displayName = "CataloguePagination"

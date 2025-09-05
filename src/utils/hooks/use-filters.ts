@@ -1,9 +1,14 @@
 import { useForm } from "@tanstack/react-form"
+
 import { useState } from "react"
 
+import { useRouter } from "next/navigation"
+
+import { updateUrlParams } from "@/utils/urlParams"
+
 export interface FilterValues {
-  houseTypes: string[]
-  roomCounts: string[]
+  houseType: string
+  roomCount: string
   priceRange: [number | null, number | null]
   searchValue: string
 }
@@ -11,16 +16,17 @@ export interface FilterValues {
 export const useFilters = () => {
   const [isFormValid, setIsFormValid] = useState(true)
   const [currentValues, setCurrentValues] = useState<FilterValues>({
-    houseTypes: [],
-    roomCounts: [],
+    houseType: "",
+    roomCount: "",
     priceRange: [null, null],
     searchValue: "",
   })
+  const router = useRouter()
 
   const form = useForm({
     defaultValues: {
-      houseTypes: [] as string[],
-      roomCounts: [] as string[],
+      houseType: "",
+      roomCount: "",
       priceRange: [null, null] as [number | null, number | null],
       searchValue: "",
     },
@@ -29,48 +35,83 @@ export const useFilters = () => {
     },
   })
 
+  // Функция для перехода на каталог с фильтрами
+  const navigateToCatalogue = () => {
+    // Создаем URL параметры
+    const urlParams = new URLSearchParams()
+
+    // Добавляем тип недвижимости
+    const propertyType = currentValues.houseType || "Жилой комплекс"
+    urlParams.set("propertyType", propertyType)
+
+    // Добавляем комнаты
+    if (currentValues.roomCount) {
+      urlParams.set("rooms", currentValues.roomCount)
+    }
+
+    // Добавляем цену
+    if (currentValues.priceRange[0] !== null) {
+      urlParams.set("priceMin", currentValues.priceRange[0].toString())
+    }
+    if (currentValues.priceRange[1] !== null) {
+      urlParams.set("priceMax", currentValues.priceRange[1].toString())
+    }
+
+    // Добавляем район
+    if (currentValues.searchValue) {
+      urlParams.set("district", currentValues.searchValue)
+    }
+
+    // Создаем URL с параметрами
+    const catalogueUrl = `/catalogue?${urlParams.toString()}`
+
+    console.log("Локальные значения фильтров:", currentValues)
+    console.log("Созданный URL:", catalogueUrl)
+
+    // Переходим на страницу каталога с параметрами
+    router.push(catalogueUrl)
+  }
+
   const updateCurrentValues = (updates: Partial<FilterValues>) => {
     setCurrentValues((prev) => ({ ...prev, ...updates }))
   }
 
   const handlePriceChange = (range: [number | null, number | null]) => {
+    console.log("Изменение цены:", range)
     form.setFieldValue("priceRange", range)
     updateCurrentValues({ priceRange: range })
     console.log("Диапазон цен изменен:", range)
   }
 
   const handleSearchChange = (value: string) => {
+    console.log("Изменение поиска:", value)
     form.setFieldValue("searchValue", value)
     updateCurrentValues({ searchValue: value })
     console.log("Поисковый запрос:", value)
   }
 
-  const handleHouseTypeChange = (selectedTypes: string[]) => {
-    form.setFieldValue("houseTypes", selectedTypes)
-    updateCurrentValues({ houseTypes: selectedTypes })
-    console.log("Выбранные типы жилья:", selectedTypes)
+  const handleHouseTypeChange = (selectedType: string) => {
+    console.log("Изменение типа жилья:", selectedType)
+    form.setFieldValue("houseType", selectedType)
+    updateCurrentValues({ houseType: selectedType })
+    console.log("Выбранный тип жилья:", selectedType)
   }
 
-  const handleRoomCountChange = (selectedCounts: string[]) => {
-    form.setFieldValue("roomCounts", selectedCounts)
-    updateCurrentValues({ roomCounts: selectedCounts })
-    console.log("Выбранное количество комнат:", selectedCounts)
+  const handleRoomCountChange = (selectedCount: string) => {
+    console.log("Изменение количества комнат:", selectedCount)
+    form.setFieldValue("roomCount", selectedCount)
+    updateCurrentValues({ roomCount: selectedCount })
+    console.log("Выбранное количество комнат:", selectedCount)
   }
 
-  const removeHouseType = (typeToRemove: string) => {
-    const currentTypes = currentValues.houseTypes.filter(
-      (type: string) => type !== typeToRemove
-    )
-    form.setFieldValue("houseTypes", currentTypes)
-    updateCurrentValues({ houseTypes: currentTypes })
+  const removeHouseType = () => {
+    form.setFieldValue("houseType", "")
+    updateCurrentValues({ houseType: "" })
   }
 
-  const removeRoomCount = (countToRemove: string) => {
-    const currentCounts = currentValues.roomCounts.filter(
-      (count: string) => count !== countToRemove
-    )
-    form.setFieldValue("roomCounts", currentCounts)
-    updateCurrentValues({ roomCounts: currentCounts })
+  const removeRoomCount = () => {
+    form.setFieldValue("roomCount", "")
+    updateCurrentValues({ roomCount: "" })
   }
 
   const removePriceRange = () => {
@@ -86,8 +127,8 @@ export const useFilters = () => {
   const clearAllFilters = () => {
     form.reset()
     setCurrentValues({
-      houseTypes: [],
-      roomCounts: [],
+      houseType: "",
+      roomCount: "",
       priceRange: [null, null],
       searchValue: "",
     })
@@ -123,8 +164,8 @@ export const useFilters = () => {
 
   const hasActiveFilters = (): boolean => {
     return (
-      currentValues.houseTypes.length > 0 ||
-      currentValues.roomCounts.length > 0 ||
+      currentValues.houseType !== "" ||
+      currentValues.roomCount !== "" ||
       currentValues.priceRange[0] !== null ||
       currentValues.priceRange[1] !== null ||
       currentValues.searchValue !== ""
@@ -134,10 +175,8 @@ export const useFilters = () => {
   const getActiveFiltersCount = (): number => {
     let count = 0
 
-    if (currentValues.houseTypes.length > 0)
-      count += currentValues.houseTypes.length
-    if (currentValues.roomCounts.length > 0)
-      count += currentValues.roomCounts.length
+    if (currentValues.houseType !== "") count += 1
+    if (currentValues.roomCount !== "") count += 1
     if (
       currentValues.priceRange[0] !== null ||
       currentValues.priceRange[1] !== null
@@ -168,5 +207,6 @@ export const useFilters = () => {
     hasActiveFilters,
     getActiveFiltersCount,
     getCurrentValues,
+    navigateToCatalogue,
   }
 }

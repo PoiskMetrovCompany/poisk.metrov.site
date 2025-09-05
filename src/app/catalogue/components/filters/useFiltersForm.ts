@@ -2,6 +2,8 @@ import { useForm } from "@tanstack/react-form"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
+import { useFiltersStore } from "@/stores/useFiltersStore"
+
 import { FiltersFormData, INITIAL_RANGES } from "./types"
 
 // Типы для селектов
@@ -112,6 +114,9 @@ interface SelectRefs {
 type FormFieldName = keyof FormValues
 
 export const useFiltersForm = () => {
+  // Получаем данные из store
+  const { filtersData } = useFiltersStore()
+
   // Состояния для показа/скрытия выпадающих списков
   const [showOptions, setShowOptions] = useState<ShowOptionsState>({
     district: false,
@@ -121,38 +126,55 @@ export const useFiltersForm = () => {
     metro: false,
   })
 
-  // Состояния для мультивыбора
+  // Состояния для мультивыбора - инициализируем данными из store
   const [multiSelectValues, setMultiSelectValues] = useState<MultiSelectValues>(
     {
       // Квартира
-      propertyType: "Квартира",
-      rooms: [],
-      floorOptions: [],
-      layout: [],
-      finish: [],
-      bathroom: [],
-      apartments: "",
-      features: [],
-      ceilingHeight: [],
+      propertyType: filtersData.propertyType || "Квартира",
+      rooms: filtersData.rooms || [],
+      floorOptions: filtersData.floorOptions || [],
+      layout: filtersData.layout || [],
+      finish: filtersData.finish || [],
+      bathroom: filtersData.bathroom || [],
+      apartments: filtersData.apartments || "",
+      features: filtersData.features || [],
+      ceilingHeight: filtersData.ceilingHeight || [],
 
       // Жилой комплекс
-      buildingType: [],
-      builder: [],
-      completionDate: [],
-      metroDistance: [],
-      metroTransportType: "",
-      elevator: [],
-      parking: [],
-      security: [],
+      buildingType: filtersData.buildingType || [],
+      builder: filtersData.builder || [],
+      completionDate: filtersData.completionDate || [],
+      metroDistance: filtersData.metroDistance || [],
+      metroTransportType: filtersData.metroTransportType || "",
+      elevator: filtersData.elevator || [],
+      parking: filtersData.parking || [],
+      security: filtersData.security || [],
 
       // Покупка
-      paymentMethod: [],
-      mortgageType: [],
-      installmentPeriod: [],
-      downPayment: [],
-      mortgagePrograms: [],
+      paymentMethod: filtersData.paymentMethod || [],
+      mortgageType: filtersData.mortgageType || [],
+      installmentPeriod: filtersData.installmentPeriod || [],
+      downPayment: filtersData.downPayment || [],
+      mortgagePrograms: filtersData.mortgagePrograms || [],
     }
   )
+
+  // Состояние для отслеживания изменений, которые нужно применить к store
+  const [pendingStoreUpdates, setPendingStoreUpdates] = useState<
+    Record<string, unknown>
+  >({})
+
+  // Применяем изменения к store после рендеринга
+  useEffect(() => {
+    if (Object.keys(pendingStoreUpdates).length > 0) {
+      const { setFiltersData, filtersData } = useFiltersStore.getState()
+      setFiltersData({
+        ...filtersData,
+        ...pendingStoreUpdates,
+      })
+      setPendingStoreUpdates({})
+    }
+  }, [pendingStoreUpdates])
 
   // Рефы для селектов
   const districtRef = useRef<HTMLDivElement>(null)
@@ -176,28 +198,92 @@ export const useFiltersForm = () => {
   const form = useForm({
     defaultValues: {
       // Селекты
-      district: "",
-      builder: "",
-      livingEstate: "",
-      street: "",
-      metro: "",
+      district: filtersData.district || "",
+      builder: filtersData.builder?.[0] || "",
+      livingEstate: filtersData.livingEstate || "",
+      street: filtersData.street || "",
+      metro: filtersData.metro || "",
 
       // Диапазоны
-      priceMin: null,
-      priceMax: null,
-      floorMin: null,
-      floorMax: null,
-      flatAreaMin: null,
-      flatAreaMax: null,
-      livingAreaMin: null,
-      livingAreaMax: null,
-      floorsInBuildingMin: null,
-      floorsInBuildingMax: null,
+      priceMin: filtersData.priceMin,
+      priceMax: filtersData.priceMax,
+      floorMin: filtersData.floorMin,
+      floorMax: filtersData.floorMax,
+      flatAreaMin: filtersData.flatAreaMin,
+      flatAreaMax: filtersData.flatAreaMax,
+      livingAreaMin: filtersData.livingAreaMin,
+      livingAreaMax: filtersData.livingAreaMax,
+      floorsInBuildingMin: filtersData.floorsInBuildingMin,
+      floorsInBuildingMax: filtersData.floorsInBuildingMax,
     },
     onSubmit: async ({ value }) => {
       return { status: "success" }
     },
   })
+
+  // Синхронизируем данные из store с формой
+  useEffect(() => {
+    // Обновляем multiSelectValues при изменении filtersData
+    setMultiSelectValues({
+      // Квартира
+      propertyType: filtersData.propertyType || "Квартира",
+      rooms: filtersData.rooms || [],
+      floorOptions: filtersData.floorOptions || [],
+      layout: filtersData.layout || [],
+      finish: filtersData.finish || [],
+      bathroom: filtersData.bathroom || [],
+      apartments: filtersData.apartments || "",
+      features: filtersData.features || [],
+      ceilingHeight: filtersData.ceilingHeight || [],
+
+      // Жилой комплекс
+      buildingType: filtersData.buildingType || [],
+      builder: filtersData.builder || [],
+      completionDate: filtersData.completionDate || [],
+      metroDistance: filtersData.metroDistance || [],
+      metroTransportType: filtersData.metroTransportType || "",
+      elevator: filtersData.elevator || [],
+      parking: filtersData.parking || [],
+      security: filtersData.security || [],
+
+      // Покупка
+      paymentMethod: filtersData.paymentMethod || [],
+      mortgageType: filtersData.mortgageType || [],
+      installmentPeriod: filtersData.installmentPeriod || [],
+      downPayment: filtersData.downPayment || [],
+      mortgagePrograms: filtersData.mortgagePrograms || [],
+    })
+
+    // Обновляем значения формы только если они действительно изменились
+    if (filtersData.district)
+      form.setFieldValue("district", filtersData.district)
+    if (filtersData.builder?.[0])
+      form.setFieldValue("builder", filtersData.builder[0])
+    if (filtersData.livingEstate)
+      form.setFieldValue("livingEstate", filtersData.livingEstate)
+    if (filtersData.street) form.setFieldValue("street", filtersData.street)
+    if (filtersData.metro) form.setFieldValue("metro", filtersData.metro)
+    if (filtersData.priceMin !== null)
+      form.setFieldValue("priceMin", filtersData.priceMin)
+    if (filtersData.priceMax !== null)
+      form.setFieldValue("priceMax", filtersData.priceMax)
+    if (filtersData.floorMin !== null)
+      form.setFieldValue("floorMin", filtersData.floorMin)
+    if (filtersData.floorMax !== null)
+      form.setFieldValue("floorMax", filtersData.floorMax)
+    if (filtersData.flatAreaMin !== null)
+      form.setFieldValue("flatAreaMin", filtersData.flatAreaMin)
+    if (filtersData.flatAreaMax !== null)
+      form.setFieldValue("flatAreaMax", filtersData.flatAreaMax)
+    if (filtersData.livingAreaMin !== null)
+      form.setFieldValue("livingAreaMin", filtersData.livingAreaMin)
+    if (filtersData.livingAreaMax !== null)
+      form.setFieldValue("livingAreaMax", filtersData.livingAreaMax)
+    if (filtersData.floorsInBuildingMin !== null)
+      form.setFieldValue("floorsInBuildingMin", filtersData.floorsInBuildingMin)
+    if (filtersData.floorsInBuildingMax !== null)
+      form.setFieldValue("floorsInBuildingMax", filtersData.floorsInBuildingMax)
+  }, [filtersData, form])
 
   // Типизированные функции для установки значений полей формы
   const setStringFieldValue = useCallback(
@@ -234,9 +320,11 @@ export const useFiltersForm = () => {
 
   // Функция сброса фильтров
   const resetFilters = () => {
+    const { resetFilters: resetStoreFilters } = useFiltersStore.getState()
+
     form.reset()
     setMultiSelectValues({
-      propertyType: "",
+      propertyType: "Квартира",
       rooms: [],
       floorOptions: [],
       layout: [],
@@ -260,6 +348,9 @@ export const useFiltersForm = () => {
       mortgagePrograms: [],
     })
     closeAllSelects()
+
+    // Сбрасываем store
+    resetStoreFilters()
   }
 
   // Функция закрытия всех выпадающих списков
@@ -409,6 +500,13 @@ export const useFiltersForm = () => {
         const newValues = currentValues.includes(value)
           ? currentValues.filter((v) => v !== value)
           : [...currentValues, value]
+
+        // Добавляем изменение в очередь для применения к store
+        setPendingStoreUpdates((prevUpdates) => ({
+          ...prevUpdates,
+          [field]: newValues,
+        }))
+
         return { ...prev, [field]: newValues }
       })
     },
@@ -421,6 +519,12 @@ export const useFiltersForm = () => {
       ...prev,
       apartments: prev.apartments === apartments ? "" : apartments,
     }))
+
+    // Добавляем изменение в очередь для применения к store
+    setPendingStoreUpdates((prevUpdates) => ({
+      ...prevUpdates,
+      apartments: apartments,
+    }))
   }, [])
 
   // Обработчик для типа жилья (взаимоисключающий выбор)
@@ -428,6 +532,12 @@ export const useFiltersForm = () => {
     setMultiSelectValues((prev) => ({
       ...prev,
       propertyType: prev.propertyType === propertyType ? "" : propertyType,
+    }))
+
+    // Добавляем изменение в очередь для применения к store
+    setPendingStoreUpdates((prevUpdates) => ({
+      ...prevUpdates,
+      propertyType: propertyType,
     }))
   }, [])
 
@@ -438,6 +548,12 @@ export const useFiltersForm = () => {
         ...prev,
         metroTransportType:
           prev.metroTransportType === transportType ? "" : transportType,
+      }))
+
+      // Добавляем изменение в очередь для применения к store
+      setPendingStoreUpdates((prevUpdates) => ({
+        ...prevUpdates,
+        metroTransportType: transportType,
       }))
     },
     []
@@ -450,6 +566,13 @@ export const useFiltersForm = () => {
         const currentValues = prev[field] || []
         // Если значение уже выбрано, убираем его, иначе заменяем весь массив на одно значение
         const newValues = currentValues.includes(value) ? [] : [value]
+
+        // Добавляем изменение в очередь для применения к store
+        setPendingStoreUpdates((prevUpdates) => ({
+          ...prevUpdates,
+          [field]: newValues,
+        }))
+
         return { ...prev, [field]: newValues }
       })
     },
@@ -550,7 +673,7 @@ export const useFiltersForm = () => {
     ).length
     count += stringCount
 
-    return count
+    return count <= 2 ? 0 : count - 2
   }, [form.state.values, multiSelectValues])
 
   // Effect для закрытия селектов при клике вне их

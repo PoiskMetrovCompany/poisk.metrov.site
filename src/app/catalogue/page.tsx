@@ -8,6 +8,7 @@ const Catalogue = () => {
   return (
     <div className={styles.catalogue}>
       <CatalogueList />
+      {/* <FiltersDebugPanel /> */}
     </div>
   )
 }
