@@ -16,7 +16,7 @@ interface FlatListProps {
 }
 
 const FlatList: FC<FlatListProps> = ({ complexKey }) => {
-  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.room`
+  const FULL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.room`
   const {
     data: flatListData,
     isLoading,
