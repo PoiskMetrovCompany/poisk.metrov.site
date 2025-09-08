@@ -24,7 +24,7 @@ import HeaderFormSmall from "./header"
 
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
-const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 // Интерфейсы для типизации запроса и ответа
 interface ICandidateFormRequest {

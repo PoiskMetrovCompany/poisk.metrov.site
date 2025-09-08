@@ -134,7 +134,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
     error: statusesError,
   } = useApiQuery(
     ["candidate-statuses"],
-    "http://poisk-metrov-demos.ru:8080/api/v1/candidates/get-statuses",
+    `${process.env.NEXT_PUBLIC_API_URL}/candidates/get-statuses`,
     {
       staleTime: 10 * 60 * 1000, // 10 минут
       retry: 2,
@@ -336,7 +336,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
     error: candidateError,
   } = useApiQuery(
     ["candidate", vacancyKey],
-    `http://poisk-metrov-demos.ru:8080/api/v1/candidates/read?key=${encodeURIComponent(vacancyKey || "")}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/candidates/read?key=${encodeURIComponent(vacancyKey || "")}`,
     {
       enabled: !!vacancyKey,
       staleTime: 5 * 60 * 1000, // 5 минут
@@ -574,7 +574,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
   // Мутация для обновления статуса кандидата
   const updateCandidateMutation = useApiMutation(
-    "http://poisk-metrov-demos.ru:8080/api/v1/candidates/update",
+    `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
     {
       onSuccess: (data) => {
         console.log("✅ Статус успешно обновлен:", data)
@@ -589,7 +589,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
   // Мутация для обновления комментария кандидата
   const updateCommentMutation = useApiMutation(
-    "http://poisk-metrov-demos.ru:8080/api/v1/candidates/update",
+    `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
     {
       onSuccess: (data) => {
         console.log("✅ Комментарий успешно отправлен:", data)

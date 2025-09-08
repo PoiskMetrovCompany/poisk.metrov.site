@@ -13,7 +13,6 @@ import ShowForm from "@/components/candidateRegForm/ShowForm"
 import BigHeader from "@/components/candidateRegForm/bigHeader"
 import { ICandidate, ICandidatesResponse } from "@/types/Candidate"
 
-
 const getAccessTokenFromCookie = (): string | null => {
   if (typeof document === "undefined") return null
   const cookies = document.cookie.split(";")
@@ -90,7 +89,7 @@ const CandidatesLoginPage = () => {
       }
 
       const response = await axios.get<ICandidatesResponse>(
-        "http://poisk-metrov-demos.ru:8080/api/v1/candidates/",
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +107,7 @@ const CandidatesLoginPage = () => {
     retry: 2,
   })
 
-  // Преобразуем данные из API в формат, ожидаемый компонентом CandidatesTable
+
   const candidatesFilteredData: FilteredData | null = candidatesData?.attributes
     ? {
         attributes: {

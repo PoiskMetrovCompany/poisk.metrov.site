@@ -4,7 +4,7 @@ import React, { RefObject, useEffect, useRef, useState } from "react"
 
 import styles from "./candidateLoginComponents.module.css"
 
-const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 const getAccessTokenFromCookie = () => {
   const cookies = document.cookie.split(";")

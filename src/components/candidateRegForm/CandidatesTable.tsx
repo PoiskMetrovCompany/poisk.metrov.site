@@ -571,7 +571,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `http://poisk-metrov-demos.ru:8080/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
