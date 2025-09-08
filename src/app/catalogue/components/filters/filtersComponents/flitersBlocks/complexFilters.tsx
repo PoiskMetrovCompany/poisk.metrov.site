@@ -40,6 +40,17 @@ interface ComplexFiltersProps {
       | "security",
     value: string
   ) => void
+  handleSingleSelect: (
+    field:
+      | "buildingType"
+      | "builder"
+      | "completionDate"
+      | "metroDistance"
+      | "elevator"
+      | "parking"
+      | "security",
+    value: string
+  ) => void
   handleMetroTransportTypeSelect: (transportType: string) => void
   handleRangeInputChange: (
     field: "floorsInBuilding",
@@ -50,6 +61,7 @@ interface ComplexFiltersProps {
 const ComplexFilters: FC<ComplexFiltersProps> = ({
   formData,
   handleMultiSelect,
+  handleSingleSelect,
   handleMetroTransportTypeSelect,
   handleRangeInputChange,
 }) => {
@@ -72,7 +84,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
       </div>
 
       {/* Тип дома */}
-      <div className={styles.filterBlock__section}>
+      {/* <div className={styles.filterBlock__section}>
         <div className={styles.filterBlock__section__label}>Тип дома</div>
         <div className={styles.filterBlock__section__options}>
           {BUILDING_TYPE_OPTIONS.map((option) => (
@@ -80,11 +92,11 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.buildingType.includes(option)}
-              onClick={() => handleMultiSelect("buildingType", option)}
+              onClick={() => handleSingleSelect("buildingType", option)}
             />
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Застройщик */}
       <div className={styles.filterBlock__section}>
@@ -95,7 +107,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option.value}
               text={option.label}
               isActive={formData.builder.includes(option.value)}
-              onClick={() => handleMultiSelect("builder", option.value)}
+              onClick={() => handleSingleSelect("builder", option.value)}
             />
           ))}
         </div>
@@ -110,7 +122,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.completionDate.includes(option)}
-              onClick={() => handleMultiSelect("completionDate", option)}
+              onClick={() => handleSingleSelect("completionDate", option)}
             />
           ))}
         </div>
@@ -126,11 +138,11 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
                 key={option}
                 text={option}
                 isActive={formData.metroDistance.includes(option)}
-                onClick={() => handleMultiSelect("metroDistance", option)}
+                onClick={() => handleSingleSelect("metroDistance", option)}
               />
             ))}
           </div>
-          <div className={styles.filterBlock__section__metro__transportOptions}>
+          {/* <div className={styles.filterBlock__section__metro__transportOptions}>
             <FiltersButton
               text="Пешком"
               iconLink="/images/icons/walk.svg"
@@ -149,7 +161,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
                 styles.filterBlock__section__metro__transportOptions__button
               }
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -162,7 +174,7 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.elevator.includes(option)}
-              onClick={() => handleMultiSelect("elevator", option)}
+              onClick={() => handleSingleSelect("elevator", option)}
             />
           ))}
         </div>
@@ -191,14 +203,14 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.parking.includes(option)}
-              onClick={() => handleMultiSelect("parking", option)}
+              onClick={() => handleSingleSelect("parking", option)}
             />
           ))}
         </div>
       </div>
 
       {/* Безопасность */}
-      <div className={styles.filterBlock__section}>
+      {/* <div className={styles.filterBlock__section}>
         <div className={styles.filterBlock__section__label}>Безопасность</div>
         <div className={styles.filterBlock__section__options}>
           {SECURITY_OPTIONS.map((option) => (
@@ -206,11 +218,11 @@ const ComplexFilters: FC<ComplexFiltersProps> = ({
               key={option}
               text={option}
               isActive={formData.security.includes(option)}
-              onClick={() => handleMultiSelect("security", option)}
+              onClick={() => handleSingleSelect("security", option)}
             />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

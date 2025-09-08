@@ -1,7 +1,7 @@
 export interface FiltersFormData {
   // Селекты
   district: string
-  builder: string
+  builder: string[]
   livingEstate: string
   street: string
   metro: string
