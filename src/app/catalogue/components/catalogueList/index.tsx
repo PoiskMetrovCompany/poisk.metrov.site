@@ -7,7 +7,6 @@ import { FiltersRequest } from "@/types/api/filters"
 
 import { CatalogueListContent } from "./CatalogueListContent"
 
-import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"
