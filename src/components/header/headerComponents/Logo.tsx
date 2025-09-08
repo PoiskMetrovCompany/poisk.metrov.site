@@ -1,33 +1,32 @@
-"use client";
-import React, { FC } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import styles from "../header.module.scss";
+"use client"
+
+import React, { FC } from "react"
+
+import Image from "next/image"
+import Link from "next/link"
+
+import styles from "../header.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface ILogoProps {
-  src?: string;
-  alt?: string;
-  href?: string;
+  src?: string
+  alt?: string
+  href?: string
 }
 
 const Logo: FC<ILogoProps> = ({
   src = "/images/header/logo.webp",
   alt = "Логотип компании Поиск Метров",
-  href = "/"
+  href = "/",
 }) => {
   return (
     <div className={styles.logo}>
       <Link href={href} className={styles.logo__link}>
-        <Image
-          src={src}
-          alt={alt}
-          width={56}
-          height={56}
-          className={styles.logo__image}
-        />
+        <IconImage iconLink={src} alt={alt} className={styles.logo__image} />
       </Link>
     </div>
-  );
-};
+  )
+}
 
-export default Logo;
+export default Logo

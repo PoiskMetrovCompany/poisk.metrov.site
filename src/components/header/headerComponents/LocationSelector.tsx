@@ -63,22 +63,20 @@ const LocationSelector = ({ initialCity }: LocationSelectorProps) => {
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger asChild>
         <div className={styles.location_selector}>
-          <Image
-            src="/images/icons/header/svgPickCity.svg"
+          <IconImage
+            iconLink="/images/icons/location-picker.svg"
             alt="Location cursor"
-            width={24}
-            height={24}
+            className={styles.location_selector__icon}
           />
           <button className={styles.location_selector__button} type="button">
             <span className={styles.location_selector__text}>
               {currentCity?.name || "Выберите город"}
             </span>
-            <Image
+
+            <IconImage
               className={styles.location_selector__arrow}
-              src="/images/icons/header/svgExpandArrow.svg"
+              iconLink="/images/icons/header/svgExpandArrow.svg"
               alt="Arrow"
-              width={16}
-              height={16}
             />
           </button>
         </div>
