@@ -4,7 +4,6 @@ import clsx from "clsx"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"

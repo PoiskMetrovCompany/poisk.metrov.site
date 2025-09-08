@@ -1,11 +1,13 @@
 "use client"
 
-import React, { useState, useEffect, RefObject } from "react"
-import styles from "./candidateLoginComponents.module.css"
-import { FormRow } from "./candidatesFormComponents/FormRow"
-import ConfirmationModal from "./confirmationalWindow"
+import React, { RefObject, useEffect, useState } from "react"
 
 import Image from "next/image"
+
+import styles from "./candidateLoginComponents.module.css"
+
+import { FormRow } from "./candidatesFormComponents/FormRow"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface Candidate {
   id: string
@@ -244,26 +246,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      // Здесь должен быть ваш API endpoint для удаления
-      const url = `/api/v1/candidates/delete`
+      // Формируем URL с query параметрами
+      const keysParam = selectedKeys.join(",")
+      const url = `http://poisk-metrov-demos.ru:8080/api/v1/candidates/destroy?key=${encodeURIComponent(
+        keysParam
+      )}`
 
       const headers: Record<string, string> = {
         accept: "application/json",
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
         method: "DELETE",
         headers: headers,
-        body: JSON.stringify({
-          keys: selectedKeys,
-        }),
       })
 
       if (!response.ok) {
@@ -314,18 +311,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      const url = `/api/v1/export/pdf-format?keys=${encodeURIComponent(
+      const url = `http://poisk-metrov-demos.ru:8080/api/v1/export/pdf-format?keys=${encodeURIComponent(
         vacancyKey
       )}`
 
       const headers: Record<string, string> = {
-        accept: "application/json",
+        accept: "application/pdf",
         Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -381,7 +374,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
 
       const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-      let url = `/api/v1/export/${endpoint}`
+      let url = `http://poisk-metrov-demos.ru:8080/api/v1/export/${endpoint}`
 
       if (selectedKeys.length > 0) {
         const keysParam = selectedKeys.join(",")
@@ -389,13 +382,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
 
       const headers: Record<string, string> = {
-        accept: "application/json",
+        accept:
+          selectedFormat === ".pdf" ? "application/pdf" : "application/json",
         Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -460,7 +450,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
+      let url = `http://poisk-metrov-demos.ru:8080/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
@@ -468,11 +458,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         accept: "*/*",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {

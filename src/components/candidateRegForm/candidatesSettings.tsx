@@ -1,8 +1,15 @@
 "use client"
-import React, { FC, useState, useEffect, KeyboardEvent } from "react"
-import ConfirmationModal from "./confirmationalWindow"
+
+import { useQueryClient } from "@tanstack/react-query"
+
+import React, { FC, KeyboardEvent, useEffect, useState } from "react"
+
 import Image from "next/image"
+
+import { useApiQuery } from "@/utils/hooks/use-api"
+
 import AccessTable from "./accessTable/AccessTable"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface IRole {
   id: string
@@ -11,10 +18,38 @@ interface IRole {
 }
 
 const CandidatesSettings: FC = () => {
-  // Состояния для загрузки данных вакансий
-  const [roles, setRoles] = useState<IRole[]>([])
-  const [isLoadingRoles, setIsLoadingRoles] = useState<boolean>(true)
-  const [rolesError, setRolesError] = useState<string>("")
+  const queryClient = useQueryClient()
+
+  // Запрос вакансий с использованием React Query
+  const {
+    data: rolesData,
+    isLoading: isLoadingRoles,
+    error: rolesError,
+    refetch,
+  } = useApiQuery<{
+    response: boolean
+    attributes: IRole[]
+  }>(["vacancies"], `${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
+    staleTime: 30 * 60 * 1000, // 30 минут - увеличиваем время жизни кэша
+    gcTime: 60 * 60 * 1000, // 1 час - увеличиваем время хранения в памяти
+    retry: 2,
+    refetchOnMount: false, // Не делать refetch при монтировании компонента
+    refetchOnWindowFocus: false, // Не делать refetch при фокусе окна
+    refetchOnReconnect: false, // Не делать refetch при восстановлении соединения
+  })
+
+  // Извлекаем роли из ответа API
+  const roles = rolesData?.attributes || []
+
+  // Отслеживаем изменения данных для отладки
+  useEffect(() => {
+    console.log("🔍 Изменение данных ролей:", {
+      count: roles.length,
+      isLoading: isLoadingRoles,
+      hasError: !!rolesError,
+      roles: roles.map((r) => ({ id: r.id, title: r.title, key: r.key })),
+    })
+  }, [roles, isLoadingRoles, rolesError])
 
   const [isAdding, setIsAdding] = useState<boolean>(false)
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -25,80 +60,6 @@ const CandidatesSettings: FC = () => {
   // Состояния для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [roleToDelete, setRoleToDelete] = useState<number | null>(null)
-
-  // Функция для получения токена из cookie
-  const getAccessTokenFromCookie = (): string | null => {
-    const cookies = document.cookie.split(";")
-    for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "access_token") {
-        return value
-      }
-    }
-    return null
-  }
-
-  // Функция для загрузки вакансий из API
-  const loadRoles = async () => {
-    try {
-      setIsLoadingRoles(true)
-      setRolesError("")
-
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        setRolesError("Токен доступа не найден")
-        return
-      }
-
-      const response = await fetch("/api/v1/vacancy/", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        // Формируем массив ролей из вакансий с сохранением key
-        const rolesFromApi: IRole[] = data.attributes.map((vacancy: any) => ({
-          id: vacancy.id,
-          key: vacancy.key,
-          title: vacancy.title,
-        }))
-        setRoles(rolesFromApi)
-        console.log("Роли загружены:", rolesFromApi)
-      } else {
-        setRolesError("Ошибка при получении данных вакансий")
-      }
-    } catch (error: any) {
-      console.error("Ошибка при загрузке ролей:", error)
-
-      if (error.response) {
-        if (error.response.status === 401) {
-          setRolesError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
-        } else if (error.response.status === 403) {
-          setRolesError("Нет доступа к данным вакансий")
-        } else {
-          setRolesError(
-            error.response.data?.error || "Ошибка сервера при загрузке ролей"
-          )
-        }
-      } else {
-        setRolesError("Ошибка при загрузке ролей")
-      }
-    } finally {
-      setIsLoadingRoles(false)
-    }
-  }
-
-  // Загружаем роли при монтировании компонента
-  useEffect(() => {
-    loadRoles()
-  }, [])
 
   const handleAddRole = () => {
     console.log("=== НАЖАТА КНОПКА ДОБАВИТЬ РОЛЬ ===")
@@ -158,17 +119,46 @@ const CandidatesSettings: FC = () => {
       console.log("=== НАЧАЛО ДОБАВЛЕНИЯ НОВОЙ РОЛИ ===")
       console.log("Название новой роли:", newTitle)
 
-      // Сразу добавляем в UI
-      const newRoleObj: IRole = {
-        id: `temp_${Date.now()}`,
-        key: `temp_key_${Date.now()}`,
+      // Создаем временный объект роли для оптимистичного обновления
+      const optimisticRole: IRole = {
+        id: `optimistic_${Date.now()}`,
+        key: `optimistic_key_${Date.now()}`,
         title: newTitle,
       }
-      setRoles([...roles, newRoleObj])
+
+      // Оптимистичное обновление: сразу добавляем роль в UI
+      console.log("⚡ Оптимистичное добавление роли:", optimisticRole.title)
+
+      queryClient.setQueryData<{
+        response: boolean
+        attributes: IRole[]
+      }>(["vacancies"], (oldData) => {
+        if (!oldData) {
+          console.log("⚠️  Нет oldData при оптимистичном добавлении")
+          return {
+            response: true,
+            attributes: [optimisticRole],
+          }
+        }
+
+        console.log(
+          "📊 Добавляем роль к существующим",
+          oldData.attributes.length,
+          "ролям"
+        )
+        const newAttributes = [...oldData.attributes, optimisticRole]
+
+        return {
+          ...oldData,
+          attributes: newAttributes,
+        }
+      })
+
+      // Сбрасываем состояние формы
       setNewRole("")
       setIsAdding(false)
 
-      console.log("Новая роль добавлена в UI:", newRoleObj)
+      console.log("Новая роль добавлена в UI оптимистично:", optimisticRole)
 
       // Отправляем POST запрос на сервер для создания роли
       const requestData = {
@@ -179,20 +169,31 @@ const CandidatesSettings: FC = () => {
       console.log("JSON для отправки:", JSON.stringify(requestData, null, 2))
 
       try {
-        const accessToken = getAccessTokenFromCookie()
+        // Получаем токен из cookie
+        const cookies = document.cookie.split(";")
+        let accessToken = null
+        for (let cookie of cookies) {
+          const [name, value] = cookie.trim().split("=")
+          if (name === "access_token") {
+            accessToken = value
+            break
+          }
+        }
+
         console.log(
           "Токен доступа для создания:",
           accessToken ? "найден" : "НЕ найден"
         )
 
         if (accessToken) {
-          console.log("Отправка POST запроса к /api/v1/vacancy/store")
+          const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/vacancy/store`
+          console.log("Отправка POST запроса к", apiUrl)
           console.log("Заголовки запроса:", {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken.substring(0, 10)}...`,
           })
 
-          const response = await fetch("/api/v1/vacancy/store", {
+          const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -211,34 +212,100 @@ const CandidatesSettings: FC = () => {
           const data = await response.json()
           console.log("Данные ответа при создании:", data)
 
-          if (response.ok && data.response) {
+          if (response.ok) {
             console.log("✅ Создание роли выполнено успешно")
             console.log("Полученные данные новой роли:", data)
 
-            // Если сервер вернул данные новой роли, можно обновить временную роль
-            if (data.attributes) {
-              console.log("Обновление временной роли данными с сервера")
-              const updatedRoles = [...roles]
-              const lastIndex = updatedRoles.length - 1
-              updatedRoles[lastIndex] = {
-                id: data.attributes.id,
-                key: data.attributes.key,
-                title: data.attributes.title,
-              }
-              setRoles(updatedRoles)
+            // Заменяем оптимистичную роль на реальную с сервера
+            // API возвращает данные роли напрямую, без поля attributes
+            if (data && data.id) {
+              console.log("🔄 Заменяем оптимистичную роль на реальную:", data)
+
+              queryClient.setQueryData<{
+                response: boolean
+                attributes: IRole[]
+              }>(["vacancies"], (oldData) => {
+                if (!oldData) {
+                  console.log("⚠️  Нет oldData при замене роли")
+                  return oldData
+                }
+
+                console.log(
+                  "📊 Текущие данные в кэше:",
+                  oldData.attributes.length,
+                  "ролей"
+                )
+                console.log("🎯 Ищем роль с ID:", optimisticRole.id)
+
+                const updatedAttributes = oldData.attributes.map((role) => {
+                  if (role.id === optimisticRole.id) {
+                    console.log(
+                      "✅ Нашли оптимистичную роль, заменяем на:",
+                      data
+                    )
+                    return data // API возвращает данные напрямую
+                  }
+                  return role
+                })
+
+                const result = {
+                  ...oldData,
+                  attributes: updatedAttributes,
+                }
+
+                console.log(
+                  "📊 Итоговые данные после замены:",
+                  result.attributes.length,
+                  "ролей"
+                )
+                return result
+              })
+            } else {
+              // Если сервер не вернул данные в ожидаемом формате, инвалидируем кэш
               console.log(
-                "Роль обновлена данными с сервера:",
-                updatedRoles[lastIndex]
+                "⚠️  Сервер вернул данные в неожиданном формате, инвалидируем кэш"
               )
+              console.log(
+                "🔄 Вызываем queryClient.invalidateQueries для vacancies"
+              )
+              queryClient.invalidateQueries({ queryKey: ["vacancies"] })
             }
           } else {
             console.error("❌ Ошибка при создании роли от сервера")
             console.error("Response.ok:", response.ok)
-            console.error("Data.response:", data.response)
+            console.error("Status:", response.status)
             console.error("Данные ошибки:", data)
+
+            // Откатываем оптимистичное обновление при ошибке
+            queryClient.setQueryData<{
+              response: boolean
+              attributes: IRole[]
+            }>(["vacancies"], (oldData) => {
+              if (!oldData) return oldData
+              return {
+                ...oldData,
+                attributes: oldData.attributes.filter(
+                  (role) => role.id !== optimisticRole.id
+                ),
+              }
+            })
           }
         } else {
           console.error("❌ Нет токена доступа для создания роли")
+
+          // Откатываем оптимистичное обновление при ошибке авторизации
+          queryClient.setQueryData<{
+            response: boolean
+            attributes: IRole[]
+          }>(["vacancies"], (oldData) => {
+            if (!oldData) return oldData
+            return {
+              ...oldData,
+              attributes: oldData.attributes.filter(
+                (role) => role.id !== optimisticRole.id
+              ),
+            }
+          })
         }
       } catch (error) {
         console.error("❌ ИСКЛЮЧЕНИЕ при создании роли:", error)
@@ -251,6 +318,20 @@ const CandidatesSettings: FC = () => {
           (error as Error).message
         )
         console.error("Stack trace при создании:", (error as Error).stack)
+
+        // Откатываем оптимистичное обновление при исключении
+        queryClient.setQueryData<{
+          response: boolean
+          attributes: IRole[]
+        }>(["vacancies"], (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            attributes: oldData.attributes.filter(
+              (role) => role.id !== optimisticRole.id
+            ),
+          }
+        })
 
         if ((error as any).response) {
           console.error(
@@ -286,29 +367,53 @@ const CandidatesSettings: FC = () => {
       const roleToUpdate = roles[editingIndex]
       const newTitle = editingRole.trim()
 
-      // Сразу обновляем UI: закрываем инпут и обновляем roleItem
-      const updatedRoles = [...roles]
-      updatedRoles[editingIndex] = {
-        ...updatedRoles[editingIndex],
+      // Создаем обновленную роль для оптимистичного обновления
+      const updatedRole: IRole = {
+        ...roleToUpdate,
         title: newTitle,
       }
-      setRoles(updatedRoles)
+
+      // Оптимистичное обновление: сразу обновляем роль в UI
+      queryClient.setQueryData<{
+        response: boolean
+        attributes: IRole[]
+      }>(["vacancies"], (oldData) => {
+        if (!oldData) return oldData
+        const updatedAttributes = oldData.attributes.map((role) =>
+          role.id === roleToUpdate.id ? updatedRole : role
+        )
+        return {
+          ...oldData,
+          attributes: updatedAttributes,
+        }
+      })
+
+      // Сбрасываем состояния редактирования
       setEditingIndex(null)
       setEditingRole("")
-      // ВАЖНО: Завершаем режим редактирования после сохранения
+      setIsAdding(false)
       setIsEditing(false)
 
-      // Отправляем запрос на сервер (результат не влияет на UI)
       const requestData = {
         key: roleToUpdate.key,
         title: newTitle,
       }
 
       try {
-        const accessToken = getAccessTokenFromCookie()
+        // Получаем токен из cookie
+        const cookies = document.cookie.split(";")
+        let accessToken = null
+        for (let cookie of cookies) {
+          const [name, value] = cookie.trim().split("=")
+          if (name === "access_token") {
+            accessToken = value
+            break
+          }
+        }
 
         if (accessToken) {
-          fetch("/api/v1/vacancy/update", {
+          const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/vacancy/update`
+          const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -316,9 +421,61 @@ const CandidatesSettings: FC = () => {
             },
             body: JSON.stringify(requestData),
           })
+
+          if (response.ok) {
+            console.log("✅ Роль обновлена успешно")
+            // Оптимистичное обновление уже применилось, ничего дополнительно не делаем
+          } else {
+            console.error("❌ Ошибка при обновлении роли на сервере")
+            // Откатываем оптимистичное обновление при ошибке
+            queryClient.setQueryData<{
+              response: boolean
+              attributes: IRole[]
+            }>(["vacancies"], (oldData) => {
+              if (!oldData) return oldData
+              const rollbackAttributes = oldData.attributes.map((role) =>
+                role.id === roleToUpdate.id ? roleToUpdate : role
+              )
+              return {
+                ...oldData,
+                attributes: rollbackAttributes,
+              }
+            })
+          }
+        } else {
+          console.error("❌ Нет токена доступа для обновления роли")
+          // Откатываем оптимистичное обновление при ошибке авторизации
+          queryClient.setQueryData<{
+            response: boolean
+            attributes: IRole[]
+          }>(["vacancies"], (oldData) => {
+            if (!oldData) return oldData
+            const rollbackAttributes = oldData.attributes.map((role) =>
+              role.id === roleToUpdate.id ? roleToUpdate : role
+            )
+            return {
+              ...oldData,
+              attributes: rollbackAttributes,
+            }
+          })
         }
       } catch (error) {
-        // Игнорируем ошибки - UI уже обновлен
+        console.error("❌ Исключение при обновлении роли:", error)
+
+        // Откатываем оптимистичное обновление при исключении
+        queryClient.setQueryData<{
+          response: boolean
+          attributes: IRole[]
+        }>(["vacancies"], (oldData) => {
+          if (!oldData) return oldData
+          const rollbackAttributes = oldData.attributes.map((role) =>
+            role.id === roleToUpdate.id ? roleToUpdate : role
+          )
+          return {
+            ...oldData,
+            attributes: rollbackAttributes,
+          }
+        })
       }
     }
   }
@@ -328,19 +485,16 @@ const CandidatesSettings: FC = () => {
     setEditingRole("")
   }
 
-  // Обработчик нажатия на кнопку удаления - показывает модальное окно
   const handleDeleteClick = (index: number) => {
     setRoleToDelete(index)
     setIsDeleteModalOpen(true)
   }
 
-  // Закрытие модального окна
   const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(false)
     setRoleToDelete(null)
   }
 
-  // Подтверждение удаления - вызывается после нажатия "Да, удалить"
   const confirmDelete = async () => {
     if (roleToDelete === null) return
 
@@ -352,11 +506,21 @@ const CandidatesSettings: FC = () => {
     console.log("Данные роли для удаления:", roleToDeleteData)
     console.log("Key для удаления:", roleToDeleteData.key)
 
-    // Сразу удаляем из UI
-    const updatedRoles = roles.filter((_, i) => i !== index)
-    setRoles(updatedRoles)
+    // Оптимистичное обновление: сразу удаляем роль из UI
+    queryClient.setQueryData<{
+      response: boolean
+      attributes: IRole[]
+    }>(["vacancies"], (oldData) => {
+      if (!oldData) return oldData
+      return {
+        ...oldData,
+        attributes: oldData.attributes.filter(
+          (role) => role.id !== roleToDeleteData.id
+        ),
+      }
+    })
 
-    // Если удаляется редактируемая роль, сбрасываем редактирование
+    // Сбрасываем состояния редактирования если удаляется редактируемая роль
     if (editingIndex === index) {
       setEditingIndex(null)
       setEditingRole("")
@@ -368,14 +532,24 @@ const CandidatesSettings: FC = () => {
 
     // Отправляем DELETE запрос на сервер
     try {
-      const accessToken = getAccessTokenFromCookie()
+      // Получаем токен из cookie
+      const cookies = document.cookie.split(";")
+      let accessToken = null
+      for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split("=")
+        if (name === "access_token") {
+          accessToken = value
+          break
+        }
+      }
+
       console.log(
         "Токен доступа для удаления:",
         accessToken ? "найден" : "НЕ найден"
       )
 
       if (accessToken) {
-        const deleteUrl = `/api/v1/vacancy/destroy?key=${roleToDeleteData.key}`
+        const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}/vacancy/destroy?key=${roleToDeleteData.key}`
         console.log("URL для удаления:", deleteUrl)
         console.log("Метод запроса: DELETE")
         console.log("Заголовки запроса:", {
@@ -403,13 +577,38 @@ const CandidatesSettings: FC = () => {
 
         if (response.ok) {
           console.log("✅ Удаление выполнено успешно")
+          // Оптимистичное обновление уже применилось, ничего дополнительно не делаем
         } else {
           console.error("❌ Ошибка при удалении от сервера")
           console.error("Response.ok:", response.ok)
           console.error("Data:", data)
+
+          // Откатываем оптимистичное обновление при ошибке
+          queryClient.setQueryData<{
+            response: boolean
+            attributes: IRole[]
+          }>(["vacancies"], (oldData) => {
+            if (!oldData) return oldData
+            return {
+              ...oldData,
+              attributes: [...oldData.attributes, roleToDeleteData],
+            }
+          })
         }
       } else {
         console.error("❌ Нет токена доступа для удаления")
+
+        // Откатываем оптимистичное обновление при ошибке авторизации
+        queryClient.setQueryData<{
+          response: boolean
+          attributes: IRole[]
+        }>(["vacancies"], (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            attributes: [...oldData.attributes, roleToDeleteData],
+          }
+        })
       }
     } catch (error) {
       console.error("❌ ИСКЛЮЧЕНИЕ при удалении:", error)
@@ -419,6 +618,18 @@ const CandidatesSettings: FC = () => {
       )
       console.error("Сообщение ошибки при удалении:", (error as Error).message)
       console.error("Stack trace при удалении:", (error as Error).stack)
+
+      // Откатываем оптимистичное обновление при исключении
+      queryClient.setQueryData<{
+        response: boolean
+        attributes: IRole[]
+      }>(["vacancies"], (oldData) => {
+        if (!oldData) return oldData
+        return {
+          ...oldData,
+          attributes: [...oldData.attributes, roleToDeleteData],
+        }
+      })
 
       if ((error as any).response) {
         console.error(
@@ -452,7 +663,9 @@ const CandidatesSettings: FC = () => {
   return (
     <>
       <main>
-        <section style={{ minHeight: "0", flexWrap: "wrap", maxWidth: "1280px" }}>
+        <section
+          style={{ minHeight: "0", flexWrap: "wrap", maxWidth: "1280px" }}
+        >
           <div className="formRow justify-flex-start">
             <h2>Настройки анкеты</h2>
           </div>
@@ -479,9 +692,9 @@ const CandidatesSettings: FC = () => {
                 <div
                   style={{ padding: "10px", color: "#e74c3c", width: "100%" }}
                 >
-                  {rolesError}
+                  {rolesError.message || "Ошибка при загрузке ролей"}
                   <button
-                    onClick={loadRoles}
+                    onClick={() => refetch()}
                     style={{
                       marginLeft: "10px",
                       background: "none",
@@ -610,8 +823,8 @@ const CandidatesSettings: FC = () => {
                 {editingIndex !== null
                   ? "Подтвердить"
                   : isAdding
-                  ? "Сохранить роль"
-                  : "Добавить роль"}
+                    ? "Сохранить роль"
+                    : "Добавить роль"}
               </button>
 
               {/* Логика для второй кнопки */}
@@ -637,7 +850,7 @@ const CandidatesSettings: FC = () => {
               )}
             </div>
           </div>
-         <AccessTable/>
+          <AccessTable />
         </section>
       </main>
 
@@ -647,7 +860,11 @@ const CandidatesSettings: FC = () => {
         onClose={handleDeleteModalClose}
         onConfirm={confirmDelete}
         header="Удалить вакансию?"
-        title={roleToDelete !== null ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.` : ""}
+        title={
+          roleToDelete !== null
+            ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.`
+            : ""
+        }
       />
     </>
   )

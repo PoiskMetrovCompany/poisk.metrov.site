@@ -1,387 +1,417 @@
-"use client";
-import React, { FC, useState, useEffect, useRef } from "react";
-import axios from "axios";
-import IMask from "imask";
-import Timer from "./Timer";
-import HeaderFormSmall from "./header";
-import Image from "next/image";
+"use client"
+
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import IMask from "imask"
+
+import React, { FC, useEffect, useRef, useState } from "react"
+
+import Image from "next/image"
+
+import Timer from "./Timer"
+import HeaderFormSmall from "./header"
+
 interface IUserAttributes {
-  phone?: string;
-  [key: string]: any;
+  phone?: string
+  [key: string]: any
 }
 
 interface IAuthResponse {
-  request: boolean;
+  request: boolean
   attributes: {
-    access_token?: string;
+    access_token?: string
     user: {
-      role: string;
-    };
-    [key: string]: any;
-  };
+      role: string
+    }
+    [key: string]: any
+  }
 }
 
+interface ISetCodeRequest {
+  phone: string
+}
+
+interface ISetCodeResponse {
+  request: boolean
+  attributes: IUserAttributes
+}
+
+interface IAuthRequest {
+  phone: string
+  code: string
+}
+
+const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+
 const CandidateRegForm: FC = () => {
-  const [isCodeMode, setIsCodeMode] = useState(false);
-  const [phoneValue, setPhoneValue] = useState("");
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  const [showCheckmark, setShowCheckmark] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAuthLoading, setIsAuthLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [userAttributes, setUserAttributes] = useState<IUserAttributes | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authResult, setAuthResult] = useState<IAuthResponse | null>(null);
-  const [timerActive, setTimerActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
-  
-  const phoneInputRef = useRef<HTMLInputElement>(null);
-  const currentMaskRef = useRef<any>(null);
-  const codeSubmitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isCodeMode, setIsCodeMode] = useState(false)
+  const [phoneValue, setPhoneValue] = useState("")
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
+  const [showCheckmark, setShowCheckmark] = useState(false)
+  const [error, setError] = useState("")
+  const [userAttributes, setUserAttributes] = useState<IUserAttributes | null>(
+    null
+  )
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authResult, setAuthResult] = useState<IAuthResponse | null>(null)
+  const [timerActive, setTimerActive] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(60)
+
+  const phoneInputRef = useRef<HTMLInputElement>(null)
+  const currentMaskRef = useRef<any>(null)
+  const codeSubmitTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Мутация для отправки кода
+  const setCodeMutation = useMutation({
+    mutationFn: async (data: ISetCodeRequest): Promise<ISetCodeResponse> => {
+      const response = await axios.post(
+        `${API_BASE_URL}/account/set-code`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.request) {
+        setUserAttributes(data.attributes)
+        setIsCodeMode(true)
+        setPhoneValue("")
+        setShowCheckmark(false)
+        startTimer()
+      } else {
+        setError("Ошибка при отправке кода")
+      }
+    },
+    onError: (error: any) => {
+      if (error.response) {
+        if (error.response.status === 404) {
+          setError("Пользователь не найден")
+        } else {
+          setError(error.response.data?.error || "Ошибка сервера")
+        }
+      } else if (error.request) {
+        setError("Ошибка соединения с сервером")
+      } else {
+        setError("Ошибка при отправке запроса")
+      }
+    },
+  })
+
+  // Мутация для аутентификации
+  const authMutation = useMutation({
+    mutationFn: async (data: IAuthRequest): Promise<IAuthResponse> => {
+      const response = await axios.post<IAuthResponse>(
+        `${API_BASE_URL}/account/auth`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.request && data.attributes) {
+        if (data.attributes.access_token) {
+          const expirationDate = new Date()
+          expirationDate.setTime(
+            expirationDate.getTime() + 30 * 24 * 60 * 60 * 1000
+          )
+          document.cookie = `access_token=${data.attributes.access_token}; expires=${expirationDate.toUTCString()}; path=/; SameSite=Strict`
+
+          const redirectUrl =
+            data.attributes.user.role === "candidate"
+              ? "/candidatesSecurityBlock/candidatesForm"
+              : "/candidatesSecurityTable"
+
+          // Немедленное перенаправление без показа экрана успеха
+          window.location.href = redirectUrl
+        }
+      } else {
+        setError("Ошибка при аутентификации")
+      }
+    },
+    onError: (error: any) => {
+      if (error.response) {
+        if (error.response.status === 401) {
+          setError("Неверный код")
+        } else if (error.response.status === 404) {
+          setError("Пользователь не найден")
+        } else {
+          setError(error.response.data?.error || "Ошибка сервера")
+        }
+      } else if (error.request) {
+        setError("Ошибка соединения с сервером")
+      } else {
+        setError("Ошибка при отправке запроса")
+      }
+    },
+  })
 
   // Инициализация маски для телефона
   useEffect(() => {
     if (phoneInputRef.current && !isCodeMode) {
       const maskOptions = {
-        mask: '+{7}(000) 000-00-00'
-      };
-      currentMaskRef.current = IMask(phoneInputRef.current, maskOptions);
+        mask: "+{7}(000) 000-00-00",
+      }
+      currentMaskRef.current = IMask(phoneInputRef.current, maskOptions)
     }
 
     return () => {
       if (currentMaskRef.current) {
-        currentMaskRef.current.destroy();
+        currentMaskRef.current.destroy()
       }
-    };
-  }, [isCodeMode]);
+    }
+  }, [isCodeMode])
 
   // Инициализация маски для кода
   useEffect(() => {
     if (phoneInputRef.current && isCodeMode) {
       if (currentMaskRef.current) {
-        currentMaskRef.current.destroy();
+        currentMaskRef.current.destroy()
       }
       const maskOptions = {
-        mask: ' 0 0 0 0 ',
+        mask: " 0 0 0 0 ",
         lazy: false,
-        placeholderChar: " _ "
-      };
-      currentMaskRef.current = IMask(phoneInputRef.current, maskOptions);
-      
-      phoneInputRef.current.focus();
-      
+        placeholderChar: " _ ",
+      }
+      currentMaskRef.current = IMask(phoneInputRef.current, maskOptions)
+
+      phoneInputRef.current.focus()
+
       // Дополнительная проверка фокуса через 100мс
       setTimeout(() => {
-        if (phoneInputRef.current && phoneInputRef.current !== document.activeElement) {
-          phoneInputRef.current.focus();
+        if (
+          phoneInputRef.current &&
+          phoneInputRef.current !== document.activeElement
+        ) {
+          phoneInputRef.current.focus()
         }
-      }, 100);
+      }, 100)
     }
-  }, [isCodeMode]);
+  }, [isCodeMode])
 
   const checkButtonState = () => {
     if (!isCodeMode) {
-      const isPhoneValid = phoneValue.length >= 17;
-      return isPhoneValid && isCheckboxChecked && !isLoading;
+      const isPhoneValid = phoneValue.length >= 17
+      return isPhoneValid && isCheckboxChecked && !setCodeMutation.isPending
     }
-    return false;
-  };
+    return false
+  }
 
   // Функция для проверки кода и установки таймера
   const checkCodeAndSetTimer = (value: string) => {
-    const enteredCode = value.replace(/\s/g, '').replace(/_/g, '');
-    
+    const enteredCode = value.replace(/\s/g, "").replace(/_/g, "")
+
     if (enteredCode.length === 6) {
-      setShowCheckmark(true);
-      
+      setShowCheckmark(true)
+
       // Очищаем таймер если он есть
       if (codeSubmitTimeoutRef.current) {
-        clearTimeout(codeSubmitTimeoutRef.current);
-        codeSubmitTimeoutRef.current = null;
+        clearTimeout(codeSubmitTimeoutRef.current)
+        codeSubmitTimeoutRef.current = null
       }
-      
+
       // Отправляем сразу
       setTimeout(() => {
-        sendAuthRequest();
-      }, 100);
-      
+        sendAuthRequest()
+      }, 100)
     } else {
-      setShowCheckmark(false);
-      
+      setShowCheckmark(false)
+
       // Очищаем предыдущий таймер автоотправки
       if (codeSubmitTimeoutRef.current) {
-        clearTimeout(codeSubmitTimeoutRef.current);
-        codeSubmitTimeoutRef.current = null;
+        clearTimeout(codeSubmitTimeoutRef.current)
+        codeSubmitTimeoutRef.current = null
       }
 
       // Устанавливаем новый таймер на 2 секунды только для неполного кода
       if (enteredCode.length > 0) {
         codeSubmitTimeoutRef.current = setTimeout(() => {
-          sendAuthRequest();
-        }, 2000);
+          sendAuthRequest()
+        }, 2000)
       }
     }
-  };
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    
+    const value = e.target.value
+
     // Всегда обновляем состояние
-    setPhoneValue(value);
+    setPhoneValue(value)
 
     // Очищаем ошибку при изменении значения
     if (error) {
-      setError('');
+      setError("")
     }
 
     // В режиме кода обрабатываем автоотправку
     if (isCodeMode) {
-      checkCodeAndSetTimer(value);
+      checkCodeAndSetTimer(value)
     }
-  };
+  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCheckboxChecked(e.target.checked);
+    setIsCheckboxChecked(e.target.checked)
     if (error) {
-      setError('');
+      setError("")
     }
-  };
-
-  // Функция для отправки запроса на получение кода
-  const sendCodeRequest = async (phone: string): Promise<boolean> => {
-    try {
-      setIsLoading(true);
-      setError('');
-
-      const response = await axios.post('/api/v1/account/set-code', {
-        phone: phone
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.data.request) {
-        setUserAttributes(response.data.attributes);
-        return true;
-      } else {
-        setError('Ошибка при отправке кода');
-        return false;
-      }
-    } catch (error: any) {
-      if (error.response) {
-        if (error.response.status === 404) {
-          setError('Пользователь не найден');
-        } else {
-          setError(error.response.data?.error || 'Ошибка сервера');
-        }
-      } else if (error.request) {
-        setError('Ошибка соединения с сервером');
-      } else {
-        setError('Ошибка при отправке запроса');
-      }
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }
 
   // Функция для отправки запроса на аутентификацию
   const sendAuthRequest = async (): Promise<boolean> => {
     // Очищаем таймер автоотправки если он есть
     if (codeSubmitTimeoutRef.current) {
-      clearTimeout(codeSubmitTimeoutRef.current);
-      codeSubmitTimeoutRef.current = null;
+      clearTimeout(codeSubmitTimeoutRef.current)
+      codeSubmitTimeoutRef.current = null
     }
 
-    try {
-      setIsAuthLoading(true);
-      setError('');
+    let enteredCode = phoneValue
 
-      let enteredCode = phoneValue;
-
-      if (currentMaskRef.current && currentMaskRef.current.unmaskedValue) {
-        enteredCode = currentMaskRef.current.unmaskedValue;
-      } else {
-        enteredCode = phoneValue.replace(/\s/g, '').replace(/_/g, '');
-      }
-
-      if (enteredCode.length === 0) {
-        setError('Введите код из СМС');
-        return false;
-      }
-
-      const phoneToAuth = userAttributes?.phone;
-      if (!phoneToAuth) {
-        setError('Ошибка: номер телефона не найден');
-        return false;
-      }
-
-      const response = await axios.post<IAuthResponse>('/api/v1/account/auth', {
-        phone: phoneToAuth,
-        code: enteredCode
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (response.data.request && response.data.attributes) {
-        if (response.data.attributes.access_token) {
-          const expirationDate = new Date();
-          expirationDate.setTime(expirationDate.getTime() + (30 * 24 * 60 * 60 * 1000));
-          document.cookie = `access_token=${response.data.attributes.access_token}; expires=${expirationDate.toUTCString()}; path=/; SameSite=Strict`;
-          
-          const redirectUrl = response.data.attributes.user.role === "candidate" ? '/candidatesForm' : '/candidatesSecurityTable';
-          
-          // Немедленное перенаправление без показа экрана успеха
-          window.location.href = redirectUrl;
-          return true;
-        }
-
-        return true;
-      } else {
-        setError('Ошибка при аутентификации');
-        return false;
-      }
-    } catch (error: any) {
-      if (error.response) {
-        if (error.response.status === 401) {
-          setError('Неверный код');
-        } else if (error.response.status === 404) {
-          setError('Пользователь не найден');
-        } else {
-          setError(error.response.data?.error || 'Ошибка сервера');
-        }
-      } else if (error.request) {
-        setError('Ошибка соединения с сервером');
-      } else {
-        setError('Ошибка при отправке запроса');
-      }
-      return false;
-    } finally {
-      setIsAuthLoading(false);
+    if (currentMaskRef.current && currentMaskRef.current.unmaskedValue) {
+      enteredCode = currentMaskRef.current.unmaskedValue
+    } else {
+      enteredCode = phoneValue.replace(/\s/g, "").replace(/_/g, "")
     }
-  };
+
+    if (enteredCode.length === 0) {
+      setError("Введите код из СМС")
+      return false
+    }
+
+    const phoneToAuth = userAttributes?.phone
+    if (!phoneToAuth) {
+      setError("Ошибка: номер телефона не найден")
+      return false
+    }
+
+    authMutation.mutate({
+      phone: phoneToAuth,
+      code: enteredCode,
+    })
+
+    return true
+  }
 
   const startTimer = () => {
-    setTimeLeft(60);
-    setTimerActive(true);
-  };
+    setTimeLeft(60)
+    setTimerActive(true)
+  }
 
   const handleTimerEnd = () => {
-    setTimerActive(false);
-  };
+    setTimerActive(false)
+  }
 
   const handleGetCodeClick = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!isCodeMode) {
-      const success = await sendCodeRequest(phoneValue);
-
-      if (success) {
-        setIsCodeMode(true);
-        setPhoneValue('');
-        setShowCheckmark(false);
-        startTimer();
-      }
+      setCodeMutation.mutate({ phone: phoneValue })
     } else {
-      const phoneToResend = userAttributes?.phone || phoneValue;
-      
-      const success = await sendCodeRequest(phoneToResend);
-
-      if (success) {
-        setPhoneValue('');
-        setShowCheckmark(false);
-        startTimer();
-      }
+      const phoneToResend = userAttributes?.phone || phoneValue
+      setCodeMutation.mutate({ phone: phoneToResend })
     }
-  };
+  }
 
   const handleChangeNumber = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Очищаем таймер автоотправки
     if (codeSubmitTimeoutRef.current) {
-      clearTimeout(codeSubmitTimeoutRef.current);
-      codeSubmitTimeoutRef.current = null;
+      clearTimeout(codeSubmitTimeoutRef.current)
+      codeSubmitTimeoutRef.current = null
     }
 
-    setIsCodeMode(false);
-    setPhoneValue('');
-    setShowCheckmark(false);
-    setError('');
-    setUserAttributes(null);
-    setIsAuthenticated(false);
-    setAuthResult(null);
-    setTimerActive(false);
+    setIsCodeMode(false)
+    setPhoneValue("")
+    setShowCheckmark(false)
+    setError("")
+    setUserAttributes(null)
+    setIsAuthenticated(false)
+    setAuthResult(null)
+    setTimerActive(false)
 
     setTimeout(() => {
       if (phoneInputRef.current) {
-        phoneInputRef.current.focus();
+        phoneInputRef.current.focus()
       }
-    }, 0);
-  };
+    }, 0)
+  }
 
   // Очистка таймеров при размонтировании компонента
   useEffect(() => {
     return () => {
       if (codeSubmitTimeoutRef.current) {
-        clearTimeout(codeSubmitTimeoutRef.current);
+        clearTimeout(codeSubmitTimeoutRef.current)
       }
-    };
-  }, []);
+    }
+  }, [])
 
   const getButtonText = () => {
-    if (isLoading) {
-      return "Отправка...";
+    if (setCodeMutation.isPending) {
+      return "Отправка..."
     }
     if (!isCodeMode) {
-      return "Получить код";
+      return "Получить код"
     }
-    
+
     return timerActive ? (
       <>
-        Получить код повторно <Timer 
-          timeLeft={timeLeft} 
-          onTimerEnd={handleTimerEnd} 
-          isActive={timerActive} 
+        Получить код повторно{" "}
+        <Timer
+          timeLeft={timeLeft}
+          onTimerEnd={handleTimerEnd}
+          isActive={timerActive}
         />
       </>
-    ) : "Получить код повторно";
-  };
+    ) : (
+      "Получить код повторно"
+    )
+  }
 
   const getButtonClass = () => {
-    if (isLoading) {
-      return "formBtn btn-inactive";
+    if (setCodeMutation.isPending) {
+      return "formBtn btn-inactive"
     }
     if (!isCodeMode) {
-      return checkButtonState() ? "formBtn btn-active" : "formBtn btn-inactive";
+      return checkButtonState() ? "formBtn btn-active" : "formBtn btn-inactive"
     }
     // В режиме кода кнопка активна только если таймер не идет
-    return !timerActive ? "formBtn btn-active" : "formBtn btn-inactive";
-  };
+    return !timerActive ? "formBtn btn-active" : "formBtn btn-inactive"
+  }
 
   const isButtonDisabled = () => {
-    if (isLoading) return true;
-    if (!isCodeMode) return !checkButtonState();
+    if (setCodeMutation.isPending) return true
+    if (!isCodeMode) return !checkButtonState()
     // В режиме кода кнопка заблокирована пока идет таймер
-    return timerActive;
-  };
+    return timerActive
+  }
 
   return (
     <>
-    <HeaderFormSmall></HeaderFormSmall>
+      <HeaderFormSmall></HeaderFormSmall>
 
       <main>
         <section>
           <div className="center-card">
             <h1>Регистрация кандидата</h1>
-            <p>Введите номер телефона, чтобы авторизоваться в системе и получить доступ к анкете кандидата</p>
+            <p>
+              Введите номер телефона, чтобы авторизоваться в системе и получить
+              доступ к анкете кандидата
+            </p>
 
             <form>
               <div className="input-container">
-                <label htmlFor="phoneNumber" id="formLabel" className="formLabel">
+                <label
+                  htmlFor="phoneNumber"
+                  id="formLabel"
+                  className="formLabel"
+                >
                   {isCodeMode ? "Последние 4 цифры номера" : "Телефон"}
                 </label>
                 <input
@@ -389,36 +419,36 @@ const CandidateRegForm: FC = () => {
                   name="phoneNumber"
                   id="phoneNumber"
                   className="formInput"
-                  placeholder={isCodeMode ? "Введите последние 4 цифры номера" : "Введите номер"}
+                  placeholder={
+                    isCodeMode
+                      ? "Введите последние 4 цифры номера"
+                      : "Введите номер"
+                  }
                   value={phoneValue}
                   onChange={handleInputChange}
                   onInput={(e: React.FormEvent<HTMLInputElement>) => {
                     if (isCodeMode) {
-                      const value = (e.target as HTMLInputElement).value;
-                      setPhoneValue(value);
-                      checkCodeAndSetTimer(value);
+                      const value = (e.target as HTMLInputElement).value
+                      setPhoneValue(value)
+                      checkCodeAndSetTimer(value)
                     }
                   }}
                   ref={phoneInputRef}
-                  disabled={isLoading || isAuthLoading}
+                  disabled={setCodeMutation.isPending || authMutation.isPending}
                 />
                 {showCheckmark && (
                   <div className="checkmark-icon" id="checkmarkIcon">
-                    <Image 
-                      src="/checkmark.svg" 
-                      alt="Checkmark" 
-                      width={24} 
-                      height={24} 
+                    <Image
+                      src="/checkmark.svg"
+                      alt="Checkmark"
+                      width={24}
+                      height={24}
                     />
                   </div>
                 )}
               </div>
 
-              {error && (
-                <div className="error-message">
-                  {error}
-                </div>
-              )}
+              {error && <div className="error-message">{error}</div>}
 
               <button
                 id="getCodeBtn"
@@ -428,12 +458,13 @@ const CandidateRegForm: FC = () => {
                 type="button"
               >
                 {getButtonText()}
-              </button><br />
+              </button>
+              <br />
 
               <div
                 className="checkboxRow"
                 id="checkboxRow"
-                style={{display: isCodeMode ? 'none' : 'flex'}}
+                style={{ display: isCodeMode ? "none" : "flex" }}
               >
                 <label className="custom-checkbox" htmlFor="personalData">
                   <input
@@ -442,34 +473,34 @@ const CandidateRegForm: FC = () => {
                     id="personalData"
                     checked={isCheckboxChecked}
                     onChange={handleCheckboxChange}
-                    disabled={isLoading || isAuthLoading}
+                    disabled={
+                      setCodeMutation.isPending || authMutation.isPending
+                    }
                   />
                   <span className="checkmark"></span>
                 </label>
                 <label htmlFor="personalData">
-                  Я даю согласие на обработку <span>своих персональных данных</span>
+                  Я даю согласие на обработку{" "}
+                  <span>своих персональных данных</span>
                 </label>
               </div>
             </form>
 
             {isCodeMode && (
               <>
-                <a
-                  href="#"
-                  id="changeNumber"
-                  onClick={handleChangeNumber}
-                >
+                <a href="#" id="changeNumber" onClick={handleChangeNumber}>
                   Изменить номер
                 </a>
-                <p style={{fontSize: '14px', color: '#666', marginTop: '10px'}}>
-                </p>
+                <p
+                  style={{ fontSize: "14px", color: "#666", marginTop: "10px" }}
+                ></p>
               </>
             )}
           </div>
         </section>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default CandidateRegForm;
+export default CandidateRegForm
