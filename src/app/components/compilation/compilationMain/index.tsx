@@ -33,7 +33,7 @@ interface compilationProps {
 
 const Compilation = ({ header, hasPromoCard }: compilationProps) => {
   const cityCode = useCityCode()
-  const userKey = "06cf32b1-83c2-11f0-a013-10f60a82b815" // Статичный ключ
+  const userKey = ""
 
   const {
     data: selectionsData,
@@ -41,11 +41,11 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
     error,
   } = useApiQuery<SelectionsResponse>(
     ["selections", cityCode, userKey],
-    `http://localhost:1080/api/v1/apartments/selections?city_code=${cityCode}&user_key=${userKey}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/apartments/selections?city_code=${cityCode}`,
     {
       enabled: !!cityCode,
-      staleTime: 5 * 60 * 1000, // 5 минут
-      gcTime: 10 * 60 * 1000, // 10 минут
+      staleTime: 5 * 60 * 1000, 
+      gcTime: 10 * 60 * 1000, 
     }
   )
 

@@ -1300,7 +1300,7 @@ input[type="checkbox"] + label {
 
 #checked {
   background: rgb(228 248 228 / 100%);
-  color: сrgb(15 141 19 / 100%);
+  color: rgb(15 141 19 / 100%);
 }
 
 #startWorking {
@@ -1327,6 +1327,49 @@ input[type="checkbox"] + label {
 #rejected {
   background: rgb(255 239 233 / 100%);
   color: rgb(240 76 26 / 100%);
+}
+
+/* Стили для статусов в селекторе */
+.status-new .select-trigger,
+.status-new .select-dropdown {
+  background: #f8f8e8;
+  color: #c5801f;
+}
+
+.status-checked .select-trigger,
+.status-checked .select-dropdown {
+  background: rgb(228 248 228 / 100%);
+  color: rgb(15 141 19 / 100%);
+}
+
+.status-needRevision .select-trigger,
+.status-needRevision .select-dropdown {
+  background: rgb(236 246 248 / 100%);
+  color: rgb(44 129 150 / 100%);
+}
+
+.status-rejected .select-trigger,
+.status-rejected .select-dropdown {
+  background: rgb(255 239 233 / 100%);
+  color: rgb(240 76 26 / 100%);
+}
+
+.status-accepted .select-trigger,
+.status-accepted .select-dropdown {
+  background-color: #fae5ff;
+  color: #c51af0;
+}
+
+.status-not .select-trigger,
+.status-not .select-dropdown {
+  background: #ebebeb;
+  color: #666666;
+}
+
+.status-startWorking .select-trigger,
+.status-startWorking .select-dropdown {
+  background-color: rgb(151 215 153);
+  color: rgb(44 83 45);
 }
 
 .left-side {
@@ -1672,7 +1715,7 @@ input[type="checkbox"] + label {
   position: fixed;
   right: 0;
   right: calc((100vw - 50%) / 2 - 22rem);
-  top: 49%;
+  top: 605px;
   transform: translateY(-50%);
   z-index: 100;
 }

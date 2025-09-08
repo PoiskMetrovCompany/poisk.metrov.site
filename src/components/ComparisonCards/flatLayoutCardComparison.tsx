@@ -1,18 +1,12 @@
+import clsx from "clsx"
+
 import React from "react"
 
 import Link from "next/link"
 
-import {
-  IFlatLayoutCardFull,
-  IPropertyCardConveniences,
-  IPropertyCardGeneral,
-  IPropertyCardLocation,
-} from "@/types/PropertyCard"
+import { IFlatLayoutCardFullWithDifferences } from "@/types/PropertyCard"
 
 import styles from "./comparisonCards.module.scss"
-
-import FlatLayoutCardData from "./data/flatData"
-import { propertyCardTranslations } from "./data/translations"
 
 import IconImage from "../ui/IconImage"
 import ActionButton from "../ui/buttons/ActionButton"
@@ -20,91 +14,55 @@ import IconButton from "../ui/buttons/IconButton"
 import Heading3 from "../ui/heading3"
 
 interface FlatLayoutCardComparisonProps {
-  data: IFlatLayoutCardFull
+  data: IFlatLayoutCardFullWithDifferences
   isLast?: boolean
   isInView?: boolean
+  isOnlyDifferences?: boolean
 }
 
 const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
-  data = FlatLayoutCardData,
+  data,
   isLast = false,
   isInView = false,
+  isOnlyDifferences = false,
 }) => {
-  // Функция для рендеринга значения в зависимости от типа
-  const renderValue = (key: string, value: unknown): React.ReactNode => {
-    // Обработка builder
-    if (
-      key === "builder" &&
-      typeof value === "object" &&
-      value !== null &&
-      "name" in value &&
-      "image" in value
-    ) {
-      const builderValue = value as { name: string; image: string }
+  // Функция для проверки, нужно ли показывать элемент
+  const shouldShowItem = (
+    blockType: "apartmentInfo" | "complex",
+    key: string
+  ): boolean => {
+    if (!isOnlyDifferences) return true
+    const differences = data.differences[blockType]
+    if (blockType === "apartmentInfo") {
       return (
-        <div
-          className={
-            styles.comparisonCards__content__block__list__item__value__complex
-          }
-        >
-          <span>{builderValue.name}</span>
-          <IconImage
-            iconLink={builderValue.image}
-            alt={builderValue.name}
-            className={
-              styles.comparisonCards__content__block__list__item__value__complex__icon
-            }
-          />
-        </div>
+        differences &&
+        key in differences &&
+        (
+          differences as IFlatLayoutCardFullWithDifferences["differences"]["apartmentInfo"]
+        )[
+          key as keyof IFlatLayoutCardFullWithDifferences["differences"]["apartmentInfo"]
+        ]
       )
     }
-
-    // Обработка metro
-    if (
-      key === "metro" &&
-      typeof value === "object" &&
-      value !== null &&
-      "name" in value &&
-      "image" in value &&
-      "time" in value
-    ) {
-      const metroValue = value as { name: string; image: string; time: string }
+    if (blockType === "complex") {
       return (
-        <div
-          className={
-            styles.comparisonCards__content__block__list__item__value__complex
-          }
-        >
-          <div
-            className={
-              styles.comparisonCards__content__block__list__item__value__complex__info
-            }
-          >
-            <span
-              className={
-                styles.comparisonCards__content__block__list__item__value__complex__info__name
-              }
-            >
-              {metroValue.name}
-            </span>
-            <IconImage
-              iconLink={metroValue.image}
-              alt={metroValue.name}
-              className={
-                styles.comparisonCards__content__block__list__item__value__complex__icon
-              }
-            />
-
-            <span
-              className={
-                styles.comparisonCards__content__block__list__item__value__complex__info__time
-              }
-            >
-              {metroValue.time}
-            </span>
-          </div>
-        </div>
+        differences &&
+        key in differences &&
+        (
+          differences as IFlatLayoutCardFullWithDifferences["differences"]["complex"]
+        )[
+          key as keyof IFlatLayoutCardFullWithDifferences["differences"]["complex"]
+        ]
       )
+    }
+    return false
+  }
+
+  // Функция для рендеринга значения в зависимости от типа
+  const renderValue = (key: string, value: unknown): React.ReactNode => {
+    // Проверяем на null/undefined/пустые значения
+    if (value === null || value === undefined || value === "") {
+      return <span>Не указано</span>
     }
 
     // Обычное строковое значение
@@ -168,103 +126,87 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
 
         <div className={styles.comparisonCards__content__block}>
           <div className={styles.comparisonCards__content__block__title}>
-            Общие сведения
+            Характеристики квартиры
           </div>
 
           <ul className={styles.comparisonCards__content__block__list}>
-            {Object.entries(data.general).map(([key, value]) => (
-              <li
-                key={key}
-                className={styles.comparisonCards__content__block__list__item}
-              >
-                <span
-                  className={
-                    styles.comparisonCards__content__block__list__item__title
-                  }
+            {Object.entries(data.apartmentInfo).map(([key, value]) =>
+              shouldShowItem("apartmentInfo", key) ? (
+                <li
+                  key={key}
+                  className={clsx(
+                    styles.comparisonCards__content__block__list__item,
+                    {
+                      [styles.comparisonCards__content__block__list__item_active]:
+                        (
+                          data.differences
+                            .apartmentInfo as IFlatLayoutCardFullWithDifferences["differences"]["apartmentInfo"]
+                        )[
+                          key as keyof IFlatLayoutCardFullWithDifferences["differences"]["apartmentInfo"]
+                        ] && isInView,
+                    }
+                  )}
                 >
-                  {
-                    propertyCardTranslations.general[
-                      key as keyof IPropertyCardGeneral
-                    ]
-                  }
-                </span>
-                <div
-                  className={
-                    styles.comparisonCards__content__block__list__item__value
-                  }
-                >
-                  {renderValue(key, value)}
-                </div>
-              </li>
-            ))}
+                  <span
+                    className={
+                      styles.comparisonCards__content__block__list__item__title
+                    }
+                  >
+                    {getApartmentInfoTranslation(key)}
+                  </span>
+                  <div
+                    className={
+                      styles.comparisonCards__content__block__list__item__value
+                    }
+                  >
+                    {renderValue(key, value)}
+                  </div>
+                </li>
+              ) : null
+            )}
           </ul>
         </div>
 
         <div className={styles.comparisonCards__content__block}>
           <div className={styles.comparisonCards__content__block__title}>
-            Расположение
+            Жилой комплекс
           </div>
 
           <ul className={styles.comparisonCards__content__block__list}>
-            {Object.entries(data.location).map(([key, value]) => (
-              <li
-                key={key}
-                className={styles.comparisonCards__content__block__list__item}
-              >
-                <span
-                  className={
-                    styles.comparisonCards__content__block__list__item__title
-                  }
+            {Object.entries(data.complex).map(([key, value]) =>
+              shouldShowItem("complex", key) ? (
+                <li
+                  key={key}
+                  className={clsx(
+                    styles.comparisonCards__content__block__list__item,
+                    {
+                      [styles.comparisonCards__content__block__list__item_active]:
+                        (
+                          data.differences
+                            .complex as IFlatLayoutCardFullWithDifferences["differences"]["complex"]
+                        )[
+                          key as keyof IFlatLayoutCardFullWithDifferences["differences"]["complex"]
+                        ] && isInView,
+                    }
+                  )}
                 >
-                  {
-                    propertyCardTranslations.location[
-                      key as keyof IPropertyCardLocation
-                    ]
-                  }
-                </span>
-                <div
-                  className={
-                    styles.comparisonCards__content__block__list__item__value
-                  }
-                >
-                  {renderValue(key, value)}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className={styles.comparisonCards__content__block}>
-          <div className={styles.comparisonCards__content__block__title}>
-            Удобства
-          </div>
-
-          <ul className={styles.comparisonCards__content__block__list}>
-            {Object.entries(data.conveniences).map(([key, value]) => (
-              <li
-                key={key}
-                className={styles.comparisonCards__content__block__list__item}
-              >
-                <span
-                  className={
-                    styles.comparisonCards__content__block__list__item__title
-                  }
-                >
-                  {
-                    propertyCardTranslations.conveniences[
-                      key as keyof IPropertyCardConveniences
-                    ]
-                  }
-                </span>
-                <div
-                  className={
-                    styles.comparisonCards__content__block__list__item__value
-                  }
-                >
-                  {renderValue(key, value)}
-                </div>
-              </li>
-            ))}
+                  <span
+                    className={
+                      styles.comparisonCards__content__block__list__item__title
+                    }
+                  >
+                    {getComplexTranslation(key)}
+                  </span>
+                  <div
+                    className={
+                      styles.comparisonCards__content__block__list__item__value
+                    }
+                  >
+                    {renderValue(key, value)}
+                  </div>
+                </li>
+              ) : null
+            )}
           </ul>
         </div>
 
@@ -273,15 +215,15 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
             <span
               className={styles.comparisonCards__content__price__value__price}
             >
-              {data.price} ₽
+              {data.apartmentInfo.price} ₽
             </span>
-            <span
+            {/* <span
               className={
                 styles.comparisonCards__content__price__value__pricePerMonth
               }
             >
-              {data.pricePerMonth} ₽/мес
-            </span>
+              Не указано ₽/мес
+            </span> */}
           </div>
           <div className={styles.comparisonCards__content__buttons}>
             <ActionButton>Записаться на просмотр</ActionButton>
@@ -291,6 +233,35 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
       </div>
     </div>
   )
+}
+
+// Функции для получения переводов
+const getApartmentInfoTranslation = (key: string): string => {
+  const translations: Record<string, string> = {
+    price: "Цена",
+    area: "Общая площадь",
+    livingSpace: "Жилая площадь",
+    kitchenSpace: "Площадь кухни",
+    roomCount: "Количество комнат",
+    floor: "Этаж",
+    floorsTotal: "Всего этажей",
+    ceilingHeight: "Высота потолков",
+    apartmentType: "Тип квартиры",
+    bathroomUnit: "Санузел",
+    buildingSection: "Секция",
+    builtYear: "Год постройки",
+    readyQuarter: "Квартал сдачи",
+  }
+  return translations[key] || key
+}
+
+const getComplexTranslation = (key: string): string => {
+  const translations: Record<string, string> = {
+    name: "Название",
+    code: "Код",
+    address: "Адрес",
+  }
+  return translations[key] || key
 }
 
 export default FlatLayoutCardComparison

@@ -9,7 +9,8 @@ import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
 import { Coordinate } from "@/types/Coordintes"
 import { IFavouriteView } from "@/types/Favourites"
-import { IProperty } from "@/types/PropertyCard"
+import { IApartment } from "@/types/api/apartment"
+import { IResidentialComplex } from "@/types/api/complex"
 import { FListResponse } from "@/types/api/favouritesList"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import {
@@ -30,8 +31,9 @@ interface IFavouritesListProps {
   setComplexCount: (complexCount: number) => void
   setCoordinates: (coordinates: Coordinate[]) => void
   setShowMap: (showMap: boolean) => void
-  setComplexes: (complexes: any[]) => void
-  setApartments: (apartments: any[]) => void
+  setComplexes: (complexes: IResidentialComplex[]) => void
+  setApartments: (apartments: IApartment[]) => void
+  setIsLoading: (isLoading: boolean) => void
 }
 
 const FavoutiresList = ({
@@ -43,14 +45,15 @@ const FavoutiresList = ({
   setShowMap,
   setComplexes,
   setApartments,
+  setIsLoading,
 }: IFavouritesListProps) => {
   const [isEmpty, setIsEmpty] = useState(false)
-  const USER_KEY = "06cf4246-83c2-11f0-a013-10f60a82b815"
+  const USER_KEY = "06cf32b1-83c2-11f0-a013-10f60a82b815"
 
   const prevComplexesLength = useRef(0)
   const prevApartmentsLength = useRef(0)
-  const prevComplexes = useRef<any[]>([])
-  const prevApartments = useRef<any[]>([])
+  const prevComplexes = useRef<IResidentialComplex[]>([])
+  const prevApartments = useRef<IApartment[]>([])
 
   const {
     data: responseData,
@@ -102,13 +105,13 @@ const FavoutiresList = ({
       JSON.stringify(prevApartments.current) !== JSON.stringify(apartments)
 
     if (complexesChanged) {
-      setComplexes(complexes)
-      prevComplexes.current = complexes
+      setComplexes(complexes as unknown as IResidentialComplex[])
+      prevComplexes.current = complexes as unknown as IResidentialComplex[]
     }
 
     if (apartmentsChanged) {
-      setApartments(apartments)
-      prevApartments.current = apartments
+      setApartments(apartments as unknown as IApartment[])
+      prevApartments.current = apartments as unknown as IApartment[]
     }
   }, [complexes, apartments])
 
@@ -125,6 +128,11 @@ const FavoutiresList = ({
       setIsEmpty(false)
     }
   }, [isLoading, complexes.length, apartments.length])
+
+  // Обновляем состояние загрузки в родительском компоненте
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading, setIsLoading])
 
   if (isEmpty) {
     return (

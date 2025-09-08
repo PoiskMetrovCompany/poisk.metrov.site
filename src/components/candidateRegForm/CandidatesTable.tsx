@@ -1,11 +1,16 @@
 "use client"
 
-import React, { useState, useEffect, RefObject } from "react"
-import styles from "./candidateLoginComponents.module.css"
-import { FormRow } from "./candidatesFormComponents/FormRow"
-import ConfirmationModal from "./confirmationalWindow"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
+import React, { RefObject, useEffect, useState } from "react"
 
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+
+import styles from "./candidateLoginComponents.module.css"
+
+import { FormRow } from "./candidatesFormComponents/FormRow"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface Candidate {
   id: string
@@ -70,6 +75,25 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   onFiltersReset,
   selectedCity,
 }) => {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  // Проверяем авторизацию сразу при создании компонента
+  const getAccessToken = () => {
+    const cookies = document.cookie.split(";")
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("access_token=")
+    )
+    return tokenCookie ? tokenCookie.split("=")[1] : null
+  }
+
+  const token = getAccessToken()
+  if (!token) {
+    console.log("Токен авторизации не найден, перенаправляем на страницу входа")
+    router.push("/candidatesSecurityBlock/securityLogin")
+    return null // Не рендерим компонент, если нет токена
+  }
+
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -86,15 +110,296 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   const [isFormatDropdownOpen, setIsFormatDropdownOpen] = useState(false)
   const [selectedFormat, setSelectedFormat] = useState(".xlsx")
-  const [downloadLoading, setDownloadLoading] = useState(false)
-  const [isAuthorized, setIsAuthorized] = useState(false)
-  const [singleDownloadLoading, setSingleDownloadLoading] = useState<
-    Record<string, boolean>
-  >({})
+  const [isAuthorized, setIsAuthorized] = useState(true) // Теперь всегда true, так как проверка уже прошла
 
   // Состояние для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [deleteLoading, setDeleteLoading] = useState(false)
+
+  // API функции для tanstack/react-query
+  const downloadSingleFile = async ({
+    vacancyKey,
+    candidateName,
+    selectedFormat,
+  }: {
+    vacancyKey: string
+    candidateName: string
+    selectedFormat: string
+  }) => {
+    const token = getAccessToken()
+    if (!token) {
+      throw new Error("Токен авторизации не найден")
+    }
+
+    const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
+    const url = `/api/proxy/v1/export/${endpoint}?keys=${encodeURIComponent(vacancyKey)}`
+
+    const headers: Record<string, string> = {
+      accept:
+        selectedFormat === ".pdf" ? "application/pdf" : "application/json",
+      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+    }
+
+    console.log("Отправляем запрос на:", url)
+    console.log("Заголовки:", headers)
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      mode: "cors",
+      // credentials: "include", // Временно отключено из-за CORS проблемы на бэкенде
+    })
+
+    console.log("Ответ получен:", response.status, response.statusText)
+    console.log("Content-Type:", response.headers.get("content-type"))
+    console.log(
+      "Content-Disposition:",
+      response.headers.get("content-disposition")
+    )
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+      } else if (response.status === 403) {
+        throw new Error("Доступ запрещен")
+      } else if (response.status === 404) {
+        throw new Error("Файл не найден или некорректный ключ")
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+    }
+
+    // Проверяем Content-Type в зависимости от формата
+    const contentType = response.headers.get("content-type")
+    if (selectedFormat === ".pdf") {
+      if (!contentType || !contentType.includes("application/pdf")) {
+        console.warn("Получен неожиданный Content-Type:", contentType)
+      }
+    } else if (selectedFormat === ".xlsx") {
+      if (
+        !contentType ||
+        (!contentType.includes(
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ) &&
+          !contentType.includes("application/octet-stream"))
+      ) {
+        console.warn("Получен неожиданный Content-Type:", contentType)
+      }
+    }
+
+    const blob = await response.blob()
+    console.log("Blob создан:", blob.size, "байт, тип:", blob.type)
+
+    if (blob.size === 0) {
+      throw new Error("Получен пустой файл")
+    }
+
+    return { blob, candidateName, selectedFormat }
+  }
+
+  const downloadMultipleFiles = async ({
+    selectedKeys,
+    selectedFormat,
+  }: {
+    selectedKeys: string[]
+    selectedFormat: string
+  }) => {
+    const token = getAccessToken()
+    if (!token) {
+      throw new Error("Токен авторизации не найден")
+    }
+
+    const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
+    let url = `/api/proxy/v1/export/${endpoint}`
+
+    if (selectedKeys.length > 0) {
+      const keysParam = selectedKeys.join(",")
+      url += `?keys=${encodeURIComponent(keysParam)}`
+    }
+
+    const headers: Record<string, string> = {
+      accept:
+        selectedFormat === ".pdf" ? "application/pdf" : "application/json",
+      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+    }
+
+    console.log("Отправляем запрос на:", url)
+    console.log("Заголовки:", headers)
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      mode: "cors",
+      // credentials: "include", // Временно отключено из-за CORS проблемы на бэкенде
+    })
+
+    console.log("Ответ получен:", response.status, response.statusText)
+    console.log("Content-Type:", response.headers.get("content-type"))
+    console.log(
+      "Content-Disposition:",
+      response.headers.get("content-disposition")
+    )
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+      } else if (response.status === 403) {
+        throw new Error("Доступ запрещен")
+      } else if (response.status === 404) {
+        throw new Error("Файл не найден или некорректные ключи")
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+    }
+
+    // Проверяем Content-Type для PDF
+    if (selectedFormat === ".pdf") {
+      const contentType = response.headers.get("content-type")
+      if (!contentType || !contentType.includes("application/pdf")) {
+        console.warn("Получен неожиданный Content-Type:", contentType)
+      }
+    }
+
+    const blob = await response.blob()
+    console.log("Blob создан:", blob.size, "байт, тип:", blob.type)
+
+    if (blob.size === 0) {
+      throw new Error("Получен пустой файл")
+    }
+
+    return { blob, selectedKeys, selectedFormat }
+  }
+
+  const deleteCandidates = async ({
+    selectedKeys,
+  }: {
+    selectedKeys: string[]
+  }) => {
+    const token = getAccessToken()
+    if (!token) {
+      throw new Error("Токен авторизации не найден")
+    }
+
+    const keysParam = selectedKeys.join(",")
+    const url = `/api/proxy/v1/candidates/destroy?key=${encodeURIComponent(keysParam)}`
+
+    const headers: Record<string, string> = {
+      accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+    }
+
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: headers,
+    })
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+      } else if (response.status === 403) {
+        throw new Error("Доступ запрещен")
+      } else if (response.status === 404) {
+        throw new Error("Анкеты не найдены")
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+    }
+
+    return { deletedKeys: selectedKeys }
+  }
+
+  // Мутации для tanstack/react-query
+  const singleDownloadMutation = useMutation({
+    mutationFn: downloadSingleFile,
+    onSuccess: ({ blob, candidateName, selectedFormat }) => {
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+      link.style.display = "none"
+
+      const fileName = `${candidateName.replace(/\s+/g, "_")}_${
+        new Date().toISOString().split("T")[0]
+      }${selectedFormat}`
+      link.download = fileName
+
+      document.body.appendChild(link)
+      link.click()
+
+      // Небольшая задержка перед удалением ссылки
+      setTimeout(() => {
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(downloadUrl)
+      }, 100)
+
+      console.log(
+        `Успешно скачана анкета кандидата: ${candidateName} в формате ${selectedFormat}`
+      )
+    },
+    onError: (error) => {
+      console.error("Ошибка при скачивании анкеты:", error)
+      alert(`Ошибка при скачивании файла: ${error.message}`)
+    },
+  })
+
+  const multipleDownloadMutation = useMutation({
+    mutationFn: downloadMultipleFiles,
+    onSuccess: ({ blob, selectedKeys, selectedFormat }) => {
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+      link.style.display = "none"
+
+      const fileName =
+        selectedKeys.length > 0
+          ? `candidates_export_${
+              new Date().toISOString().split("T")[0]
+            }${selectedFormat}`
+          : `all_candidates_export_${
+              new Date().toISOString().split("T")[0]
+            }${selectedFormat}`
+      link.download = fileName
+
+      document.body.appendChild(link)
+      link.click()
+
+      // Небольшая задержка перед удалением ссылки
+      setTimeout(() => {
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(downloadUrl)
+      }, 100)
+
+      const exportMessage =
+        selectedKeys.length > 0
+          ? `Успешно скачано ${selectedKeys.length} анкет в формате ${selectedFormat}`
+          : `Успешно скачаны все анкеты в формате ${selectedFormat}`
+      console.log(exportMessage)
+    },
+    onError: (error) => {
+      console.error("Ошибка при скачивании:", error)
+      alert(`Ошибка при скачивании файла: ${error.message}`)
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCandidates,
+    onSuccess: ({ deletedKeys }) => {
+      // Удаляем анкеты из локального состояния
+      setCandidates((prev) =>
+        prev.filter((candidate) => !deletedKeys.includes(candidate.vacancyKey))
+      )
+      setSelectedKeys([])
+      setIsDeleteModalOpen(false)
+
+      console.log(`Успешно удалено ${deletedKeys.length} анкет`)
+
+      // Инвалидируем кэш кандидатов для обновления данных
+      queryClient.invalidateQueries({ queryKey: ["candidates"] })
+    },
+    onError: (error) => {
+      console.error("Ошибка при удалении анкет:", error)
+      alert(`Ошибка при удалении: ${error.message}`)
+    },
+  })
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
@@ -156,14 +461,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }, [])
 
-  const getAccessToken = () => {
-    const cookies = document.cookie.split(";")
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("access_token=")
-    )
-    return tokenCookie ? tokenCookie.split("=")[1] : null
-  }
-
   const getCsrfToken = () => {
     const metaTag = document.querySelector('meta[name="csrf-token"]')
     return metaTag ? metaTag.getAttribute("content") : null
@@ -196,8 +493,16 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         return "needRevision"
       case "Отклонен":
         return "rejected"
+      case "Принят":
+        return "accepted"
+      case "Не принят":
+        return "not"
+      case "Вышел":
+        return "startWorking"
+      case "Не вышел":
+        return "not"
       default:
-        return "unknown"
+        return "new"
     }
   }
 
@@ -230,67 +535,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }
 
   // Функция для обработки удаления
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (selectedKeys.length === 0) {
       console.log("Нет выбранных анкет для удаления")
       return
     }
 
-    setDeleteLoading(true)
-
-    try {
-      const token = getAccessToken()
-      if (!token) {
-        throw new Error("Токен авторизации не найден")
-      }
-
-      // Здесь должен быть ваш API endpoint для удаления
-      const url = `/api/v1/candidates/delete`
-
-      const headers: Record<string, string> = {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: headers,
-        body: JSON.stringify({
-          keys: selectedKeys,
-        }),
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-        } else if (response.status === 403) {
-          throw new Error("Доступ запрещен")
-        } else if (response.status === 404) {
-          throw new Error("Анкеты не найдены")
-        } else {
-          throw new Error(`Ошибка сервера: ${response.status}`)
-        }
-      }
-
-      // Удаляем анкеты из локального состояния
-      setCandidates((prev) =>
-        prev.filter((candidate) => !selectedKeys.includes(candidate.vacancyKey))
-      )
-      setSelectedKeys([])
-
-      console.log(`Успешно удалено ${selectedKeys.length} анкет`)
-    } catch (err) {
-      console.error("Ошибка при удалении анкет:", err)
-      console.error(`Ошибка при удалении: ${(err as Error).message}`)
-    } finally {
-      setDeleteLoading(false)
-    }
+    deleteMutation.mutate({ selectedKeys })
   }
 
   // Функция для открытия модального окна удаления
@@ -302,152 +553,12 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     setIsDeleteModalOpen(true)
   }
 
-  const handleSingleDownload = async (
-    vacancyKey: string,
-    candidateName: string
-  ) => {
-    setSingleDownloadLoading((prev) => ({ ...prev, [vacancyKey]: true }))
-
-    try {
-      const token = getAccessToken()
-      if (!token) {
-        throw new Error("Токен авторизации не найден")
-      }
-
-      const url = `/api/v1/export/pdf-format?keys=${encodeURIComponent(
-        vacancyKey
-      )}`
-
-      const headers: Record<string, string> = {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: headers,
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-        } else if (response.status === 403) {
-          throw new Error("Доступ запрещен")
-        } else if (response.status === 404) {
-          throw new Error("Файл не найден или некорректный ключ")
-        } else {
-          throw new Error(`Ошибка сервера: ${response.status}`)
-        }
-      }
-
-      const blob = await response.blob()
-
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = downloadUrl
-
-      const fileName = `${candidateName.replace(/\s+/g, "_")}_${
-        new Date().toISOString().split("T")[0]
-      }.pdf`
-      link.download = fileName
-
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
-      window.URL.revokeObjectURL(downloadUrl)
-
-      console.log(`Успешно скачана анкета кандидата: ${candidateName}`)
-    } catch (err) {
-      console.error("Ошибка при скачивании анкеты:", err)
-      console.error(`Ошибка при скачивании анкеты: ${(err as Error).message}`)
-    } finally {
-      setSingleDownloadLoading((prev) => ({ ...prev, [vacancyKey]: false }))
-    }
+  const handleSingleDownload = (vacancyKey: string, candidateName: string) => {
+    singleDownloadMutation.mutate({ vacancyKey, candidateName, selectedFormat })
   }
 
-  const handleDownload = async () => {
-    setDownloadLoading(true)
-
-    try {
-      const token = getAccessToken()
-      if (!token) {
-        throw new Error("Токен авторизации не найден")
-      }
-
-      const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-      let url = `/api/v1/export/${endpoint}`
-
-      if (selectedKeys.length > 0) {
-        const keysParam = selectedKeys.join(",")
-        url += `?keys=${encodeURIComponent(keysParam)}`
-      }
-
-      const headers: Record<string, string> = {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: headers,
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-        } else if (response.status === 403) {
-          throw new Error("Доступ запрещен")
-        } else if (response.status === 404) {
-          throw new Error("Файл не найден или некорректные ключи")
-        } else {
-          throw new Error(`Ошибка сервера: ${response.status}`)
-        }
-      }
-
-      const blob = await response.blob()
-
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = downloadUrl
-
-      const fileName =
-        selectedKeys.length > 0
-          ? `candidates_export_${
-              new Date().toISOString().split("T")[0]
-            }${selectedFormat}`
-          : `all_candidates_export_${
-              new Date().toISOString().split("T")[0]
-            }${selectedFormat}`
-      link.download = fileName
-
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
-      window.URL.revokeObjectURL(downloadUrl)
-
-      const exportMessage =
-        selectedKeys.length > 0
-          ? `Успешно скачано ${selectedKeys.length} анкет в формате ${selectedFormat}`
-          : `Успешно скачаны все анкеты в формате ${selectedFormat}`
-      console.log(exportMessage)
-    } catch (err) {
-      console.error("Ошибка при скачивании:", err)
-      console.error(`Ошибка при скачивании: ${(err as Error).message}`)
-    } finally {
-      setDownloadLoading(false)
-    }
+  const handleDownload = () => {
+    multipleDownloadMutation.mutate({ selectedKeys, selectedFormat })
   }
 
   const fetchCandidates = async (page = 1, useFilters = false) => {
@@ -460,7 +571,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
+      let url = `http://poisk-metrov-demos.ru:8080/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
@@ -468,11 +579,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         accept: "*/*",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -579,20 +686,44 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           vacancy: "Project Manager",
           status: "Принят",
           statusID: "accepted",
-          hasVacancyComment: "Не соответствует требованиям",
-          vacancyKey: "mock-key-4",
+          hasVacancyComment: "Отличный кандидат",
+          vacancyKey: "mock-key-5",
           fullData: {},
         },
         {
           id: "6",
-          name: "Козлов Алексей Владимирович",
+          name: "Смирнова Елена Петровна",
           rop: "Маликова Е.",
-          datetime: "12.01.2025 09:20",
-          vacancy: "Project Manager",
+          datetime: "11.01.2025 15:30",
+          vacancy: "UI/UX дизайнер",
           status: "Вышел",
           statusID: "startWorking",
-          hasVacancyComment: "Не соответствует требованиям",
-          vacancyKey: "mock-key-4",
+          hasVacancyComment: "Начал работу",
+          vacancyKey: "mock-key-6",
+          fullData: {},
+        },
+        {
+          id: "7",
+          name: "Петров Сергей Иванович",
+          rop: "Маликова Е.",
+          datetime: "10.01.2025 12:15",
+          vacancy: "Backend разработчик",
+          status: "Не принят",
+          statusID: "not",
+          hasVacancyComment: "Не подошел по требованиям",
+          vacancyKey: "mock-key-7",
+          fullData: {},
+        },
+        {
+          id: "8",
+          name: "Козлова Мария Сергеевна",
+          rop: "Маликова Е.",
+          datetime: "09.01.2025 18:45",
+          vacancy: "Frontend разработчик",
+          status: "Не вышел",
+          statusID: "not",
+          hasVacancyComment: "Не явился на работу",
+          vacancyKey: "mock-key-8",
           fullData: {},
         },
       ]
@@ -601,10 +732,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       setPagination({
         current_page: 1,
         last_page: 1,
-        total: 4,
+        total: 8,
         per_page: 8,
         from: 1,
-        to: 4,
+        to: 8,
       })
     } finally {
       setLoading(false)
@@ -665,8 +796,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }
 
   useEffect(() => {
-    setIsAuthorized(true)
-
     if (filteredData) {
       const transformedCandidates = filteredData.attributes.data.map(
         (candidate: any) => ({
@@ -727,10 +856,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [isFormatDropdownOpen])
-
-  if (!isAuthorized) {
-    return null
-  }
 
   return (
     <>
@@ -859,14 +984,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                             candidate.name
                           )
                         }}
-                        disabled={singleDownloadLoading[candidate.vacancyKey]}
+                        disabled={singleDownloadMutation.isPending}
                         title={
-                          singleDownloadLoading[candidate.vacancyKey]
+                          singleDownloadMutation.isPending
                             ? "Скачивание..."
-                            : "Скачать анкету в PDF"
+                            : `Скачать анкету в формате ${selectedFormat}`
                         }
                       >
-                        {singleDownloadLoading[candidate.vacancyKey] ? (
+                        {singleDownloadMutation.isPending ? (
                           <span>⏳</span>
                         ) : (
                           <Image
@@ -934,21 +1059,25 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                 <button
                   className="deleteBtn"
                   onClick={handleDeleteClick}
-                  disabled={selectedKeys.length === 0 || deleteLoading}
+                  disabled={
+                    selectedKeys.length === 0 || deleteMutation.isPending
+                  }
                 >
-                  {deleteLoading ? "Удаление..." : "Удалить"}
+                  {deleteMutation.isPending ? "Удаление..." : "Удалить"}
                 </button>
                 <button
                   className="download-btn primary"
                   onClick={handleDownload}
-                  disabled={downloadLoading}
+                  disabled={multipleDownloadMutation.isPending}
                 >
-                  {downloadLoading ? "Скачивание..." : "Скачать"}
+                  {multipleDownloadMutation.isPending
+                    ? "Скачивание..."
+                    : "Скачать"}
                 </button>
                 <button
                   className="download-btn dropdown-toggle"
                   onClick={handleFormatDropdownToggle}
-                  disabled={downloadLoading}
+                  disabled={multipleDownloadMutation.isPending}
                 >
                   <span className="format-text">{selectedFormat}</span>
                   <Image

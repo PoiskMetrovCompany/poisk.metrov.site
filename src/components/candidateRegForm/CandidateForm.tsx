@@ -1,23 +1,84 @@
 "use client"
-import React, { FC, useState, useEffect } from "react"
-import WorkExperienceTable from "./WorkExperienceTable"
-import SpouseTable from "./SpouseTable"
+
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "axios"
+
+import React, { FC, useEffect, useState } from "react"
+
+import Image from "next/image"
+
+import ChildrenTable from "./ChildrenTable"
 import CourseDataTable from "./CourseDataTable"
 import EducationDataTable from "./EducationDataTable"
 import RelativeTable from "./RelativeTable"
-import ChildrenTable from "./ChildrenTable"
-import CustomSelect from "@/components/ui/inputs/select/customSelect"
-import Image from "next/image"
-
-import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection"
+import SpouseTable from "./SpouseTable"
+import WorkExperienceTable from "./WorkExperienceTable"
 import { EducationSection } from "./candidatesFormComponents/EducationSection"
-import { PassportSection } from "./candidatesFormComponents/PassportSection"
 import { FormRow } from "./candidatesFormComponents/FormRow"
+import { PassportSection } from "./candidatesFormComponents/PassportSection"
+import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection"
 import { RadioGroup } from "./candidatesFormComponents/RadioGroup"
 import { SectionHeader } from "./candidatesFormComponents/SectionHeader"
 import { SuccessMessage } from "./candidatesFormComponents/successMessage"
-
 import HeaderFormSmall from "./header"
+
+import CustomSelect from "@/components/ui/inputs/select/customSelect"
+
+const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+
+// Интерфейсы для типизации запроса и ответа
+interface ICandidateFormRequest {
+  vacancies_key: string
+  marital_statuses_key: string
+  rop_key: string | null
+  status: string
+  first_name: string
+  last_name: string
+  middle_name: string
+  reason_for_changing_surnames: string | null
+  city_work: string
+  birth_date: string | null
+  country_birth: string
+  city_birth: string
+  level_educational: string
+  courses: string
+  educational_institution: string
+  organization_name: string
+  organization_phone: string
+  field_of_activity: string
+  organization_address: string
+  organization_job_title: string
+  organization_price: string
+  date_of_hiring: string | null
+  date_of_dismissal: string | null
+  reason_for_dismissal: string
+  recommendation_contact: string
+  mobile_phone_candidate: string
+  home_phone_candidate: string
+  mail_candidate: string
+  inn: string
+  passport_series: string
+  passport_number: string
+  passport_issued: string
+  passport_issue_date: string | null
+  permanent_registration_address: string
+  temporary_registration_address: string
+  actual_residence_address: string
+  family_partner: string
+  adult_family_members: string
+  adult_children: string
+  serviceman: boolean
+  law_breaker: string
+  legal_entity: string
+  is_data_processing: boolean
+  comment: string
+}
+
+interface ICandidateFormResponse {
+  request: boolean
+  attributes?: any
+  error?: string
+}
 
 const CandidateForm: FC = () => {
   const [surnameChanged, setSurnameChanged] = useState(true)
@@ -42,7 +103,9 @@ const CandidateForm: FC = () => {
   const [spouseErrors, setSpouseErrors] = useState<Record<string, boolean>>({})
 
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
-  const [childrenErrors, setChildrenErrors] = useState({})
+  const [childrenErrors, setChildrenErrors] = useState<Record<string, boolean>>(
+    {}
+  )
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({})
@@ -73,16 +136,11 @@ const CandidateForm: FC = () => {
     number[]
   >([])
 
-  const [vacancyOptions, setVacancyOptions] = useState<string[]>([])
-  const [isLoadingVacancies, setIsLoadingVacancies] = useState(true)
-  const [vacancyError, setVacancyError] = useState("")
-
   const [maritalStatusError, setMaritalStatusError] = useState(false)
   const [cityError, setCityError] = useState(false)
   const [maritalStatusApiOptions, setMaritalStatusApiOptions] = useState<
     string[]
   >([])
-  const [isLoadingMaritalStatuses, setIsLoadingMaritalStatuses] = useState(true)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
@@ -125,6 +183,7 @@ const CandidateForm: FC = () => {
   ]
 
   const getAccessTokenFromCookie = (): string | null => {
+    if (typeof document === "undefined") return null
     const cookies = document.cookie.split(";")
     for (let cookie of cookies) {
       const [name, value] = cookie.trim().split("=")
@@ -134,6 +193,119 @@ const CandidateForm: FC = () => {
     }
     return null
   }
+
+  const {
+    data: vacanciesData,
+    isLoading: isLoadingVacancies,
+    error: vacancyQueryError,
+  } = useQuery({
+    queryKey: ["vacancies"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        // Используем mock данные если нет токена
+        return mockVacancyData
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/vacancy/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      if (response.data.response && response.data.attributes) {
+        return response.data.attributes
+      } else {
+        throw new Error("Ошибка при получении данных вакансий")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 минут
+  })
+
+  // Хук для получения семейного положения
+  const {
+    data: maritalStatusData,
+    isLoading: isLoadingMaritalStatuses,
+    error: maritalStatusQueryError,
+  } = useQuery({
+    queryKey: ["maritalStatuses"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        // Используем mock данные если нет токена
+        return mockMaritalStatusData
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/marital-statuses/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      if (response.data.response && response.data.attributes) {
+        return response.data.attributes
+      } else {
+        throw new Error("Ошибка при получении данных семейного положения")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 минут
+  })
+
+  // Мутация для отправки формы кандидата
+  const submitFormMutation = useMutation({
+    mutationFn: async (
+      data: ICandidateFormRequest
+    ): Promise<ICandidateFormResponse> => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        throw new Error("Токен доступа не найден")
+      }
+
+      const response = await axios.post<ICandidateFormResponse>(
+        `${API_BASE_URL}/candidates/store`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      )
+
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.request) {
+        setSubmitSuccess(true)
+        console.log("Анкета успешно отправлена:", data)
+      } else {
+        console.log("Ответ сервера не содержит request: true")
+        // Пока игнорируем ошибки бэка
+        setSubmitSuccess(true)
+      }
+    },
+    onError: (error: any) => {
+      console.error("Ошибка при отправке анкеты:", error)
+      console.error("Error response:", error.response)
+      console.error("Error message:", error.message)
+
+      // Показываем реальную ошибку вместо фейкового успеха
+      setSubmitError(
+        error.response?.data?.message ||
+          error.message ||
+          "Произошла ошибка при отправке формы"
+      )
+      setSubmitSuccess(false)
+    },
+  })
 
   const validateRelativesTables = (): boolean => {
     const errors: Record<string, boolean> = {}
@@ -176,7 +348,7 @@ const CandidateForm: FC = () => {
   }
 
   const validateChildrenTables = () => {
-    const errors = {}
+    const errors: Record<string, boolean> = {}
     let isValid = true
 
     const allIndexes = [1, ...additionalChildrenTables]
@@ -517,136 +689,6 @@ const CandidateForm: FC = () => {
     return familyMembers.length > 0 ? familyMembers : null
   }
 
-  const loadVacancies = async () => {
-    try {
-      setIsLoadingVacancies(true)
-      setVacancyError("")
-
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        // Используем mock данные
-        console.log(
-          "Токен доступа не найден, используем mock данные для вакансий"
-        )
-        setTimeout(() => {
-          const vacancies = mockVacancyData.map((vacancy) => vacancy.title)
-          setVacancyOptions(vacancies)
-          ;(window as any).vacanciesData = mockVacancyData
-          console.log("Mock вакансии загружены:", vacancies)
-          setIsLoadingVacancies(false)
-        }, 500) // Имитируем задержку API
-        return
-      }
-
-      const response = await fetch("/api/v1/vacancy/", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        const vacancies = data.attributes.map((vacancy: any) => vacancy.title)
-        setVacancyOptions(vacancies)
-        ;(window as any).vacanciesData = data.attributes
-        console.log("Вакансии загружены:", vacancies)
-      } else {
-        setVacancyError("Ошибка при получении данных вакансий")
-      }
-    } catch (error: any) {
-      console.error("Ошибка при загрузке вакансий:", error)
-
-      if (error.response) {
-        if (error.response.status === 401) {
-          setVacancyError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
-        } else if (error.response.status === 403) {
-          setVacancyError("Нет доступа к данным вакансий")
-        } else {
-          setVacancyError(
-            error.response.data?.error || "Ошибка сервера при загрузке вакансий"
-          )
-        }
-      } else {
-        setVacancyError("Ошибка при загрузке вакансий")
-      }
-    } finally {
-      setIsLoadingVacancies(false)
-    }
-  }
-
-  // Функция для загрузки семейного положения из API
-  const loadMaritalStatuses = async () => {
-    try {
-      setIsLoadingMaritalStatuses(true)
-      setMaritalStatusError("")
-
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        // Используем mock данные
-        console.log(
-          "Токен доступа не найден, используем mock данные для семейного положения"
-        )
-        setTimeout(() => {
-          const maritalStatuses = mockMaritalStatusData.map(
-            (status) => status.title
-          )
-          setMaritalStatusApiOptions(maritalStatuses)
-          ;(window as any).maritalStatusData = mockMaritalStatusData
-          console.log("Mock семейное положение загружено:", maritalStatuses)
-          setIsLoadingMaritalStatuses(false)
-        }, 300) // Имитируем задержку API
-        return
-      }
-
-      const response = await fetch("/api/v1/marital-statuses/", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        const maritalStatuses = data.attributes.map(
-          (status: any) => status.title
-        )
-        setMaritalStatusApiOptions(maritalStatuses)
-        ;(window as any).maritalStatusData = data.attributes
-        console.log("Семейное положение загружено:", maritalStatuses)
-      } else {
-        setMaritalStatusError("Ошибка при получении данных семейного положения")
-      }
-    } catch (error: any) {
-      console.error("Ошибка при загрузке семейного положения:", error)
-
-      if (error.response) {
-        if (error.response.status === 401) {
-          setMaritalStatusError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
-        } else if (error.response.status === 403) {
-          setMaritalStatusError("Нет доступа к данным семейного положения")
-        } else {
-          setMaritalStatusError(
-            error.response.data?.error ||
-              "Ошибка сервера при загрузке семейного положения"
-          )
-        }
-      } else {
-        setMaritalStatusError("Ошибка при загрузке семейного положения")
-      }
-    } finally {
-      setIsLoadingMaritalStatuses(false)
-    }
-  }
-
   // Функция для загрузки данных РОП
   const loadROPData = () => {
     console.log("Загрузка данных РОП...")
@@ -657,21 +699,21 @@ const CandidateForm: FC = () => {
   }
 
   useEffect(() => {
-    loadVacancies()
-    loadMaritalStatuses()
     loadROPData()
   }, [])
 
-  const maritalStatusOptions =
-    maritalStatusApiOptions.length > 0
-      ? maritalStatusApiOptions
-      : [
-          "Не женат/Не замужем",
-          "Женат/Замужем",
-          "В разводе",
-          "Вдовец/Вдова",
-          "Гражданский брак",
-        ]
+  const vacancyOptions = vacanciesData
+    ? vacanciesData.map((vacancy: any) => vacancy.title)
+    : []
+  const maritalStatusOptions = maritalStatusData
+    ? maritalStatusData.map((status: any) => status.title)
+    : [
+        "Не женат/Не замужем",
+        "Женат/Замужем",
+        "В разводе",
+        "Вдовец/Вдова",
+        "Гражданский брак",
+      ]
 
   const cityOptions = ["Новосибирск", "Санкт-Петербург"]
 
@@ -703,10 +745,8 @@ const CandidateForm: FC = () => {
 
   // Функция для получения ключа вакансии
   const getVacancyKey = (selectedTitle: string): string => {
-    if ((window as any).vacanciesData) {
-      const vacancy = (window as any).vacanciesData.find(
-        (v: any) => v.title === selectedTitle
-      )
+    if (vacanciesData) {
+      const vacancy = vacanciesData.find((v: any) => v.title === selectedTitle)
       return vacancy ? vacancy.key : ""
     }
     return ""
@@ -714,13 +754,8 @@ const CandidateForm: FC = () => {
 
   // Функция для получения ключа РОП
   const getROPKey = (selectedTitle: string): string => {
-    if ((window as any).ropData) {
-      const rop = (window as any).ropData.find(
-        (r: any) => r.title === selectedTitle
-      )
-      return rop ? rop.key : ""
-    }
-    return ""
+    const rop = mockROPData.find((r: any) => r.title === selectedTitle)
+    return rop ? rop.key : ""
   }
 
   const addEducationTable = () => {
@@ -736,8 +771,8 @@ const CandidateForm: FC = () => {
   }
 
   const getMaritalStatusKey = (selectedTitle: string): string => {
-    if ((window as any).maritalStatusData) {
-      const status = (window as any).maritalStatusData.find(
+    if (maritalStatusData) {
+      const status = maritalStatusData.find(
         (s: any) => s.title === selectedTitle
       )
       return status ? status.key : ""
@@ -772,7 +807,7 @@ const CandidateForm: FC = () => {
     }
   }
 
-  const handleChildrenFieldChange = (fieldName, value) => {
+  const handleChildrenFieldChange = (fieldName: string, value: string) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }))
 
     if (value && value.trim() !== "" && childrenErrors[fieldName]) {
@@ -783,155 +818,117 @@ const CandidateForm: FC = () => {
       })
     }
   }
-  const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true)
-      setSubmitError("")
-      setChildrenErrors({})
-      setRelativesErrors({})
-      setWorkExperienceErrors({})
-      setSpouseErrors({}) // Добавьте сброс ошибок супруга
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+    setSubmitError("")
+    setChildrenErrors({})
+    setRelativesErrors({})
+    setWorkExperienceErrors({})
+    setSpouseErrors({})
 
-      const isPersonalInfoValid = validatePersonalInfoSection()
-      const isPassportValid = validatePassportSection()
-      const isChildrenValid = haveChildren ? validateChildrenTables() : true
-      const isRelativesValid = haveFamilyMembers
-        ? validateRelativesTables()
-        : true
-      const isWorkExperienceValid = validateWorkExperienceTable()
-      const isSpouseValid = validateSpouseTable() // Добавьте валидацию супруга
-      const isSelectFieldsValid = validateSelectFields()
+    const isPersonalInfoValid = validatePersonalInfoSection()
+    const isPassportValid = validatePassportSection()
+    const isChildrenValid = haveChildren ? validateChildrenTables() : true
+    const isRelativesValid = haveFamilyMembers
+      ? validateRelativesTables()
+      : true
+    const isWorkExperienceValid = validateWorkExperienceTable()
+    const isSpouseValid = validateSpouseTable()
+    const isSelectFieldsValid = validateSelectFields()
 
-      if (
-        !isPersonalInfoValid ||
-        !isPassportValid ||
-        !isChildrenValid ||
-        !isRelativesValid ||
-        !isWorkExperienceValid ||
-        !isSpouseValid || // Добавьте проверку супруга
-        !isSelectFieldsValid
-      ) {
-        setIsSubmitting(false)
-        setHasError(true)
-        return
-      }
-
-      setTriggerValidation(false)
-      setValidationErrors({})
-      setMaritalStatusError(false)
-      setHasError(false)
-      setCityError(false)
-      const nameData = splitFullName(formData.FIO || "")
-
-      const passportData = splitPassportData(formData.passwordSeriaNumber || "")
-
-      const birthPlaceData = splitBirthPlace(formData.birthPlace)
-
-      const childrenData = collectChildrenData()
-      const familyMembersData = collectFamilyMembersData()
-
-      const apiData = {
-        vacancies_key: getVacancyKey(selectedVacancy),
-        marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
-        rop_key: goingToROP ? getROPKey(selectedROP) : null,
-        status: "active",
-        first_name: nameData.first_name,
-        last_name: nameData.last_name,
-        middle_name: nameData.middle_name,
-        reason_for_changing_surnames: surnameChanged
-          ? formData.reasonOfChange || ""
-          : null,
-        city_work: selectedCity,
-        birth_date: formatDateForDatabase(formData.birthDate),
-        country_birth: birthPlaceData.country,
-        city_birth: birthPlaceData.city,
-        level_educational: selectedEducationLevel,
-        courses: JSON.stringify(collectCoursesData()),
-        educational_institution: JSON.stringify(collectEducationData()),
-        organization_name: formData.companyName || "",
-        organization_phone: formData.companyPhone || "",
-        field_of_activity: formData.companyActivity || "",
-        organization_address: formData.companyAddress || "",
-        organization_job_title: formData.position || "",
-        organization_price: formData.salary || "",
-        date_of_hiring: formatDateForDatabase(formData.hireDate),
-        date_of_dismissal: formatDateForDatabase(formData.dismissalDate),
-        reason_for_dismissal: formData.dismissalReason || "",
-        recommendation_contact: formData.referenceContact || "",
-        mobile_phone_candidate: formData.mobileNumber || "",
-        home_phone_candidate: formData.domesticNumber || "",
-        mail_candidate: formData.email || "",
-        inn: formData.INN || "",
-        passport_series: passportData.passport_series,
-        passport_number: passportData.passport_number,
-        passport_issued: formData.issuedBy || "",
-        passport_issue_date: formatDateForDatabase(formData.dateOfIssue),
-        permanent_registration_address: formData.adressOfPermanentReg || "",
-        temporary_registration_address: formData.adressOfTemporaryReg || "",
-        actual_residence_address: formData.adressOfFactialLiving || "",
-        family_partner:
-          selectedMaritalStatus === "Состою в зарегистрированном браке"
-            ? JSON.stringify({
-                full_name: formData.FIOSuprug || "",
-                birth_date:
-                  formatDateForDatabase(formData.dateOfBirthTable) || "",
-                phone: formData.phoneNumberTable || "",
-                work_study_place: formData.placeOfStudy || "",
-                residence_address: formData.placeOfLiving || "",
-              })
-            : JSON.stringify({}),
-        adult_family_members: familyMembersData
-          ? JSON.stringify(familyMembersData)
-          : JSON.stringify([]),
-        adult_children: childrenData
-          ? JSON.stringify(childrenData)
-          : JSON.stringify([]),
-        serviceman: militaryDuty,
-        law_breaker: criminalResponsibility
-          ? formData.whyPrisoner || "Да"
-          : "Нет",
-        legal_entity: legalEntity ? formData.LegalEntity || "Да" : "Нет",
-        is_data_processing: personalDataChecked,
-        comment: "Коммент",
-      }
-
-      console.table(apiData)
-
-      const response = await fetch("/api/v1/candidates/store", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify(apiData),
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        setSubmitSuccess(true)
-        console.log("Анкета успешно отправлена:", result)
-      } else {
-        console.error("Ошибка при отправке:", result)
-        if (result.errors) {
-          const errorMessages = Object.values(result.errors).flat()
-          setSubmitError(
-            `Ошибки в форме: ${(errorMessages as string[])
-              .slice(0, 3)
-              .join(", ")}${errorMessages.length > 3 ? "..." : ""}`
-          )
-        } else {
-          setSubmitError(result.message || "Ошибка при отправке анкеты")
-        }
-      }
-    } catch (error) {
-      console.error("Ошибка при отправке анкеты:", error)
-      setSubmitError("Ошибка соединения с сервером")
-    } finally {
+    if (
+      !isPersonalInfoValid ||
+      !isPassportValid ||
+      !isChildrenValid ||
+      !isRelativesValid ||
+      !isWorkExperienceValid ||
+      !isSpouseValid ||
+      !isSelectFieldsValid
+    ) {
       setIsSubmitting(false)
-      console.log("Ошибки валидации:", formErrors)
+      setHasError(true)
+      return
     }
+
+    setTriggerValidation(false)
+    setValidationErrors({})
+    setMaritalStatusError(false)
+    setHasError(false)
+    setCityError(false)
+
+    const nameData = splitFullName(formData.FIO || "")
+    const passportData = splitPassportData(formData.passwordSeriaNumber || "")
+    const birthPlaceData = splitBirthPlace(formData.birthPlace)
+
+    const childrenData = collectChildrenData()
+    const familyMembersData = collectFamilyMembersData()
+
+    const apiData: ICandidateFormRequest = {
+      vacancies_key: getVacancyKey(selectedVacancy),
+      marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
+      rop_key: goingToROP ? getROPKey(selectedROP) : null,
+      status: "active",
+      first_name: nameData.first_name,
+      last_name: nameData.last_name,
+      middle_name: nameData.middle_name,
+      reason_for_changing_surnames: surnameChanged
+        ? formData.reasonOfChange || ""
+        : null,
+      city_work: selectedCity,
+      birth_date: formatDateForDatabase(formData.birthDate),
+      country_birth: birthPlaceData.country,
+      city_birth: birthPlaceData.city,
+      level_educational: selectedEducationLevel,
+      courses: JSON.stringify(collectCoursesData()),
+      educational_institution: JSON.stringify(collectEducationData()),
+      organization_name: formData.companyName || "",
+      organization_phone: formData.companyPhone || "",
+      field_of_activity: formData.companyActivity || "",
+      organization_address: formData.companyAddress || "",
+      organization_job_title: formData.position || "",
+      organization_price: formData.salary || "",
+      date_of_hiring: formatDateForDatabase(formData.hireDate),
+      date_of_dismissal: formatDateForDatabase(formData.dismissalDate),
+      reason_for_dismissal: formData.dismissalReason || "",
+      recommendation_contact: formData.referenceContact || "",
+      mobile_phone_candidate: formData.mobileNumber || "",
+      home_phone_candidate: formData.domesticNumber || "",
+      mail_candidate: formData.email || "",
+      inn: formData.INN || "",
+      passport_series: passportData.passport_series,
+      passport_number: passportData.passport_number,
+      passport_issued: formData.issuedBy || "",
+      passport_issue_date: formatDateForDatabase(formData.dateOfIssue),
+      permanent_registration_address: formData.adressOfPermanentReg || "",
+      temporary_registration_address: formData.adressOfTemporaryReg || "",
+      actual_residence_address: formData.adressOfFactialLiving || "",
+      family_partner:
+        selectedMaritalStatus === "Состою в зарегистрированном браке"
+          ? JSON.stringify({
+              full_name: formData.FIOSuprug || "",
+              birth_date:
+                formatDateForDatabase(formData.dateOfBirthTable) || "",
+              phone: formData.phoneNumberTable || "",
+              work_study_place: formData.placeOfStudy || "",
+              residence_address: formData.placeOfLiving || "",
+            })
+          : JSON.stringify({}),
+      adult_family_members: familyMembersData
+        ? JSON.stringify(familyMembersData)
+        : JSON.stringify([]),
+      adult_children: childrenData
+        ? JSON.stringify(childrenData)
+        : JSON.stringify([]),
+      serviceman: militaryDuty,
+      law_breaker: criminalResponsibility
+        ? formData.whyPrisoner || "Да"
+        : "Нет",
+      legal_entity: legalEntity ? formData.LegalEntity || "Да" : "Нет",
+      is_data_processing: personalDataChecked,
+      comment: "Коммент",
+    }
+
+    submitFormMutation.mutate(apiData)
   }
 
   return (
@@ -964,8 +961,8 @@ const CandidateForm: FC = () => {
                 vacancyOptions={vacancyOptions}
                 cityOptions={cityOptions}
                 isLoadingVacancies={isLoadingVacancies}
-                vacancyError={vacancyError}
-                loadVacancies={loadVacancies}
+                vacancyError={vacancyQueryError?.message || ""}
+                loadVacancies={() => {}}
                 surnameChanged={surnameChanged}
                 setSurnameChanged={setSurnameChanged}
                 goingToROP={goingToROP}
@@ -1021,11 +1018,11 @@ const CandidateForm: FC = () => {
               </FormRow>
               <SpouseTable
                 formData={formData}
-                setFormData={handleSpouseFieldChange} 
+                setFormData={handleSpouseFieldChange}
                 isVisible={
                   selectedMaritalStatus === "Состою в зарегистрированном браке"
                 }
-                errors={spouseErrors} 
+                errors={spouseErrors}
               />
               <SectionHeader title="1. Дети старше 18 лет" />
               <FormRow justifyContent="flex-start" style={{ marginTop: 0 }}>
@@ -1311,10 +1308,14 @@ const CandidateForm: FC = () => {
                       ? "formBtn btn-active"
                       : "formBtn btn-inactive"
                   }
-                  disabled={!personalDataChecked || isSubmitting}
+                  disabled={
+                    !personalDataChecked || submitFormMutation.isPending
+                  }
                   onClick={handleSubmit}
                 >
-                  {isSubmitting ? "Отправка..." : "Отправить анкету"}
+                  {submitFormMutation.isPending
+                    ? "Отправка..."
+                    : "Отправить анкету"}
                 </button>
               </FormRow>
               {submitError && (
