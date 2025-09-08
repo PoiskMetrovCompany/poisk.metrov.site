@@ -16,7 +16,8 @@ interface SelectOption {
 }
 
 interface CandidateData {
-  id: string
+  id: string | number
+  key?: string
   last_name: string
   first_name: string
   middle_name?: string
@@ -48,6 +49,7 @@ interface CandidateData {
   temporary_registration_address?: string
   actual_residence_address?: string
   marital_statuses?: {
+    key?: string
     attributes?: {
       title?: string
     }
@@ -73,18 +75,21 @@ interface CandidateData {
     work_study_place?: string
     residence_address?: string
   }>
-  serviceman?: boolean
+  serviceman?: boolean | number
   law_breaker?: string
   legal_entity?: string
   status?: string
   comment?: string
   created_at?: string
   vacancy?: {
+    key?: string
     attributes?: {
       title?: string
     }
   }
   reason_for_changing_surnames?: string
+  city_work?: string
+  is_data_processing?: boolean | number
 }
 
 interface ShowFormProps {
@@ -107,13 +112,48 @@ const ShowForm: React.FC<ShowFormProps> = ({
   const [isUpdating, setIsUpdating] = useState(false)
 
   const [candidateData, setCandidateData] = useState<CandidateData | null>(null)
+  const [selectOptions, setSelectOptions] = useState<SelectOption[]>([])
 
-  const selectOptions: SelectOption[] = [
-    { value: "new", text: "Новая анкета" },
-    { value: "needs-work", text: "Нужна доработка" },
-    { value: "checked", text: "Проверен" },
-    { value: "rejected", text: "Отклонен" },
-  ]
+  // Функция для получения токена из cookie
+  const getAccessTokenFromCookie = (): string | null => {
+    if (typeof document === "undefined") return null
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
+  // Запрос для получения списка статусов
+  const {
+    data: statusesData,
+    isLoading: isLoadingStatuses,
+    error: statusesError,
+  } = useApiQuery(
+    ["candidate-statuses"],
+    "http://poisk-metrov-demos.ru:8080/api/v1/candidates/get-statuses",
+    {
+      staleTime: 10 * 60 * 1000, // 10 минут
+      retry: 2,
+      useMock: !getAccessTokenFromCookie(),
+      mockFn: async () => {
+        console.log("Используем mock-данные для статусов")
+        return [
+          "Новая анкета",
+          "Проверен",
+          "Отклонен",
+          "Нужна доработка",
+          "Принят",
+          "Не принят",
+          "Вышел",
+          "Не вышел",
+        ]
+      },
+    }
+  )
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
@@ -290,20 +330,6 @@ const ShowForm: React.FC<ShowFormProps> = ({
     }
   }
 
-  // Функция для получения токена из cookie
-  const getAccessTokenFromCookie = (): string | null => {
-    if (typeof document === "undefined") return null
-    const cookies = document.cookie.split(";")
-    for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "access_token") {
-        return value
-      }
-    }
-    return null
-  }
-
-  // Запрос для получения данных кандидата
   const {
     data: candidateApiData,
     isLoading: isLoadingCandidate,
@@ -428,36 +454,89 @@ const ShowForm: React.FC<ShowFormProps> = ({
     const statusOption = selectOptions.find((option) => option.value === "new")
     if (statusOption) {
       setSelectedOption(statusOption)
+    } else if (selectOptions.length > 0) {
+      // Если статус не найден, используем первый доступный
+      setSelectedOption(selectOptions[0])
     }
 
     setCommentValue(mockData.comment || "")
+  }
+
+  // Обрабатываем данные статусов из API
+  useEffect(() => {
+    if (statusesData && Array.isArray(statusesData)) {
+      console.log("Получены статусы от API:", statusesData)
+
+      // Преобразуем массив строк в массив объектов SelectOption
+      const options = statusesData.map((status: string) => ({
+        value: getStatusValue(status),
+        text: status,
+      }))
+
+      setSelectOptions(options)
+
+      // Если у нас еще нет выбранного статуса, устанавливаем первый
+      if (!selectedOption.value && options.length > 0) {
+        setSelectedOption(options[0])
+      }
+    } else if (statusesError) {
+      console.error("Ошибка при получении статусов:", statusesError)
+      // Устанавливаем дефолтные статусы в случае ошибки
+      const defaultOptions = [
+        { value: "new", text: "Новая анкета" },
+        { value: "needs-work", text: "Нужна доработка" },
+        { value: "checked", text: "Проверен" },
+        { value: "rejected", text: "Отклонен" },
+      ]
+      setSelectOptions(defaultOptions)
+    }
+  }, [statusesData, statusesError])
+
+  // Функция для преобразования текста статуса в значение
+  const getStatusValue = (statusText: string): string => {
+    const statusMap: Record<string, string> = {
+      "Новая анкета": "new",
+      "Нужна доработка": "needs-work",
+      Проверен: "checked",
+      Отклонен: "rejected",
+      Принят: "accepted",
+      "Не принят": "not-accepted",
+      Вышел: "started-working",
+      "Не вышел": "not-started-working",
+    }
+    return (
+      statusMap[statusText] || statusText.toLowerCase().replace(/\s+/g, "-")
+    )
   }
 
   // Обрабатываем данные кандидата из API
   useEffect(() => {
     if (candidateApiData && typeof candidateApiData === "object") {
       const apiData = candidateApiData as any // Type assertion для работы с внешним API
-      if (apiData.response && apiData.attributes && apiData.attributes.data) {
-        const data = Array.isArray(apiData.attributes.data)
-          ? apiData.attributes.data[0]
-          : apiData.attributes.data
+      console.log("Получены данные от API:", apiData)
 
+      if (apiData.response && apiData.attributes) {
+        // Данные находятся напрямую в attributes, а не в attributes.data
+        const data = apiData.attributes
+
+        console.log("Обрабатываем данные кандидата:", data)
         setCandidateData(data)
 
         // Устанавливаем текущий статус в селектор
         const currentStatus = data.status
-        const statusOption = selectOptions.find((option) => {
-          const statusMap: Record<string, string> = {
-            new: "Новая анкета",
-            "needs-work": "Нужна доработка",
-            checked: "Проверен",
-            rejected: "Отклонен",
-          }
-          return statusMap[option.value] === currentStatus
-        })
+        const statusOption = selectOptions.find(
+          (option) => option.text === currentStatus
+        )
 
         if (statusOption) {
           setSelectedOption(statusOption)
+        } else {
+          // Если статус не найден в списке, создаем новый объект
+          const newOption = {
+            value: getStatusValue(currentStatus),
+            text: currentStatus,
+          }
+          setSelectedOption(newOption)
         }
 
         if (data.comment) {
@@ -468,7 +547,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
       console.error("Ошибка при получении данных кандидата:", candidateError)
       setMockData() // Используем mock-данные в случае ошибки
     }
-  }, [candidateApiData, candidateError])
+  }, [candidateApiData, candidateError, selectOptions])
 
   // Обрабатываем отсутствие vacancyKey
   useEffect(() => {
@@ -485,6 +564,10 @@ const ShowForm: React.FC<ShowFormProps> = ({
       "needs-work": "Нужна доработка",
       checked: "Проверен",
       rejected: "Отклонен",
+      accepted: "Принят",
+      "not-accepted": "Не принят",
+      "started-working": "Вышел",
+      "not-started-working": "Не вышел",
     }
     return statusMap[statusValue] || statusValue
   }
@@ -616,6 +699,14 @@ const ShowForm: React.FC<ShowFormProps> = ({
         return "status-needRevision"
       case "Отклонен":
         return "status-rejected"
+      case "Принят":
+        return "status-accepted"
+      case "Не принят":
+        return "status-not"
+      case "Вышел":
+        return "status-startWorking"
+      case "Не вышел":
+        return "status-not"
       default:
         return "status-new" // по умолчанию
     }
@@ -777,11 +868,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
             <div className="fixedMenu">
               <div className="navArea">
                 <div
-                  className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
+                  className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""} ${getStatusClass(selectedOption.text)}`}
                   id="customSelect"
                 >
                   <div
-                    className={`select-trigger ${getStatusClass(selectedOption.text)}`}
+                    className="select-trigger"
                     id="selectTrigger"
                     onClick={handleSelectToggle}
                     style={{ opacity: isUpdating ? 0.6 : 1 }}
@@ -792,10 +883,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
                     )}
                     <div className="trigger-icons"></div>
                   </div>
-                  <div
-                    className={`select-dropdown ${getStatusClass(selectedOption.text)}`}
-                    id="selectDropdown"
-                  >
+                  <div className="select-dropdown" id="selectDropdown">
                     {selectOptions.map((option) => (
                       <div
                         key={option.value}
@@ -827,7 +915,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
                   value={commentValue}
                   onChange={handleCommentChange}
                 ></textarea>
-                <button id="addComment" onClick={handleAddComment}>
+                <button
+                  style={{ marginTop: "20px" }}
+                  id="addComment"
+                  onClick={handleAddComment}
+                >
                   Оставить коментарий
                 </button>
               </div>
@@ -1760,7 +1852,8 @@ const ShowForm: React.FC<ShowFormProps> = ({
                   id="militaryDuty"
                   className="formInput big"
                   value={
-                    candidateData.serviceman
+                    candidateData.serviceman === 1 ||
+                    candidateData.serviceman === true
                       ? "Является военнообязанным"
                       : "Не является военнообязанным"
                   }

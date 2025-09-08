@@ -3,7 +3,9 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+
+import { useRouter } from "next/navigation"
 
 import CandidatesTable from "@/components/candidateRegForm/CandidatesTable"
 import FiltersCalendar from "@/components/candidateRegForm/FiltersCalendar"
@@ -11,7 +13,7 @@ import ShowForm from "@/components/candidateRegForm/ShowForm"
 import BigHeader from "@/components/candidateRegForm/bigHeader"
 import { ICandidate, ICandidatesResponse } from "@/types/Candidate"
 
-// Функция для получения токена из cookie
+
 const getAccessTokenFromCookie = (): string | null => {
   if (typeof document === "undefined") return null
   const cookies = document.cookie.split(";")
@@ -47,6 +49,7 @@ interface ActiveFilters {
 }
 
 const CandidatesLoginPage = () => {
+  const router = useRouter()
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [selectedVacancyKey, setSelectedVacancyKey] = useState<string | null>(
     null
@@ -54,8 +57,22 @@ const CandidatesLoginPage = () => {
   const [filteredData, setFilteredData] = useState<FilteredData | null>(null)
   const [activeFilters, setActiveFilters] = useState<ActiveFilters | null>(null)
   const [selectedCity, setSelectedCity] = useState("Новосибирск")
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
   const filtersButtonRef = useRef<HTMLButtonElement>(null!)
+
+  // Проверка авторизации при загрузке страницы
+  useEffect(() => {
+    const token = getAccessTokenFromCookie()
+    if (!token) {
+      console.log(
+        "Токен авторизации не найден, перенаправляем на страницу входа"
+      )
+      router.push("/candidatesSecurityBlock/securityLogin")
+      return
+    }
+    setIsCheckingAuth(false)
+  }, [router])
 
   // Запрос для получения списка кандидатов
   const {
@@ -86,7 +103,7 @@ const CandidatesLoginPage = () => {
 
       return response.data
     },
-    enabled: true,
+    enabled: !isCheckingAuth, // Выполняем запрос только после проверки авторизации
     staleTime: 5 * 60 * 1000, // 5 минут
     retry: 2,
   })
@@ -142,6 +159,15 @@ const CandidatesLoginPage = () => {
     setFilteredData(null)
     setActiveFilters(null)
     console.log("Фильтры сброшены")
+  }
+
+  // Показываем состояние загрузки во время проверки авторизации
+  if (isCheckingAuth) {
+    return (
+      <div style={{ textAlign: "center", padding: "40px" }}>
+        <p>Проверка авторизации...</p>
+      </div>
+    )
   }
 
   return (

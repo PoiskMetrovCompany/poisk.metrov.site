@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/proxy/:path*",
+        destination: "http://poisk-metrov-demos.ru:8080/api/:path*",
+      },
+    ]
+  },
 }
 
 export default nextConfig
