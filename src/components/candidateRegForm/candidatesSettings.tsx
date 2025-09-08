@@ -1,8 +1,11 @@
 "use client"
-import React, { FC, useState, useEffect, KeyboardEvent } from "react"
-import ConfirmationModal from "./confirmationalWindow"
+
+import React, { FC, KeyboardEvent, useEffect, useState } from "react"
+
 import Image from "next/image"
+
 import AccessTable from "./accessTable/AccessTable"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface IRole {
   id: string
@@ -452,7 +455,9 @@ const CandidatesSettings: FC = () => {
   return (
     <>
       <main>
-        <section style={{ minHeight: "0", flexWrap: "wrap", maxWidth: "1280px" }}>
+        <section
+          style={{ minHeight: "0", flexWrap: "wrap", maxWidth: "1280px" }}
+        >
           <div className="formRow justify-flex-start">
             <h2>Настройки анкеты</h2>
           </div>
@@ -610,8 +615,8 @@ const CandidatesSettings: FC = () => {
                 {editingIndex !== null
                   ? "Подтвердить"
                   : isAdding
-                  ? "Сохранить роль"
-                  : "Добавить роль"}
+                    ? "Сохранить роль"
+                    : "Добавить роль"}
               </button>
 
               {/* Логика для второй кнопки */}
@@ -637,7 +642,7 @@ const CandidatesSettings: FC = () => {
               )}
             </div>
           </div>
-         <AccessTable/>
+          <AccessTable />
         </section>
       </main>
 
@@ -647,7 +652,11 @@ const CandidatesSettings: FC = () => {
         onClose={handleDeleteModalClose}
         onConfirm={confirmDelete}
         header="Удалить вакансию?"
-        title={roleToDelete !== null ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.` : ""}
+        title={
+          roleToDelete !== null
+            ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.`
+            : ""
+        }
       />
     </>
   )
