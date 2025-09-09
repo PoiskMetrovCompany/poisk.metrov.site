@@ -101,10 +101,22 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
+
+      if (!element || !element.isConnected) return
+
       const sectionElement = element as HTMLElement
       sectionElement.style.setProperty("max-width", "none", "important")
       sectionElement.style.setProperty("width", "100%", "important")
       sectionElement.style.setProperty("margin", "0", "important")
+    }
+
+    const cleanupStyles = () => {
+      const sectionElement = document.querySelector("section")
+      if (sectionElement && sectionElement.isConnected) {
+        sectionElement.style.removeProperty("max-width")
+        sectionElement.style.removeProperty("width")
+        sectionElement.style.removeProperty("margin")
+      }
     }
 
     const sectionElement = document.querySelector("section")
@@ -139,23 +151,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
       return () => {
         observer.disconnect()
-        const sectionElement = document.querySelector("section")
-        if (sectionElement) {
-          sectionElement.style.removeProperty("max-width")
-          sectionElement.style.removeProperty("width")
-          sectionElement.style.removeProperty("margin")
-        }
+        cleanupStyles()
       }
     }
 
-    return () => {
-      const sectionElement = document.querySelector("section")
-      if (sectionElement) {
-        sectionElement.style.removeProperty("max-width")
-        sectionElement.style.removeProperty("width")
-        sectionElement.style.removeProperty("margin")
-      }
-    }
+    return cleanupStyles
   }, [])
 
   const getAccessToken = () => {
@@ -285,9 +285,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         }
       }
 
-      setCandidates((prev) =>
-        prev.filter((candidate) => !selectedKeys.includes(candidate.vacancyKey))
-      )
+      setCandidates((prev) => {
+        // Безопасная фильтрация с проверкой существования кандидатов
+        const filtered = prev.filter(
+          (candidate) =>
+            candidate && !selectedKeys.includes(candidate.vacancyKey)
+        )
+        return filtered
+      })
       setSelectedKeys([])
 
       console.log(`Успешно удалено ${selectedKeys.length} анкет`)
@@ -578,26 +583,26 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         },
         {
           id: "5",
-          name: "Козлов Алексей Владимирович",
+          name: "Смирнова Ольга Петровна",
           rop: "Маликова Е.",
-          datetime: "12.01.2025 09:20",
-          vacancy: "Project Manager",
+          datetime: "11.01.2025 11:30",
+          vacancy: "UX Designer",
           status: "Принят",
           statusID: "accepted",
-          hasVacancyComment: "Не соответствует требованиям",
-          vacancyKey: "mock-key-4",
+          hasVacancyComment: "Отличный кандидат",
+          vacancyKey: "mock-key-5",
           fullData: {},
         },
         {
           id: "6",
-          name: "Козлов Алексей Владимирович",
+          name: "Васильев Дмитрий Сергеевич",
           rop: "Маликова Е.",
-          datetime: "12.01.2025 09:20",
-          vacancy: "Project Manager",
+          datetime: "10.01.2025 14:15",
+          vacancy: "DevOps Engineer",
           status: "Вышел",
           statusID: "startWorking",
-          hasVacancyComment: "Не соответствует требованиям",
-          vacancyKey: "mock-key-4",
+          hasVacancyComment: "Ушел на другую работу",
+          vacancyKey: "mock-key-6",
           fullData: {},
         },
       ]
@@ -923,7 +928,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
               ))}
             </div>
 
-            {/* <FormRow
+            <FormRow
               className="w-80"
               justifyContent="space-between"
               style={{ marginTop: "2rem" }}
@@ -1018,13 +1023,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                   </div>
                 </div>
               </div>
-            </FormRow> */}
+            </FormRow>
           </>
         )}
       </section>
 
       {/* Модальное окно подтверждения удаления */}
-      {/* <ConfirmationModal
+      <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
@@ -1032,7 +1037,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         title="Вы точно уверены, что хотите удалить эту вакансию из анкет кандидатов?"
         confirmText="Да, удалить"
         cancelText="Отмена"
-      /> */}
+      />
     </>
   )
 }
