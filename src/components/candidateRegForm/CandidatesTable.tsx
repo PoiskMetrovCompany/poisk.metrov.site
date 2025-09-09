@@ -1,11 +1,14 @@
 "use client"
 
-import React, { useState, useEffect, RefObject } from "react"
-import styles from "./candidateLoginComponents.module.css"
-import { FormRow } from "./candidatesFormComponents/FormRow"
-import ConfirmationModal from "./confirmationalWindow"
+import React, { RefObject, useEffect, useState } from "react"
 
 import Image from "next/image"
+
+import styles from "./candidateLoginComponents.module.css"
+
+import MobileCandidateCard from "./MobileCandidateCard"
+import { FormRow } from "./candidatesFormComponents/FormRow"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface Candidate {
   id: string
@@ -92,9 +95,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     Record<string, boolean>
   >({})
 
-  // Состояние для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
@@ -102,7 +105,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       sectionElement.style.setProperty("max-width", "none", "important")
       sectionElement.style.setProperty("width", "100%", "important")
       sectionElement.style.setProperty("margin", "0", "important")
-      console.log("✅ Стили применены через MutationObserver")
     }
 
     const sectionElement = document.querySelector("section")
@@ -201,6 +203,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
+  const getStatusText = (status: string) => {
+    if (status === "Нужна доработка" && isMobile) {
+      return "Доработка"
+    }
+    return status
+  }
+
   const handleCheckboxChange = (vacancyKey: string, isChecked: boolean) => {
     setSelectedKeys((prev) => {
       if (isChecked) {
@@ -229,7 +238,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
-  // Функция для обработки удаления
   const handleDelete = async () => {
     if (selectedKeys.length === 0) {
       console.log("Нет выбранных анкет для удаления")
@@ -244,7 +252,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      // Здесь должен быть ваш API endpoint для удаления
       const url = `/api/v1/candidates/delete`
 
       const headers: Record<string, string> = {
@@ -278,7 +285,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         }
       }
 
-      // Удаляем анкеты из локального состояния
       setCandidates((prev) =>
         prev.filter((candidate) => !selectedKeys.includes(candidate.vacancyKey))
       )
@@ -293,7 +299,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
-  // Функция для открытия модального окна удаления
   const handleDeleteClick = () => {
     if (selectedKeys.length === 0) {
       console.log("Выберите анкеты для удаления")
@@ -704,6 +709,18 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     console.log("Выбранные ключи:", selectedKeys)
   }, [selectedKeys])
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
   const handleFormatDropdownToggle = (e: React.MouseEvent) => {
     e.stopPropagation()
     setIsFormatDropdownOpen(!isFormatDropdownOpen)
@@ -770,120 +787,143 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           </div>
         ) : (
           <>
-            <table className="candidatesTable w-80">
-              <thead>
-                <tr style={{ border: "0" }}>
-                  <th></th>
-                  <th>ФИО Кандидата</th>
-                  <th>РОП</th>
-                  <th>Дата и время</th>
-                  <th>Вакансия</th>
-                  <th style={{ textAlign: "right", paddingRight: "30px" }}>
-                    Статус
-                  </th>
-                  <th style={{ width: "100px" }}></th>
-                </tr>
-              </thead>
-              <tbody id="candidatesTableBody">
-                {candidates.map((candidate) => (
-                  <tr
-                    key={candidate.id}
-                    data-keyvacancy={candidate.vacancyKey}
-                    onClick={(e) => handleRowClick(candidate, e)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td>
-                      <label
-                        className="custom-checkbox"
-                        htmlFor={`personalData${candidate.id}`}
-                      >
-                        <input
-                          type="checkbox"
-                          name="personalData"
-                          id={`personalData${candidate.id}`}
-                          checked={selectedKeys.includes(candidate.vacancyKey)}
-                          onChange={(e) =>
-                            handleCheckboxChange(
-                              candidate.vacancyKey,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="checkmark"></span>
-                      </label>
-                    </td>
-                    <td>{candidate.name}</td>
-                    <td>{candidate.rop}</td>
-                    <td>{candidate.datetime}</td>
-                    <td>{candidate.vacancy}</td>
-                    <td
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginRight: "20px",
-                      }}
-                    >
-                      <p id={candidate.statusID}>{candidate.status}</p>
-                    </td>
-                    <td>
-                      {candidate.hasVacancyComment && (
-                        <button
-                          id={`radactBtn${candidate.id}`}
-                          className="redactBtn"
-                          onClick={(e) => e.stopPropagation()}
-                          onMouseEnter={() => setActiveTooltip(candidate.id)}
-                          onMouseLeave={() => setActiveTooltip(null)}
-                        >
-                          <Image
-                            src="/images/candidatesSecurityImg/pen.webp"
-                            alt="Кнопка комментария"
-                            width={20}
-                            height={20}
-                          />
-                          <div
-                            className={`comment-tooltip ${
-                              activeTooltip === candidate.id ? "visible" : ""
-                            }`}
-                          >
-                            {candidate.hasVacancyComment}
-                          </div>
-                        </button>
-                      )}
-                      <button
-                        id={`downloadBtn${candidate.id}`}
-                        className={"downloadBtn"}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleSingleDownload(
-                            candidate.vacancyKey,
-                            candidate.name
-                          )
-                        }}
-                        disabled={singleDownloadLoading[candidate.vacancyKey]}
-                        title={
-                          singleDownloadLoading[candidate.vacancyKey]
-                            ? "Скачивание..."
-                            : "Скачать анкету в PDF"
-                        }
-                      >
-                        {singleDownloadLoading[candidate.vacancyKey] ? (
-                          <span>⏳</span>
-                        ) : (
-                          <Image
-                            src="/images/icons/download.svg"
-                            alt="Download"
-                            width={20}
-                            height={20}
-                          />
-                        )}
-                      </button>
-                    </td>
+            {/* Десктопная версия таблицы */}
+            <div className="desktop-table-container">
+              <table className="candidatesTable w-80">
+                <thead>
+                  <tr style={{ border: "0" }}>
+                    <th></th>
+                    <th>ФИО Кандидата</th>
+                    <th>РОП</th>
+                    <th>Дата и время</th>
+                    <th>Вакансия</th>
+                    <th style={{ textAlign: "right", paddingRight: "30px" }}>
+                      Статус
+                    </th>
+                    <th style={{ width: "100px" }}></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody id="candidatesTableBody">
+                  {candidates.map((candidate) => (
+                    <tr
+                      key={candidate.id}
+                      data-keyvacancy={candidate.vacancyKey}
+                      onClick={(e) => handleRowClick(candidate, e)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <td>
+                        <label
+                          className="custom-checkbox"
+                          htmlFor={`personalData${candidate.id}`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="personalData"
+                            id={`personalData${candidate.id}`}
+                            checked={selectedKeys.includes(
+                              candidate.vacancyKey
+                            )}
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                candidate.vacancyKey,
+                                e.target.checked
+                              )
+                            }
+                          />
+                          <span className="checkmark"></span>
+                        </label>
+                      </td>
+                      <td>{candidate.name}</td>
+                      <td>{candidate.rop}</td>
+                      <td>{candidate.datetime}</td>
+                      <td>{candidate.vacancy}</td>
+                      <td
+                        style={{
+                          marginRight: "20px",
+                        }}
+                      >
+                        <p className="status" id={candidate.statusID}>
+                          {getStatusText(candidate.status)}
+                        </p>
+                      </td>
+                      <td>
+                        {candidate.hasVacancyComment && (
+                          <button
+                            id={`radactBtn${candidate.id}`}
+                            className="redactBtn"
+                            onClick={(e) => e.stopPropagation()}
+                            onMouseEnter={() => setActiveTooltip(candidate.id)}
+                            onMouseLeave={() => setActiveTooltip(null)}
+                          >
+                            <Image
+                              src="/images/candidatesSecurityImg/pen.webp"
+                              alt="Кнопка комментария"
+                              width={20}
+                              height={20}
+                            />
+                            <div
+                              className={`comment-tooltip ${
+                                activeTooltip === candidate.id ? "visible" : ""
+                              }`}
+                            >
+                              {candidate.hasVacancyComment}
+                            </div>
+                          </button>
+                        )}
+                        <button
+                          id={`downloadBtn${candidate.id}`}
+                          className={"downloadBtn"}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleSingleDownload(
+                              candidate.vacancyKey,
+                              candidate.name
+                            )
+                          }}
+                          disabled={singleDownloadLoading[candidate.vacancyKey]}
+                          title={
+                            singleDownloadLoading[candidate.vacancyKey]
+                              ? "Скачивание..."
+                              : "Скачать анкету в PDF"
+                          }
+                        >
+                          {singleDownloadLoading[candidate.vacancyKey] ? (
+                            <span>⏳</span>
+                          ) : (
+                            <Image
+                              src="/images/icons/download.svg"
+                              alt="Download"
+                              width={20}
+                              height={20}
+                            />
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-            <FormRow
+            {/* Мобильная версия карточек */}
+            <div className="mobile-cards-container">
+              {candidates.map((candidate) => (
+                <MobileCandidateCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  isSelected={selectedKeys.includes(candidate.vacancyKey)}
+                  onCheckboxChange={handleCheckboxChange}
+                  onRowClick={handleRowClick}
+                  onSingleDownload={handleSingleDownload}
+                  singleDownloadLoading={singleDownloadLoading}
+                  activeTooltip={activeTooltip}
+                  setActiveTooltip={setActiveTooltip}
+                  getStatusText={getStatusText}
+                />
+              ))}
+            </div>
+
+            {/* <FormRow
               className="w-80"
               justifyContent="space-between"
               style={{ marginTop: "2rem" }}
@@ -978,13 +1018,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                   </div>
                 </div>
               </div>
-            </FormRow>
+            </FormRow> */}
           </>
         )}
       </section>
 
       {/* Модальное окно подтверждения удаления */}
-      <ConfirmationModal
+      {/* <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
@@ -992,7 +1032,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         title="Вы точно уверены, что хотите удалить эту вакансию из анкет кандидатов?"
         confirmText="Да, удалить"
         cancelText="Отмена"
-      />
+      /> */}
     </>
   )
 }
