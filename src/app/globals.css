@@ -142,6 +142,10 @@ header p {
 #nonTextImg {
   height: 40px;
   width: 40px;
+  @media (width < 1024px) {
+    height: 32px;
+    width: 32px;
+  }
 }
 
 section {
