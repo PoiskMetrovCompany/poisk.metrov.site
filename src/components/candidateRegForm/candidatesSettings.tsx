@@ -30,18 +30,18 @@ const CandidatesSettings: FC = () => {
     response: boolean
     attributes: IRole[]
   }>(["vacancies"], `${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
-    staleTime: 30 * 60 * 1000, // 30 минут - увеличиваем время жизни кэша
-    gcTime: 60 * 60 * 1000, // 1 час - увеличиваем время хранения в памяти
+    staleTime: 30 * 60 * 1000, 
+    gcTime: 60 * 60 * 1000,
     retry: 2,
-    refetchOnMount: false, // Не делать refetch при монтировании компонента
-    refetchOnWindowFocus: false, // Не делать refetch при фокусе окна
-    refetchOnReconnect: false, // Не делать refetch при восстановлении соединения
+    refetchOnMount: false, 
+    refetchOnWindowFocus: false, 
+    refetchOnReconnect: false, 
   })
 
-  // Извлекаем роли из ответа API
+
   const roles = rolesData?.attributes || []
 
-  // Мутация для создания новой роли
+  
   const createRoleMutation = useApiMutation<
     { id: string; key: string; title: string },
     { title: string }

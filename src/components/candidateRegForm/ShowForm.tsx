@@ -15,6 +15,42 @@ interface SelectOption {
   text: string
 }
 
+interface EducationalInstitution {
+  institution_name?: string
+  start_date?: string
+  end_date?: string
+  education_type?: string
+  specialty?: string
+}
+
+interface Course {
+  institution_name?: string
+  course_name?: string
+  start_date?: string
+  end_date?: string
+}
+
+interface FamilyMember {
+  full_name?: string
+  birth_date?: string
+  phone?: string
+  work_study_place?: string
+  residence_address?: string
+}
+
+interface AdultFamilyMember {
+  relationship_and_name?: string
+  birth_date?: string
+  phone?: string
+  work_study_place?: string
+  residence_address?: string
+}
+
+interface ApiResponse {
+  response?: boolean
+  attributes?: CandidateData
+}
+
 interface CandidateData {
   id: string | number
   key?: string
@@ -54,27 +90,9 @@ interface CandidateData {
       title?: string
     }
   }
-  family_partner?: Array<{
-    full_name?: string
-    birth_date?: string
-    phone?: string
-    work_study_place?: string
-    residence_address?: string
-  }>
-  adult_children?: Array<{
-    full_name?: string
-    birth_date?: string
-    phone?: string
-    work_study_place?: string
-    residence_address?: string
-  }>
-  adult_family_members?: Array<{
-    relationship_and_name?: string
-    birth_date?: string
-    phone?: string
-    work_study_place?: string
-    residence_address?: string
-  }>
+  family_partner?: FamilyMember[] | FamilyMember
+  adult_children?: FamilyMember[]
+  adult_family_members?: AdultFamilyMember[]
   serviceman?: boolean | number
   law_breaker?: string
   legal_entity?: string
@@ -319,7 +337,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
   }
 
   // Функция для парсинга JSON строк
-  const parseJsonField = (jsonString?: string): any[] => {
+  const parseJsonField = <T,>(jsonString?: string): T[] => {
     if (!jsonString || jsonString === null || jsonString === "null") return []
     try {
       const parsed = JSON.parse(jsonString)
@@ -512,7 +530,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
   // Обрабатываем данные кандидата из API
   useEffect(() => {
     if (candidateApiData && typeof candidateApiData === "object") {
-      const apiData = candidateApiData as any // Type assertion для работы с внешним API
+      const apiData = candidateApiData as ApiResponse
       console.log("Получены данные от API:", apiData)
 
       if (apiData.response && apiData.attributes) {
@@ -524,19 +542,21 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
         // Устанавливаем текущий статус в селектор
         const currentStatus = data.status
-        const statusOption = selectOptions.find(
-          (option) => option.text === currentStatus
-        )
+        if (currentStatus) {
+          const statusOption = selectOptions.find(
+            (option) => option.text === currentStatus
+          )
 
-        if (statusOption) {
-          setSelectedOption(statusOption)
-        } else {
-          // Если статус не найден в списке, создаем новый объект
-          const newOption = {
-            value: getStatusValue(currentStatus),
-            text: currentStatus,
+          if (statusOption) {
+            setSelectedOption(statusOption)
+          } else {
+            // Если статус не найден в списке, создаем новый объект
+            const newOption = {
+              value: getStatusValue(currentStatus),
+              text: currentStatus,
+            }
+            setSelectedOption(newOption)
           }
-          setSelectedOption(newOption)
         }
 
         if (data.comment) {
@@ -820,15 +840,17 @@ const ShowForm: React.FC<ShowFormProps> = ({
   }
 
   // Парсим данные об образовании, курсах и работе
-  const educationalInstitutions = parseJsonField(
+  const educationalInstitutions = parseJsonField<EducationalInstitution>(
     candidateData.educational_institution
   )
-  const courses = parseJsonField(candidateData.courses)
+  const courses = parseJsonField<Course>(candidateData.courses)
 
   const hasPartner =
     candidateData.family_partner &&
-    Array.isArray(candidateData.family_partner) &&
-    candidateData.family_partner.length > 0
+    ((Array.isArray(candidateData.family_partner) &&
+      candidateData.family_partner.length > 0) ||
+      (!Array.isArray(candidateData.family_partner) &&
+        candidateData.family_partner.full_name))
 
   const hasAdultChildren =
     candidateData.adult_children &&
@@ -1152,7 +1174,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
                 {/* Динамические данные об образовательных учреждениях */}
                 {educationalInstitutions.length > 0 &&
                   educationalInstitutions.map(
-                    (institution: any, index: number) => (
+                    (institution: EducationalInstitution, index: number) => (
                       <div key={index} className="formRow">
                         <table className="inputTable showTable">
                           <tbody>
@@ -1215,7 +1237,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
                 {/* Динамические данные о курсах */}
                 {courses.length > 0 &&
-                  courses.map((course: any, index: number) => (
+                  courses.map((course: Course, index: number) => (
                     <div key={index} className="formRow">
                       <table className="inputTable showTable">
                         <tbody>
@@ -1602,7 +1624,9 @@ const ShowForm: React.FC<ShowFormProps> = ({
                           name="FIOSuprug"
                           placeholder="ФИО супруга(-и)"
                           value={
-                            candidateData.family_partner[0]?.full_name || ""
+                            Array.isArray(candidateData.family_partner)
+                              ? candidateData.family_partner[0]?.full_name || ""
+                              : candidateData.family_partner?.full_name || ""
                           }
                           readOnly
                         />
@@ -1615,7 +1639,9 @@ const ShowForm: React.FC<ShowFormProps> = ({
                           name="dateOfBirthTable"
                           placeholder="Дата рождения"
                           value={formatDate(
-                            candidateData.family_partner[0]?.birth_date
+                            Array.isArray(candidateData.family_partner)
+                              ? candidateData.family_partner[0]?.birth_date
+                              : candidateData.family_partner?.birth_date
                           )}
                           readOnly
                         />
@@ -1625,7 +1651,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
                           type="tel"
                           name="phoneNumberTable"
                           placeholder="Телефон"
-                          value={candidateData.family_partner[0]?.phone || ""}
+                          value={
+                            Array.isArray(candidateData.family_partner)
+                              ? candidateData.family_partner[0]?.phone || ""
+                              : candidateData.family_partner?.phone || ""
+                          }
                           readOnly
                         />
                       </td>
@@ -1637,8 +1667,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
                           name="placeOfStudy"
                           placeholder="Место учебы/работы, рабочий телефон"
                           value={
-                            candidateData.family_partner[0]?.work_study_place ||
-                            ""
+                            Array.isArray(candidateData.family_partner)
+                              ? candidateData.family_partner[0]
+                                  ?.work_study_place || ""
+                              : candidateData.family_partner
+                                  ?.work_study_place || ""
                           }
                           readOnly
                         />
@@ -1649,8 +1682,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
                           name="placeOfLiving"
                           placeholder="Место проживания"
                           value={
-                            candidateData.family_partner[0]
-                              ?.residence_address || ""
+                            Array.isArray(candidateData.family_partner)
+                              ? candidateData.family_partner[0]
+                                  ?.residence_address || ""
+                              : candidateData.family_partner
+                                  ?.residence_address || ""
                           }
                           readOnly
                         />

@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 
-import { ResidentialComplexDataResponse } from "@/types/api/complex"
+import { IInclude, ResidentialComplexDataResponse } from "@/types/api/complex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./flatList.module.scss"
@@ -16,7 +16,7 @@ interface FlatListProps {
 }
 
 const FlatList: FC<FlatListProps> = ({ complexKey }) => {
-  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${complexKey}&includes=Apartment`
+  const FULL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${complexKey}&includes=Apartment`
   const {
     data: flatListData,
     isLoading,
@@ -62,11 +62,10 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
 
       <LayoutList
         apartments={
-
           (Array.isArray(flatListData.attributes)
             ? flatListData.attributes[0]
             : flatListData.attributes
-          )?.includes?.find((include: any) => include.type === "apartment")
+          )?.includes?.find((include: IInclude) => include.type === "apartment")
             ?.attributes || []
         }
       />
