@@ -98,10 +98,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+  const [allCandidates, setAllCandidates] = useState<Candidate[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMorePages, setHasMorePages] = useState(true)
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false)
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
-
       if (!element || !element.isConnected) return
 
       const sectionElement = element as HTMLElement
@@ -517,6 +521,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         )
 
         setCandidates(transformedCandidates)
+        setAllCandidates(transformedCandidates)
+        setCurrentPage(data.attributes.current_page)
+        setHasMorePages(
+          data.attributes.current_page < data.attributes.last_page
+        )
         setPagination({
           current_page: data.attributes.current_page,
           last_page: data.attributes.last_page,
@@ -608,6 +617,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       ]
 
       setCandidates(mockCandidates)
+      setAllCandidates(mockCandidates)
+      setCurrentPage(1)
+      setHasMorePages(false)
       setPagination({
         current_page: 1,
         last_page: 1,
@@ -642,6 +654,74 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       page !== pagination.current_page
     ) {
       fetchCandidates(page, activeFilters !== null)
+    }
+  }
+
+  const handleLoadMore = async () => {
+    if (loadMoreLoading || !hasMorePages) return
+
+    setLoadMoreLoading(true)
+    const nextPage = currentPage + 1
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      let url = `/api/v1/candidates/?page=${nextPage}&city_work=${encodeURIComponent(
+        selectedCity
+      )}`
+
+      const headers: Record<string, string> = {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+
+      const csrfToken = getCsrfToken()
+      if (csrfToken) {
+        headers["X-CSRF-TOKEN"] = csrfToken
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.response && data.attributes) {
+        const newCandidates = data.attributes.data.map((candidate: any) => ({
+          id: candidate.id,
+          name: `${candidate.last_name} ${candidate.first_name} ${
+            candidate.middle_name || ""
+          }`.trim(),
+          rop: "Маликова Е.",
+          datetime: formatDateTime(
+            candidate.created_at || new Date().toISOString()
+          ),
+          vacancy: candidate.vacancy?.attributes?.title || "Не указана",
+          status: candidate.status || "Не определен",
+          statusID: getStatusId(candidate.status),
+          hasVacancyComment: candidate.comment,
+          vacancyKey: candidate.key,
+          fullData: candidate,
+        }))
+
+        setAllCandidates((prev) => [...prev, ...newCandidates])
+        setCandidates((prev) => [...prev, ...newCandidates])
+        setCurrentPage(nextPage)
+        setHasMorePages(nextPage < data.attributes.last_page)
+      }
+    } catch (err) {
+      console.error("Ошибка при загрузке дополнительных кандидатов:", err)
+    } finally {
+      setLoadMoreLoading(false)
     }
   }
 
@@ -697,6 +777,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         })
       )
       setCandidates(transformedCandidates)
+      setAllCandidates(transformedCandidates)
+      setCurrentPage(filteredData.attributes.current_page)
+      setHasMorePages(
+        filteredData.attributes.current_page < filteredData.attributes.last_page
+      )
       setPagination({
         current_page: filteredData.attributes.current_page,
         last_page: filteredData.attributes.last_page,
@@ -716,7 +801,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024)
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      setIsTablet(width < 1024)
     }
 
     handleResize()
@@ -928,102 +1015,170 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
               ))}
             </div>
 
-            <FormRow
-              className="w-80"
-              justifyContent="space-between"
-              style={{ marginTop: "2rem" }}
-            >
-              <div className="left-side">
-                <button
-                  id="prevBtn"
-                  className={`navBtn ${
-                    pagination.current_page === 1 ? "inactive" : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page - 1)}
-                  disabled={pagination.current_page === 1}
-                >
-                  Предыдущая
-                </button>
-                <div className="pagination">
-                  {generatePageNumbers().map((page, index) => (
-                    <button
-                      key={index}
-                      className={`paginationBtn ${
-                        page === pagination.current_page ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        typeof page === "number"
-                          ? handlePageChange(page)
-                          : undefined
-                      }
-                      disabled={typeof page !== "number"}
+            {/* Мобильная пагинация */}
+            {isMobile ? (
+              <div className="mobile-pagination-container">
+                <div className="load-more-section">
+                  <button
+                    className="load-more-btn"
+                    onClick={handleLoadMore}
+                    disabled={!hasMorePages || loadMoreLoading}
+                  >
+                    {loadMoreLoading ? "Загрузка..." : "Показать еще"}
+                  </button>
+                </div>
+                <div className="download-button-group">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={selectedKeys.length === 0 || deleteLoading}
+                  >
+                    {deleteLoading ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={downloadLoading}
+                  >
+                    {downloadLoading ? "Скачивание..." : "Скачать выбранные"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={downloadLoading}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
                     >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  id="nexBtn"
-                  className={`navBtn ${
-                    pagination.current_page === pagination.last_page
-                      ? "inactive"
-                      : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page + 1)}
-                  disabled={pagination.current_page === pagination.last_page}
-                >
-                  Следующая
-                </button>
-              </div>
-              <div className="download-button-group right-side">
-                <button
-                  className="deleteBtn"
-                  onClick={handleDeleteClick}
-                  disabled={selectedKeys.length === 0 || deleteLoading}
-                >
-                  {deleteLoading ? "Удаление..." : "Удалить"}
-                </button>
-                <button
-                  className="download-btn primary"
-                  onClick={handleDownload}
-                  disabled={downloadLoading}
-                >
-                  {downloadLoading ? "Скачивание..." : "Скачать"}
-                </button>
-                <button
-                  className="download-btn dropdown-toggle"
-                  onClick={handleFormatDropdownToggle}
-                  disabled={downloadLoading}
-                >
-                  <span className="format-text">{selectedFormat}</span>
-                  <Image
-                    src="/images/icons/chevron-down.svg"
-                    alt="Dropdown"
-                    width={16}
-                    height={16}
-                    className="chevron-down"
-                  />
-                </button>
-                <div
-                  className={`file-formats-card ${
-                    isFormatDropdownOpen ? "" : "hide"
-                  }`}
-                >
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".xlsx")}
-                  >
-                    .xlsx
-                  </div>
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".pdf")}
-                  >
-                    .pdf
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
                   </div>
                 </div>
               </div>
-            </FormRow>
+            ) : (
+              /* Десктопная пагинация */
+              <FormRow
+                className="w-80 pagination-container"
+                justifyContent="space-between"
+                style={{ marginTop: "2rem", padding: "0 20px" }}
+              >
+                <div className="left-side">
+                  <button
+                    id="prevBtn"
+                    className={`navBtn ${
+                      pagination.current_page === 1 ? "inactive" : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page - 1)
+                    }
+                    disabled={pagination.current_page === 1}
+                  >
+                    {isTablet ? "Пред" : "Предыдущая"}
+                  </button>
+                  <div className="pagination">
+                    {generatePageNumbers().map((page, index) => (
+                      <button
+                        key={index}
+                        className={`paginationBtn ${
+                          page === pagination.current_page ? "active" : ""
+                        }`}
+                        onClick={() =>
+                          typeof page === "number"
+                            ? handlePageChange(page)
+                            : undefined
+                        }
+                        disabled={typeof page !== "number"}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    id="nexBtn"
+                    className={`navBtn ${
+                      pagination.current_page === pagination.last_page
+                        ? "inactive"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page + 1)
+                    }
+                    disabled={pagination.current_page === pagination.last_page}
+                  >
+                    {isTablet ? "След" : "Следующая"}
+                  </button>
+                </div>
+                <div className="download-button-group right-side">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={selectedKeys.length === 0 || deleteLoading}
+                  >
+                    {deleteLoading ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={downloadLoading}
+                  >
+                    {downloadLoading ? "Скачивание..." : "Скачать"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={downloadLoading}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
+                    >
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
+                  </div>
+                </div>
+              </FormRow>
+            )}
           </>
         )}
       </section>

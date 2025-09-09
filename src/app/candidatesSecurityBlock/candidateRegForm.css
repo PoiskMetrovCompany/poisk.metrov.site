@@ -1286,6 +1286,9 @@ input[type="checkbox"] + label {
   color: #f13131;
   margin-right: 12px;
   padding: 10px 24px;
+  @media (width < 1024px) {
+    padding: 0px 20px;
+  }
 }
 
 .downloadBtn {
@@ -1322,12 +1325,12 @@ input[type="checkbox"] + label {
 
 #checked {
   background: rgb(228 248 228 / 100%);
-  color: сrgb(15 141 19 / 100%);
+  color: #0f8d13;
 }
 
 #startWorking {
-  background-color: rgb(151 215 153);
-  color: rgb(44 83 45);
+  background-color: #ffe4cd;
+  color: #ff7c11;
 }
 
 #accepted {
@@ -1354,6 +1357,13 @@ input[type="checkbox"] + label {
   color: rgb(240 76 26 / 100%);
 }
 
+.pagination-container {
+  @media (width < 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .left-side {
   display: inline-flex;
   gap: 1.5rem;
@@ -1371,6 +1381,10 @@ input[type="checkbox"] + label {
   height: 42px;
 
   width: 149px;
+  @media (width < 1024px) {
+    height: 32px;
+    width: 65px;
+  }
 }
 
 .navBtn:hover {
@@ -1400,6 +1414,11 @@ input[type="checkbox"] + label {
   padding: 0;
 
   width: 42px;
+  @media (width < 1024px) {
+    border-radius: 16px;
+    height: 32px;
+    width: 32px;
+  }
 }
 
 .paginationBtn:first-child {
@@ -1448,14 +1467,65 @@ input[type="checkbox"] + label {
   color: white !important;
 }
 
-/* Контейнер для группы кнопок скачивания */
 .download-button-group {
   border-radius: 25px;
   display: flex;
   position: relative;
+  @media (width < 1024px) {
+    height: 32px;
+  }
+  @media (width < 768px) {
+    justify-content: center;
+    margin-top: 20px;
+  }
 }
 
-/* Основная кнопка скачивания */
+
+.mobile-pagination-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 2rem;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.load-more-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.load-more-btn {
+  background: #E9E9E9;
+  border: none;
+  border-radius: 16px;
+  color: #494949;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  height: 42px;
+  padding: 14px 20px;
+  transition: all 0.2s ease;
+  width: auto;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: #ec7d3f;
+  color: white;
+}
+
+.load-more-btn:disabled {
+  background: #e4e4e4;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.mobile-pagination-container .download-button-group {
+  justify-content: center;
+  margin-top: 0;
+}
+
 .download-btn.primary {
   background: rgb(236 125 63 / 100%);
   border: none;
@@ -1463,14 +1533,14 @@ input[type="checkbox"] + label {
   color: white;
   cursor: pointer;
 
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 500;
 
-  min-width: 100px;
-  padding: 12px 24px;
+  padding: 9px 24px;
   text-align: center;
 
   transition: background-color 0.2s ease;
+  width: 101px;
 }
 
 .download-btn.primary:hover {
@@ -2485,6 +2555,28 @@ input[type="checkbox"] + label {
   .redactBtn .comment-tooltip {
     font-size: 0.625rem;
   }
+
+  /* Мобильная пагинация для очень маленьких экранов */
+  .load-more-btn {
+    font-size: 0.75rem;
+    height: 32px;
+    padding: 0 16px;
+  }
+
+  .mobile-pagination-container .download-btn.primary {
+    font-size: 0.625rem;
+    padding: 6px 12px;
+  }
+
+  .mobile-pagination-container .download-btn.dropdown-toggle {
+    font-size: 0.625rem;
+    padding: 6px 10px;
+  }
+
+  .mobile-pagination-container .deleteBtn {
+    font-size: 0.625rem;
+    padding: 6px 12px;
+  }
 }
 
 /* Адаптивные контейнеры для таблицы */
@@ -2505,6 +2597,34 @@ input[type="checkbox"] + label {
     display: block;
     padding: 0 20px;
     width: 100%;
+  }
+
+  /* Мобильная пагинация */
+  .mobile-pagination-container {
+    padding: 0 20px;
+  }
+
+  .load-more-btn {
+    font-size: 0.875rem;
+    height: 36px;
+    padding: 0 20px;
+  }
+
+
+  .mobile-pagination-container .download-btn.primary {
+    font-size: 0.75rem;
+    padding: 8px 16px;
+    width: auto;
+  }
+
+  .mobile-pagination-container .download-btn.dropdown-toggle {
+    font-size: 0.75rem;
+    padding: 8px 12px;
+  }
+
+  .mobile-pagination-container .deleteBtn {
+    font-size: 0.75rem;
+    padding: 8px 16px;
   }
 
   /* Мобильные карточки кандидатов */
