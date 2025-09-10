@@ -364,6 +364,13 @@ form {
   transition: background ease-in-out 0.3s;
 
   width: 21rem; /* 336px */
+  @media (width < 1440px) {
+    font-size: 13px;
+  }
+  @media (width < 768px) {
+    font-size: 12px;
+    height: 40px !important;
+  }
 }
 
 .formBtn.small {
@@ -423,6 +430,15 @@ form {
 
   margin: 0.375rem; /* 20px */
   padding: 0.5rem 1rem; /* 8px 16px */
+  @media (width < 1920px) {
+    height: 31px;
+    font-size: 15px;
+    padding: 4px 16px;
+  }
+  @media (width < 768px) {
+    height: 29px;
+    font-size: 14px;
+  }
 }
 
 .filterButton.active {
@@ -496,12 +512,12 @@ form {
   height: 18px;
   width: 18px;
   @media (width < 1920px) {
-    width: 14px;
     height: 14px;
+    width: 14px;
   }
   @media (width < 768px) {
-    width: 12px;
     height: 12px;
+    width: 12px;
   }
 }
 .filtersRow {
@@ -1903,25 +1919,68 @@ input[type="checkbox"] + label {
   border-bottom: none;
 }
 
+.filters-window {
+  background-color: rgb(255 255 255 / 100%);
+  border-radius: 2rem; /* 32px */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  margin-bottom: 40px;
+  min-height: auto;
+  padding: 64px;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  @media (width < 1920px) {
+    padding: 40px;
+  }
+  @media (width < 1440px) {
+    padding: 32px 40px;
+  }
+  @media (width < 768px) {
+    padding: 24px 16px;
+  }
+}
+
 .calendar-filter-panel {
   background: #fff;
   box-shadow: -2px 0 16px rgb(0 0 0 / 8%);
+  display: flex;
   height: 100vh;
 
   overflow-y: auto;
   padding-bottom: 0;
   position: fixed;
-  right: -900px;
+  right: 0;
   top: 0;
+  transform: translateX(100%);
 
-  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  width: 900px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 768px;
   z-index: 1000;
 }
 
+@media (width < 1920px) {
+  .calendar-filter-panel {
+    width: 664px;
+  }
+}
+
+@media (width < 1440px) {
+  .calendar-filter-panel {
+    width: 600px;
+  }
+}
+
+@media (width < 768px) {
+  .calendar-filter-panel {
+    width: 100%;
+  }
+}
+
 .calendar-filter-panel.open {
-  right: 0;
+  transform: translateX(0);
 }
 
 .calendar-filter-panel .close-btn {
@@ -1938,6 +1997,44 @@ input[type="checkbox"] + label {
   z-index: 10;
 }
 
+.filters-window .formRow {
+  margin-top: 1.875rem; /* 30px */
+}
+
+.filters-window .formRow:first-child {
+  margin-top: 20px;
+}
+
+.filters-window h1 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.filters-window h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  text-align: left;
+  width: 100%;
+}
+
+.filters-window h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.filters-window h4 {
+  color: #818181;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  margin-top: 1.25rem; /* 20px */
+  text-align: center;
+  width: 100%;
+}
 .roleItem {
   background: rgb(236 125 63 / 10%);
   border-radius: 24px;
@@ -2773,6 +2870,48 @@ input[type="checkbox"] + label {
 
 .mobile-cards-container {
   display: none;
+}
+
+/* Мобильная версия календаря - один календарь */
+@media screen and (width <= 768px) {
+  .calendar-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .calendar-wrapper {
+    flex: none;
+    width: 100%;
+  }
+
+  .calendar-wrapper.mobile-hidden {
+    display: none;
+  }
+
+  .calendar-header .month-year {
+    font-size: 1rem;
+  }
+
+  .calendar th {
+    font-size: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .calendar td {
+    font-size: 0.75rem;
+    height: 1.5rem;
+  }
+
+  .calendar td .day-number {
+    line-height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  .nav-arrow {
+    font-size: 1rem;
+    height: 1rem;
+    width: 1rem;
+  }
 }
 
 @media screen and (width <= 768px) {
