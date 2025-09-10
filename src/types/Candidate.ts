@@ -138,6 +138,7 @@ export interface ICandidateTableData {
   created_at: string
   status: string
   comment: string
+  work_team: string | null
   vacancy: {
     attributes: {
       title: string
@@ -259,6 +260,7 @@ export interface ICandidate {
   key: string
   vacancy: ICandidateVacancy
   marital_statuses: ICandidateMaritalStatus
+  work_team: string | null
   status: CandidateStatus
   first_name: string
   last_name: string
