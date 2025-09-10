@@ -838,7 +838,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
         <section className={formStyles.section}>
           <div className={`center-card big ${formStyles.centerCard}`}>
             <div className="fixedMenu">
-              <div className="navArea" style={{display: "none"}}>
+              <div className="navArea" style={{ display: "none" }}>
                 <div
                   className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
                   id="customSelect"
@@ -882,7 +882,10 @@ const ShowForm: React.FC<ShowFormProps> = ({
                 <a href="#familyData">Состав семьи</a>
                 <a href="#legalData">Юридический статус</a>
               </div>
-              <div className="navArea" style={{ marginTop: "3rem" }} style={{display: "none"}}>
+              <div
+                className="navArea"
+                style={{ marginTop: "3rem", display: "none" }}
+              >
                 <textarea
                   name="comment"
                   id="commentArea"
@@ -916,10 +919,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
               Вернуться к списку
             </p>
 
-            <div
-              className={`formRow justify-space-between ${formStyles.formRow}`}
-              id="generalData"
-            >
+            <div className={`formRow ${formStyles.formRow}`} id="generalData">
               <h3
                 style={{ width: "auto", display: "flex", alignItems: "center" }}
                 className={formStyles.formRowH3}
@@ -933,15 +933,8 @@ const ShowForm: React.FC<ShowFormProps> = ({
                   .filter(Boolean)
                   .join(",    ")}
               </h3>
-              <p style={{ fontSize: "16px" }} className={formStyles.formRowP}>
-                Дата подачи
-              </p>
             </div>
-            <span id="line"></span>
-            <div
-              className={`formRow justify-space-between ${formStyles.formRow}`}
-              style={{ marginTop: "0rem" }}
-            >
+            <div className={`formRow ${formStyles.formRow}`} id="vacancyData">
               <h4
                 style={{
                   width: "auto",
@@ -954,6 +947,15 @@ const ShowForm: React.FC<ShowFormProps> = ({
                 {candidateData.vacancy?.attributes?.title ||
                   "Вакансия не указана"}
               </h4>
+            </div>
+            <span id="line"></span>
+            <div
+              className={`formRow justify-space-between ${formStyles.formRow}`}
+              id="submissionData"
+            >
+              <p style={{ fontSize: "16px" }} className={formStyles.formRowP}>
+                Дата подачи
+              </p>
               <p style={{ fontSize: "16px" }} className={formStyles.formRowP}>
                 {formatDate(candidateData.created_at)}
               </p>
