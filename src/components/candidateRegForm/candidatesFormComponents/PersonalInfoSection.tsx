@@ -1,9 +1,11 @@
 import React, { FC } from "react"
-import { FormRow } from "./FormRow"
+
 import { FormInput } from "./FormInput"
+import { FormRow } from "./FormRow"
 import { RadioGroup } from "./RadioGroup"
-import CustomSelect from "@/components/ui/inputs/select/customSelect"
 import { SectionHeader } from "./SectionHeader"
+
+import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
 interface PersonalInfoSectionProps {
   formData: Record<string, any>
@@ -24,6 +26,9 @@ interface PersonalInfoSectionProps {
   selectedROP: string
   setSelectedROP: React.Dispatch<React.SetStateAction<string>>
   ropOptions: string[]
+  isLoadingROP: boolean
+  ropError: string
+  loadROP: () => void
   // Добавляем новые пропсы для валидации
   validationErrors: Record<string, boolean>
   triggerValidation: boolean
@@ -48,6 +53,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   selectedROP,
   setSelectedROP,
   ropOptions,
+  isLoadingROP,
+  ropError,
+  loadROP,
   validationErrors,
   triggerValidation,
 }) => {
@@ -147,7 +155,8 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       </FormRow>
 
       <FormRow className="justify-flex-start required">
-        <p className="textLeft"
+        <p
+          className="textLeft"
           style={{
             marginTop: 0,
             marginLeft: "0.4375rem",
@@ -180,9 +189,36 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
                 placeholder="Выберите РОП"
                 value={selectedROP}
                 onChange={setSelectedROP}
+                isLoading={isLoadingROP}
                 required={true}
                 error={hasError("selectedROP")}
+                ropSelect={true}
               />
+              {ropError && (
+                <div
+                  className="error-message"
+                  style={{
+                    marginTop: "5px",
+                    fontSize: "14px",
+                    color: "#e74c3c",
+                  }}
+                >
+                  {ropError}
+                  <button
+                    onClick={loadROP}
+                    style={{
+                      marginLeft: "10px",
+                      background: "none",
+                      border: "none",
+                      color: "#3498db",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    Повторить
+                  </button>
+                </div>
+              )}
             </div>
           </FormRow>
         </div>

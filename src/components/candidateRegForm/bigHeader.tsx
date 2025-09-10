@@ -1,5 +1,6 @@
 "use client"
-import React, { FC, useState, useEffect, useRef } from "react"
+
+import React, { FC, useEffect, useRef, useState } from "react"
 
 import Image from "next/image"
 
@@ -87,7 +88,6 @@ const BigHeader: FC<IHeaderProps> = ({
     const fetchNotifications = async () => {
       setLoading(true)
       const url = "/api/v1/notification/new-candidates"
-
 
       const getAccessToken = (): string | null => {
         const cookies = document.cookie.split(";")

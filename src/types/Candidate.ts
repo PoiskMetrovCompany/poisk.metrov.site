@@ -109,6 +109,26 @@ export interface IRopItem {
   key: string
 }
 
+export interface IROPAccount {
+  id: number
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+  key: string
+  role: string
+  phone: string | null
+  email: string | null
+  secret: string
+  last_name: string | null
+  first_name: string | null
+  middle_name: string | null
+}
+
+export interface IROPAccountsResponse {
+  request: boolean
+  attributes: IROPAccount[]
+}
+
 export interface ICandidateTableData {
   id: number
   key: string

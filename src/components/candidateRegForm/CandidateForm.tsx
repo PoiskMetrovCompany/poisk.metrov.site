@@ -10,6 +10,8 @@ import {
   ICandidateFormData,
   ICandidateFormResponse,
   IMaritalStatusItem,
+  IROPAccount,
+  IROPAccountsResponse,
   IRopItem,
   IVacancyItem,
 } from "@/types/Candidate"
@@ -37,6 +39,7 @@ interface ICandidateFormRequest {
   vacancies_key: string
   marital_statuses_key: string
   rop_key: string | null
+  work_team: string | null
   status: string
   first_name: string
   last_name: string
@@ -175,6 +178,9 @@ const CandidateForm: FC = () => {
   ]
 
   const [ropOptions, setRopOptions] = useState<string[]>([])
+  const [ropData, setRopData] = useState<IROPAccount[]>([])
+  const [isLoadingROP, setIsLoadingROP] = useState(false)
+  const [ropError, setRopError] = useState("")
 
   const mockMaritalStatusData = [
     { title: "Не женат/Не замужем", key: "single" },
@@ -250,6 +256,42 @@ const CandidateForm: FC = () => {
         return response.data.attributes
       } else {
         throw new Error("Ошибка при получении данных семейного положения")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const {
+    data: ropAccountsData,
+    isLoading: isLoadingROPAccounts,
+    error: ropAccountsQueryError,
+  } = useQuery<IROPAccount[]>({
+    queryKey: ["ropAccounts"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        return []
+      }
+
+      const response = await axios.get<IROPAccountsResponse>(
+        `${API_BASE_URL}/account/list`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+
+      if (response.data.request && response.data.attributes) {
+        // Фильтруем только РОПов
+        return response.data.attributes.filter(
+          (account) => account.role === "РОП"
+        )
+      } else {
+        throw new Error("Ошибка при получении данных РОП")
       }
     },
     retry: 1,
@@ -684,14 +726,28 @@ const CandidateForm: FC = () => {
   }
 
   const loadROPData = () => {
-    const ropTitles = mockROPData.map((rop) => rop.title)
-    setRopOptions(ropTitles)
-    ;(window as unknown as Record<string, unknown>).ropData = mockROPData
+    if (ropAccountsData && ropAccountsData.length > 0) {
+      const ropTitles = ropAccountsData.map((rop) => {
+        const fullName =
+          `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        return fullName || "Не указано"
+      })
+      setRopOptions(ropTitles)
+      setRopData(ropAccountsData)
+    } else {
+      const ropTitles = mockROPData.map((rop) => rop.title)
+      setRopOptions(ropTitles)
+      setRopData([])
+    }
+  }
+
+  const loadROP = () => {
+    window.location.reload()
   }
 
   useEffect(() => {
     loadROPData()
-  }, [])
+  }, [ropAccountsData])
 
   const vacancyOptions = vacanciesData
     ? vacanciesData.map((vacancy: IVacancyItem) => vacancy.title)
@@ -743,8 +799,36 @@ const CandidateForm: FC = () => {
   }
 
   const getROPKey = (selectedTitle: string): string => {
-    const rop = mockROPData.find((r: IRopItem) => r.title === selectedTitle)
-    return rop ? rop.key : ""
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop ? rop.key : ""
+    } else {
+      // Fallback на моковые данные
+      const rop = mockROPData.find((r: IRopItem) => r.title === selectedTitle)
+      return rop ? rop.key : ""
+    }
+  }
+
+  const getROPFullName = (selectedTitle: string): string => {
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop
+        ? `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        : ""
+    } else {
+      // Fallback на моковые данные
+      return selectedTitle
+    }
   }
 
   const addEducationTable = () => {
@@ -868,6 +952,7 @@ const CandidateForm: FC = () => {
       vacancies_key: getVacancyKey(selectedVacancy),
       marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
       rop_key: goingToROP ? getROPKey(selectedROP) : null,
+      work_team: goingToROP ? getROPFullName(selectedROP) : null,
       status: "active",
       first_name: nameData.first_name,
       last_name: nameData.last_name,
@@ -971,6 +1056,9 @@ const CandidateForm: FC = () => {
                 selectedROP={selectedROP}
                 setSelectedROP={setSelectedROP}
                 ropOptions={ropOptions}
+                isLoadingROP={isLoadingROPAccounts}
+                ropError={ropAccountsQueryError?.message || ""}
+                loadROP={loadROP}
                 validationErrors={validationErrors}
                 triggerValidation={triggerValidation}
               />

@@ -5,8 +5,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import React, { FC, KeyboardEvent, useEffect, useState } from "react"
 
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
-import { useApiMutation, useApiQuery } from "@/utils/hooks/use-api"
+import {
+  useApiDelete,
+  useApiMutation,
+  useApiQuery,
+} from "@/utils/hooks/use-api"
 
 import AccessTable from "./accessTable/AccessTable"
 import ConfirmationModal from "./confirmationalWindow"
@@ -19,29 +24,55 @@ interface IRole {
 
 const CandidatesSettings: FC = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
-  // Запрос вакансий с использованием React Query
+  const getAccessToken = (): string | null => {
+    if (typeof document === "undefined") return null
+
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "access_token") {
+        return decodeURIComponent(value)
+      }
+    }
+    return null
+  }
+
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const accessToken = getAccessToken()
+    if (!accessToken) {
+      console.log(
+        "🔒 Access token не найден, перенаправляем на страницу логина"
+      )
+      router.push("/candidatesSecurityBlock/securityLogin")
+      setIsAuthorized(false)
+    } else {
+      console.log("✅ Access token найден, пользователь авторизован")
+      setIsAuthorized(true)
+    }
+  }, [router])
+
   const {
     data: rolesData,
     isLoading: isLoadingRoles,
     error: rolesError,
-    refetch,
   } = useApiQuery<{
     response: boolean
     attributes: IRole[]
   }>(["vacancies"], `${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
-    staleTime: 30 * 60 * 1000, 
+    staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     retry: 2,
-    refetchOnMount: false, 
-    refetchOnWindowFocus: false, 
-    refetchOnReconnect: false, 
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
-
 
   const roles = rolesData?.attributes || []
 
-  
   const createRoleMutation = useApiMutation<
     { id: string; key: string; title: string },
     { title: string }
@@ -70,7 +101,7 @@ const CandidatesSettings: FC = () => {
     },
   })
 
-  const deleteRoleMutation = useApiMutation<
+  const deleteRoleMutation = useApiDelete<
     { success: boolean },
     { key: string }
   >(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/destroy`, {
@@ -264,6 +295,29 @@ const CandidatesSettings: FC = () => {
     }
   }
 
+  // Показываем загрузку пока проверяем авторизацию
+  if (isAuthorized === null) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "18px",
+          color: "#666",
+        }}
+      >
+        Проверка авторизации...
+      </div>
+    )
+  }
+
+  // Если не авторизован, не рендерим контент (редирект уже произошел)
+  if (!isAuthorized) {
+    return null
+  }
+
   return (
     <>
       <main>
@@ -298,7 +352,9 @@ const CandidatesSettings: FC = () => {
                 >
                   {rolesError.message || "Ошибка при загрузке ролей"}
                   <button
-                    onClick={() => refetch()}
+                    onClick={() =>
+                      queryClient.invalidateQueries({ queryKey: ["vacancies"] })
+                    }
                     style={{
                       marginLeft: "10px",
                       background: "none",
@@ -422,7 +478,12 @@ const CandidatesSettings: FC = () => {
               <button
                 className="formBtn small btn-active"
                 onClick={handleAddRole}
-                disabled={isLoadingRoles}
+                disabled={
+                  isLoadingRoles ||
+                  createRoleMutation.isPending ||
+                  updateRoleMutation.isPending ||
+                  deleteRoleMutation.isPending
+                }
               >
                 {editingIndex !== null
                   ? "Подтвердить"
@@ -446,7 +507,13 @@ const CandidatesSettings: FC = () => {
                   className={`formBtn small ${
                     isEditing ? "btn-active" : "btn-inactive"
                   }`}
-                  disabled={editingIndex !== null || isLoadingRoles}
+                  disabled={
+                    editingIndex !== null ||
+                    isLoadingRoles ||
+                    createRoleMutation.isPending ||
+                    updateRoleMutation.isPending ||
+                    deleteRoleMutation.isPending
+                  }
                   onClick={handleEditMode}
                 >
                   {isEditing ? "Завершить редактирование" : "Редактировать"}
