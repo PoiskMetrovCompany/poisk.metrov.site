@@ -844,9 +844,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   return (
     <>
       <section style={{ flexWrap: "wrap", minHeight: "auto" }}>
-        <FormRow className="w-80" justifyContent="space-between">
+        <FormRow className="w-80 filtersRow" justifyContent="space-between">
           <div className="flex-direction-column">
-            <h1>Кандидаты</h1>
+            <h1 className="tableHeading">Кандидаты</h1>
             <button className="aButton" id="checkAll" onClick={handleSelectAll}>
               {candidates.length > 0 &&
               candidates.every((c) => selectedKeys.includes(c.vacancyKey))

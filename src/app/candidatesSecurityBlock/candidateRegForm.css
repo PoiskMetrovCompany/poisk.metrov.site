@@ -29,9 +29,9 @@ header {
   margin-bottom: 3rem;
 
   margin-top: 1rem;
+  margin: 12px 16px;
   position: relative;
   width: 100%;
-  margin: 12px 16px;
 }
 
 main {
@@ -441,12 +441,18 @@ form {
   color: #ec7d3f;
   cursor: pointer;
 
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.5;
 
   padding: 0;
   text-align: left;
+  @media (width < 1920px) {
+    font-size: 13px;
+  }
+  @media (width < 768px) {
+    font-size: 12px;
+  }
 }
 
 .aButton:hover {
@@ -458,23 +464,48 @@ form {
 
   background: #ec7d3f1a;
   border: none;
-  border-radius: 0.75rem; /* 12px */
+  border-radius: 12px;
+  box-sizing: border-box;
   color: #ec7d3f;
   cursor: pointer;
 
   display: flex;
+  font-size: 14px;
+  gap: 6px;
 
-  font-size: 1rem; /* 16px */
-  height: 1.3125rem; /* 21px */
-  height: 100%;
-  justify-content: space-around;
-  padding: 0.84375rem; /* 13.5px */
-
-  width: 8.75rem; /* 140px */
+  height: 48px;
+  padding: 14px 24px;
+  width: 140px;
+  @media (width < 1920px) {
+    font-size: 13px;
+    height: 40px;
+    padding: 14px 20px;
+    width: 121px;
+  }
+  @media (width < 768px) {
+    font-size: 11px;
+    height: 32px;
+    width: 102px;
+  }
 }
 
 #filters:hover {
   background: rgb(236 125 63 / 20%);
+}
+#filters img {
+  height: 18px;
+  width: 18px;
+  @media (width < 1920px) {
+    width: 14px;
+    height: 14px;
+  }
+  @media (width < 768px) {
+    width: 12px;
+    height: 12px;
+  }
+}
+.filtersRow {
+  padding: 20px 20px;
 }
 
 /* ==============================================
@@ -2364,14 +2395,6 @@ input[type="checkbox"] + label {
     font-size: 1rem;
   }
 
-  button.aButton {
-    font-size: 0.75rem;
-  }
-
-  button#filters {
-    font-size: 0.875rem;
-  }
-
   .custom-radio {
     font-size: 1rem;
   }
@@ -2594,10 +2617,6 @@ input[type="checkbox"] + label {
 
   button.aButton {
     font-size: 0.625rem;
-  }
-
-  button#filters {
-    font-size: 0.75rem;
   }
 
   .custom-radio {
@@ -3122,5 +3141,14 @@ input[type="checkbox"] + label {
 
   @media (width <= 768px) {
     font-size: 12px;
+  }
+}
+.tableHeading {
+  font-size: 24px !important;
+  @media (width < 1920px) {
+    font-size: 18px !important;
+  }
+  @media (width < 768px) {
+    font-size: 16px;
   }
 }
