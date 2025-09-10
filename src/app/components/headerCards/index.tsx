@@ -23,7 +23,7 @@ import Skeleton from "@/components/ui/skeleton"
 const HeaderCards = () => {
   const [currentTime, setCurrentTime] = useState(new Date())
   const CITY = "novosibirsk"
-  const API_URL = "http://localhost:1080/api/v1/cbr/actual-date/"
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/cbr/actual-date/`
   const {
     data: cbrData,
     isLoading: cbrLoading,
