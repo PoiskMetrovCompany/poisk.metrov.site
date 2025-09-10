@@ -1,23 +1,25 @@
 "use client"
-import React, { FC, useState, useEffect } from "react"
-import WorkExperienceTable from "./WorkExperienceTable"
-import SpouseTable from "./SpouseTable"
+
+import React, { FC, useEffect, useState } from "react"
+
+import Image from "next/image"
+
+import ChildrenTable from "./ChildrenTable"
 import CourseDataTable from "./CourseDataTable"
 import EducationDataTable from "./EducationDataTable"
 import RelativeTable from "./RelativeTable"
-import ChildrenTable from "./ChildrenTable"
-import CustomSelect from "@/components/ui/inputs/select/customSelect"
-import Image from "next/image"
-
-import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection"
+import SpouseTable from "./SpouseTable"
+import WorkExperienceTable from "./WorkExperienceTable"
 import { EducationSection } from "./candidatesFormComponents/EducationSection"
-import { PassportSection } from "./candidatesFormComponents/PassportSection"
 import { FormRow } from "./candidatesFormComponents/FormRow"
+import { PassportSection } from "./candidatesFormComponents/PassportSection"
+import { PersonalInfoSection } from "./candidatesFormComponents/PersonalInfoSection"
 import { RadioGroup } from "./candidatesFormComponents/RadioGroup"
 import { SectionHeader } from "./candidatesFormComponents/SectionHeader"
 import { SuccessMessage } from "./candidatesFormComponents/successMessage"
-
 import HeaderFormSmall from "./header"
+
+import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
 const CandidateForm: FC = () => {
   const [surnameChanged, setSurnameChanged] = useState(true)
@@ -1021,11 +1023,11 @@ const CandidateForm: FC = () => {
               </FormRow>
               <SpouseTable
                 formData={formData}
-                setFormData={handleSpouseFieldChange} 
+                setFormData={handleSpouseFieldChange}
                 isVisible={
                   selectedMaritalStatus === "Состою в зарегистрированном браке"
                 }
-                errors={spouseErrors} 
+                errors={spouseErrors}
               />
               <SectionHeader title="1. Дети старше 18 лет" />
               <FormRow justifyContent="flex-start" style={{ marginTop: 0 }}>
