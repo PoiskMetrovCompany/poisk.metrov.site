@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 
-import { ResidentialComplexDataResponse } from "@/types/api/complex"
+import { IInclude, ResidentialComplexDataResponse } from "@/types/api/complex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./flatList.module.scss"
@@ -17,6 +17,7 @@ interface FlatListProps {
 
 const FlatList: FC<FlatListProps> = ({ complexKey }) => {
   const FULL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.room`
+
   const {
     data: flatListData,
     isLoading,
@@ -61,6 +62,7 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
       </div>
 
       <LayoutList
+
         apartmentTypes={
           (() => {
             const apartmentInclude = flatListData?.attributes?.includes?.find(
@@ -72,6 +74,7 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
             }
             return attributes || {}
           })() as Record<string, any>
+
         }
       />
     </div>

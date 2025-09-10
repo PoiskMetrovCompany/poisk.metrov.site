@@ -1,5 +1,3 @@
-"use client"
-
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import IMask from "imask"
@@ -8,24 +6,15 @@ import React, { FC, useEffect, useRef, useState } from "react"
 
 import Image from "next/image"
 
+import {
+  IApiError,
+  IAuthResponse,
+  IMaskInstance,
+  IUserAttributes,
+} from "@/types/Candidate"
+
 import Timer from "./Timer"
 import HeaderFormSmall from "./header"
-
-interface IUserAttributes {
-  phone?: string
-  [key: string]: any
-}
-
-interface IAuthResponse {
-  request: boolean
-  attributes: {
-    access_token?: string
-    user: {
-      role: string
-    }
-    [key: string]: any
-  }
-}
 
 interface ISetCodeRequest {
   phone: string
@@ -41,7 +30,7 @@ interface IAuthRequest {
   code: string
 }
 
-const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 const CandidateRegForm: FC = () => {
   const [isCodeMode, setIsCodeMode] = useState(false)
@@ -58,10 +47,9 @@ const CandidateRegForm: FC = () => {
   const [timeLeft, setTimeLeft] = useState(60)
 
   const phoneInputRef = useRef<HTMLInputElement>(null)
-  const currentMaskRef = useRef<any>(null)
+  const currentMaskRef = useRef<IMaskInstance | null>(null)
   const codeSubmitTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Мутация для отправки кода
   const setCodeMutation = useMutation({
     mutationFn: async (data: ISetCodeRequest): Promise<ISetCodeResponse> => {
       const response = await axios.post(
@@ -86,12 +74,12 @@ const CandidateRegForm: FC = () => {
         setError("Ошибка при отправке кода")
       }
     },
-    onError: (error: any) => {
+    onError: (error: IApiError) => {
       if (error.response) {
         if (error.response.status === 404) {
           setError("Пользователь не найден")
         } else {
-          setError(error.response.data?.error || "Ошибка сервера")
+          setError(error.response.data?.message || "Ошибка сервера")
         }
       } else if (error.request) {
         setError("Ошибка соединения с сервером")
@@ -101,7 +89,6 @@ const CandidateRegForm: FC = () => {
     },
   })
 
-  // Мутация для аутентификации
   const authMutation = useMutation({
     mutationFn: async (data: IAuthRequest): Promise<IAuthResponse> => {
       const response = await axios.post<IAuthResponse>(
@@ -129,21 +116,20 @@ const CandidateRegForm: FC = () => {
               ? "/candidatesSecurityBlock/candidatesForm"
               : "/candidatesSecurityTable"
 
-          // Немедленное перенаправление без показа экрана успеха
           window.location.href = redirectUrl
         }
       } else {
         setError("Ошибка при аутентификации")
       }
     },
-    onError: (error: any) => {
+    onError: (error: IApiError) => {
       if (error.response) {
         if (error.response.status === 401) {
           setError("Неверный код")
         } else if (error.response.status === 404) {
           setError("Пользователь не найден")
         } else {
-          setError(error.response.data?.error || "Ошибка сервера")
+          setError(error.response.data?.message || "Ошибка сервера")
         }
       } else if (error.request) {
         setError("Ошибка соединения с сервером")
@@ -153,7 +139,6 @@ const CandidateRegForm: FC = () => {
     },
   })
 
-  // Инициализация маски для телефона
   useEffect(() => {
     if (phoneInputRef.current && !isCodeMode) {
       const maskOptions = {
@@ -169,7 +154,6 @@ const CandidateRegForm: FC = () => {
     }
   }, [isCodeMode])
 
-  // Инициализация маски для кода
   useEffect(() => {
     if (phoneInputRef.current && isCodeMode) {
       if (currentMaskRef.current) {
@@ -184,7 +168,6 @@ const CandidateRegForm: FC = () => {
 
       phoneInputRef.current.focus()
 
-      // Дополнительная проверка фокуса через 100мс
       setTimeout(() => {
         if (
           phoneInputRef.current &&
@@ -204,33 +187,28 @@ const CandidateRegForm: FC = () => {
     return false
   }
 
-  // Функция для проверки кода и установки таймера
   const checkCodeAndSetTimer = (value: string) => {
     const enteredCode = value.replace(/\s/g, "").replace(/_/g, "")
 
     if (enteredCode.length === 6) {
       setShowCheckmark(true)
 
-      // Очищаем таймер если он есть
       if (codeSubmitTimeoutRef.current) {
         clearTimeout(codeSubmitTimeoutRef.current)
         codeSubmitTimeoutRef.current = null
       }
 
-      // Отправляем сразу
       setTimeout(() => {
         sendAuthRequest()
       }, 100)
     } else {
       setShowCheckmark(false)
 
-      // Очищаем предыдущий таймер автоотправки
       if (codeSubmitTimeoutRef.current) {
         clearTimeout(codeSubmitTimeoutRef.current)
         codeSubmitTimeoutRef.current = null
       }
 
-      // Устанавливаем новый таймер на 2 секунды только для неполного кода
       if (enteredCode.length > 0) {
         codeSubmitTimeoutRef.current = setTimeout(() => {
           sendAuthRequest()
@@ -242,15 +220,12 @@ const CandidateRegForm: FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
 
-    // Всегда обновляем состояние
     setPhoneValue(value)
 
-    // Очищаем ошибку при изменении значения
     if (error) {
       setError("")
     }
 
-    // В режиме кода обрабатываем автоотправку
     if (isCodeMode) {
       checkCodeAndSetTimer(value)
     }
@@ -263,9 +238,7 @@ const CandidateRegForm: FC = () => {
     }
   }
 
-  // Функция для отправки запроса на аутентификацию
   const sendAuthRequest = async (): Promise<boolean> => {
-    // Очищаем таймер автоотправки если он есть
     if (codeSubmitTimeoutRef.current) {
       clearTimeout(codeSubmitTimeoutRef.current)
       codeSubmitTimeoutRef.current = null
@@ -321,7 +294,6 @@ const CandidateRegForm: FC = () => {
   const handleChangeNumber = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
 
-    // Очищаем таймер автоотправки
     if (codeSubmitTimeoutRef.current) {
       clearTimeout(codeSubmitTimeoutRef.current)
       codeSubmitTimeoutRef.current = null
@@ -343,7 +315,6 @@ const CandidateRegForm: FC = () => {
     }, 0)
   }
 
-  // Очистка таймеров при размонтировании компонента
   useEffect(() => {
     return () => {
       if (codeSubmitTimeoutRef.current) {
@@ -381,14 +352,12 @@ const CandidateRegForm: FC = () => {
     if (!isCodeMode) {
       return checkButtonState() ? "formBtn btn-active" : "formBtn btn-inactive"
     }
-    // В режиме кода кнопка активна только если таймер не идет
     return !timerActive ? "formBtn btn-active" : "formBtn btn-inactive"
   }
 
   const isButtonDisabled = () => {
     if (setCodeMutation.isPending) return true
     if (!isCodeMode) return !checkButtonState()
-    // В режиме кода кнопка заблокирована пока идет таймер
     return timerActive
   }
 

@@ -10,7 +10,7 @@ export const getInfrastructureByType = async (
     const spn1 = radius / 111000
     const spn2 = radius / 111000
 
-    // API поиска организаций Яндекс Карт
+
     const url = `https://search-maps.yandex.ru/v1/?text=${encodeURIComponent(
       searchQuery
     )}&type=biz&lang=ru_RU&apikey=${

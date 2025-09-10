@@ -1,5 +1,3 @@
-"use client"
-
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import React, { RefObject, useEffect, useState } from "react"
@@ -7,23 +5,17 @@ import React, { RefObject, useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
+import {
+  ICandidateTableData,
+  ICandidateTableItem,
+  ICandidateTableResponse,
+} from "@/types/Candidate"
+import { useApiMutation } from "@/utils/hooks/use-api"
+
 import styles from "./candidateLoginComponents.module.css"
 
 import { FormRow } from "./candidatesFormComponents/FormRow"
 import ConfirmationModal from "./confirmationalWindow"
-
-interface Candidate {
-  id: string
-  name: string
-  rop: string
-  datetime: string
-  vacancy: string
-  status: string
-  statusID: string
-  hasVacancyComment: string
-  vacancyKey: string
-  fullData: any
-}
 
 interface Pagination {
   current_page: number
@@ -32,18 +24,6 @@ interface Pagination {
   per_page: number
   from: number
   to: number
-}
-
-interface FilteredData {
-  attributes: {
-    data: any[]
-    current_page: number
-    last_page: number
-    total: number
-    per_page: number
-    from: number
-    to: number
-  }
 }
 
 interface ActiveFilters {
@@ -60,7 +40,7 @@ interface CandidatesTableProps {
   onFiltersClick: () => void
   onRowClick: (vacancyKey: string) => void
   filtersButtonRef: RefObject<HTMLButtonElement | null>
-  filteredData: FilteredData | null
+  filteredData: ICandidateTableResponse | null
   activeFilters: ActiveFilters | null
   onFiltersReset: () => void
   selectedCity: string
@@ -78,7 +58,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  // Проверяем авторизацию сразу при создании компонента
   const getAccessToken = () => {
     const cookies = document.cookie.split(";")
     const tokenCookie = cookies.find((cookie) =>
@@ -88,14 +67,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }
 
   const token = getAccessToken()
-  if (!token) {
-    console.log("Токен авторизации не найден, перенаправляем на страницу входа")
-    router.push("/candidatesSecurityBlock/securityLogin")
-    return null // Не рендерим компонент, если нет токена
-  }
 
-  const [candidates, setCandidates] = useState<Candidate[]>([])
-  const [loading, setLoading] = useState(true)
+  const [candidates, setCandidates] = useState<ICandidateTableItem[]>([])
+  const [loading, setLoading] = useState(false) // Изменено на false, так как родительский компонент управляет загрузкой
   const [error, setError] = useState("")
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
@@ -131,30 +105,20 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
 
     const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-    const url = `/api/proxy/v1/export/${endpoint}?keys=${encodeURIComponent(vacancyKey)}`
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}?keys=${encodeURIComponent(vacancyKey)}`
 
     const headers: Record<string, string> = {
       accept:
         selectedFormat === ".pdf" ? "application/pdf" : "application/json",
+      Authorization: `Bearer ${token}`,
       "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
     }
-
-    console.log("Отправляем запрос на:", url)
-    console.log("Заголовки:", headers)
 
     const response = await fetch(url, {
       method: "GET",
       headers: headers,
       mode: "cors",
-      // credentials: "include", // Временно отключено из-за CORS проблемы на бэкенде
     })
-
-    console.log("Ответ получен:", response.status, response.statusText)
-    console.log("Content-Type:", response.headers.get("content-type"))
-    console.log(
-      "Content-Disposition:",
-      response.headers.get("content-disposition")
-    )
 
     if (!response.ok) {
       if (response.status === 401) {
@@ -172,7 +136,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     const contentType = response.headers.get("content-type")
     if (selectedFormat === ".pdf") {
       if (!contentType || !contentType.includes("application/pdf")) {
-        console.warn("Получен неожиданный Content-Type:", contentType)
       }
     } else if (selectedFormat === ".xlsx") {
       if (
@@ -182,12 +145,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         ) &&
           !contentType.includes("application/octet-stream"))
       ) {
-        console.warn("Получен неожиданный Content-Type:", contentType)
       }
     }
 
     const blob = await response.blob()
-    console.log("Blob создан:", blob.size, "байт, тип:", blob.type)
 
     if (blob.size === 0) {
       throw new Error("Получен пустой файл")
@@ -209,7 +170,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
 
     const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-    let url = `/api/proxy/v1/export/${endpoint}`
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}`
 
     if (selectedKeys.length > 0) {
       const keysParam = selectedKeys.join(",")
@@ -219,25 +180,15 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     const headers: Record<string, string> = {
       accept:
         selectedFormat === ".pdf" ? "application/pdf" : "application/json",
+      Authorization: `Bearer ${token}`,
       "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
     }
-
-    console.log("Отправляем запрос на:", url)
-    console.log("Заголовки:", headers)
 
     const response = await fetch(url, {
       method: "GET",
       headers: headers,
       mode: "cors",
-      // credentials: "include", // Временно отключено из-за CORS проблемы на бэкенде
     })
-
-    console.log("Ответ получен:", response.status, response.statusText)
-    console.log("Content-Type:", response.headers.get("content-type"))
-    console.log(
-      "Content-Disposition:",
-      response.headers.get("content-disposition")
-    )
 
     if (!response.ok) {
       if (response.status === 401) {
@@ -255,12 +206,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     if (selectedFormat === ".pdf") {
       const contentType = response.headers.get("content-type")
       if (!contentType || !contentType.includes("application/pdf")) {
-        console.warn("Получен неожиданный Content-Type:", contentType)
       }
     }
 
     const blob = await response.blob()
-    console.log("Blob создан:", blob.size, "байт, тип:", blob.type)
 
     if (blob.size === 0) {
       throw new Error("Получен пустой файл")
@@ -280,7 +229,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
 
     const keysParam = selectedKeys.join(",")
-    const url = `/api/proxy/v1/candidates/destroy?key=${encodeURIComponent(keysParam)}`
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?key=${encodeURIComponent(keysParam)}`
 
     const headers: Record<string, string> = {
       accept: "application/json",
@@ -330,13 +279,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         document.body.removeChild(link)
         window.URL.revokeObjectURL(downloadUrl)
       }, 100)
-
-      console.log(
-        `Успешно скачана анкета кандидата: ${candidateName} в формате ${selectedFormat}`
-      )
     },
     onError: (error) => {
-      console.error("Ошибка при скачивании анкеты:", error)
       alert(`Ошибка при скачивании файла: ${error.message}`)
     },
   })
@@ -372,10 +316,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         selectedKeys.length > 0
           ? `Успешно скачано ${selectedKeys.length} анкет в формате ${selectedFormat}`
           : `Успешно скачаны все анкеты в формате ${selectedFormat}`
-      console.log(exportMessage)
     },
     onError: (error) => {
-      console.error("Ошибка при скачивании:", error)
       alert(`Ошибка при скачивании файла: ${error.message}`)
     },
   })
@@ -390,13 +332,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       setSelectedKeys([])
       setIsDeleteModalOpen(false)
 
-      console.log(`Успешно удалено ${deletedKeys.length} анкет`)
-
       // Инвалидируем кэш кандидатов для обновления данных
       queryClient.invalidateQueries({ queryKey: ["candidates"] })
     },
     onError: (error) => {
-      console.error("Ошибка при удалении анкет:", error)
       alert(`Ошибка при удалении: ${error.message}`)
     },
   })
@@ -407,7 +346,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       sectionElement.style.setProperty("max-width", "none", "important")
       sectionElement.style.setProperty("width", "100%", "important")
       sectionElement.style.setProperty("margin", "0", "important")
-      console.log("✅ Стили применены через MutationObserver")
     }
 
     const sectionElement = document.querySelector("section")
@@ -537,17 +475,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   // Функция для обработки удаления
   const handleDelete = () => {
     if (selectedKeys.length === 0) {
-      console.log("Нет выбранных анкет для удаления")
       return
     }
 
     deleteMutation.mutate({ selectedKeys })
   }
 
-  // Функция для открытия модального окна удаления
   const handleDeleteClick = () => {
     if (selectedKeys.length === 0) {
-      console.log("Выберите анкеты для удаления")
       return
     }
     setIsDeleteModalOpen(true)
@@ -562,7 +497,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }
 
   const fetchCandidates = async (page = 1, useFilters = false) => {
-    setLoading(true)
     setError("")
 
     try {
@@ -571,7 +505,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `http://poisk-metrov-demos.ru:8080/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
@@ -595,12 +529,12 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
       if (data.response && data.attributes) {
         const transformedCandidates = data.attributes.data.map(
-          (candidate: any) => ({
-            id: candidate.id,
+          (candidate: ICandidateTableData) => ({
+            id: candidate.id.toString(),
             name: `${candidate.last_name} ${candidate.first_name} ${
               candidate.middle_name || ""
             }`.trim(),
-            rop: "Маликова Е.",
+            rop: candidate.work_team || "-",
             datetime: formatDateTime(
               candidate.created_at || new Date().toISOString()
             ),
@@ -627,20 +561,33 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
     } catch (err) {
       console.error("Ошибка при загрузке кандидатов:", err)
-      console.log("Используем mock-данные для разработки")
-
-      const mockCandidates = [
+      const mockCandidates: ICandidateTableItem[] = [
         {
           id: "1",
           name: "Иванов Иван Иванович",
-          rop: "Маликова Е.",
+          rop: "Административный состав",
           datetime: "15.01.2025 14:30",
           vacancy: "Frontend разработчик",
           status: "Новая анкета",
           statusID: "new",
           hasVacancyComment: "Требует дополнительной проверки",
           vacancyKey: "mock-key-1",
-          fullData: {},
+          fullData: {
+            id: 1,
+            key: "mock-key-1",
+            last_name: "Иванов",
+            first_name: "Иван",
+            middle_name: "Иванович",
+            created_at: "2025-01-15T14:30:00Z",
+            status: "Новая анкета",
+            comment: "Требует дополнительной проверки",
+            work_team: "Административный состав",
+            vacancy: {
+              attributes: {
+                title: "Frontend разработчик",
+              },
+            },
+          },
         },
         {
           id: "2",
@@ -652,7 +599,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "checked",
           hasVacancyComment: "Мутный челик, не понравился",
           vacancyKey: "mock-key-2",
-          fullData: {},
+          fullData: {
+            id: 2,
+            key: "mock-key-2",
+            last_name: "Петров",
+            first_name: "Петр",
+            middle_name: "Петрович",
+            created_at: "2025-01-14T10:15:00Z",
+            status: "Проверен",
+            comment: "Мутный челик, не понравился",
+            vacancy: {
+              attributes: {
+                title: "Backend разработчик",
+              },
+            },
+          },
         },
         {
           id: "3",
@@ -664,7 +625,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "needRevision",
           hasVacancyComment: "Необходимо уточнить опыт работы",
           vacancyKey: "mock-key-3",
-          fullData: {},
+          fullData: {
+            id: 3,
+            key: "mock-key-3",
+            last_name: "Сидорова",
+            first_name: "Анна",
+            middle_name: "Михайловна",
+            created_at: "2025-01-13T16:45:00Z",
+            status: "Нужна доработка",
+            comment: "Необходимо уточнить опыт работы",
+            vacancy: {
+              attributes: {
+                title: "UI/UX дизайнер",
+              },
+            },
+          },
         },
         {
           id: "4",
@@ -676,7 +651,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "rejected",
           hasVacancyComment: "Не соответствует требованиям",
           vacancyKey: "mock-key-4",
-          fullData: {},
+          fullData: {
+            id: 4,
+            key: "mock-key-4",
+            last_name: "Козлов",
+            first_name: "Алексей",
+            middle_name: "Владимирович",
+            created_at: "2025-01-12T09:20:00Z",
+            status: "Отклонен",
+            comment: "Не соответствует требованиям",
+            vacancy: {
+              attributes: {
+                title: "Project Manager",
+              },
+            },
+          },
         },
         {
           id: "5",
@@ -688,7 +677,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "accepted",
           hasVacancyComment: "Отличный кандидат",
           vacancyKey: "mock-key-5",
-          fullData: {},
+          fullData: {
+            id: 5,
+            key: "mock-key-5",
+            last_name: "Козлов",
+            first_name: "Алексей",
+            middle_name: "Владимирович",
+            created_at: "2025-01-12T09:20:00Z",
+            status: "Принят",
+            comment: "Отличный кандидат",
+            vacancy: {
+              attributes: {
+                title: "Project Manager",
+              },
+            },
+          },
         },
         {
           id: "6",
@@ -700,7 +703,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "startWorking",
           hasVacancyComment: "Начал работу",
           vacancyKey: "mock-key-6",
-          fullData: {},
+          fullData: {
+            id: 6,
+            key: "mock-key-6",
+            last_name: "Смирнова",
+            first_name: "Елена",
+            middle_name: "Петровна",
+            created_at: "2025-01-11T15:30:00Z",
+            status: "Вышел",
+            comment: "Начал работу",
+            vacancy: {
+              attributes: {
+                title: "UI/UX дизайнер",
+              },
+            },
+          },
         },
         {
           id: "7",
@@ -712,7 +729,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "not",
           hasVacancyComment: "Не подошел по требованиям",
           vacancyKey: "mock-key-7",
-          fullData: {},
+          fullData: {
+            id: 7,
+            key: "mock-key-7",
+            last_name: "Петров",
+            first_name: "Сергей",
+            middle_name: "Иванович",
+            created_at: "2025-01-10T12:15:00Z",
+            status: "Не принят",
+            comment: "Не подошел по требованиям",
+            vacancy: {
+              attributes: {
+                title: "Backend разработчик",
+              },
+            },
+          },
         },
         {
           id: "8",
@@ -724,7 +755,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "not",
           hasVacancyComment: "Не явился на работу",
           vacancyKey: "mock-key-8",
-          fullData: {},
+          fullData: {
+            id: 8,
+            key: "mock-key-8",
+            last_name: "Козлова",
+            first_name: "Мария",
+            middle_name: "Сергеевна",
+            created_at: "2025-01-09T18:45:00Z",
+            status: "Не вышел",
+            comment: "Не явился на работу",
+            vacancy: {
+              attributes: {
+                title: "Frontend разработчик",
+              },
+            },
+          },
         },
       ]
 
@@ -737,12 +782,13 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         from: 1,
         to: 8,
       })
-    } finally {
-      setLoading(false)
     }
   }
 
-  const handleRowClick = (candidate: Candidate, event: React.MouseEvent) => {
+  const handleRowClick = (
+    candidate: ICandidateTableItem,
+    event: React.MouseEvent
+  ) => {
     if (
       (event.target as HTMLElement).tagName === "INPUT" ||
       (event.target as HTMLElement).closest("button") ||
@@ -797,13 +843,14 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   useEffect(() => {
     if (filteredData) {
+      // Данные уже получены родительским компонентом, просто обрабатываем их
       const transformedCandidates = filteredData.attributes.data.map(
-        (candidate: any) => ({
-          id: candidate.id,
+        (candidate: ICandidateTableData) => ({
+          id: candidate.id.toString(),
           name: `${candidate.last_name} ${candidate.first_name} ${
             candidate.middle_name || ""
           }`.trim(),
-          rop: "Маликова Е.",
+          rop: candidate.work_team || "-",
           datetime: formatDateTime(
             candidate.created_at || new Date().toISOString()
           ),
@@ -824,14 +871,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         from: filteredData.attributes.from,
         to: filteredData.attributes.to,
       })
-    } else {
-      fetchCandidates()
     }
-  }, [filteredData, selectedCity])
+  }, [filteredData])
 
-  useEffect(() => {
-    console.log("Выбранные ключи:", selectedKeys)
-  }, [selectedKeys])
+  useEffect(() => {}, [selectedKeys])
 
   const handleFormatDropdownToggle = (e: React.MouseEvent) => {
     e.stopPropagation()
