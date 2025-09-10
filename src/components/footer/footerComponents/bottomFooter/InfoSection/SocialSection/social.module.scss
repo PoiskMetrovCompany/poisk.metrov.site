@@ -5,7 +5,7 @@
 }
 
 .social__title {
-  color: var(--color-gray);
+  color: var(--color-text-gray-light);
   font-size: 14px;
   font-weight: 400;
 }
@@ -17,6 +17,7 @@
 }
 
 .social__item {
+  color: var(--color-border-gray);
   margin-top: 0.625rem;
   padding-left: 25px;
   position: relative;
@@ -35,8 +36,11 @@
     width: 16px;
   }
 }
-@media (max-width: 380px) {
+@media (max-width: 767px) {
   .social__title {
+    font-size: 12px;
+  }
+  .social__item {
     font-size: 13px;
   }
 }

@@ -4,4 +4,8 @@
   width: 100%;
 
   @include mixins.adaptive-padding;
+
+  &_map {
+    padding: 0;
+  }
 }

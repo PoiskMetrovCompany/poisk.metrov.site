@@ -1,8 +1,8 @@
 .heading1 {
+  color: var(--color-black);
   font-size: 40px;
   font-weight: 500;
   line-height: 130%;
-  color: var(--color-black);
 
   @media screen and (width >= 1440px) and (width < 1920px) {
     font-size: 26px;

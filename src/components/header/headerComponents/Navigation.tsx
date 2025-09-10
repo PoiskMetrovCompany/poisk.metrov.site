@@ -1,8 +1,12 @@
 "use client"
+
 import React, { useCallback, useMemo } from "react"
+
 import { useRouter } from "next/navigation"
-import styles from "../header.module.scss"
+
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
+
+import styles from "../header.module.scss"
 
 interface INavItem {
   text: string
@@ -38,7 +42,7 @@ const Navigation = ({ onCatalogClick }: INavigationProps) => {
   )
 
   const navItems: INavItem[] = [
-    { text: "Каталог недвижимости", href: "/catalog", onClick: catalogClick },
+    { text: "Каталог недвижимости", href: "/catalogue", onClick: catalogClick },
     { text: "Продать", href: "/sell" },
     { text: "Ипотека", href: "/mortgage" },
   ]

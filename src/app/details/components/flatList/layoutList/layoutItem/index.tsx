@@ -3,9 +3,10 @@
 import clsx from "clsx"
 import { Accordion } from "radix-ui"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"
+import Pagination from "@/components/pagination"
 import { IApartment } from "@/types/api/complex"
 
 import styles from "./layoutItem.module.scss"
@@ -16,18 +17,56 @@ interface ILayoutItemProps {
   isOpen: boolean
   name: string
   apartments: IApartment[]
+  title: string
 }
 
-const LayoutItem = ({ isOpen, name, apartments }: ILayoutItemProps) => {
+const LayoutItem = ({ isOpen, name, apartments, title }: ILayoutItemProps) => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(8)
+
   const minPrice = Math.min(...apartments.map((apt) => apt.price))
   const minArea = Math.min(...apartments.map((apt) => apt.area))
   const apartmentsCount = apartments.length
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      const width = window.innerWidth
+      if (width <= 768) {
+        setItemsPerPage(2)
+      } else if (width <= 1024) {
+        setItemsPerPage(4)
+      } else {
+        setItemsPerPage(8)
+      }
+    }
+
+    updateItemsPerPage()
+    window.addEventListener("resize", updateItemsPerPage)
+
+    return () => window.removeEventListener("resize", updateItemsPerPage)
+  }, [])
+
+  const totalPages = Math.ceil(apartmentsCount / itemsPerPage)
+
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentApartments = apartments.slice(startIndex, endIndex)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentPage(1)
+    }
+  }, [isOpen])
 
   return (
     <Accordion.Item className={styles.Item} value={name}>
       <AccordionTrigger className={styles.layoutList__header}>
         <span className={styles.layoutList__header__title}>
-          Все квартиры{" "}
+          {title}{" "}
           <b className={styles.layoutList__header__title__price}>
             от {minPrice.toLocaleString("ru-RU")} ₽
           </b>
@@ -48,10 +87,20 @@ const LayoutItem = ({ isOpen, name, apartments }: ILayoutItemProps) => {
       </AccordionTrigger>
       <AccordionContent className={styles.layoutList__wrapper}>
         <div className={styles.layoutList__content}>
-          {apartments.map((apartment) => (
+          {currentApartments.map((apartment) => (
             <FlatLayoutCard key={apartment.key} apartment={apartment} />
           ))}
         </div>
+        {totalPages > 1 && (
+          <div className={styles.layoutList__pagination}>
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </AccordionContent>
     </Accordion.Item>
   )

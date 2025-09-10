@@ -4,6 +4,8 @@ import clsx from "clsx"
 
 import React, { FC } from "react"
 
+import Link from "next/link"
+
 import { IProperty } from "@/types/PropertyCard"
 
 import styles from "./propertyCard.module.scss"
@@ -39,6 +41,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
     driveTime,
     metroType,
     specifications,
+    linkKey,
   } = property
 
   // Выбираем иконку в зависимости от типа передвижения до метро
@@ -178,7 +181,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             type={isMap ? "primary" : "outline"}
             size="tiny"
           >
-            <a href={`/details`}>Подробнее</a>
+            <Link href={`/details?linkKey=${linkKey}`}>Подробнее</Link>
           </ActionButton>
           <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
         </div>

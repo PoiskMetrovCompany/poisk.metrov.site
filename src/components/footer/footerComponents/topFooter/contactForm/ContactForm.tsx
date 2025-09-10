@@ -39,7 +39,6 @@ const ContactForm: FC = () => {
     isAgreed: false,
   })
 
-
   const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
     "/crm/store",
     {
@@ -156,6 +155,7 @@ const ContactForm: FC = () => {
             loading={submitMutation.isPending}
             disabled={submitMutation.isPending}
             className={clsx(styles.borderRadius, styles.hideOnDesktop)}
+            svgClassName={styles.hideOnDesktop__svg}
             svgSrc="./images/icons/header/nextArrow.svg"
             svgDiscolored={true}
           >

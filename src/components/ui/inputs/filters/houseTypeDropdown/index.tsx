@@ -1,8 +1,11 @@
-import React, { FC, useState, useRef, useEffect } from "react"
 import * as Select from "@radix-ui/react-select"
-import styles from "./houseTypeDropdown.module.scss"
-import IconImage from "@/components/ui/IconImage"
 import clsx from "clsx"
+
+import React, { FC, useEffect, useRef, useState } from "react"
+
+import styles from "./houseTypeDropdown.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
 
 interface HouseType {
   value: string
@@ -10,29 +13,27 @@ interface HouseType {
 }
 
 interface HouseTypeDropdownProps {
-  onHouseTypeChange?: (selectedTypes: string[]) => void
+  onHouseTypeChange?: (selectedType: string) => void
   className?: string
-  value?: string[]
+  value?: string
 }
 
 const houseTypes: HouseType[] = [
-  { value: "residential-complex", label: "ЖК" },
-  { value: "apartment", label: "Квартира" },
-  { value: "apartments", label: "Апартаменты" },
-  { value: "house", label: "Дома" },
+  { value: "Жилой комплекс", label: "ЖК" },
+  { value: "Квартира", label: "Квартира" },
 ]
 
 const HouseTypeDropdown: FC<HouseTypeDropdownProps> = ({
   onHouseTypeChange,
   className,
-  value = [],
+  value = "",
 }) => {
-  const [selectedTypes, setSelectedTypes] = useState<string[]>(value)
+  const [selectedType, setSelectedType] = useState<string>(value)
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setSelectedTypes(value)
+    setSelectedType(value)
   }, [value])
 
   useEffect(() => {
@@ -54,27 +55,20 @@ const HouseTypeDropdown: FC<HouseTypeDropdownProps> = ({
     }
   }, [isOpen])
 
-  const handleTypeToggle = (typeValue: string) => {
-    const newSelectedTypes = selectedTypes.includes(typeValue)
-      ? selectedTypes.filter((type) => type !== typeValue)
-      : [...selectedTypes, typeValue]
-
-    setSelectedTypes(newSelectedTypes)
-    onHouseTypeChange?.(newSelectedTypes)
+  const handleTypeSelect = (typeValue: string) => {
+    const newSelectedType = selectedType === typeValue ? "" : typeValue
+    setSelectedType(newSelectedType)
+    onHouseTypeChange?.(newSelectedType)
+    setIsOpen(false)
   }
 
   const getDisplayText = () => {
-    if (selectedTypes.length === 0) return "Тип жилья"
+    if (!selectedType) return "Тип жилья"
 
-    const selectedLabels = selectedTypes
-      .map((typeValue) => houseTypes.find((t) => t.value === typeValue)?.label)
-      .filter(Boolean)
-
-    return selectedLabels.join(", ")
-  }
-
-  const getSelectedCount = () => {
-    return selectedTypes.length
+    const selectedLabel = houseTypes.find(
+      (t) => t.value === selectedType
+    )?.label
+    return selectedLabel || "Тип жилья"
   }
 
   return (
@@ -93,18 +87,13 @@ const HouseTypeDropdown: FC<HouseTypeDropdownProps> = ({
           <span
             className={clsx(
               styles.houseTypeDropdown__trigger__text,
-              (selectedTypes.length > 0 || isOpen) &&
+              (selectedType || isOpen) &&
                 styles["houseTypeDropdown__trigger__text--selected"],
               isOpen && styles["houseTypeDropdown__trigger__text--open"]
             )}
           >
             {getDisplayText()}
           </span>
-          {selectedTypes.length > 1 && (
-            <span className={styles.houseTypeDropdown__trigger__badge}>
-              {getSelectedCount()}
-            </span>
-          )}
           <IconImage
             className={clsx(
               styles.houseTypeDropdown__trigger__icon,
@@ -120,7 +109,7 @@ const HouseTypeDropdown: FC<HouseTypeDropdownProps> = ({
         <div
           className={styles.houseTypeDropdown__content}
           role="listbox"
-          aria-multiselectable="true"
+          aria-multiselectable="false"
         >
           <div className={styles.houseTypeDropdown__content__inner}>
             {houseTypes.map((type) => (
@@ -128,17 +117,17 @@ const HouseTypeDropdown: FC<HouseTypeDropdownProps> = ({
                 key={type.value}
                 className={styles.houseTypeDropdown__item}
                 role="option"
-                aria-selected={selectedTypes.includes(type.value)}
+                aria-selected={selectedType === type.value}
               >
                 <div className={styles.houseTypeDropdown__checkboxWrapper}>
                   <input
-                    type="checkbox"
-                    checked={selectedTypes.includes(type.value)}
-                    onChange={() => handleTypeToggle(type.value)}
+                    type="radio"
+                    checked={selectedType === type.value}
+                    onChange={() => handleTypeSelect(type.value)}
                     className={styles.houseTypeDropdown__checkbox}
                     aria-label={`Выбрать ${type.label}`}
                   />
-                  {selectedTypes.includes(type.value) && (
+                  {selectedType === type.value && (
                     <IconImage
                       className={styles.houseTypeDropdown__checkboxIcon}
                       iconLink="/images/icons/checkMark-white.svg"

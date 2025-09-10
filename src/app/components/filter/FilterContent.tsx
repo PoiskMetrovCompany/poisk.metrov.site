@@ -1,24 +1,27 @@
 "use client"
 
 import React from "react"
+
+import { useScreenSize } from "@/utils/hooks/use-screen-size"
+
 import styles from "./filter.module.scss"
-import PriceDropdown from "@/components/ui/inputs/filters/priceDropdown"
-import SearchDropdown from "@/components/ui/inputs/filters/searchDropdown"
-import HouseTypeDropdown from "@/components/ui/inputs/filters/houseTypeDropdown"
-import RoomCountDropdown from "@/components/ui/inputs/filters/roomCountDropdown"
+
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import IconButton from "@/components/ui/buttons/IconButton"
-import { useScreenSize } from "@/utils/hooks/use-screen-size"
+import HouseTypeDropdown from "@/components/ui/inputs/filters/houseTypeDropdown"
+import PriceDropdown from "@/components/ui/inputs/filters/priceDropdown"
+import RoomCountDropdown from "@/components/ui/inputs/filters/roomCountDropdown"
+import SearchDropdown from "@/components/ui/inputs/filters/searchDropdown"
 
 interface FilterContentProps {
   currentValues: {
-    houseTypes: string[]
-    roomCounts: string[]
+    houseType: string
+    roomCount: string
     priceRange: [number | null, number | null]
     searchValue: string
   }
-  onHouseTypeChange: (types: string[]) => void
-  onRoomCountChange: (counts: string[]) => void
+  onHouseTypeChange: (type: string) => void
+  onRoomCountChange: (count: string) => void
   onPriceChange: (range: [number | null, number | null]) => void
   onSearchChange: (value: string) => void
   onApplyFilters: () => void
@@ -43,12 +46,12 @@ const FilterContent: React.FC<FilterContentProps> = ({
           <>
             <HouseTypeDropdown
               onHouseTypeChange={onHouseTypeChange}
-              value={currentValues.houseTypes}
+              value={currentValues.houseType}
             />
             <div className={styles.filter__content__inputs__divider} />
             <RoomCountDropdown
               onRoomCountChange={onRoomCountChange}
-              value={currentValues.roomCounts}
+              value={currentValues.roomCount}
             />
             <div className={styles.filter__content__inputs__divider} />
             <PriceDropdown

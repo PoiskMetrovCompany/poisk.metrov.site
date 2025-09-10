@@ -1,8 +1,11 @@
 "use client"
+
 import React from "react"
+
 import styles from "./filter.module.scss"
-import Range from "@/components/ui/inputs/range"
+
 import Dropdown from "@/components/ui/inputs/dropdown"
+import Range from "@/components/ui/inputs/range"
 
 const Filter = () => {
   return (

@@ -35,6 +35,36 @@
     z-index: 10;
   }
 
+  &__favouritesButton {
+    border-radius: 8px;
+    position: absolute;
+    right: 40px;
+    top: 16px;
+    z-index: 12;
+    @media screen and (width <= 768px) {
+      left: 16px;
+      margin: 0;
+      right: 16px;
+    }
+    button {
+      background-color: white;
+      border: 1px solid var(--color-gray-white);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      color: var(--color-black);
+      width: 303px;
+      @media screen and (width >= 1440px) and (width <= 1920px) {
+        width: 252px;
+      }
+      @media screen and (width >= 1024px) and (width <= 1440px) {
+        width: 200px;
+      }
+      @media screen and (width <=768px) {
+        width: 100%;
+      }
+    }
+  }
+
   &__filtersNavbar {
     padding: 0 120px;
     position: sticky;
@@ -70,7 +100,7 @@
     cursor: default;
     left: 24px;
     position: absolute;
-    top: 94px;
+    top: 30px;
     width: 480px;
     z-index: 11;
 
@@ -102,4 +132,9 @@
     margin-top: 20px;
     width: 100%;
   }
+}
+
+.favouritesButton {
+  white-space: nowrap;
+  width: auto;
 }

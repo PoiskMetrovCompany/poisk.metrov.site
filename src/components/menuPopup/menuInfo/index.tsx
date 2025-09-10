@@ -1,9 +1,14 @@
-import React, { useState } from "react"
-import ActionButton from "@/components/ui/buttons/ActionButton"
 import clsx from "clsx"
-import IconImage from "@/components/ui/IconImage"
-import styles from "./menuInfo.module.scss"
+
+import React, { useState } from "react"
+
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+
+import styles from "./menuInfo.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
 
 enum tabType {
   residentialComplex = "ЖК",
@@ -14,10 +19,17 @@ enum tabType {
 
 interface IMenuInfoProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+  onClose?: () => void
 }
 
-const MenuInfo = ({ onClick }: IMenuInfoProps) => {
+const MenuInfo = ({ onClick, onClose }: IMenuInfoProps) => {
   const [selectedType, setSelectedType] = useState(tabType.residentialComplex)
+  const router = useRouter()
+
+  const handleCatalogueClick = () => {
+    router.push("/catalogue")
+    onClose?.()
+  }
 
   return (
     <div className={styles.info} onClick={onClick}>
@@ -121,7 +133,11 @@ const MenuInfo = ({ onClick }: IMenuInfoProps) => {
           </div>
         </div>
       </div>
-      <ActionButton type="secondary" className={styles.info__button}>
+      <ActionButton
+        type="secondary"
+        className={styles.info__button}
+        onClick={handleCatalogueClick}
+      >
         Перейти в каталог
       </ActionButton>
     </div>

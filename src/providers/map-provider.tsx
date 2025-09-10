@@ -1,8 +1,17 @@
 "use client"
-import React, { createContext, useContext, useMemo, useState } from "react"
-import ReactDOM from "react-dom"
-import Script from "next/script"
+
 import { ReactifiedModule } from "@yandex/ymaps3-types/reactify"
+import ReactDOM from "react-dom"
+
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
+
+import Script from "next/script"
 
 export type ReactifyApi = ReactifiedModule<
   typeof import("@yandex/ymaps3-types")
@@ -20,10 +29,32 @@ const yandexApiUrl = `https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_P
 
 export const MapProvider: React.FC<{
   children?: React.ReactNode
+  key?: string | number
 }> = (props) => {
   const [reactifyApi, setReactifyApi] = useState<ReactifyApi | null>(null)
 
   const contextValue = useMemo(() => ({ reactifyApi }), [reactifyApi])
+
+  useEffect(() => {
+    // Переинициализируем API при изменении key
+    const initializeMap = async () => {
+      if (typeof window !== "undefined" && window.ymaps3) {
+        try {
+          const [ymaps3React] = await Promise.all([
+            window.ymaps3.import("@yandex/ymaps3-reactify"),
+            window.ymaps3.ready,
+          ])
+          const reactify = ymaps3React.reactify.bindTo(React, ReactDOM)
+          setReactifyApi(reactify.module(window.ymaps3))
+        } catch (error) {
+          console.error("Error reinitializing map:", error)
+        }
+      }
+    }
+
+    // Всегда пытаемся инициализировать при изменении key
+    initializeMap()
+  }, [props.key])
 
   return (
     <MountedMapsContext.Provider value={contextValue}>

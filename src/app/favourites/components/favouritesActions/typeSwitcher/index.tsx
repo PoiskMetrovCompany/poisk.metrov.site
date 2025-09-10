@@ -1,20 +1,50 @@
 "use client"
 
-import React from "react"
-import styles from "./typeSwitcher.module.scss"
-import IconImage from "@/components/ui/IconImage"
-import { IFavouriteView } from "@/types/Favourites"
 import clsx from "clsx"
+
+import React from "react"
+
+import { IFavouriteView } from "@/types/Favourites"
+
+import styles from "./typeSwitcher.module.scss"
+
+import IconImage from "@/components/ui/IconImage"
+import Skeleton from "@/components/ui/skeleton"
 
 interface ITypeSwitcherProps {
   selectedView: IFavouriteView
   setSelectedView: (view: IFavouriteView) => void
+  flatCount: number
+  complexCount: number
+  isComparison?: boolean
+  comparisonFlatCount?: number
+  comparisonComplexCount?: number
+  isLoading?: boolean
+  isLoadingComparisonFlats?: boolean
+  isLoadingComparisonComplexes?: boolean
 }
 
 const TypeSwitcher = ({
   selectedView,
   setSelectedView,
+  flatCount,
+  complexCount,
+  isComparison = false,
+  comparisonFlatCount = 0,
+  comparisonComplexCount = 0,
+  isLoading = true,
+  isLoadingComparisonFlats = true,
+  isLoadingComparisonComplexes = true,
 }: ITypeSwitcherProps) => {
+  // Определяем какое количество показывать в зависимости от режима
+  const getFlatCount = () => {
+    return isComparison ? comparisonFlatCount : flatCount
+  }
+
+  const getComplexCount = () => {
+    return isComparison ? comparisonComplexCount : complexCount
+  }
+
   return (
     <div className={styles.typeSwitcher}>
       <button
@@ -34,7 +64,18 @@ const TypeSwitcher = ({
             Планировка
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>0</span>
+        {isLoadingComparisonFlats && isLoading ? (
+          <Skeleton
+            className={styles.typeSwitcher__item__count}
+            width={32}
+            height={32}
+            border="50px"
+          />
+        ) : (
+          <span className={styles.typeSwitcher__item__count}>
+            {getFlatCount()}
+          </span>
+        )}
       </button>
 
       <button
@@ -54,7 +95,18 @@ const TypeSwitcher = ({
             Жилые комплексы
           </span>
         </div>
-        <span className={styles.typeSwitcher__item__count}>3</span>
+        {isLoadingComparisonComplexes && isLoading ? (
+          <Skeleton
+            className={styles.typeSwitcher__item__count}
+            width={28}
+            height={28}
+            border="50px"
+          />
+        ) : (
+          <span className={styles.typeSwitcher__item__count}>
+            {getComplexCount()}
+          </span>
+        )}
       </button>
     </div>
   )
