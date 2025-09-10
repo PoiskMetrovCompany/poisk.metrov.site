@@ -1,11 +1,20 @@
-"use client"
-
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 import React, { FC, useEffect, useState } from "react"
 
 import Image from "next/image"
+
+import {
+  IApiError,
+  ICandidateFormData,
+  ICandidateFormResponse,
+  IMaritalStatusItem,
+  IROPAccount,
+  IROPAccountsResponse,
+  IRopItem,
+  IVacancyItem,
+} from "@/types/Candidate"
 
 import ChildrenTable from "./ChildrenTable"
 import CourseDataTable from "./CourseDataTable"
@@ -24,13 +33,13 @@ import HeaderFormSmall from "./header"
 
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
-const API_BASE_URL = "http://poisk-metrov-demos.ru:8080/api/v1"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-// Интерфейсы для типизации запроса и ответа
 interface ICandidateFormRequest {
   vacancies_key: string
   marital_statuses_key: string
   rop_key: string | null
+  work_team: string | null
   status: string
   first_name: string
   last_name: string
@@ -72,12 +81,6 @@ interface ICandidateFormRequest {
   legal_entity: string
   is_data_processing: boolean
   comment: string
-}
-
-interface ICandidateFormResponse {
-  request: boolean
-  attributes?: any
-  error?: string
 }
 
 const CandidateForm: FC = () => {
@@ -156,7 +159,9 @@ const CandidateForm: FC = () => {
   const [selectedROP, setSelectedROP] = useState("")
   const [showROPOptions, setShowROPOptions] = useState(false)
 
-  const [formData, setFormData] = useState<Record<string, any>>({})
+  const [formData, setFormData] = useState<ICandidateFormData>(
+    {} as ICandidateFormData
+  )
 
   const mockVacancyData = [
     { title: "Frontend разработчик", key: "frontend_dev" },
@@ -173,6 +178,9 @@ const CandidateForm: FC = () => {
   ]
 
   const [ropOptions, setRopOptions] = useState<string[]>([])
+  const [ropData, setRopData] = useState<IROPAccount[]>([])
+  const [isLoadingROP, setIsLoadingROP] = useState(false)
+  const [ropError, setRopError] = useState("")
 
   const mockMaritalStatusData = [
     { title: "Не женат/Не замужем", key: "single" },
@@ -198,13 +206,12 @@ const CandidateForm: FC = () => {
     data: vacanciesData,
     isLoading: isLoadingVacancies,
     error: vacancyQueryError,
-  } = useQuery({
+  } = useQuery<IVacancyItem[]>({
     queryKey: ["vacancies"],
     queryFn: async () => {
       const accessToken = getAccessTokenFromCookie()
 
       if (!accessToken) {
-        // Используем mock данные если нет токена
         return mockVacancyData
       }
 
@@ -222,21 +229,19 @@ const CandidateForm: FC = () => {
       }
     },
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 минут
+    staleTime: 5 * 60 * 1000,
   })
 
-  // Хук для получения семейного положения
   const {
     data: maritalStatusData,
     isLoading: isLoadingMaritalStatuses,
     error: maritalStatusQueryError,
-  } = useQuery({
+  } = useQuery<IMaritalStatusItem[]>({
     queryKey: ["maritalStatuses"],
     queryFn: async () => {
       const accessToken = getAccessTokenFromCookie()
 
       if (!accessToken) {
-        // Используем mock данные если нет токена
         return mockMaritalStatusData
       }
 
@@ -254,11 +259,50 @@ const CandidateForm: FC = () => {
       }
     },
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 минут
+    staleTime: 5 * 60 * 1000,
   })
 
-  // Мутация для отправки формы кандидата
-  const submitFormMutation = useMutation({
+  const {
+    data: ropAccountsData,
+    isLoading: isLoadingROPAccounts,
+    error: ropAccountsQueryError,
+  } = useQuery<IROPAccount[]>({
+    queryKey: ["ropAccounts"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        return []
+      }
+
+      const response = await axios.get<IROPAccountsResponse>(
+        `${API_BASE_URL}/account/list`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+
+      if (response.data.request && response.data.attributes) {
+        // Фильтруем только РОПов
+        return response.data.attributes.filter(
+          (account) => account.role === "РОП"
+        )
+      } else {
+        throw new Error("Ошибка при получении данных РОП")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const submitFormMutation = useMutation<
+    ICandidateFormResponse,
+    IApiError,
+    ICandidateFormRequest
+  >({
     mutationFn: async (
       data: ICandidateFormRequest
     ): Promise<ICandidateFormResponse> => {
@@ -285,25 +329,16 @@ const CandidateForm: FC = () => {
     onSuccess: (data) => {
       if (data.request) {
         setSubmitSuccess(true)
-        console.log("Анкета успешно отправлена:", data)
       } else {
-        console.log("Ответ сервера не содержит request: true")
-        // Пока игнорируем ошибки бэка
         setSubmitSuccess(true)
       }
     },
-    onError: (error: any) => {
-      console.error("Ошибка при отправке анкеты:", error)
-      console.error("Error response:", error.response)
-      console.error("Error message:", error.message)
-
-      // Показываем реальную ошибку вместо фейкового успеха
+    onError: (error: IApiError) => {
       setSubmitError(
         error.response?.data?.message ||
           error.message ||
           "Произошла ошибка при отправке формы"
       )
-      setSubmitSuccess(false)
     },
   })
 
@@ -311,7 +346,6 @@ const CandidateForm: FC = () => {
     const errors: Record<string, boolean> = {}
     let isValid = true
 
-    // Проверяем первую таблицу (index = 1)
     const requiredFields1 = [
       "FIORelative1",
       "dateOfBirthRelative1",
@@ -326,7 +360,6 @@ const CandidateForm: FC = () => {
       }
     })
 
-    // Проверяем дополнительные таблицы
     additionalRelativeTables.forEach((index) => {
       const requiredFields = [
         `FIORelative${index}`,
@@ -377,7 +410,6 @@ const CandidateForm: FC = () => {
   const validateSelectFields = () => {
     let isValid = true
 
-    // Проверка семейного положения
     if (!selectedMaritalStatus) {
       setMaritalStatusError(true)
       isValid = false
@@ -385,7 +417,6 @@ const CandidateForm: FC = () => {
       setMaritalStatusError(false)
     }
 
-    // Проверка города работы
     if (!selectedCity) {
       setCityError(true)
       isValid = false
@@ -396,7 +427,6 @@ const CandidateForm: FC = () => {
     return isValid
   }
   const validateWorkExperienceTable = (): boolean => {
-    // Проверяем только если выбран "Опыт есть"
     if (selectedProfessionalExperience !== "Опыт есть") {
       return true
     }
@@ -487,7 +517,6 @@ const CandidateForm: FC = () => {
       requiredSelects.push({ key: "selectedROP", value: selectedROP })
     }
 
-    // Проверяем обычные поля
     requiredFields.forEach((field) => {
       if (!field.value || field.value.trim() === "") {
         errors[field.key] = true
@@ -519,7 +548,7 @@ const CandidateForm: FC = () => {
       "adressOfFactialLiving",
     ]
 
-    const errors: Record<string, boolean> = { ...formErrors } // Сохраняем существующие ошибки
+    const errors: Record<string, boolean> = { ...formErrors }
     let isValid = true
 
     requiredFields.forEach((field) => {
@@ -535,7 +564,7 @@ const CandidateForm: FC = () => {
     return isValid
   }
 
-  const formatDateForDatabase = (dateString: string): string | null => {
+  const formatDateForDatabase = (dateString: string | null): string | null => {
     if (!dateString || dateString.trim() === "") {
       return null
     }
@@ -555,12 +584,19 @@ const CandidateForm: FC = () => {
       return dateString
     }
 
-    console.warn(`Неверный формат даты: ${dateString}`)
     return null
   }
 
   const handleFormDataChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
+
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
+    }
   }
 
   const collectEducationData = () => {
@@ -689,24 +725,35 @@ const CandidateForm: FC = () => {
     return familyMembers.length > 0 ? familyMembers : null
   }
 
-  // Функция для загрузки данных РОП
   const loadROPData = () => {
-    console.log("Загрузка данных РОП...")
-    const ropTitles = mockROPData.map((rop) => rop.title)
-    setRopOptions(ropTitles)
-    ;(window as any).ropData = mockROPData
-    console.log("Mock РОП данные загружены:", ropTitles)
+    if (ropAccountsData && ropAccountsData.length > 0) {
+      const ropTitles = ropAccountsData.map((rop) => {
+        const fullName =
+          `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        return fullName || "Не указано"
+      })
+      setRopOptions(ropTitles)
+      setRopData(ropAccountsData)
+    } else {
+      const ropTitles = mockROPData.map((rop) => rop.title)
+      setRopOptions(ropTitles)
+      setRopData([])
+    }
+  }
+
+  const loadROP = () => {
+    window.location.reload()
   }
 
   useEffect(() => {
     loadROPData()
-  }, [])
+  }, [ropAccountsData])
 
   const vacancyOptions = vacanciesData
-    ? vacanciesData.map((vacancy: any) => vacancy.title)
+    ? vacanciesData.map((vacancy: IVacancyItem) => vacancy.title)
     : []
   const maritalStatusOptions = maritalStatusData
-    ? maritalStatusData.map((status: any) => status.title)
+    ? maritalStatusData.map((status: IMaritalStatusItem) => status.title)
     : [
         "Не женат/Не замужем",
         "Женат/Замужем",
@@ -729,33 +776,59 @@ const CandidateForm: FC = () => {
     return () => document.removeEventListener("click", handleClickOutside)
   }, [])
 
-  // Функция для добавления таблицы члена семьи
   const addRelativeTable = () => {
     const newCounter = relativeCounter + 1
     setRelativeCounter(newCounter)
     setAdditionalRelativeTables((prev) => [...prev, newCounter])
   }
 
-  // Функция для добавления таблицы ребенка
   const addChildrenTable = () => {
     const newCounter = childrenCounter + 1
     setChildrenCounter(newCounter)
     setAdditionalChildrenTables((prev) => [...prev, newCounter])
   }
 
-  // Функция для получения ключа вакансии
   const getVacancyKey = (selectedTitle: string): string => {
     if (vacanciesData) {
-      const vacancy = vacanciesData.find((v: any) => v.title === selectedTitle)
+      const vacancy = vacanciesData.find(
+        (v: IVacancyItem) => v.title === selectedTitle
+      )
       return vacancy ? vacancy.key : ""
     }
     return ""
   }
 
-  // Функция для получения ключа РОП
   const getROPKey = (selectedTitle: string): string => {
-    const rop = mockROPData.find((r: any) => r.title === selectedTitle)
-    return rop ? rop.key : ""
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop ? rop.key : ""
+    } else {
+      // Fallback на моковые данные
+      const rop = mockROPData.find((r: IRopItem) => r.title === selectedTitle)
+      return rop ? rop.key : ""
+    }
+  }
+
+  const getROPFullName = (selectedTitle: string): string => {
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop
+        ? `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        : ""
+    } else {
+      // Fallback на моковые данные
+      return selectedTitle
+    }
   }
 
   const addEducationTable = () => {
@@ -773,7 +846,7 @@ const CandidateForm: FC = () => {
   const getMaritalStatusKey = (selectedTitle: string): string => {
     if (maritalStatusData) {
       const status = maritalStatusData.find(
-        (s: any) => s.title === selectedTitle
+        (s: IMaritalStatusItem) => s.title === selectedTitle
       )
       return status ? status.key : ""
     }
@@ -812,6 +885,18 @@ const CandidateForm: FC = () => {
 
     if (value && value.trim() !== "" && childrenErrors[fieldName]) {
       setChildrenErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldName]
+        return newErrors
+      })
+    }
+  }
+
+  const handleRelativeFieldChange = (fieldName: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
+
+    if (value && value.trim() !== "" && relativesErrors[fieldName]) {
+      setRelativesErrors((prev) => {
         const newErrors = { ...prev }
         delete newErrors[fieldName]
         return newErrors
@@ -867,15 +952,16 @@ const CandidateForm: FC = () => {
       vacancies_key: getVacancyKey(selectedVacancy),
       marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
       rop_key: goingToROP ? getROPKey(selectedROP) : null,
+      work_team: goingToROP ? getROPFullName(selectedROP) : null,
       status: "active",
       first_name: nameData.first_name,
       last_name: nameData.last_name,
       middle_name: nameData.middle_name,
       reason_for_changing_surnames: surnameChanged
         ? formData.reasonOfChange || ""
-        : null,
+        : "",
       city_work: selectedCity,
-      birth_date: formatDateForDatabase(formData.birthDate),
+      birth_date: formatDateForDatabase(formData.birthDate) || "",
       country_birth: birthPlaceData.country,
       city_birth: birthPlaceData.city,
       level_educational: selectedEducationLevel,
@@ -970,6 +1056,9 @@ const CandidateForm: FC = () => {
                 selectedROP={selectedROP}
                 setSelectedROP={setSelectedROP}
                 ropOptions={ropOptions}
+                isLoadingROP={isLoadingROPAccounts}
+                ropError={ropAccountsQueryError?.message || ""}
+                loadROP={loadROP}
                 validationErrors={validationErrors}
                 triggerValidation={triggerValidation}
               />
@@ -982,12 +1071,16 @@ const CandidateForm: FC = () => {
                   setSelectedProfessionalExperience
                 }
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={
+                  setFormData as React.Dispatch<
+                    React.SetStateAction<Record<string, any>>
+                  >
+                }
                 additionalEducationTables={additionalEducationTables}
                 additionalCourseTables={additionalCourseTables}
                 onAddEducationTable={addEducationTable}
                 onAddCourseTable={addCourseTable}
-                workExperienceErrors={workExperienceErrors} // Передаем ошибки
+                workExperienceErrors={workExperienceErrors}
               />
               {/* Паспортные данные */}
               <PassportSection
@@ -1102,16 +1195,17 @@ const CandidateForm: FC = () => {
                   <RelativeTable
                     index={1}
                     formData={formData}
-                    setFormData={setFormData}
+                    setFormData={handleRelativeFieldChange}
                     requiredFields={[""]}
                     errors={relativesErrors}
                   />
 
                   {additionalRelativeTables.map((index) => (
                     <RelativeTable
-                      index={1}
+                      key={index}
+                      index={index}
                       formData={formData}
-                      setFormData={setFormData}
+                      setFormData={handleRelativeFieldChange}
                       requiredFields={[""]}
                       errors={relativesErrors}
                     />

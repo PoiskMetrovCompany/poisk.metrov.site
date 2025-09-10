@@ -19,6 +19,7 @@ interface ICustomSelectProps {
   disabled?: boolean
   required?: boolean
   style?: React.CSSProperties
+  ropSelect?: boolean
 }
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -34,6 +35,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   disabled = false,
   required = false,
   style,
+  ropSelect = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
@@ -145,6 +147,9 @@ const CustomSelect: FC<ICustomSelectProps> = ({
             className={styles.selectItems}
             role="listbox"
             aria-label={label || placeholder}
+            style={{
+              position: ropSelect ? "relative" : undefined,
+            }}
           >
             {options.map((option, index) => (
               <div

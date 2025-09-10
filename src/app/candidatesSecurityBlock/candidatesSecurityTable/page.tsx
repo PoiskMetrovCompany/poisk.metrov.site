@@ -11,8 +11,11 @@ import CandidatesTable from "@/components/candidateRegForm/CandidatesTable"
 import FiltersCalendar from "@/components/candidateRegForm/FiltersCalendar"
 import ShowForm from "@/components/candidateRegForm/ShowForm"
 import BigHeader from "@/components/candidateRegForm/bigHeader"
-import { ICandidate, ICandidatesResponse } from "@/types/Candidate"
-
+import {
+  CandidateStatus,
+  ICandidate,
+  ICandidatesResponse,
+} from "@/types/Candidate"
 
 const getAccessTokenFromCookie = (): string | null => {
   if (typeof document === "undefined") return null
@@ -26,20 +29,10 @@ const getAccessTokenFromCookie = (): string | null => {
   return null
 }
 
-interface FilteredData {
-  attributes: {
-    data: any[]
-    current_page: number
-    last_page: number
-    total: number
-    per_page: number
-    from: number
-    to: number
-  }
-}
+type FilterStatus = CandidateStatus | "showAll"
 
 interface ActiveFilters {
-  status: string[]
+  status: FilterStatus[]
   vacancy: string[]
   dateRange: {
     type: string
@@ -54,27 +47,24 @@ const CandidatesLoginPage = () => {
   const [selectedVacancyKey, setSelectedVacancyKey] = useState<string | null>(
     null
   )
-  const [filteredData, setFilteredData] = useState<FilteredData | null>(null)
+  const [filteredData, setFilteredData] = useState<ICandidatesResponse | null>(
+    null
+  )
   const [activeFilters, setActiveFilters] = useState<ActiveFilters | null>(null)
   const [selectedCity, setSelectedCity] = useState("Новосибирск")
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
   const filtersButtonRef = useRef<HTMLButtonElement>(null!)
 
-  // Проверка авторизации при загрузке страницы
   useEffect(() => {
     const token = getAccessTokenFromCookie()
     if (!token) {
-      console.log(
-        "Токен авторизации не найден, перенаправляем на страницу входа"
-      )
       router.push("/candidatesSecurityBlock/securityLogin")
       return
     }
     setIsCheckingAuth(false)
   }, [router])
 
-  // Запрос для получения списка кандидатов
   const {
     data: candidatesData,
     isLoading: isLoadingCandidates,
@@ -90,7 +80,7 @@ const CandidatesLoginPage = () => {
       }
 
       const response = await axios.get<ICandidatesResponse>(
-        "http://poisk-metrov-demos.ru:8080/api/v1/candidates/",
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -103,25 +93,13 @@ const CandidatesLoginPage = () => {
 
       return response.data
     },
-    enabled: !isCheckingAuth, // Выполняем запрос только после проверки авторизации
-    staleTime: 5 * 60 * 1000, // 5 минут
+    enabled: !isCheckingAuth,
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   })
 
-  // Преобразуем данные из API в формат, ожидаемый компонентом CandidatesTable
-  const candidatesFilteredData: FilteredData | null = candidatesData?.attributes
-    ? {
-        attributes: {
-          data: candidatesData.attributes.data,
-          current_page: candidatesData.attributes.current_page,
-          last_page: candidatesData.attributes.last_page,
-          total: candidatesData.attributes.total,
-          per_page: candidatesData.attributes.per_page,
-          from: candidatesData.attributes.from,
-          to: candidatesData.attributes.to,
-        },
-      }
-    : null
+  const candidatesFilteredData: ICandidatesResponse | null =
+    candidatesData || null
 
   const handleFiltersClick = () => {
     setIsCalendarOpen(true)
@@ -139,18 +117,17 @@ const CandidatesLoginPage = () => {
     setSelectedVacancyKey(null)
   }
 
-  const handleFiltersApply = (data: FilteredData, filters: ActiveFilters) => {
+  const handleFiltersApply = (
+    data: ICandidatesResponse,
+    filters: ActiveFilters
+  ) => {
     setFilteredData(data)
     setActiveFilters(filters)
     setIsCalendarOpen(false)
-    console.log("Фильтры применены:", filters)
-    console.log("Отфильтрованные данные:", data)
   }
 
   const handleCityChange = (city: string) => {
-    console.log("Изменение города на:", city)
     setSelectedCity(city)
-    // Сбрасываем фильтры при смене города
     setFilteredData(null)
     setActiveFilters(null)
   }
@@ -158,10 +135,8 @@ const CandidatesLoginPage = () => {
   const handleFiltersReset = () => {
     setFilteredData(null)
     setActiveFilters(null)
-    console.log("Фильтры сброшены")
   }
 
-  // Показываем состояние загрузки во время проверки авторизации
   if (isCheckingAuth) {
     return (
       <div style={{ textAlign: "center", padding: "40px" }}>

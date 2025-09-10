@@ -211,8 +211,7 @@ export function useApiUpdate<T, V>(
   })
 }
 
-// Хук для DELETE запросов
-export function useApiDelete<T>(
+export function useApiDelete<T, V = void>(
   url: string,
   options?: {
     onSuccess?: (data: T) => void
@@ -222,10 +221,26 @@ export function useApiDelete<T>(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (): Promise<T> => {
+    mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.delete<unknown>(url)
+
+        let requestUrl = url
+        if (variables && typeof variables === "object") {
+          const params = new URLSearchParams()
+          Object.entries(variables as Record<string, any>).forEach(
+            ([key, value]) => {
+              if (value !== undefined && value !== null) {
+                params.append(key, String(value))
+              }
+            }
+          )
+          if (params.toString()) {
+            requestUrl += (url.includes("?") ? "&" : "?") + params.toString()
+          }
+        }
+
+        const response = await client.delete<unknown>(requestUrl)
         const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
