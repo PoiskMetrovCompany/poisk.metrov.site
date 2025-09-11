@@ -16,7 +16,8 @@ import InputContainer from "@/components/ui/inputs/inputContainer"
 interface DreamFlatData {
   firstName: string
   phoneNumber: string
-  isAgreed: boolean
+  privacyAgreed: boolean
+  marketingAgreed: boolean
 }
 
 interface ApiData {
@@ -30,7 +31,8 @@ const RightSide: FC = () => {
   const [formData, setFormData] = useState<DreamFlatData>({
     firstName: "",
     phoneNumber: "",
-    isAgreed: false,
+    privacyAgreed: false,
+    marketingAgreed: false,
   })
 
   const submitMutation = useApiMutation<ApiData, ApiData>("/crm/store", {
@@ -39,7 +41,8 @@ const RightSide: FC = () => {
       setFormData({
         firstName: "",
         phoneNumber: "",
-        isAgreed: false,
+        privacyAgreed: false,
+        marketingAgreed: false,
       })
     },
     onError: (error) => {
@@ -51,12 +54,16 @@ const RightSide: FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  const handlePrivacyChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, privacyAgreed: checked }))
+  }
+
+  const handleMarketingChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }))
   }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return
+    if (!formData.privacyAgreed) return
     if (!formData.firstName || !formData.phoneNumber) {
       console.log("Пожалуйста заполните все поля")
       return
@@ -94,7 +101,7 @@ const RightSide: FC = () => {
           loading={submitMutation.isPending}
           disabled={submitMutation.isPending}
           size="medium"
-          type={formData.isAgreed ? "primary" : "gray"}
+          type={formData.privacyAgreed ? "primary" : "gray"}
         >
           {submitMutation.isPending ? "Отправка..." : "Отправить"}
         </ActionButton>
@@ -105,13 +112,11 @@ const RightSide: FC = () => {
         justifyContent="flex-start"
       >
         <CheckboxRow
-          checked={formData.isAgreed}
-          onChange={handleCheckboxChange}
-          text="Нажимая на кнопку вы даете согласие"
-          linkText="своих персональных данных"
-          linkHref="/privatePolicy"
-          name="personalDataDreamFlat"
-          id="personalDataDreamFlat"
+          privacyChecked={formData.privacyAgreed}
+          onPrivacyChange={handlePrivacyChange}
+          marketingChecked={formData.marketingAgreed}
+          onMarketingChange={handleMarketingChange}
+          idPrefix="dreamFlat"
         />
       </FormRow>
     </div>

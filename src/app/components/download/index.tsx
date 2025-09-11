@@ -23,7 +23,8 @@ const Download = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    checkbox: false,
+    privacyChecked: false,
+    marketingChecked: false,
   })
 
   const handleInputChange = (name: string, value: string | boolean) => {
@@ -36,7 +37,8 @@ const Download = () => {
       setFormData({
         name: "",
         phone: "",
-        checkbox: false,
+        privacyChecked: false,
+        marketingChecked: false,
       })
       setSendMessenger("")
     },
@@ -46,7 +48,7 @@ const Download = () => {
   })
 
   const handleSubmit = (value: string) => {
-    if (!formData.checkbox) return
+    if (!formData.privacyChecked) return
 
     setSendMessenger(value)
     console.log(value)
@@ -107,7 +109,9 @@ const Download = () => {
               type="whatsapp"
               onClick={() => handleSubmit("whatsapp")}
               loading={sendMessenger === "whatsapp" && submitMutation.isPending}
-              disabled={sendMessenger === "whatsapp" && submitMutation.isPending}
+              disabled={
+                sendMessenger === "whatsapp" && submitMutation.isPending
+              }
             >
               {submitMutation.isPending && sendMessenger === "whatsapp"
                 ? "Отправляем в whatsapp"
@@ -123,8 +127,10 @@ const Download = () => {
               size="medium"
               type="telegram"
               onClick={() => handleSubmit("telegram")}
-              loading={sendMessenger === "telegram" && submitMutation.isPending }
-              disabled={sendMessenger === "telegram" && submitMutation.isPending}
+              loading={sendMessenger === "telegram" && submitMutation.isPending}
+              disabled={
+                sendMessenger === "telegram" && submitMutation.isPending
+              }
             >
               {submitMutation.isPending && sendMessenger === "telegram"
                 ? "Отправляем в telegram"
@@ -137,13 +143,15 @@ const Download = () => {
             </ActionButton>
           </div>
           <CheckboxRow
-            checked={formData.checkbox}
-            onChange={() => handleInputChange("checkbox", !formData.checkbox)}
-            text="Нажимая на кнопку, вы даете согласие на обработку"
-            linkText="своих персональных данных"
-            linkHref="/privacy-policy"
-            name="personalData"
-            id="personalData"
+            privacyChecked={formData.privacyChecked}
+            onPrivacyChange={(checked) =>
+              handleInputChange("privacyChecked", checked)
+            }
+            marketingChecked={formData.marketingChecked}
+            onMarketingChange={(checked) =>
+              handleInputChange("marketingChecked", checked)
+            }
+            idPrefix="download"
           />
         </div>
       </div>

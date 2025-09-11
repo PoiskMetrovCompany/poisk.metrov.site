@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react"
 
+import { useApiMutation } from "@/utils/hooks/use-api"
+
 import styles from "./rightSide.module.scss"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -8,22 +10,21 @@ import { FormRow } from "@/components/ui/forms/formRow/FormRow"
 import InputContainer from "@/components/ui/inputs/inputContainer"
 import TextAreaContainer from "@/components/ui/inputs/textArea"
 
-import { useApiMutation } from "@/utils/hooks/use-api"
-
 interface FormDataQuestions {
   lastName: string
   name: string
   surName: string
   phoneNumber: string
   message: string
-  isAgreed: boolean
+  privacyAgreed: boolean
+  marketingAgreed: boolean
 }
 
-interface ApiRequestData{
-    name: string
-    phone: string
-    comment: string
-    city: string
+interface ApiRequestData {
+  name: string
+  phone: string
+  comment: string
+  city: string
 }
 
 const QuestionsForm: FC = () => {
@@ -33,26 +34,28 @@ const QuestionsForm: FC = () => {
     surName: "",
     phoneNumber: "",
     message: "",
-    isAgreed: false,
+    privacyAgreed: false,
+    marketingAgreed: false,
   })
 
   const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
     "/crm/store",
     {
-        onSuccess: (data) => {
-            console.log("Запрос отправлен", data)
-            setFormData({
-                lastName: "",
-                name: "",
-                surName: "",
-                phoneNumber: "",
-                message: "",
-                isAgreed: false,
-            })
-        },
-        onError: (error) => {
-            console.log("Ошибка при отправке запроса", error)
-        }
+      onSuccess: (data) => {
+        console.log("Запрос отправлен", data)
+        setFormData({
+          lastName: "",
+          name: "",
+          surName: "",
+          phoneNumber: "",
+          message: "",
+          privacyAgreed: false,
+          marketingAgreed: false,
+        })
+      },
+      onError: (error) => {
+        console.log("Ошибка при отправке запроса", error)
+      },
     }
   )
 
@@ -60,23 +63,33 @@ const QuestionsForm: FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  const handlePrivacyChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, privacyAgreed: checked }))
+  }
+
+  const handleMarketingChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }))
   }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return
+    if (!formData.privacyAgreed) return
 
-    if(!formData.lastName || !formData.name || !formData.surName || !formData.phoneNumber || !formData.message) {
-        console.log("Пожалуйста, заполните все поля")
-        return
+    if (
+      !formData.lastName ||
+      !formData.name ||
+      !formData.surName ||
+      !formData.phoneNumber ||
+      !formData.message
+    ) {
+      console.log("Пожалуйста, заполните все поля")
+      return
     }
 
     const apiData: ApiRequestData = {
-        name: `${formData.lastName} ${formData.name} ${formData.surName}` . trim(),
-        phone: formData.phoneNumber,
-        comment: formData.message,
-        city: "novosibirsk",
+      name: `${formData.lastName} ${formData.name} ${formData.surName}`.trim(),
+      phone: formData.phoneNumber,
+      comment: formData.message,
+      city: "novosibirsk",
     }
 
     submitMutation.mutate(apiData)
@@ -136,9 +149,9 @@ const QuestionsForm: FC = () => {
 
       <FormRow justifyContent="flex-start">
         <ActionButton
-          type={formData.isAgreed ? "primary" : "disabled"}
-          loading = {submitMutation.isPending}
-          disabled = {submitMutation.isPending}
+          type={formData.privacyAgreed ? "primary" : "disabled"}
+          loading={submitMutation.isPending}
+          disabled={submitMutation.isPending}
           onClick={handleSubmit}
           size="medium"
           buttonWidth={293}
@@ -150,13 +163,11 @@ const QuestionsForm: FC = () => {
 
       <FormRow justifyContent="flex-start" className={styles.mt_0}>
         <CheckboxRow
-          checked={formData.isAgreed}
-          onChange={handleCheckboxChange}
-          text="Нажимая на кнопку вы даете согласие"
-          linkText="своих персональных данных"
-          linkHref="/privatePolicy"
-          name="personalDataDreamFlat"
-          id="personalDataDreamFlat"
+          privacyChecked={formData.privacyAgreed}
+          onPrivacyChange={handlePrivacyChange}
+          marketingChecked={formData.marketingAgreed}
+          onMarketingChange={handleMarketingChange}
+          idPrefix="questions"
         />
       </FormRow>
     </div>

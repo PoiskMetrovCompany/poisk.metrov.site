@@ -17,7 +17,8 @@ interface SellAppFormData {
   firstName: string
   surName: string
   phoneNumber: string
-  isAgreed: boolean
+  privacyAgreed: boolean
+  marketingAgreed: boolean
 }
 
 const FormSendSellApp = () => {
@@ -28,7 +29,8 @@ const FormSendSellApp = () => {
     firstName: "",
     surName: "",
     phoneNumber: "",
-    isAgreed: false,
+    privacyAgreed: false,
+    marketingAgreed: false,
   })
 
   const [showEstateTypeOptions, setShowEstateTypeOptions] = useState(false)
@@ -57,12 +59,16 @@ const FormSendSellApp = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  const handlePrivacyChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, privacyAgreed: checked }))
+  }
+
+  const handleMarketingChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }))
   }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return
+    if (!formData.privacyAgreed) return
 
     console.log("Form submited, need back", formData)
   }
@@ -171,7 +177,7 @@ const FormSendSellApp = () => {
       <FormRow justifyContent="flex-start">
         <ActionButton
           size="medium"
-          type={formData.isAgreed ? "primary" : "disabled"}
+          type={formData.privacyAgreed ? "primary" : "disabled"}
           buttonWidth={253}
           onClick={handleSubmit}
           className={styles.button}
@@ -182,13 +188,11 @@ const FormSendSellApp = () => {
 
       <FormRow justifyContent="flex-start" className={styles.mt_0}>
         <CheckboxRow
-          checked={formData.isAgreed}
-          onChange={handleCheckboxChange}
-          text="Нажимая на кнопку вы даете согласие"
-          linkText="своих персональных данных"
-          linkHref="/privatePolicy"
-          name="personalDataDreamFlat"
-          id="personalDataDreamFlat"
+          privacyChecked={formData.privacyAgreed}
+          onPrivacyChange={handlePrivacyChange}
+          marketingChecked={formData.marketingAgreed}
+          onMarketingChange={handleMarketingChange}
+          idPrefix="sellApp"
         />
       </FormRow>
     </div>

@@ -20,7 +20,8 @@ interface ContactFormData {
   firstName: string
   middleName: string
   phone: string
-  isAgreed: boolean
+  privacyAgreed: boolean
+  marketingAgreed: boolean
 }
 
 interface ApiRequestData {
@@ -36,7 +37,8 @@ const ContactForm: FC = () => {
     firstName: "",
     middleName: "",
     phone: "",
-    isAgreed: false,
+    privacyAgreed: false,
+    marketingAgreed: false,
   })
 
   const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
@@ -50,7 +52,8 @@ const ContactForm: FC = () => {
           firstName: "",
           middleName: "",
           phone: "",
-          isAgreed: false,
+          privacyAgreed: false,
+          marketingAgreed: false,
         })
       },
       onError: (error) => {
@@ -63,12 +66,16 @@ const ContactForm: FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  const handlePrivacyChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, privacyAgreed: checked }))
+  }
+
+  const handleMarketingChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }))
   }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return
+    if (!formData.privacyAgreed) return
 
     if (
       !formData.lastName ||
@@ -137,7 +144,7 @@ const ContactForm: FC = () => {
             disabled={submitMutation.isPending}
             loading={submitMutation.isPending}
             className={clsx(
-              !formData.isAgreed
+              !formData.privacyAgreed
                 ? styles.contactForm__submitButton_disabled
                 : "",
               styles.position
@@ -145,7 +152,7 @@ const ContactForm: FC = () => {
           />
         </FormRow>
 
-        <FormRow>
+        <FormRow className={styles.hideOnDesktop}>
           <ActionButton
             onClick={handleSubmit}
             size="large"
@@ -154,8 +161,7 @@ const ContactForm: FC = () => {
             svgHeight={20}
             loading={submitMutation.isPending}
             disabled={submitMutation.isPending}
-            className={clsx(styles.borderRadius, styles.hideOnDesktop)}
-            svgClassName={styles.hideOnDesktop__svg}
+            className={styles.borderRadius}
             svgSrc="./images/icons/header/nextArrow.svg"
             svgDiscolored={true}
           >
@@ -165,13 +171,11 @@ const ContactForm: FC = () => {
 
         <FormRow className={styles.mt_0} justifyContent="flex-start">
           <CheckboxRow
-            checked={formData.isAgreed}
-            onChange={handleCheckboxChange}
-            text="Нажимая на кнопку, вы даете согласие на обработку"
-            linkText="своих персональных данных"
-            linkHref="/privacy-policy"
-            name="personalDataFooter"
-            id="personalDataFooter"
+            privacyChecked={formData.privacyAgreed}
+            onPrivacyChange={handlePrivacyChange}
+            marketingChecked={formData.marketingAgreed}
+            onMarketingChange={handleMarketingChange}
+            idPrefix="footer"
           />
         </FormRow>
       </form>
