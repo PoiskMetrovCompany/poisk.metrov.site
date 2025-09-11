@@ -1,13 +1,16 @@
 "use client"
+
 import React from "react"
+
 import styles from "./filter.module.scss"
-import Range from "@/components/ui/inputs/range"
+
 import Dropdown from "@/components/ui/inputs/dropdown"
+import Range from "@/components/ui/inputs/range"
 
 const Filter = () => {
   return (
     <div className={styles.filter}>
-      <Range />
+      <Range min={0} max={100} step={1} />
       {[...new Array(9)].map((_, index) => (
         <Dropdown
           key={index}

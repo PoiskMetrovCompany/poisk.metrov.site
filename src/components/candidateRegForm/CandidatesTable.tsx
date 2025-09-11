@@ -608,6 +608,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-14T10:15:00Z",
             status: "Проверен",
             comment: "Мутный челик, не понравился",
+            work_team: "Команда разработки",
             vacancy: {
               attributes: {
                 title: "Backend разработчик",
@@ -634,6 +635,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-13T16:45:00Z",
             status: "Нужна доработка",
             comment: "Необходимо уточнить опыт работы",
+            work_team: "Команда дизайна",
             vacancy: {
               attributes: {
                 title: "UI/UX дизайнер",
@@ -660,6 +662,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-12T09:20:00Z",
             status: "Отклонен",
             comment: "Не соответствует требованиям",
+            work_team: "Управление проектами",
             vacancy: {
               attributes: {
                 title: "Project Manager",
@@ -686,6 +689,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-12T09:20:00Z",
             status: "Принят",
             comment: "Отличный кандидат",
+            work_team: "Управление проектами",
             vacancy: {
               attributes: {
                 title: "Project Manager",
@@ -712,6 +716,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-11T15:30:00Z",
             status: "Вышел",
             comment: "Начал работу",
+            work_team: "Команда дизайна",
             vacancy: {
               attributes: {
                 title: "UI/UX дизайнер",
@@ -738,6 +743,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-10T12:15:00Z",
             status: "Не принят",
             comment: "Не подошел по требованиям",
+            work_team: "Команда разработки",
             vacancy: {
               attributes: {
                 title: "Backend разработчик",
@@ -764,6 +770,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-09T18:45:00Z",
             status: "Не вышел",
             comment: "Не явился на работу",
+            work_team: "Команда разработки",
             vacancy: {
               attributes: {
                 title: "Frontend разработчик",

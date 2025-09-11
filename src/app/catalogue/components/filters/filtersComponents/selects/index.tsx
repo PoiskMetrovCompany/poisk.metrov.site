@@ -1,13 +1,16 @@
 import React, { FC, RefObject } from "react"
+
 import styles from "./selects.module.scss"
-import CustomSelect from "@/components/ui/inputs/select/customSelect"
+
 import {
-  DISTRICT_OPTIONS,
   BUILDER_OPTIONS,
+  DISTRICT_OPTIONS,
   LIVING_ESTATE_OPTIONS,
-  STREET_OPTIONS,
   METRO_OPTIONS,
+  STREET_OPTIONS,
 } from "../../types"
+
+import CustomSelect from "@/components/ui/inputs/select/customSelect"
 
 interface FilterSelectsProps {
   // Данные формы
@@ -98,7 +101,7 @@ const FilterSelects: FC<FilterSelectsProps> = ({
               isLoading={false}
               error=""
               onToggle={() => handleSelectToggle(field)}
-              onSelect={(value) =>
+              onSelect={(value: string) =>
                 handleSelectChange(
                   field as
                     | "district"

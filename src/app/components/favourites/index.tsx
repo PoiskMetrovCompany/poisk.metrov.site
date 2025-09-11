@@ -15,7 +15,6 @@ import { mapResidentialComplexToProperty } from "@/utils/mappers/residential-com
 
 import styles from "./favourites.module.scss"
 
-
 import PropertyCard from "../../../components/propertyCard"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -34,7 +33,6 @@ const Favourites = () => {
       gcTime: 10 * 60 * 1000, 
     }
   )
-
 
   const apiCards: IProperty[] = bestOffers
     ? bestOffers.map(mapResidentialComplexToProperty)
