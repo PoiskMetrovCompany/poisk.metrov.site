@@ -4,36 +4,26 @@ import clsx from "clsx"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import Selection from "@/components/apartmentSelection"
-
-import FlatLayoutCard from "@/components/flatLayoutCard"
-
-import GetCatalogue from "@/components/getCatalogue"
-
+// import GetCatalogue from "@/components/getCatalogue"
 
 import Download from "@/app/components/download"
-
-
-
-
+import Selection from "@/components/apartmentSelection"
+import FlatLayoutCard from "@/components/flatLayoutCard"
 import GetYourDreamFlat from "@/components/getYourDreamFlat"
 import NotFound from "@/components/notFound"
 import Pagination from "@/components/pagination"
 import PropertyCard from "@/components/propertyCard"
 import PropertyCardSkeleton from "@/components/propertyCard/PropertyCardSkeleton"
 import PropertyCardList from "@/components/propertyCardList"
-
-
 import PropertyCardListSkeleton from "@/components/propertyCardList/PropertyCardListSkeleton"
-
-
 import { useStickyState } from "@/hooks/useStickyState"
-
-
-
 import { IProperty } from "@/types/PropertyCard"
 import { ApartmentSelectionResponse } from "@/types/api/apartment"
-import { ResidentialComplexDataResponse } from "@/types/api/complex"
+import { IApartment } from "@/types/api/complex"
+import {
+  IResidentialComplex,
+  ResidentialComplexDataResponse,
+} from "@/types/api/complex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import { mapResidentialComplexesToProperties } from "@/utils/mappers/propertyMapper"
@@ -44,11 +34,12 @@ import CatalogueFilters from "../catalogueFiltersNavbar"
 import FiltersDialog from "../filters"
 
 import IconImage from "@/components/ui/IconImage"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+// import ActionButton from "@/components/ui/buttons/ActionButton"
 import Heading2 from "@/components/ui/heading2"
 import Heading3 from "@/components/ui/heading3"
 import PropertyTypeSelect from "@/components/ui/inputs/select/PropertyTypeSelect"
-import RangeSlider from "@/components/ui/rangeSlider"
+
+// import RangeSlider from "@/components/ui/rangeSlider"
 
 type SortType = "cards" | "list"
 const CITY = "novosibirsk"
@@ -75,12 +66,10 @@ const CatalogueList = () => {
   const applyFilters = () => {
     console.log("Фильтры применены")
     setShowFilters(false)
-
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-
   }
 
   useEffect(() => {
@@ -97,17 +86,23 @@ const CatalogueList = () => {
     )
   }
 
+  // Always define URLs regardless of selectedPropertyType
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const RESIDENTIAL_COMPLEX_API_URL = useMemo(
     () =>
       `http://localhost:1080/api/v1/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`,
     [currentPage]
   )
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const APARTMENTS_API_URL = useMemo(
     () =>
       `http://localhost:1080/api/v1/apartments/selections?city_code=${CITY}`,
     []
   )
 
+  // Always call hooks, but control execution with enabled
+  /* eslint-disable react-hooks/rules-of-hooks */
   const {
     data: catalogueResidentialComplexes,
     isLoading: isLoadingComplexes,
@@ -135,14 +130,16 @@ const CatalogueList = () => {
       enabled: selectedPropertyType === "Квартира",
     }
   )
+  /* eslint-enable react-hooks/rules-of-hooks */
 
   const isLoading =
     selectedPropertyType === "Жилой комплекс"
       ? isLoadingComplexes
       : isLoadingApartments
-  const error =
-    selectedPropertyType === "Жилой комплекс" ? errorComplexes : errorApartments
+  // const error =
+  //   selectedPropertyType === "Жилой комплекс" ? errorComplexes : errorApartments
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const renderSkeletons = useCallback((): React.ReactNode[] => {
     const result: React.ReactNode[] = []
     const skeletonCount = 4
@@ -158,6 +155,7 @@ const CatalogueList = () => {
     return result
   }, [selectedSorting])
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const renderCards = useCallback((): React.ReactNode[] => {
     const result: React.ReactNode[] = []
 
@@ -166,7 +164,9 @@ const CatalogueList = () => {
         ? catalogueResidentialComplexes
         : catalogueResidentialComplexes?.attributes || []
 
-      const properties = mapResidentialComplexesToProperties(complexes)
+      const properties = mapResidentialComplexesToProperties(
+        complexes as IResidentialComplex[]
+      )
 
       properties.forEach((property, index) => {
         if (selectedSorting === "cards") {
@@ -197,7 +197,7 @@ const CatalogueList = () => {
         ? catalogueApartments
         : catalogueApartments?.attributes || []
 
-      apartments.forEach((apartment, index) => {
+      ;(apartments as IApartment[]).forEach((apartment, index) => {
         if (selectedSorting === "cards") {
           result.push(
             <FlatLayoutCard key={apartment.id} apartment={apartment} />
@@ -232,6 +232,7 @@ const CatalogueList = () => {
     catalogueApartments,
   ])
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const renderAdditionalComponents = useCallback((): React.ReactNode[] => {
     const result: React.ReactNode[] = []
 

@@ -1,14 +1,20 @@
 "use client"
 
-import React from "react"
-import styles from "./favourites.module.scss"
-import PropertyCard from "../../../components/propertyCard"
-import Heading2 from "@/components/ui/heading2"
-import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+
+import React from "react"
+
 import Image from "next/image"
-import ActionButton from "@/components/ui/buttons/ActionButton"
+
 import { IProperty } from "@/types/PropertyCard"
+
+import styles from "./favourites.module.scss"
+
+import PropertyCard from "../../../components/propertyCard"
+
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Heading2 from "@/components/ui/heading2"
 
 const cards: IProperty[] = [
   {
@@ -19,6 +25,7 @@ const cards: IProperty[] = [
     badge: { developer: "Брусника", period: "I – IV 2026" },
     metro: "Октябрьская",
     driveTime: "25 минут",
+    metroType: "on_foot",
     specifications: [
       { type: "Студии", price: "от 5,6 млн ₽" },
       { type: "1-комн. кв", price: "от 7,1 млн ₽" },
@@ -42,6 +49,7 @@ const cards: IProperty[] = [
     badge: { developer: "ПИК", period: "III – IV 2025" },
     metro: "Центральная",
     driveTime: "15 минут",
+    metroType: "on_foot",
     specifications: [
       { type: "Студии", price: "от 4,8 млн ₽" },
       { type: "1-комн. кв", price: "от 6,2 млн ₽" },
@@ -65,6 +73,7 @@ const cards: IProperty[] = [
     badge: { developer: "Самолет", period: "II – III 2026" },
     metro: "Парковая",
     driveTime: "20 минут",
+    metroType: "by_transport",
     specifications: [
       { type: "Студии", price: "от 6,2 млн ₽" },
       { type: "1-комн. кв", price: "от 8,0 млн ₽" },
@@ -88,6 +97,7 @@ const cards: IProperty[] = [
     badge: { developer: "Эталон", period: "I – II 2027" },
     metro: "Морская",
     driveTime: "30 минут",
+    metroType: "by_transport",
     specifications: [
       { type: "Студии", price: "от 7,1 млн ₽" },
       { type: "1-комн. кв", price: "от 9,3 млн ₽" },
@@ -155,7 +165,11 @@ const Favourites = () => {
             className={`swiper-button-prev ${styles.navigationButton} ${styles.navigationButtonPrev}`}
           >
             <div className={styles.navigationButton__icon}>
-              <Image src="/images/icons/arrow-slider.svg" alt="arrow-left" fill />
+              <Image
+                src="/images/icons/arrow-slider.svg"
+                alt="arrow-left"
+                fill
+              />
             </div>
           </div>
           <div

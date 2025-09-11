@@ -1,14 +1,18 @@
 "use client"
 
-import React, { useState } from "react"
 import clsx from "clsx"
-import { IFavouriteView } from "@/types/Favourites"
-import styles from "./favouritesList.module.scss"
-import NotFound from "@/components/notFound"
-import ListFilter from "../listFilter"
-import { IProperty } from "@/types/PropertyCard"
-import PropertyCard from "@/components/propertyCard"
+
+import React, { useState } from "react"
+
 import FlatLayoutCard from "@/components/flatLayoutCard"
+import NotFound from "@/components/notFound"
+import PropertyCard from "@/components/propertyCard"
+import { IFavouriteView } from "@/types/Favourites"
+import { IProperty } from "@/types/PropertyCard"
+
+import styles from "./favouritesList.module.scss"
+
+import ListFilter from "../listFilter"
 
 interface IFavouritesListProps {
   selectedView: IFavouriteView
@@ -24,6 +28,7 @@ const cards: IProperty[] = [
     badge: { developer: "Брусника", period: "I – IV 2026" },
     metro: "Октябрьская",
     driveTime: "25 минут",
+    metroType: "on_foot",
     specifications: [
       { type: "Студии", price: "от 5,6 млн ₽" },
       { type: "1-комн. кв", price: "от 7,1 млн ₽" },
@@ -47,6 +52,7 @@ const cards: IProperty[] = [
     badge: { developer: "ПИК", period: "III – IV 2025" },
     metro: "Центральная",
     driveTime: "15 минут",
+    metroType: "on_foot",
     specifications: [
       { type: "Студии", price: "от 4,8 млн ₽" },
       { type: "1-комн. кв", price: "от 6,2 млн ₽" },
@@ -70,6 +76,7 @@ const cards: IProperty[] = [
     badge: { developer: "Самолет", period: "II – III 2026" },
     metro: "Парковая",
     driveTime: "20 минут",
+    metroType: "by_transport",
     specifications: [
       { type: "Студии", price: "от 6,2 млн ₽" },
       { type: "1-комн. кв", price: "от 8,0 млн ₽" },
@@ -95,6 +102,7 @@ const cards: IProperty[] = [
     badge: { developer: "Эталон", period: "I – II 2027" },
     metro: "Морская",
     driveTime: "30 минут",
+    metroType: "by_transport",
     specifications: [
       { type: "Студии", price: "от 7,1 млн ₽" },
       { type: "1-комн. кв", price: "от 9,3 млн ₽" },
