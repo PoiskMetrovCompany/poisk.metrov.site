@@ -71,6 +71,10 @@
     margin-top: 2rem;
   }
 
+
+  .inputTable{
+    overflow: hidden;
+  }
   .inputTable td input {
     font-size: 0.875rem;
   }
@@ -894,11 +898,12 @@
 }
 .section {
   max-width: none;
-  width: 1006px;
+  width: 100%;
   @media (width < 1440px) {
     width: 692px;
   }
   @media (width < 1024px) {
     width: 100%;
+    padding: 0;
   }
 }
