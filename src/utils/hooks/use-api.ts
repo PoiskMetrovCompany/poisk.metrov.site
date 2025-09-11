@@ -49,6 +49,8 @@ export function useApiQuery<T>(
     refetchOnMount?: boolean
     refetchOnWindowFocus?: boolean
     refetchOnReconnect?: boolean
+    refetchInterval?: number
+    refetchIntervalInBackground?: boolean
   }
 ) {
   return useQuery({
@@ -121,6 +123,8 @@ export function useApiQuery<T>(
     refetchOnMount: options?.refetchOnMount ?? true,
     refetchOnWindowFocus: options?.refetchOnWindowFocus ?? true,
     refetchOnReconnect: options?.refetchOnReconnect ?? true,
+    refetchInterval: options?.refetchInterval,
+    refetchIntervalInBackground: options?.refetchIntervalInBackground ?? false,
   })
 }
 

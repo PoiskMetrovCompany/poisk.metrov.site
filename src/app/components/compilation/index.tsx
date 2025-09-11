@@ -37,6 +37,7 @@ interface compilationProps {
   header: string
   hasPromoCard: boolean
   similarApartmentParams?: SimilarApartmentParams
+  compolationParams?: unknown
 }
 
 const Compilation = ({
@@ -45,7 +46,7 @@ const Compilation = ({
   similarApartmentParams,
 }: compilationProps) => {
   const similarApartmentsUrl = similarApartmentParams
-    ? `http://localhost:1080/api/v1/apartments/similar?` +
+    ? `${process.env.NEXT_PUBLIC_API_URL}/apartments/similar?` +
       `city_code=${encodeURIComponent(similarApartmentParams.city_code)}&` +
       `city=${encodeURIComponent(similarApartmentParams.city)}&` +
       `price=${similarApartmentParams.price}&` +
@@ -67,7 +68,7 @@ const Compilation = ({
     { attributes?: IApartment[]; data?: IApartment[] } | IApartment[] | null
   >(
     ["similar-apartments", similarApartmentsUrl || ""],
-    similarApartmentsUrl || "",
+    similarApartmentsUrl || "/api/empty",
     {
       enabled: !!similarApartmentsUrl,
     }

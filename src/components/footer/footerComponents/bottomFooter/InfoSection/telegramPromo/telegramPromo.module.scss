@@ -1,35 +1,96 @@
-.telegramPromo__title{
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--color-gray-white)
-}
-.telegramPromo__description{
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--color-gray-white)
-}
-.telegramPromo__button{
-    background: var(--color-orange);
+.telegramPromo__content {
+  @media screen and (width < 1024px) {
+    align-items: start;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
+    flex-direction: row-reverse;
+    gap: 16px;
+    justify-content: start;
+    width: 100%;
+  }
+
+  &__text {
+    @media screen and (width < 1024px) {
+      width: 60%;
+    }
+  }
 }
 
-.divider{
-    display: none;
-    margin: 20px 0;
-    width: 100%;
-    border: 1px solid var( --color-text-black);
-    @media (max-width: 1024px) {
-        display: block;
+.telegramPromo__title {
+  color: var(--color-gray-white);
+  font-size: 20px;
+  font-weight: 400;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    font-size: 16px;
+  }
+
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    font-size: 20px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    font-size: 16px;
+  }
+
+  @media screen and (width < 768px) {
+    font-size: 14px;
+  }
+}
+.telegramPromo__description {
+  color: var(--color-gray-white);
+  font-size: 14px;
+  font-weight: 400;
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    font-size: 13px;
+  }
+
+  @media screen and (width < 768px) {
+    font-size: 12px;
+  }
+}
+.telegramPromo__button {
+  align-items: center;
+  background: var(--color-orange);
+  border-radius: 16px;
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+
+  @media screen and (width < 768px) {
+    height: 48px;
+    width: 48px;
+  }
+
+  &__icon {
+    height: 28px;
+    width: 28px;
+
+    @media screen and (width >= 768px) and (width < 1920px) {
+      height: 28px;
+      width: 28px;
     }
+
+    @media screen and (width < 768px) {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+.divider {
+  border: 1px solid var(--color-text-black);
+  display: none;
+  margin: 20px 0;
+  width: 100%;
+  @media (max-width: 1024px) {
+    display: block;
+  }
 }
 
 @media (max-width: 1024px) {
-    .telegramPromo{
-        width: 100%;
-    }
+  .telegramPromo {
+    width: 100%;
+  }
 }

@@ -6,6 +6,9 @@ import React, { FC, useEffect, useRef, useState } from "react"
 
 import Image from "next/image"
 
+import { FiltersFormData } from "@/app/catalogue/components/filters/types"
+import { useFiltersStore } from "@/stores/useFiltersStore"
+
 import styles from "./catalogueFilters.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
@@ -18,18 +21,22 @@ import SearchDropdown from "@/components/ui/inputs/filters/searchDropdown"
 interface CatalogueFiltersProps {
   isMap?: boolean
   onShowFilters: () => void
-  onApplyFilters: () => void
+  onApplyFilters: (formData: FiltersFormData) => void
   isSticky?: boolean
+  isLoadingFilters?: boolean
 }
 
 const CatalogueFilters: FC<CatalogueFiltersProps> = ({
   isMap = false,
   onShowFilters,
+  onApplyFilters,
   isSticky = false,
+  isLoadingFilters = false,
 }) => {
-  const [roomCount, setRoomCount] = useState<string[]>([])
   const [shouldApplySticky, setShouldApplySticky] = useState(false)
   const stickyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const { filtersData, updatePriceRange, updateRoomCount, updateSearchQuery } =
+    useFiltersStore()
 
   useEffect(() => {
     if (isSticky) {
@@ -59,16 +66,8 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
     }
   }, [isSticky])
 
-  const applyFilters = () => {
-    console.log("Фильтры применены")
-  }
-
-  const handlePriceChange = (range: [number | null, number | null]) => {
-    console.log("Диапазон цен изменен:", range)
-  }
-
-  const handleSearchChange = (value: string) => {
-    console.log("Поисковый запрос:", value)
+  const handleApplyFilters = () => {
+    onApplyFilters(filtersData)
   }
 
   return (
@@ -80,36 +79,38 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
     >
       <div className={styles.catalogue__filters__container__inputs}>
         <RoomCountDropdown
+          showCount={false}
           className={styles.catalogue__filters__container__inputs__room}
-          value={roomCount}
-          onRoomCountChange={(newRoomCount: string[]) =>
-            setRoomCount(newRoomCount)
-          }
+          value={filtersData.rooms[0] || ""}
+          onRoomCountChange={updateRoomCount}
         />
         <div
           className={styles.catalogue__filters__container__inputs__separator}
         />
         <PriceDropdown
           className={styles.catalogue__filters__container__inputs__price}
-          onPriceChange={handlePriceChange}
+          value={[filtersData.priceMin || null, filtersData.priceMax || null]}
+          onPriceChange={updatePriceRange}
         />
         <div
           className={styles.catalogue__filters__container__inputs__separator}
         />
         <SearchDropdown
           className={styles.catalogue__filters__container__inputs__search}
-          onSearchChange={handleSearchChange}
+          value={filtersData.district || ""}
+          onSearchChange={updateSearchQuery}
         />
       </div>
       <div className={styles.catalogue__filters__container__buttonsDesktop}>
         {!isMap && (
           <ActionButton
             type="primary"
-            onClick={applyFilters}
+            onClick={handleApplyFilters}
             className={
               styles.catalogue__filters__container__buttonsDesktop__button__show
             }
             size="medium"
+            disabled={isLoadingFilters}
           >
             <IconImage
               iconLink="/images/icons/search-white.svg"
@@ -123,7 +124,10 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
                 styles.catalogue__filters__container__buttonsDesktop__button__show__text
               }
             >
-              Показать <span>12166 квартир</span>
+              {isLoadingFilters ? "Загрузка..." : "Показать"}{" "}
+              <span>
+                {filtersData.propertyType === "Квартира" ? "квартиры" : "ЖК"}
+              </span>
             </div>
           </ActionButton>
         )}
@@ -136,6 +140,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
           }
           size="small"
           type="secondary"
+          disabled={isLoadingFilters}
         >
           <IconImage
             className={
@@ -162,6 +167,7 @@ const CatalogueFilters: FC<CatalogueFiltersProps> = ({
             }
             size="small"
             type="outline-white"
+            disabled={isLoadingFilters}
           >
             <IconImage
               className={
