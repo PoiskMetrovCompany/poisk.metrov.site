@@ -1,49 +1,87 @@
-"use client";
-import React, { FC } from "react";
-import styles from "./checkboxRow.module.scss";
+"use client"
+
+import React, { FC } from "react"
+
+import styles from "./checkboxRow.module.scss"
 
 interface CheckboxRowProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  text: string;
-  linkText: string;
-  linkHref: string;
-  name: string;
-  id: string;
-  disabled?: boolean;
-  style?: React.CSSProperties;
+  privacyChecked: boolean
+  onPrivacyChange: (checked: boolean) => void
+  marketingChecked: boolean
+  onMarketingChange: (checked: boolean) => void
+  disabled?: boolean
+  style?: React.CSSProperties
+  idPrefix?: string
 }
 
 const CheckboxRow: FC<CheckboxRowProps> = ({
-  checked,
-  onChange,
-  text,
-  linkText,
-  linkHref,
-  name,
-  id,
+  privacyChecked,
+  onPrivacyChange,
+  marketingChecked,
+  onMarketingChange,
   disabled = false,
-  style
+  style,
+  idPrefix = "default",
 }) => {
   return (
     <div className={styles.checkboxRow} style={style}>
-      <label className={styles.checkboxRow__customCheckbox} htmlFor={id}>
-        <input
-          type="checkbox"
-          name={name}
-          id={id}
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          disabled={disabled}
-          className={styles.checkboxRow__input}
-        />
-        <span className={styles.checkboxRow__checkmark}></span>
-      </label>
-      <label htmlFor={id} className={styles.checkboxRow__label}>
-        {text} <span className={styles.checkboxRow__linkText}>{linkText}</span>
-      </label>
-    </div>
-  );
-};
+      {/* Первый чекбокс - политика конфиденциальности */}
+      <div className={styles.checkboxRow__item}>
+        <label
+          className={styles.checkboxRow__customCheckbox}
+          htmlFor={`${idPrefix}-privacy-policy`}
+        >
+          <input
+            type="checkbox"
+            name={`${idPrefix}-privacy-policy`}
+            id={`${idPrefix}-privacy-policy`}
+            checked={privacyChecked}
+            onChange={(e) => onPrivacyChange(e.target.checked)}
+            disabled={disabled}
+            className={styles.checkboxRow__input}
+          />
+          <span className={styles.checkboxRow__checkmark}></span>
+        </label>
+        <label
+          htmlFor={`${idPrefix}-privacy-policy`}
+          className={styles.checkboxRow__label}
+        >
+          Я соглашаюсь с условиями{" "}
+          <span className={styles.checkboxRow__linkText}>
+            политики конфиденциальности и обработки персональных данных
+          </span>
+        </label>
+      </div>
 
-export default CheckboxRow;
+      {/* Второй чекбокс - рекламные рассылки */}
+      <div className={styles.checkboxRow__item}>
+        <label
+          className={styles.checkboxRow__customCheckbox}
+          htmlFor={`${idPrefix}-marketing`}
+        >
+          <input
+            type="checkbox"
+            name={`${idPrefix}-marketing`}
+            id={`${idPrefix}-marketing`}
+            checked={marketingChecked}
+            onChange={(e) => onMarketingChange(e.target.checked)}
+            disabled={disabled}
+            className={styles.checkboxRow__input}
+          />
+          <span className={styles.checkboxRow__checkmark}></span>
+        </label>
+        <label
+          htmlFor={`${idPrefix}-marketing`}
+          className={styles.checkboxRow__label}
+        >
+          Я соглашаюсь с получением{" "}
+          <span className={styles.checkboxRow__linkText}>
+            рекламных рассылок
+          </span>
+        </label>
+      </div>
+    </div>
+  )
+}
+
+export default CheckboxRow
