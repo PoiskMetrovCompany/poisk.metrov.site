@@ -417,7 +417,7 @@ const Compilation = ({
                   imageUrl={
                     card.apartment?.plan_URL || "/images/temporary/room.png"
                   }
-                  apartment={card.apartment}
+                  apartment={card.apartment || undefined}
                   linkUrl={
                     card.apartment
                       ? `/detailsFlat?key=${card.apartment.key}`

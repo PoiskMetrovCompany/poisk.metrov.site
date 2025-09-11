@@ -10,7 +10,7 @@ import Range from "@/components/ui/inputs/range"
 const Filter = () => {
   return (
     <div className={styles.filter}>
-      <Range />
+      <Range min={0} max={100} step={1} />
       {[...new Array(9)].map((_, index) => (
         <Dropdown
           key={index}

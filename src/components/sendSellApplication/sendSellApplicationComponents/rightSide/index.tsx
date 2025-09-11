@@ -105,7 +105,7 @@ const FormSendSellApp = () => {
               setShowEstateTypeOptions(!showEstateTypeOptions)
               setShowServiceOptions(false)
             }}
-            onSelect={(option) => {
+            onSelect={(option: string) => {
               handleInputChange("estateType", option)
               setShowEstateTypeOptions(false)
             }}
@@ -127,7 +127,7 @@ const FormSendSellApp = () => {
               setShowServiceOptions(!showServiceOptions)
               setShowEstateTypeOptions(false)
             }}
-            onSelect={(option) => {
+            onSelect={(option: string) => {
               handleInputChange("service", option)
               setShowServiceOptions(false)
             }}
