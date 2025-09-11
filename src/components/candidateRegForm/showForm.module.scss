@@ -1,3 +1,8 @@
+.formRow {
+  flex-direction: row !important;
+  height: auto !important;
+  justify-content: space-between !important;
+}
 @media (width <= 1024px) {
   .center-card h1 {
     font-size: 1.125rem;
@@ -194,20 +199,12 @@
     gap: 1rem;
   }
 
-
-  .formRow {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-  }
-
-
   .formRow#generalData,
   .formRow#vacancyData {
     align-items: flex-start !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
   }
-
 
   .formRow.justify-space-between#submissionData {
     align-items: center;
@@ -224,12 +221,10 @@
     width: 100% !important;
   }
 
-
   .formBtn {
     max-width: none;
     width: 100%;
   }
-
 
   .calendar-container {
     flex-direction: column;
@@ -337,6 +332,7 @@
 
   .inputTable td {
     border-bottom: 1.5px solid #d2d2d2;
+    border-radius: 0;
     box-sizing: border-box;
     display: block;
     padding: 1rem;
@@ -348,8 +344,38 @@
     padding-bottom: 1rem;
   }
 
-  .inputTable td {
-    border-radius: 0;
+  /* Правильные закругления для мобильной версии таблиц */
+  .inputTable tr:first-child td:first-child {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+
+  .inputTable tr:first-child td:last-child {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  .inputTable tr:last-child td:first-child {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  .inputTable tr:last-child td:last-child {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  /* Убираем закругления с промежуточных строк */
+  .inputTable tr:not(:first-child):not(:last-child) td {
+    border-radius: 0 !important;
   }
 
   .inputTable td input {

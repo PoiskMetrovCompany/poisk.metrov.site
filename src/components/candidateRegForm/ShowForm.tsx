@@ -838,7 +838,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
         <section className={formStyles.section}>
           <div className={`center-card big ${formStyles.centerCard}`}>
             <div className="fixedMenu">
-              <div className="navArea" style={{ display: "none" }}>
+              <div className="navArea">
                 <div
                   className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
                   id="customSelect"
@@ -884,7 +884,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
               </div>
               <div
                 className="navArea"
-                style={{ marginTop: "3rem", display: "none" }}
+                style={{ marginTop: "3rem" }}
               >
                 <textarea
                   name="comment"

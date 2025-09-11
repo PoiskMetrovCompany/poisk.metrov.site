@@ -474,7 +474,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `/api/v1/candidates/?page=${page}&city_work=${encodeURIComponent(
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
@@ -803,7 +803,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     const handleResize = () => {
       const width = window.innerWidth
       setIsMobile(width < 768)
-      setIsTablet(width < 1024)
+      setIsTablet(width < 1440)
     }
 
     handleResize()
