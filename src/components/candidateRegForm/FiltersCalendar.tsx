@@ -1,8 +1,14 @@
 "use client"
 
+import { useMutation } from "@tanstack/react-query"
+
 import React, { RefObject, useEffect, useRef, useState } from "react"
 
+import { useApiQuery } from "@/utils/hooks/use-api"
+
 import styles from "./candidateLoginComponents.module.css"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface FilteredData {
   attributes: {
@@ -30,6 +36,17 @@ interface VacancyOption {
   value: string
   text: string
   title: string | null
+  key: string | null
+}
+
+interface VacancyApiItem {
+  key: string
+  title: string
+}
+
+interface VacanciesApiResponse {
+  response: boolean
+  attributes: VacancyApiItem[]
 }
 
 interface StatusFilter {
@@ -102,8 +119,41 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
   const [isMobile, setIsMobile] = useState(false)
 
   const [vacancyOptions, setVacancyOptions] = useState<VacancyOption[]>([])
-  const [isLoadingVacancies, setIsLoadingVacancies] = useState(true)
-  const [vacancyError, setVacancyError] = useState("")
+
+  const {
+    data: vacanciesData,
+    isLoading: isLoadingVacancies,
+    error: vacancyError,
+  } = useApiQuery<VacanciesApiResponse>(
+    ["vacancies"],
+    `${API_BASE_URL}/vacancy/`,
+    {
+      enabled: true,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    }
+  )
+
+  useEffect(() => {
+    if (
+      vacanciesData &&
+      vacanciesData.response &&
+      Array.isArray(vacanciesData.attributes)
+    ) {
+      const vacancies = [
+        { value: "showAll", text: "Показать все", title: null, key: null },
+        ...vacanciesData.attributes.map((vacancy: VacancyApiItem) => ({
+          value: vacancy.key,
+          text: vacancy.title,
+          title: vacancy.title,
+          key: vacancy.key,
+        })),
+      ]
+      setVacancyOptions(vacancies)
+    } else if (vacancyError) {
+      setMockVacancies()
+    }
+  }, [vacanciesData, vacancyError])
 
   const monthNames = [
     "Январь",
@@ -120,7 +170,6 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     "Декабрь",
   ]
 
-  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false)
   const [candidatesError, setCandidatesError] = useState("")
 
   const calendarPanelRef = useRef<HTMLElement>(null)
@@ -182,11 +231,11 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     }
 
     return vacancyValues
-      .map((vacancyId) => {
+      .map((vacancyKey) => {
         const vacancy = vacancyOptions.find(
-          (option) => option.value === vacancyId
+          (option) => option.value === vacancyKey
         )
-        return vacancy ? vacancy.title : null
+        return vacancy ? vacancy.key : null
       })
       .filter(Boolean)
   }
@@ -202,67 +251,79 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     return null
   }
 
-  const loadVacancies = async () => {
-    try {
-      setIsLoadingVacancies(true)
-      setVacancyError("")
 
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        console.log("Токен доступа не найден, используем mock-данные")
-        setMockVacancies()
-        return
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        const vacancies = [
-          { value: "showAll", text: "Показать все", title: null },
-          ...data.attributes.map((vacancy: any) => ({
-            value: vacancy.id.toString(),
-            text: vacancy.title,
-            title: vacancy.title,
-          })),
-        ]
-        setVacancyOptions(vacancies)
-      } else {
-        throw new Error("Ошибка при получении данных вакансий")
-      }
-    } catch (error) {
-      console.error("Ошибка при загрузке вакансий:", error)
-      console.log("Используем mock-данные для вакансий")
-      setMockVacancies()
-    } finally {
-      setIsLoadingVacancies(false)
-    }
-  }
-
-  // Добавьте эту новую функцию:
   const setMockVacancies = () => {
     const mockVacancies = [
-      { value: "showAll", text: "Показать все", title: null },
+      { value: "showAll", text: "Показать все", title: null, key: null },
       {
-        value: "1",
-        text: "Frontend разработчик",
-        title: "Frontend разработчик",
+        value: "bcb609e6-95ae-4168-a168-3491eb4d8681",
+        text: "Специалист по продаже недвижимости",
+        title: "Специалист по продаже недвижимости",
+        key: "bcb609e6-95ae-4168-a168-3491eb4d8681",
       },
-      { value: "2", text: "Backend разработчик", title: "Backend разработчик" },
-      { value: "3", text: "UI/UX дизайнер", title: "UI/UX дизайнер" },
-      { value: "4", text: "Project Manager", title: "Project Manager" },
-      { value: "5", text: "DevOps инженер", title: "DevOps инженер" },
-      { value: "6", text: "QA тестировщик", title: "QA тестировщик" },
+      {
+        value: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
+        text: "Ипотечный специалист",
+        title: "Ипотечный специалист",
+        key: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
+      },
+      {
+        value: "db147302-cf22-4f1a-ae93-0e3e56d22131",
+        text: "Бухгалтер",
+        title: "Бухгалтер",
+        key: "db147302-cf22-4f1a-ae93-0e3e56d22131",
+      },
     ]
     setVacancyOptions(mockVacancies)
   }
+
+  const executeFiltersQuery = async ({
+    queryString,
+  }: {
+    queryString: string
+  }) => {
+    const accessToken = getAccessTokenFromCookie()
+    if (!accessToken) {
+      throw new Error("Токен доступа не найден")
+    }
+
+    const apiUrl = `${API_BASE_URL}/candidates${queryString ? "?" + queryString : ""}`
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+        accept: "*/*",
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  const applyFiltersMutation = useMutation({
+    mutationFn: executeFiltersQuery,
+    onSuccess: (data) => {
+      if (onFiltersApply) {
+        const updatedFilters: ActiveFilters = {
+          ...selectedFilters,
+          dateRange: {
+            type: currentRangeType,
+            start: startDate ? new Date(startDate) : null,
+            end: endDate ? new Date(endDate) : null,
+          },
+        }
+        onFiltersApply(data, updatedFilters)
+      }
+    },
+    onError: (error) => {
+      setCandidatesError("Ошибка при загрузке данных кандидатов")
+    },
+  })
 
   const handleCustomSelectToggle = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -384,126 +445,59 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     }
   }
 
-  const handleApplyFilters = async () => {
-    try {
-      setIsLoadingCandidates(true)
-      setCandidatesError("")
+  const handleApplyFilters = () => {
+    setCandidatesError("")
 
-      const updatedFilters: ActiveFilters = {
-        ...selectedFilters,
-        dateRange: {
-          type: currentRangeType,
-          start: startDate ? new Date(startDate) : null,
-          end: endDate ? new Date(endDate) : null,
-        },
-      }
+    const updatedFilters: ActiveFilters = {
+      ...selectedFilters,
+      dateRange: {
+        type: currentRangeType,
+        start: startDate ? new Date(startDate) : null,
+        end: endDate ? new Date(endDate) : null,
+      },
+    }
 
-      const queryParams: string[] = []
+    const queryParams: string[] = []
 
-      if (selectedCity) {
-        queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
-      }
+    if (selectedCity) {
+      queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
+    }
 
-      if (updatedFilters.dateRange.start && updatedFilters.dateRange.end) {
-        const dateRange = formatApiDateRange(
-          updatedFilters.dateRange.start,
-          updatedFilters.dateRange.end,
-          updatedFilters.dateRange.type
-        )
-
-        if (dateRange) {
-          switch (updatedFilters.dateRange.type) {
-            case "years":
-              queryParams.push(`year_range=${dateRange}`)
-              break
-            case "months":
-              queryParams.push(`month_range=${dateRange}`)
-              break
-            case "dates":
-              queryParams.push(`date_range=${dateRange}`)
-              break
-          }
-        }
-      }
-
-      const statusValues = getStatusApiValues(updatedFilters.status)
-      if (statusValues.length > 0) {
-        queryParams.push(`candidate_statuses=${statusValues.join(",")}`)
-      }
-
-      const vacancyValues = getVacancyApiValues(updatedFilters.vacancy)
-      if (vacancyValues.length > 0) {
-        queryParams.push(`vacancy_title=${vacancyValues.join(",")}`)
-      }
-
-      const queryString = queryParams.join("&")
-
-      console.log("=== ФИЛЬТРЫ КАЛЕНДАРЯ ===")
-      console.log("Применяемые фильтры:", {
-        dateRange: updatedFilters.dateRange,
-        status: updatedFilters.status,
-        vacancy: updatedFilters.vacancy,
-      })
-      console.log("Параметры API запроса:", queryString)
-      console.log(
-        "Полный URL запроса:",
-        `/api/v1/candidates${queryString ? "?" + queryString : ""}`
+    if (updatedFilters.dateRange.start && updatedFilters.dateRange.end) {
+      const dateRange = formatApiDateRange(
+        updatedFilters.dateRange.start,
+        updatedFilters.dateRange.end,
+        updatedFilters.dateRange.type
       )
 
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        throw new Error("Токен доступа не найден")
+      if (dateRange) {
+        switch (updatedFilters.dateRange.type) {
+          case "years":
+            queryParams.push(`year_range=${dateRange}`)
+            break
+          case "months":
+            queryParams.push(`month_range=${dateRange}`)
+            break
+          case "dates":
+            queryParams.push(`date_range=${dateRange}`)
+            break
+        }
       }
-
-      const apiUrl = `/api/v1/candidates${queryString ? "?" + queryString : ""}`
-      console.log("Отправляем запрос на:", apiUrl)
-
-      const response = await fetch(apiUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      console.log("Статус ответа:", response.status)
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const data = await response.json()
-      console.log("Полученные данные кандидатов:", data)
-
-      // Передаем данные в родительский компонент
-      if (onFiltersApply) {
-        onFiltersApply(data, updatedFilters)
-      }
-
-      console.log("Фильтры успешно применены, данные загружены")
-    } catch (error) {
-      console.error("Ошибка при применении фильтров:", error)
-
-      let errorMessage = "Ошибка при загрузке данных кандидатов"
-
-      if ((error as Error).message.includes("404")) {
-        errorMessage = "API endpoint не найден"
-      } else if ((error as Error).message.includes("401")) {
-        errorMessage =
-          "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-      } else if ((error as Error).message.includes("403")) {
-        errorMessage = "Нет доступа к данным кандидатов"
-      } else if ((error as Error).message.includes("500")) {
-        errorMessage = "Ошибка сервера"
-      } else if ((error as Error).message === "Токен доступа не найден") {
-        errorMessage = (error as Error).message
-      }
-
-      setCandidatesError(errorMessage)
-      console.log("Ошибка обработана:", errorMessage)
-    } finally {
-      setIsLoadingCandidates(false)
     }
+
+    const statusValues = getStatusApiValues(updatedFilters.status)
+    if (statusValues.length > 0) {
+      queryParams.push(`candidate_statuses=${statusValues.join(",")}`)
+    }
+
+    const vacancyValues = getVacancyApiValues(updatedFilters.vacancy)
+    if (vacancyValues.length > 0) {
+      queryParams.push(`vacancy_keys=${vacancyValues.join(",")}`)
+    }
+
+    const queryString = queryParams.join("&")
+
+    applyFiltersMutation.mutate({ queryString })
   }
 
   // Функции для генерации календаря
@@ -1123,34 +1117,30 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
           </div>
 
           <div className="formRow">
-            <h3 style={{ textAlign: "left" }}>
-              Фильтр по статусу
-            </h3>
+            <h3 style={{ textAlign: "left" }}>Фильтр по статусу</h3>
           </div>
           <div
             className="formRow justify-flex-start"
             style={{ flexWrap: "wrap" }}
           >
             {statusFilters.map((filter) => (
-              <button
-                key={filter.value}
-                className={`filterButton ${selectedFilters.status.includes(filter.value) ? "active" : ""}`}
-                onClick={() => handleFilterToggle("status", filter.value)}
-                disabled={isLoadingCandidates}
-              >
-                {filter.text}
-              </button>
+                <button
+                  key={filter.value}
+                  className={`filterButton ${selectedFilters.status.includes(filter.value) ? "active" : ""}`}
+                  onClick={() => handleFilterToggle("status", filter.value)}
+                  disabled={applyFiltersMutation.isPending}
+                >
+                  {filter.text}
+                </button>
             ))}
           </div>
 
           <div className="formRow">
-            <h3 style={{ textAlign: "left" }}>
-              Фильтр по вакансии
-            </h3>
+            <h3 style={{ textAlign: "left" }}>Фильтр по вакансии</h3>
           </div>
           <div
             className="formRow justify-flex-start"
-            style={{flexWrap: "wrap" }}
+            style={{ flexWrap: "wrap" }}
           >
             {/* Показываем индикатор загрузки или ошибку */}
             {isLoadingVacancies && (
@@ -1190,7 +1180,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
               >
                 {vacancyError}
                 <button
-                  onClick={loadVacancies}
+                  onClick={() => window.location.reload()}
                   style={{
                     marginLeft: "10px",
                     background: "none",
@@ -1213,7 +1203,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   key={filter.value}
                   className={`filterButton ${selectedFilters.vacancy.includes(filter.value) ? "active" : ""}`}
                   onClick={() => handleFilterToggle("vacancy", filter.value)}
-                  disabled={isLoadingCandidates}
+                  disabled={applyFiltersMutation.isPending}
                 >
                   {filter.text}
                 </button>
@@ -1225,16 +1215,16 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
             style={{ marginTop: "25px", gap: "1rem" }}
           >
             <button
-              className={`formBtn ${isLoadingCandidates ? "btn-inactive" : "btn-active"}`}
+              className={`formBtn ${applyFiltersMutation.isPending ? "btn-inactive" : "btn-active"}`}
               onClick={handleApplyFilters}
-              disabled={isLoadingCandidates}
+              disabled={applyFiltersMutation.isPending}
               style={{
                 position: "relative",
                 minWidth: "140px",
                 height: "45px",
               }}
             >
-              {isLoadingCandidates ? (
+              {applyFiltersMutation.isPending ? (
                 <>
                   <span style={{ opacity: 0 }}>Применить</span>
                   <div
@@ -1285,7 +1275,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   setTimeout(() => setIsMobile(window.innerWidth <= 768), 0)
                 }
               }}
-              disabled={isLoadingCandidates}
+              disabled={applyFiltersMutation.isPending}
               style={{
                 minWidth: "140px",
                 height: "45px",
