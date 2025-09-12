@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react"
 
 import Image from "next/image"
 
-import { useApiMutation, useApiQuery } from "@/utils/hooks/use-api"
-
 import styles from "./candidateLoginComponents.module.css"
+import formStyles from "./showForm.module.scss"
 
 import BigHeader from "./bigHeader"
 
@@ -15,45 +14,8 @@ interface SelectOption {
   text: string
 }
 
-interface EducationalInstitution {
-  institution_name?: string
-  start_date?: string
-  end_date?: string
-  education_type?: string
-  specialty?: string
-}
-
-interface Course {
-  institution_name?: string
-  course_name?: string
-  start_date?: string
-  end_date?: string
-}
-
-interface FamilyMember {
-  full_name?: string
-  birth_date?: string
-  phone?: string
-  work_study_place?: string
-  residence_address?: string
-}
-
-interface AdultFamilyMember {
-  relationship_and_name?: string
-  birth_date?: string
-  phone?: string
-  work_study_place?: string
-  residence_address?: string
-}
-
-interface ApiResponse {
-  response?: boolean
-  attributes?: CandidateData
-}
-
 interface CandidateData {
-  id: string | number
-  key?: string
+  id: string
   last_name: string
   first_name: string
   middle_name?: string
@@ -85,29 +47,43 @@ interface CandidateData {
   temporary_registration_address?: string
   actual_residence_address?: string
   marital_statuses?: {
-    key?: string
     attributes?: {
       title?: string
     }
   }
-  family_partner?: FamilyMember[] | FamilyMember
-  adult_children?: FamilyMember[]
-  adult_family_members?: AdultFamilyMember[]
-  serviceman?: boolean | number
+  family_partner?: Array<{
+    full_name?: string
+    birth_date?: string
+    phone?: string
+    work_study_place?: string
+    residence_address?: string
+  }>
+  adult_children?: Array<{
+    full_name?: string
+    birth_date?: string
+    phone?: string
+    work_study_place?: string
+    residence_address?: string
+  }>
+  adult_family_members?: Array<{
+    relationship_and_name?: string
+    birth_date?: string
+    phone?: string
+    work_study_place?: string
+    residence_address?: string
+  }>
+  serviceman?: boolean
   law_breaker?: string
   legal_entity?: string
   status?: string
   comment?: string
   created_at?: string
   vacancy?: {
-    key?: string
     attributes?: {
       title?: string
     }
   }
   reason_for_changing_surnames?: string
-  city_work?: string
-  is_data_processing?: boolean | number
 }
 
 interface ShowFormProps {
@@ -130,48 +106,15 @@ const ShowForm: React.FC<ShowFormProps> = ({
   const [isUpdating, setIsUpdating] = useState(false)
 
   const [candidateData, setCandidateData] = useState<CandidateData | null>(null)
-  const [selectOptions, setSelectOptions] = useState<SelectOption[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
 
-  // Функция для получения токена из cookie
-  const getAccessTokenFromCookie = (): string | null => {
-    if (typeof document === "undefined") return null
-    const cookies = document.cookie.split(";")
-    for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "access_token") {
-        return value
-      }
-    }
-    return null
-  }
-
-  // Запрос для получения списка статусов
-  const {
-    data: statusesData,
-    isLoading: isLoadingStatuses,
-    error: statusesError,
-  } = useApiQuery(
-    ["candidate-statuses"],
-    `${process.env.NEXT_PUBLIC_API_URL}/candidates/get-statuses`,
-    {
-      staleTime: 10 * 60 * 1000, // 10 минут
-      retry: 2,
-      useMock: !getAccessTokenFromCookie(),
-      mockFn: async () => {
-        console.log("Используем mock-данные для статусов")
-        return [
-          "Новая анкета",
-          "Проверен",
-          "Отклонен",
-          "Нужна доработка",
-          "Принят",
-          "Не принят",
-          "Вышел",
-          "Не вышел",
-        ]
-      },
-    }
-  )
+  const selectOptions: SelectOption[] = [
+    { value: "new", text: "Новая анкета" },
+    { value: "needs-work", text: "Нужна доработка" },
+    { value: "checked", text: "Проверен" },
+    { value: "rejected", text: "Отклонен" },
+  ]
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
@@ -192,7 +135,6 @@ const ShowForm: React.FC<ShowFormProps> = ({
           : element.querySelector("section")
       if (sectionElement) {
         sectionElement.style.removeProperty("max-width")
-        sectionElement.style.setProperty("width", "50%", "important")
         console.log("✅ Стили применены к section")
       }
     }
@@ -294,7 +236,6 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
       if (sectionElement) {
         sectionElement.style.removeProperty("max-width")
-        sectionElement.style.setProperty("width", "50%", "important")
         console.log("✅ Стили применены к section")
         success = true
       }
@@ -336,8 +277,38 @@ const ShowForm: React.FC<ShowFormProps> = ({
     window.location.reload()
   }
 
+  // Функция для получения CSRF токена
+  const getCsrfToken = () => {
+    const metaTag = document.querySelector('meta[name="csrf-token"]')
+    if (metaTag) {
+      return metaTag.getAttribute("content")
+    }
+
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "XSRF-TOKEN") {
+        return decodeURIComponent(value)
+      }
+    }
+
+    return "Zva2RlvTSh5wTQogjJMfE8v5ObQoOSIcL40Xwc5d"
+  }
+
+  // Функция для получения access token из cookies
+  const getAccessToken = () => {
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
   // Функция для парсинга JSON строк
-  const parseJsonField = <T,>(jsonString?: string): T[] => {
+  const parseJsonField = (jsonString?: string): any[] => {
     if (!jsonString || jsonString === null || jsonString === "null") return []
     try {
       const parsed = JSON.parse(jsonString)
@@ -348,25 +319,88 @@ const ShowForm: React.FC<ShowFormProps> = ({
     }
   }
 
-  const {
-    data: candidateApiData,
-    isLoading: isLoadingCandidate,
-    error: candidateError,
-  } = useApiQuery(
-    ["candidate", vacancyKey],
-    `${process.env.NEXT_PUBLIC_API_URL}/candidates/read?key=${encodeURIComponent(vacancyKey || "")}`,
-    {
-      enabled: !!vacancyKey,
-      staleTime: 5 * 60 * 1000, // 5 минут
-      retry: 2,
-      useMock: !getAccessTokenFromCookie(),
-      mockFn: async () => {
-        console.log("Используем mock-данные для кандидата")
-        setMockData()
-        return null
-      },
+  // Функция для загрузки данных кандидата
+  const fetchCandidateData = async () => {
+    if (!vacancyKey) {
+      setError("Ключ кандидата не передан")
+      setIsLoading(false)
+      return
     }
-  )
+
+    const accessToken = getAccessToken()
+    if (!accessToken) {
+      console.log("Access token не найден, используем mock-данные")
+      setMockData()
+      setIsLoading(false) // Добавляем эту строку
+      return // Важно: завершаем выполнение функции здесь
+    }
+
+    setIsLoading(true)
+    setError("")
+
+    try {
+      const csrfToken = getCsrfToken()
+
+      const headers: Record<string, string> = {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      }
+
+      if (csrfToken) {
+        headers["X-CSRF-TOKEN"] = csrfToken
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/read?key=${vacancyKey}`,
+        {
+          method: "GET",
+          headers: headers,
+        }
+      )
+
+      if (response.ok) {
+        const result = await response.json()
+
+        if (result.response && result.attributes) {
+          const data = Array.isArray(result.attributes.data)
+            ? result.attributes.data[0]
+            : result.attributes
+          setCandidateData(data)
+
+          // Устанавливаем текущий статус в селектор
+          const currentStatus = data.status
+          const statusOption = selectOptions.find((option) => {
+            const statusMap: Record<string, string> = {
+              new: "Новая анкета",
+              "needs-work": "Нужна доработка",
+              checked: "Проверен",
+              rejected: "Отклонен",
+            }
+            return statusMap[option.value] === currentStatus
+          })
+
+          if (statusOption) {
+            setSelectedOption(statusOption)
+          }
+
+          if (data.comment) {
+            setCommentValue(data.comment)
+          }
+        } else {
+          throw new Error("Неверный формат ответа сервера")
+        }
+      } else {
+        throw new Error(`Ошибка ${response.status}`)
+      }
+    } catch (error) {
+      console.error("Ошибка при получении данных кандидата:", error)
+      console.log("Используем mock-данные для разработки")
+      setMockData()
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   // Добавьте эту новую функцию для установки mock-данных:
   const setMockData = () => {
@@ -472,108 +506,21 @@ const ShowForm: React.FC<ShowFormProps> = ({
     const statusOption = selectOptions.find((option) => option.value === "new")
     if (statusOption) {
       setSelectedOption(statusOption)
-    } else if (selectOptions.length > 0) {
-      // Если статус не найден, используем первый доступный
-      setSelectedOption(selectOptions[0])
     }
 
     setCommentValue(mockData.comment || "")
+    setError("")
   }
 
-  // Обрабатываем данные статусов из API
+  // Загружаем данные при монтировании компонента
   useEffect(() => {
-    if (statusesData && Array.isArray(statusesData)) {
-      console.log("Получены статусы от API:", statusesData)
-
-      // Преобразуем массив строк в массив объектов SelectOption
-      const options = statusesData.map((status: string) => ({
-        value: getStatusValue(status),
-        text: status,
-      }))
-
-      setSelectOptions(options)
-
-      // Если у нас еще нет выбранного статуса, устанавливаем первый
-      if (!selectedOption.value && options.length > 0) {
-        setSelectedOption(options[0])
-      }
-    } else if (statusesError) {
-      console.error("Ошибка при получении статусов:", statusesError)
-      // Устанавливаем дефолтные статусы в случае ошибки
-      const defaultOptions = [
-        { value: "new", text: "Новая анкета" },
-        { value: "needs-work", text: "Нужна доработка" },
-        { value: "checked", text: "Проверен" },
-        { value: "rejected", text: "Отклонен" },
-      ]
-      setSelectOptions(defaultOptions)
-    }
-  }, [statusesData, statusesError])
-
-  // Функция для преобразования текста статуса в значение
-  const getStatusValue = (statusText: string): string => {
-    const statusMap: Record<string, string> = {
-      "Новая анкета": "new",
-      "Нужна доработка": "needs-work",
-      Проверен: "checked",
-      Отклонен: "rejected",
-      Принят: "accepted",
-      "Не принят": "not-accepted",
-      Вышел: "started-working",
-      "Не вышел": "not-started-working",
-    }
-    return (
-      statusMap[statusText] || statusText.toLowerCase().replace(/\s+/g, "-")
-    )
-  }
-
-  // Обрабатываем данные кандидата из API
-  useEffect(() => {
-    if (candidateApiData && typeof candidateApiData === "object") {
-      const apiData = candidateApiData as ApiResponse
-      console.log("Получены данные от API:", apiData)
-
-      if (apiData.response && apiData.attributes) {
-        // Данные находятся напрямую в attributes, а не в attributes.data
-        const data = apiData.attributes
-
-        console.log("Обрабатываем данные кандидата:", data)
-        setCandidateData(data)
-
-        // Устанавливаем текущий статус в селектор
-        const currentStatus = data.status
-        if (currentStatus) {
-          const statusOption = selectOptions.find(
-            (option) => option.text === currentStatus
-          )
-
-          if (statusOption) {
-            setSelectedOption(statusOption)
-          } else {
-            // Если статус не найден в списке, создаем новый объект
-            const newOption = {
-              value: getStatusValue(currentStatus),
-              text: currentStatus,
-            }
-            setSelectedOption(newOption)
-          }
-        }
-
-        if (data.comment) {
-          setCommentValue(data.comment)
-        }
-      }
-    } else if (candidateError) {
-      console.error("Ошибка при получении данных кандидата:", candidateError)
-      setMockData() // Используем mock-данные в случае ошибки
-    }
-  }, [candidateApiData, candidateError, selectOptions])
-
-  // Обрабатываем отсутствие vacancyKey
-  useEffect(() => {
-    if (!vacancyKey) {
+    console.log("UseEffect запущен, vacancyKey:", vacancyKey)
+    if (vacancyKey) {
+      fetchCandidateData()
+    } else {
       console.log("vacancyKey не передан")
-      // vacancyKey обрабатывается в условии рендера компонента
+      setError("Ключ кандидата не передан")
+      setIsLoading(false)
     }
   }, [vacancyKey])
 
@@ -584,45 +531,19 @@ const ShowForm: React.FC<ShowFormProps> = ({
       "needs-work": "Нужна доработка",
       checked: "Проверен",
       rejected: "Отклонен",
-      accepted: "Принят",
-      "not-accepted": "Не принят",
-      "started-working": "Вышел",
-      "not-started-working": "Не вышел",
     }
     return statusMap[statusValue] || statusValue
   }
 
-  // Мутация для обновления статуса кандидата
-  const updateCandidateMutation = useApiMutation(
-    `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
-    {
-      onSuccess: (data) => {
-        console.log("✅ Статус успешно обновлен:", data)
-        setIsUpdating(false)
-      },
-      onError: (error) => {
-        console.error("❌ Ошибка при обновлении статуса:", error)
-        setIsUpdating(false)
-      },
-    }
-  )
-
-  // Мутация для обновления комментария кандидата
-  const updateCommentMutation = useApiMutation(
-    `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
-    {
-      onSuccess: (data) => {
-        console.log("✅ Комментарий успешно отправлен:", data)
-        setCommentValue("")
-      },
-      onError: (error) => {
-        console.error("❌ Ошибка при отправке комментария:", error)
-      },
-    }
-  )
-
   // Функция для отправки запроса обновления статуса
   const updateCandidateStatus = async (newStatus: string) => {
+    const accessToken = getAccessToken()
+
+    if (!accessToken) {
+      console.error("Access token не найден в cookies")
+      return false
+    }
+
     if (!vacancyKey) {
       console.error("Ключ кандидата не передан в props")
       return false
@@ -645,12 +566,45 @@ const ShowForm: React.FC<ShowFormProps> = ({
     console.log("requestData:", requestData)
 
     try {
-      await updateCandidateMutation.mutateAsync(requestData)
-      return true
+      const csrfToken = getCsrfToken()
+      const headers: Record<string, string> = {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      }
+
+      if (csrfToken) {
+        headers["X-CSRF-TOKEN"] = csrfToken
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestData),
+        }
+      )
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log("✅ Статус успешно обновлен:", result)
+        return true
+      } else {
+        const errorText = await response.text()
+        console.error(
+          "❌ Ошибка при обновлении статуса:",
+          response.status,
+          errorText
+        )
+        return false
+      }
     } catch (error) {
       console.error("=== ОШИБКА ЗАПРОСА ===")
       console.error("Ошибка:", error)
       return false
+    } finally {
+      setIsUpdating(false)
     }
   }
 
@@ -688,6 +642,13 @@ const ShowForm: React.FC<ShowFormProps> = ({
       return
     }
 
+    const accessToken = getAccessToken()
+
+    if (!accessToken) {
+      console.error("Access token не найден в cookies")
+      return
+    }
+
     if (!vacancyKey) {
       console.error("Ключ кандидата не передан в props")
       return
@@ -701,7 +662,38 @@ const ShowForm: React.FC<ShowFormProps> = ({
     }
 
     try {
-      await updateCommentMutation.mutateAsync(requestData)
+      const csrfToken = getCsrfToken()
+      const headers: Record<string, string> = {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      }
+
+      if (csrfToken) {
+        headers["X-CSRF-TOKEN"] = csrfToken
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestData),
+        }
+      )
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log("✅ Комментарий успешно отправлен:", result)
+        setCommentValue("")
+      } else {
+        const errorText = await response.text()
+        console.error(
+          "❌ Ошибка при отправке комментария:",
+          response.status,
+          errorText
+        )
+      }
     } catch (error) {
       console.error("=== ОШИБКА ОТПРАВКИ КОММЕНТАРИЯ ===")
       console.error("Ошибка:", error)
@@ -719,14 +711,6 @@ const ShowForm: React.FC<ShowFormProps> = ({
         return "status-needRevision"
       case "Отклонен":
         return "status-rejected"
-      case "Принят":
-        return "status-accepted"
-      case "Не принят":
-        return "status-not"
-      case "Вышел":
-        return "status-startWorking"
-      case "Не вышел":
-        return "status-not"
       default:
         return "status-new" // по умолчанию
     }
@@ -734,7 +718,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
 
   // Функции для форматирования данных
   const formatDate = (dateString?: string) => {
-    if (!dateString || dateString.trim() === "") return ""
+    if (!dateString) return ""
     try {
       const date = new Date(dateString)
       return date.toLocaleDateString("ru-RU")
@@ -744,20 +728,18 @@ const ShowForm: React.FC<ShowFormProps> = ({
   }
 
   const formatPhone = (phone?: string) => {
-    if (!phone || phone.trim() === "") return ""
+    if (!phone) return ""
     return phone
-  }
-
-  const formatValue = (value?: string | number | boolean) => {
-    if (value === null || value === undefined || value === "") return ""
-    if (typeof value === "boolean") return value ? "Да" : "Нет"
-    return String(value).trim()
   }
 
   // Закрытие селектора при клике вне его
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (isSelectOpen && !(e.target as HTMLElement).closest("#customSelect")) {
+      if (
+        isSelectOpen &&
+        !(e.target as HTMLElement).closest("#customSelect") &&
+        !(e.target as HTMLElement).closest("#mobileSelect")
+      ) {
         setIsSelectOpen(false)
       }
     }
@@ -778,7 +760,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
   }, [isSelectOpen])
 
   // Показываем загрузку
-  if (isLoadingCandidate) {
+  if (isLoading) {
     return (
       <div
         style={{
@@ -794,7 +776,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
   }
 
   // Показываем ошибку
-  if (candidateError) {
+  if (error) {
     return (
       <div
         style={{
@@ -805,10 +787,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
           minHeight: "400px",
         }}
       >
-        <p style={{ color: "red", marginBottom: "20px" }}>
-          Ошибка:{" "}
-          {candidateError?.message || "Ошибка при загрузке данных кандидата"}
-        </p>
+        <p style={{ color: "red", marginBottom: "20px" }}>Ошибка: {error}</p>
         <button
           onClick={() => {
             setSelectedVacancyKey(null)
@@ -821,36 +800,36 @@ const ShowForm: React.FC<ShowFormProps> = ({
     )
   }
 
-  // Если данные кандидата еще не загружены, не рендерим основной контент
+  // Показываем сообщение, если данные не загружены
   if (!candidateData) {
     return (
-      <>
-        <BigHeader onCityChange={handleCityChange} activePage="candidates" />
-        <main style={{ marginTop: "5rem" }}>
-          <section>
-            <div className="center-card big">
-              <div style={{ textAlign: "center", padding: "20px" }}>
-                Загрузка данных кандидата...
-              </div>
-            </div>
-          </section>
-        </main>
-      </>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px",
+        }}
+      >
+        <p>Данные кандидата не найдены</p>
+        <button onClick={() => setSelectedVacancyKey(null)}>
+          Вернуться к списку
+        </button>
+      </div>
     )
   }
 
   // Парсим данные об образовании, курсах и работе
-  const educationalInstitutions = parseJsonField<EducationalInstitution>(
+  const educationalInstitutions = parseJsonField(
     candidateData.educational_institution
   )
-  const courses = parseJsonField<Course>(candidateData.courses)
+  const courses = parseJsonField(candidateData.courses)
 
   const hasPartner =
     candidateData.family_partner &&
-    ((Array.isArray(candidateData.family_partner) &&
-      candidateData.family_partner.length > 0) ||
-      (!Array.isArray(candidateData.family_partner) &&
-        candidateData.family_partner.full_name))
+    Array.isArray(candidateData.family_partner) &&
+    candidateData.family_partner.length > 0
 
   const hasAdultChildren =
     candidateData.adult_children &&
@@ -862,39 +841,1271 @@ const ShowForm: React.FC<ShowFormProps> = ({
     Array.isArray(candidateData.adult_family_members) &&
     candidateData.adult_family_members.length > 0
 
-  // Проверяем наличие данных об образовании и курсах
-  const hasEducationData =
-    candidateData.level_educational ||
-    (educationalInstitutions && educationalInstitutions.length > 0) ||
-    (courses && courses.length > 0)
-
-  // Проверяем наличие данных о работе
-  const hasWorkExperience =
-    candidateData.organization_name ||
-    candidateData.organization_phone ||
-    candidateData.field_of_activity ||
-    candidateData.organization_address ||
-    candidateData.organization_job_title ||
-    candidateData.organization_price ||
-    candidateData.date_of_hiring ||
-    candidateData.date_of_dismissal ||
-    candidateData.reason_for_dismissal ||
-    candidateData.recommendation_contact
-
   return (
     <>
       <BigHeader onCityChange={handleCityChange} activePage="candidates" />
-      <main style={{ marginTop: "5rem" }}>
-        <section>
-          <div className="center-card big">
+      <main style={{ marginTop: "5rem" }} className={formStyles.main}>
+        <section className={formStyles.section}>
+          <div className="form-layout">
+            <div className="nonAbsblock">
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => setSelectedVacancyKey(null)}
+              >
+                <Image
+                  src="/images/icons/arrow-left.svg"
+                  alt="Back"
+                  width={16}
+                  height={16}
+                />
+                Вернуться к списку
+              </p>
+              <div className="mobile-status-select" style={{ display: "none" }}>
+                <div
+                  className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
+                  id="mobileSelect"
+                  style={{ width: "179px" }}
+                >
+                  <div
+                    className={`select-trigger ${getStatusClass(selectedOption.text)}`}
+                    id="mobileSelectTrigger"
+                    onClick={handleSelectToggle}
+                    style={{ opacity: isUpdating ? 0.6 : 1, width: "100%" }}
+                  >
+                    {selectedOption.text}
+                    {isUpdating && (
+                      <span style={{ marginLeft: "10px" }}>...</span>
+                    )}
+                    <div className="trigger-icons"></div>
+                  </div>
+                  <div
+                    className={`select-dropdown ${getStatusClass(selectedOption.text)}`}
+                    id="mobileSelectDropdown"
+                  >
+                    {selectOptions.map((option) => (
+                      <div
+                        key={option.value}
+                        className={`select-option ${selectedOption.value === option.value ? "selected" : ""}`}
+                        data-value={option.value}
+                        onClick={() => handleOptionSelect(option)}
+                        style={{
+                          opacity: isUpdating ? 0.6 : 1,
+                          pointerEvents: isUpdating ? "none" : "auto",
+                        }}
+                      >
+                        {option.text}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={`center-card big ${formStyles.centerCard}`}>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-3.7rem",
+                  left: "0",
+                  right: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                }}
+              >
+                <p
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setSelectedVacancyKey(null)}
+                >
+                  <Image
+                    src="/images/icons/arrow-left.svg"
+                    alt="Back"
+                    width={16}
+                    height={16}
+                  />
+                  Вернуться к списку
+                </p>
+
+                {/* Mobile status select - показывается только на экранах < 1024px */}
+                <div
+                  className="mobile-status-select"
+                  style={{ display: "none" }}
+                >
+                  <div
+                    className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
+                    id="mobileSelect"
+                    style={{ width: "179px" }}
+                  >
+                    <div
+                      className={`select-trigger ${getStatusClass(selectedOption.text)}`}
+                      id="mobileSelectTrigger"
+                      onClick={handleSelectToggle}
+                      style={{ opacity: isUpdating ? 0.6 : 1, width: "100%" }}
+                    >
+                      {selectedOption.text}
+                      {isUpdating && (
+                        <span style={{ marginLeft: "10px" }}>...</span>
+                      )}
+                      <div className="trigger-icons"></div>
+                    </div>
+                    <div
+                      className={`select-dropdown ${getStatusClass(selectedOption.text)}`}
+                      id="mobileSelectDropdown"
+                    >
+                      {selectOptions.map((option) => (
+                        <div
+                          key={option.value}
+                          className={`select-option ${selectedOption.value === option.value ? "selected" : ""}`}
+                          data-value={option.value}
+                          onClick={() => handleOptionSelect(option)}
+                          style={{
+                            opacity: isUpdating ? 0.6 : 1,
+                            pointerEvents: isUpdating ? "none" : "auto",
+                          }}
+                        >
+                          {option.text}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`formRow ${formStyles.formRow}`} id="generalData">
+                <h3
+                  style={{
+                    width: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  className={formStyles.formRowH3}
+                >
+                  {[
+                    `${candidateData.last_name || ""} ${candidateData.first_name || ""} ${candidateData.middle_name || ""}`.trim(),
+                    candidateData.birth_date
+                      ? `${new Date().getFullYear() - new Date(candidateData.birth_date).getFullYear()} лет`
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(",    ")}
+                </h3>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`} id="vacancyData">
+                <h4
+                  style={{
+                    width: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "0",
+                  }}
+                  className={formStyles.formRowH4}
+                >
+                  {candidateData.vacancy?.attributes?.title ||
+                    "Вакансия не указана"}
+                </h4>
+              </div>
+              <span id="line"></span>
+              <div
+                className={`formRow justify-space-between ${formStyles.formRow}`}
+                id="submissionData"
+              >
+                <p style={{ fontSize: "16px" }} className={formStyles.formRowP}>
+                  Дата подачи
+                </p>
+                <p style={{ fontSize: "16px" }} className={formStyles.formRowP}>
+                  {formatDate(candidateData.created_at)}
+                </p>
+              </div>
+
+              {candidateData.reason_for_changing_surnames && (
+                <div
+                  id="surnameChangeReason"
+                  className="toggle-block"
+                  style={{ width: "100%" }}
+                >
+                  <div className="formRow">
+                    <div className="input-container">
+                      <label
+                        htmlFor="reasonOfChange"
+                        id="formLabel"
+                        className="formLabel"
+                      >
+                        Причина изменения фамилии
+                      </label>
+                      <input
+                        type="text"
+                        name="reasonOfChange"
+                        id="reasonOfChange"
+                        className="formInput big"
+                        placeholder="Опишите, почему поменяли фамилию"
+                        value={candidateData.reason_for_changing_surnames || ""}
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div
+                className={`formRow justify-space-between ${formStyles.formRow}`}
+              >
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="birthDate"
+                    id="formLabel"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Дата рождения
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="birthDate"
+                    id="birthDate"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="01.01.1990"
+                    value={formatDate(candidateData.birth_date)}
+                    readOnly
+                  />
+                </div>
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="birthPlace"
+                    id="formLabel"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Место рождения
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="birthPlace"
+                    id="birthPlace"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="Страна и город"
+                    value={`${candidateData.country_birth || ""}, ${candidateData.city_birth || ""}`}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div
+                className={`formRow justify-space-between ${formStyles.formRow}`}
+              >
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="mobileNumber"
+                    id="mobileNumber"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Мобильный телефон
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="tel"
+                    name="mobileNumber"
+                    id="mobileNumber"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="+7(999)999-99-99"
+                    value={formatPhone(candidateData.mobile_phone_candidate)}
+                    readOnly
+                  />
+                </div>
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="domesticNumber"
+                    id="domesticNumber"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Домашний телефон
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="tel"
+                    name="domesticNumber"
+                    id="domesticNumber"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="999 999"
+                    value={formatPhone(candidateData.home_phone_candidate)}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div
+                className={`formRow justify-space-between ${formStyles.formRow}`}
+              >
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="email"
+                    id="email"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    E-mail
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="email"
+                    name="email"
+                    id="email"
+                    className={`formInput ${formStyles.formInput}`}
+                    value={candidateData.mail_candidate || ""}
+                    placeholder="example@gmail.com"
+                    readOnly
+                  />
+                </div>
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="INN"
+                    id="INN"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    ИНН
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="INN"
+                    id="INN"
+                    className={`formInput ${formStyles.formInput}`}
+                    value={candidateData.inn || ""}
+                    placeholder="123456789012"
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              {/* Показываем раздел образования только если есть данные */}
+              {(candidateData.level_educational ||
+                educationalInstitutions.length > 0 ||
+                courses.length > 0) && (
+                <>
+                  <div
+                    className={`formRow flex-direction-column ${formStyles.formRow}`}
+                    style={{ marginTop: "50px" }}
+                  >
+                    <h3 className={formStyles.formRowH3}>
+                      Образование и профессиональный опыт
+                    </h3>
+                  </div>
+
+                  {candidateData.level_educational && (
+                    <div className={`formRow ${formStyles.formRow}`}>
+                      <div
+                        className={`input-container ${formStyles.inputContainer}`}
+                      >
+                        <label
+                          htmlFor="educationLevel"
+                          className={`formLabel ${formStyles.formLabel}`}
+                        >
+                          Уровень образования
+                        </label>
+                        <input
+                          style={{ width: "100%" }}
+                          type="text"
+                          name="educationLevel"
+                          id="educationLevel"
+                          className={`formInput ${formStyles.formInput}`}
+                          value={candidateData.level_educational || ""}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Динамические данные об образовательных учреждениях */}
+                  {educationalInstitutions.length > 0 &&
+                    educationalInstitutions.map(
+                      (institution: any, index: number) => (
+                        <div
+                          key={index}
+                          className={`formRow ${formStyles.formRow}`}
+                        >
+                          <table
+                            className={`inputTable showTable ${formStyles.inputTable}`}
+                          >
+                            <tbody>
+                              <tr>
+                                <td colSpan={2}>
+                                  <input
+                                    type="text"
+                                    name={`nameInstitution${index + 1}`}
+                                    placeholder="Полное наименование учебного заведения"
+                                    value={institution?.institution_name || ""}
+                                    readOnly
+                                  />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name={`dateOfEntrance${index + 1}`}
+                                    placeholder="Дата поступления"
+                                    value={formatDate(institution?.start_date)}
+                                    readOnly
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name={`dateOfEnding${index + 1}`}
+                                    placeholder="Дата окончания"
+                                    value={formatDate(institution?.end_date)}
+                                    readOnly
+                                  />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name={`typeOfEducation${index + 1}`}
+                                    placeholder="Форма обучения"
+                                    value={institution?.education_type || ""}
+                                    readOnly
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name={`diplomaSpeciality${index + 1}`}
+                                    placeholder="Специальность по диплому"
+                                    value={institution?.specialty || ""}
+                                    readOnly
+                                  />
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                    )}
+
+                  {/* Динамические данные о курсах */}
+                  {courses.length > 0 &&
+                    courses.map((course: any, index: number) => (
+                      <div
+                        key={index}
+                        className={`formRow ${formStyles.formRow}`}
+                      >
+                        <table
+                          className={`inputTable showTable ${formStyles.inputTable}`}
+                        >
+                          <tbody>
+                            <tr>
+                              <td colSpan={2}>
+                                <input
+                                  type="text"
+                                  name={`courseName${index + 1}`}
+                                  placeholder="Полное наименование учебного заведения"
+                                  value={course?.institution_name || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan={2}>
+                                <input
+                                  type="text"
+                                  name={`courseTitle${index + 1}`}
+                                  placeholder="Название курса/тренинга"
+                                  value={course?.course_name || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`courseStartDate${index + 1}`}
+                                  placeholder="Дата начала"
+                                  value={formatDate(course?.start_date)}
+                                  readOnly
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`courseEndDate${index + 1}`}
+                                  placeholder="Дата окончания"
+                                  value={formatDate(course?.end_date)}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+
+                  <div className={`formRow ${formStyles.formRow}`}>
+                    <div
+                      className={`input-container ${formStyles.inputContainer}`}
+                    >
+                      <label
+                        htmlFor="professionalExperience"
+                        className={`formLabel ${formStyles.formLabel}`}
+                      >
+                        Профессиональный опыт
+                      </label>
+                      <input
+                        style={{ width: "100%" }}
+                        type="text"
+                        name="professionalExperience"
+                        id="professionalExperience"
+                        className={`formInput ${formStyles.formInput}`}
+                        value={
+                          candidateData.organization_name
+                            ? "Опыт есть"
+                            : "Опыт отсутствует"
+                        }
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Динамические данные о последнем месте работы */}
+              {candidateData.organization_name && (
+                <div
+                  className={`formRow ${formStyles.formRow}`}
+                  style={{
+                    opacity: 1,
+                    height: "550px",
+                    overflow: "hidden",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
+                  <table
+                    className={`inputTable showTable ${formStyles.inputTable}`}
+                    style={{ height: "auto", minHeight: "350px" }}
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          style={{
+                            borderTopLeftRadius: "16px",
+                            borderTopRightRadius: 0,
+                          }}
+                        >
+                          <input
+                            type="text"
+                            name="companyName"
+                            placeholder="Полное наименование предприятия"
+                            value={candidateData.organization_name || ""}
+                            readOnly
+                          />
+                        </td>
+                        <td
+                          style={{
+                            borderTopRightRadius: "16px",
+                            borderTopLeftRadius: 0,
+                          }}
+                        >
+                          <input
+                            type="text"
+                            name="companyPhone"
+                            placeholder="Телефон предприятия"
+                            value={candidateData.organization_phone || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={2}>
+                          <input
+                            type="text"
+                            name="companyActivity"
+                            placeholder="Сфера деятельности предприятия"
+                            value={candidateData.field_of_activity || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={2}>
+                          <input
+                            type="text"
+                            name="companyAddress"
+                            placeholder="Адрес предприятия"
+                            value={candidateData.organization_address || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            name="position"
+                            placeholder="Должность"
+                            value={candidateData.organization_job_title || ""}
+                            readOnly
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            name="salary"
+                            placeholder="Уровень заработной платы"
+                            value={candidateData.organization_price || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            name="hireDate"
+                            placeholder="Дата приема (месяц, год)"
+                            value={formatDate(candidateData.date_of_hiring)}
+                            readOnly
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            name="dismissalDate"
+                            placeholder="Дата увольнения (месяц, год)"
+                            value={formatDate(candidateData.date_of_dismissal)}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={2}>
+                          <input
+                            type="text"
+                            name="dismissalReason"
+                            placeholder="Причина увольнения"
+                            value={candidateData.reason_for_dismissal || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          colSpan={2}
+                          style={{
+                            borderBottomLeftRadius: "16px",
+                            borderBottomRightRadius: "16px",
+                          }}
+                        >
+                          <input
+                            type="text"
+                            name="referenceContact"
+                            placeholder="ФИО и номер телефона лица, к которому можно обратиться за рекомендацией"
+                            value={candidateData.recommendation_contact || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <div
+                className={`formRow ${formStyles.formRow}`}
+                style={{ marginTop: "50px" }}
+                id="passportData"
+              >
+                <h3 className={formStyles.formRowH3}>Паспортные данные</h3>
+              </div>
+
+              <div
+                className={`formRow justify-space-between ${formStyles.formRow}`}
+              >
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="passwordSeriaNumber"
+                    id="passwordSeriaNumber"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Серия и номер
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="passwordSeriaNumber"
+                    id="passwordSeriaNumber"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="1234 567890"
+                    value={`${candidateData.passport_series || ""} ${candidateData.passport_number || ""}`}
+                    readOnly
+                  />
+                </div>
+                <div
+                  className={`input-container w-49 ${formStyles.inputContainer}`}
+                >
+                  <label
+                    htmlFor="dateOfIssue"
+                    id="dateOfIssue"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Дата выдачи
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="dateOfIssue"
+                    id="dateOfIssue"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="01.01.1990"
+                    value={formatDate(candidateData.passport_issued_date)}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="issuedBy"
+                    id="issuedBy"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Кем выдан
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="issuedBy"
+                    id="issuedBy"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="ОФУМС России"
+                    value={candidateData.passport_issued || ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="adressOfPermanentReg"
+                    id="adressOfPermanentReg"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Адрес постоянной регистрации
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="adressOfPermanentReg"
+                    id="adressOfPermanentReg"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="Адрес постоянной регистрации"
+                    value={candidateData.permanent_registration_address || ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="adressOfTemporaryReg"
+                    id="adressOfTemporaryReg"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Адрес временной регистрации
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="adressOfTemporaryReg"
+                    id="adressOfTemporaryReg"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="Адрес временной регистрации"
+                    value={candidateData.temporary_registration_address || ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="adressOfFactialLiving"
+                    id="adressOfFactialLiving"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Адрес фактического проживания
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="adressOfFactialLiving"
+                    id="adressOfFactialLiving"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="Адрес фактического проживания"
+                    value={candidateData.actual_residence_address || ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div
+                className={`formRow ${formStyles.formRow}`}
+                style={{ marginTop: "50px" }}
+                id="familyData"
+              >
+                <h3 className={formStyles.formRowH3}>Состав семьи</h3>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="maritalStatus"
+                    id="maritalStatus"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Семейное положение
+                  </label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="maritalStatus"
+                    id="maritalStatus"
+                    className={`formInput ${formStyles.formInput}`}
+                    placeholder="Семейное положение"
+                    value={
+                      candidateData.marital_statuses?.attributes?.title || ""
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              {hasPartner && candidateData.family_partner && (
+                <div className={`formRow ${formStyles.formRow}`}>
+                  <table
+                    className={`inputTable showTable ${formStyles.inputTable}`}
+                  >
+                    <tbody>
+                      <tr>
+                        <td colSpan={2}>
+                          <input
+                            type="text"
+                            name="FIOSuprug"
+                            placeholder="ФИО супруга(-и)"
+                            value={
+                              candidateData.family_partner[0]?.full_name || ""
+                            }
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            name="dateOfBirthTable"
+                            placeholder="Дата рождения"
+                            value={formatDate(
+                              candidateData.family_partner[0]?.birth_date
+                            )}
+                            readOnly
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="tel"
+                            name="phoneNumberTable"
+                            placeholder="Телефон"
+                            value={candidateData.family_partner[0]?.phone || ""}
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            name="placeOfStudy"
+                            placeholder="Место учебы/работы, рабочий телефон"
+                            value={
+                              candidateData.family_partner[0]
+                                ?.work_study_place || ""
+                            }
+                            readOnly
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            name="placeOfLiving"
+                            placeholder="Место проживания"
+                            value={
+                              candidateData.family_partner[0]
+                                ?.residence_address || ""
+                            }
+                            readOnly
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {hasAdultChildren && candidateData.adult_children && (
+                <>
+                  <div
+                    className={`formRow flex-direction-column ${formStyles.formRow}`}
+                  >
+                    <h3 className={formStyles.formRowH3}>
+                      Данные совершеннолетнего ребенка
+                    </h3>
+                  </div>
+                  <div className={`formRow ${formStyles.formRow}`}>
+                    <div
+                      className={`input-container ${formStyles.inputContainer}`}
+                    >
+                      <label
+                        htmlFor="hasGraduatedChild"
+                        id="hasGraduatedChild"
+                        className={`formLabel ${formStyles.formLabel}`}
+                      >
+                        Наличие совершеннолетних детей
+                      </label>
+                      <input
+                        style={{ width: "100%" }}
+                        type="text"
+                        name="hasGraduatedChild"
+                        id="hasGraduatedChild"
+                        className={`formInput ${formStyles.formInput}`}
+                        value="Есть"
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                  {candidateData.adult_children.map((child, index) => (
+                    <div
+                      key={index}
+                      id="doesHaveAdultChildren"
+                      className={`toggle-block ${formStyles.toggleBlock}`}
+                      style={{ width: "100%" }}
+                    >
+                      <div
+                        className={`formRow showTable ${formStyles.formRow}`}
+                      >
+                        <table
+                          className={`inputTable showTable ${formStyles.inputTable}`}
+                        >
+                          <tbody>
+                            <tr>
+                              <td colSpan={2}>
+                                <input
+                                  type="text"
+                                  name={`FIOChildren${index + 1}`}
+                                  placeholder="ФИО ребенка"
+                                  value={child?.full_name || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`dateOfBirthChildren${index + 1}`}
+                                  placeholder="Дата рождения"
+                                  value={formatDate(child?.birth_date)}
+                                  readOnly
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="tel"
+                                  name={`phoneNumberChildren${index + 1}`}
+                                  placeholder="Телефон"
+                                  value={child?.phone || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`placeOfStudyChildren${index + 1}`}
+                                  placeholder="Место учебы/работы, рабочий телефон"
+                                  value={child?.work_study_place || ""}
+                                  readOnly
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`placeOfLivingChildren${index + 1}`}
+                                  placeholder="Место проживания"
+                                  value={child?.residence_address || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {hasAdultFamilyMembers && candidateData.adult_family_members && (
+                <>
+                  <div
+                    className={`formRow flex-direction-column ${formStyles.formRow}`}
+                  >
+                    <h3 className={formStyles.formRowH3}>
+                      2. Члены семьи старше 18 лет
+                    </h3>
+                  </div>
+
+                  {candidateData.adult_family_members.map((member, index) => (
+                    <div
+                      key={index}
+                      id="doesHaveAdultRelative"
+                      className={`toggle-block ${formStyles.toggleBlock}`}
+                      style={{ width: "100%" }}
+                    >
+                      <div className={`formRow ${formStyles.formRow}`}>
+                        <table
+                          className={`inputTable showTable ${formStyles.inputTable}`}
+                        >
+                          <tbody>
+                            <tr>
+                              <td colSpan={2}>
+                                <input
+                                  type="text"
+                                  name={`FIORelative${index + 1}`}
+                                  placeholder="Степень родства, ФИО члена семьи"
+                                  value={member?.relationship_and_name || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`dateOfBirthRelative${index + 1}`}
+                                  placeholder="Дата рождения"
+                                  value={formatDate(member?.birth_date)}
+                                  readOnly
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="tel"
+                                  name={`phoneNumberRelative${index + 1}`}
+                                  placeholder="Телефон"
+                                  value={member?.phone || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`placeOfStudyRelative${index + 1}`}
+                                  placeholder="Место учебы/работы, рабочий телефон"
+                                  value={member?.work_study_place || ""}
+                                  readOnly
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="text"
+                                  name={`placeOfLivingRelative${index + 1}`}
+                                  placeholder="Место проживания"
+                                  value={member?.residence_address || ""}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              <div
+                className={`formRow flex-direction-column ${formStyles.formRow}`}
+                style={{ marginTop: "50px" }}
+                id="legalData"
+              >
+                <h3 className={formStyles.formRowH3}>Юридический статус</h3>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="militaryDuty"
+                    id="militaryDuty"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Статус военнообязанного
+                  </label>
+                  <input
+                    type="text"
+                    name="militaryDuty"
+                    id="militaryDuty"
+                    className={`formInput big ${formStyles.formInput}`}
+                    value={
+                      candidateData.serviceman
+                        ? "Является военнообязанным"
+                        : "Не является военнообязанным"
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="reasonOfChange"
+                    id="formLabel"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Наличие уголовной или административной ответственности
+                  </label>
+                  <input
+                    type="text"
+                    name="reasonOfChange"
+                    id="reasonOfChange"
+                    className={`formInput big ${formStyles.formInput}`}
+                    value={
+                      candidateData.law_breaker !== "Нет"
+                        ? "Да, имеется"
+                        : "Нет"
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              {candidateData.law_breaker &&
+                candidateData.law_breaker !== "Нет" && (
+                  <div className={`formRow ${formStyles.formRow}`}>
+                    <div
+                      className={`input-container ${formStyles.inputContainer}`}
+                    >
+                      <label
+                        htmlFor="whyPrisoner"
+                        id="whyPrisoner"
+                        className={`formLabel ${formStyles.formLabel}`}
+                      >
+                        Причины привлечения к уголовной или административной
+                        ответственности
+                      </label>
+                      <input
+                        type="text"
+                        name="whyPrisoner"
+                        id="whyPrisoner"
+                        className={`formInput big ${formStyles.formInput}`}
+                        value={candidateData.law_breaker || ""}
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                )}
+              <div className={`formRow ${formStyles.formRow}`}>
+                <div className={`input-container ${formStyles.inputContainer}`}>
+                  <label
+                    htmlFor="isLegalEntity"
+                    id="isLegalEntity"
+                    className={`formLabel ${formStyles.formLabel}`}
+                  >
+                    Является или нет (со-)учредителем юридического лица
+                  </label>
+                  <input
+                    type="text"
+                    name="isLegalEntity"
+                    id="isLegalEntity"
+                    className={`formInput big ${formStyles.formInput}`}
+                    value={candidateData.legal_entity !== "Нет" ? "Да" : "Нет"}
+                    readOnly
+                  />
+                </div>
+              </div>
+              {candidateData.legal_entity &&
+                candidateData.legal_entity !== "Нет" && (
+                  <div className={`formRow ${formStyles.formRow}`}>
+                    <div
+                      className={`input-container ${formStyles.inputContainer}`}
+                    >
+                      <label
+                        htmlFor="LegalEntityActivity"
+                        id="LegalEntityActivity"
+                        className={`formLabel ${formStyles.formLabel}`}
+                      >
+                        Вид деятельности юридического лица
+                      </label>
+                      <input
+                        type="text"
+                        name="LegalEntityActivity"
+                        id="LegalEntityActivity"
+                        className={`formInput big ${formStyles.formInput}`}
+                        value={candidateData.legal_entity || ""}
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                )}
+            </div>
+
+            {/* Mobile comment block - показывается только на экранах < 1024px */}
+            <div className="mobile-comment-block" style={{ display: "none" }}>
+              <textarea
+                name="mobileComment"
+                id="mobileCommentArea"
+                placeholder="Написать комментарий"
+                value={commentValue}
+                onChange={handleCommentChange}
+                className="mobile-comment-textarea"
+              />
+              <button
+                id="mobileAddComment"
+                onClick={handleAddComment}
+                className="mobile-comment-button"
+              >
+                Оставить комментарий
+              </button>
+            </div>
+
             <div className="fixedMenu">
               <div className="navArea">
                 <div
-                  className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""} ${getStatusClass(selectedOption.text)}`}
+                  className={`yellowSelect ${isSelectOpen ? "open" : ""} ${isUpdating ? "updating" : ""}`}
                   id="customSelect"
                 >
                   <div
-                    className="select-trigger"
+                    className={`select-trigger ${getStatusClass(selectedOption.text)}`}
                     id="selectTrigger"
                     onClick={handleSelectToggle}
                     style={{ opacity: isUpdating ? 0.6 : 1 }}
@@ -905,7 +2116,10 @@ const ShowForm: React.FC<ShowFormProps> = ({
                     )}
                     <div className="trigger-icons"></div>
                   </div>
-                  <div className="select-dropdown" id="selectDropdown">
+                  <div
+                    className={`select-dropdown ${getStatusClass(selectedOption.text)}`}
+                    id="selectDropdown"
+                  >
                     {selectOptions.map((option) => (
                       <div
                         key={option.value}
@@ -937,1051 +2151,11 @@ const ShowForm: React.FC<ShowFormProps> = ({
                   value={commentValue}
                   onChange={handleCommentChange}
                 ></textarea>
-                <button
-                  style={{ marginTop: "20px" }}
-                  id="addComment"
-                  onClick={handleAddComment}
-                >
+                <button id="addComment" onClick={handleAddComment}>
                   Оставить коментарий
                 </button>
               </div>
             </div>
-            <p
-              style={{
-                position: "absolute",
-                top: "-3.7rem",
-                left: "0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                cursor: "pointer",
-              }}
-              onClick={() => setSelectedVacancyKey(null)}
-            >
-              <Image
-                src="/images/icons/arrow-left.svg"
-                alt="Back"
-                width={16}
-                height={16}
-              />
-              Вернуться к списку
-            </p>
-
-            <div className="formRow justify-space-between" id="generalData">
-              <h3
-                style={{ width: "auto", display: "flex", alignItems: "center" }}
-              >
-                {[
-                  `${formatValue(candidateData.last_name)} ${formatValue(candidateData.first_name)} ${formatValue(candidateData.middle_name)}`.trim(),
-                  candidateData.birth_date
-                    ? `${new Date().getFullYear() - new Date(candidateData.birth_date).getFullYear()} лет`
-                    : "",
-                ]
-                  .filter(Boolean)
-                  .join(",    ")}
-              </h3>
-              <p style={{ fontSize: "16px" }}>Дата подачи</p>
-            </div>
-            <span id="line"></span>
-            <div
-              className="formRow justify-space-between"
-              style={{ marginTop: "0rem" }}
-            >
-              <h4
-                style={{
-                  width: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "0",
-                }}
-              >
-                {candidateData.vacancy?.attributes?.title ||
-                  "Вакансия не указана"}
-              </h4>
-              <p style={{ fontSize: "16px" }}>
-                {formatDate(candidateData.created_at)}
-              </p>
-            </div>
-
-            {candidateData.reason_for_changing_surnames && (
-              <div
-                id="surnameChangeReason"
-                className="toggle-block"
-                style={{ width: "100%" }}
-              >
-                <div className="formRow">
-                  <div className="input-container">
-                    <label
-                      htmlFor="reasonOfChange"
-                      id="formLabel"
-                      className="formLabel"
-                    >
-                      Причина изменения фамилии
-                    </label>
-                    <input
-                      type="text"
-                      name="reasonOfChange"
-                      id="reasonOfChange"
-                      className="formInput big"
-                      placeholder="Опишите, почему поменяли фамилию"
-                      value={candidateData.reason_for_changing_surnames || ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="formRow justify-space-between">
-              <div className="input-container w-49">
-                <label htmlFor="birthDate" id="formLabel" className="formLabel">
-                  Дата рождения
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="birthDate"
-                  id="birthDate"
-                  className="formInput"
-                  placeholder="01.01.1990"
-                  value={formatDate(candidateData.birth_date)}
-                  readOnly
-                />
-              </div>
-              <div className="input-container w-49">
-                <label
-                  htmlFor="birthPlace"
-                  id="formLabel"
-                  className="formLabel"
-                >
-                  Место рождения
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="birthPlace"
-                  id="birthPlace"
-                  className="formInput"
-                  placeholder="Страна и город"
-                  value={`${candidateData.country_birth || ""}, ${candidateData.city_birth || ""}`}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow justify-space-between">
-              <div className="input-container w-49">
-                <label
-                  htmlFor="mobileNumber"
-                  id="mobileNumber"
-                  className="formLabel"
-                >
-                  Мобильный телефон
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="tel"
-                  name="mobileNumber"
-                  id="mobileNumber"
-                  className="formInput"
-                  placeholder="+7(999)999-99-99"
-                  value={formatPhone(candidateData.mobile_phone_candidate)}
-                  readOnly
-                />
-              </div>
-              <div className="input-container w-49">
-                <label
-                  htmlFor="domesticNumber"
-                  id="domesticNumber"
-                  className="formLabel"
-                >
-                  Домашний телефон
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="tel"
-                  name="domesticNumber"
-                  id="domesticNumber"
-                  className="formInput"
-                  placeholder="999 999"
-                  value={formatPhone(candidateData.home_phone_candidate)}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow justify-space-between">
-              <div className="input-container w-49">
-                <label htmlFor="email" id="email" className="formLabel">
-                  E-mail
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="formInput"
-                  value={candidateData.mail_candidate || ""}
-                  placeholder="example@gmail.com"
-                  readOnly
-                />
-              </div>
-              <div className="input-container w-49">
-                <label htmlFor="INN" id="INN" className="formLabel">
-                  ИНН
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="INN"
-                  id="INN"
-                  className="formInput"
-                  value={candidateData.inn || ""}
-                  placeholder="123456789012"
-                  readOnly
-                />
-              </div>
-            </div>
-
-            {/* Показываем раздел образования только если есть данные */}
-            {hasEducationData && (
-              <>
-                <div
-                  className="formRow flex-direction-column"
-                  style={{ marginTop: "50px" }}
-                >
-                  <h3>Образование и профессиональный опыт</h3>
-                </div>
-
-                {candidateData.level_educational &&
-                  candidateData.level_educational.trim() && (
-                    <div className="formRow">
-                      <div className="input-container">
-                        <label htmlFor="educationLevel" className="formLabel">
-                          Уровень образования
-                        </label>
-                        <input
-                          style={{ width: "100%" }}
-                          type="text"
-                          name="educationLevel"
-                          id="educationLevel"
-                          className="formInput"
-                          value={candidateData.level_educational || ""}
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                {/* Динамические данные об образовательных учреждениях */}
-                {educationalInstitutions.length > 0 &&
-                  educationalInstitutions.map(
-                    (institution: EducationalInstitution, index: number) => (
-                      <div key={index} className="formRow">
-                        <table className="inputTable showTable">
-                          <tbody>
-                            <tr>
-                              <td colSpan={2}>
-                                <input
-                                  type="text"
-                                  name={`nameInstitution${index + 1}`}
-                                  placeholder="Полное наименование учебного заведения"
-                                  value={institution?.institution_name || ""}
-                                  readOnly
-                                />
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <input
-                                  type="text"
-                                  name={`dateOfEntrance${index + 1}`}
-                                  placeholder="Дата поступления"
-                                  value={formatDate(institution?.start_date)}
-                                  readOnly
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name={`dateOfEnding${index + 1}`}
-                                  placeholder="Дата окончания"
-                                  value={formatDate(institution?.end_date)}
-                                  readOnly
-                                />
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <input
-                                  type="text"
-                                  name={`typeOfEducation${index + 1}`}
-                                  placeholder="Форма обучения"
-                                  value={institution?.education_type || ""}
-                                  readOnly
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name={`diplomaSpeciality${index + 1}`}
-                                  placeholder="Специальность по диплому"
-                                  value={institution?.specialty || ""}
-                                  readOnly
-                                />
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    )
-                  )}
-
-                {/* Динамические данные о курсах */}
-                {courses.length > 0 &&
-                  courses.map((course: Course, index: number) => (
-                    <div key={index} className="formRow">
-                      <table className="inputTable showTable">
-                        <tbody>
-                          <tr>
-                            <td colSpan={2}>
-                              <input
-                                type="text"
-                                name={`courseName${index + 1}`}
-                                placeholder="Полное наименование учебного заведения"
-                                value={course?.institution_name || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={2}>
-                              <input
-                                type="text"
-                                name={`courseTitle${index + 1}`}
-                                placeholder="Название курса/тренинга"
-                                value={course?.course_name || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input
-                                type="text"
-                                name={`courseStartDate${index + 1}`}
-                                placeholder="Дата начала"
-                                value={formatDate(course?.start_date)}
-                                readOnly
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                name={`courseEndDate${index + 1}`}
-                                placeholder="Дата окончания"
-                                value={formatDate(course?.end_date)}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  ))}
-
-                <div className="formRow">
-                  <div className="input-container">
-                    <label
-                      htmlFor="professionalExperience"
-                      className="formLabel"
-                    >
-                      Профессиональный опыт
-                    </label>
-                    <input
-                      style={{ width: "100%" }}
-                      type="text"
-                      name="professionalExperience"
-                      id="professionalExperience"
-                      className="formInput"
-                      value={
-                        hasWorkExperience ? "Опыт есть" : "Опыт отсутствует"
-                      }
-                      readOnly
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Динамические данные о последнем месте работы */}
-            {hasWorkExperience && (
-              <div
-                className="formRow"
-                style={{
-                  opacity: 1,
-                  height: "550px",
-                  overflow: "hidden",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                }}
-              >
-                <table
-                  className="inputTable showTable"
-                  style={{ height: "auto", minHeight: "350px" }}
-                >
-                  <tbody>
-                    <tr>
-                      <td
-                        style={{
-                          borderTopLeftRadius: "16px",
-                          borderTopRightRadius: 0,
-                        }}
-                      >
-                        <input
-                          type="text"
-                          name="companyName"
-                          placeholder="Полное наименование предприятия"
-                          value={candidateData.organization_name || ""}
-                          readOnly
-                        />
-                      </td>
-                      <td
-                        style={{
-                          borderTopRightRadius: "16px",
-                          borderTopLeftRadius: 0,
-                        }}
-                      >
-                        <input
-                          type="text"
-                          name="companyPhone"
-                          placeholder="Телефон предприятия"
-                          value={candidateData.organization_phone || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <input
-                          type="text"
-                          name="companyActivity"
-                          placeholder="Сфера деятельности предприятия"
-                          value={candidateData.field_of_activity || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <input
-                          type="text"
-                          name="companyAddress"
-                          placeholder="Адрес предприятия"
-                          value={candidateData.organization_address || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="text"
-                          name="position"
-                          placeholder="Должность"
-                          value={candidateData.organization_job_title || ""}
-                          readOnly
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name="salary"
-                          placeholder="Уровень заработной платы"
-                          value={candidateData.organization_price || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="text"
-                          name="hireDate"
-                          placeholder="Дата приема (месяц, год)"
-                          value={formatDate(candidateData.date_of_hiring)}
-                          readOnly
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name="dismissalDate"
-                          placeholder="Дата увольнения (месяц, год)"
-                          value={formatDate(candidateData.date_of_dismissal)}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <input
-                          type="text"
-                          name="dismissalReason"
-                          placeholder="Причина увольнения"
-                          value={candidateData.reason_for_dismissal || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        colSpan={2}
-                        style={{
-                          borderBottomLeftRadius: "16px",
-                          borderBottomRightRadius: "16px",
-                        }}
-                      >
-                        <input
-                          type="text"
-                          name="referenceContact"
-                          placeholder="ФИО и номер телефона лица, к которому можно обратиться за рекомендацией"
-                          value={candidateData.recommendation_contact || ""}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            <div
-              className="formRow"
-              style={{ marginTop: "50px" }}
-              id="passportData"
-            >
-              <h3>Паспортные данные</h3>
-            </div>
-
-            <div className="formRow justify-space-between">
-              <div className="input-container w-49">
-                <label
-                  htmlFor="passwordSeriaNumber"
-                  id="passwordSeriaNumber"
-                  className="formLabel"
-                >
-                  Серия и номер
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="passwordSeriaNumber"
-                  id="passwordSeriaNumber"
-                  className="formInput"
-                  placeholder="1234 567890"
-                  value={`${candidateData.passport_series || ""} ${candidateData.passport_number || ""}`}
-                  readOnly
-                />
-              </div>
-              <div className="input-container w-49">
-                <label
-                  htmlFor="dateOfIssue"
-                  id="dateOfIssue"
-                  className="formLabel"
-                >
-                  Дата выдачи
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="dateOfIssue"
-                  id="dateOfIssue"
-                  className="formInput"
-                  placeholder="01.01.1990"
-                  value={formatDate(candidateData.passport_issued_date)}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label htmlFor="issuedBy" id="issuedBy" className="formLabel">
-                  Кем выдан
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="issuedBy"
-                  id="issuedBy"
-                  className="formInput"
-                  placeholder="ОФУМС России"
-                  value={candidateData.passport_issued || ""}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="adressOfPermanentReg"
-                  id="adressOfPermanentReg"
-                  className="formLabel"
-                >
-                  Адрес постоянной регистрации
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="adressOfPermanentReg"
-                  id="adressOfPermanentReg"
-                  className="formInput"
-                  placeholder="Адрес постоянной регистрации"
-                  value={candidateData.permanent_registration_address || ""}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="adressOfTemporaryReg"
-                  id="adressOfTemporaryReg"
-                  className="formLabel"
-                >
-                  Адрес временной регистрации
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="adressOfTemporaryReg"
-                  id="adressOfTemporaryReg"
-                  className="formInput"
-                  placeholder="Адрес временной регистрации"
-                  value={candidateData.temporary_registration_address || ""}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="adressOfFactialLiving"
-                  id="adressOfFactialLiving"
-                  className="formLabel"
-                >
-                  Адрес фактического проживания
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="adressOfFactialLiving"
-                  id="adressOfFactialLiving"
-                  className="formInput"
-                  placeholder="Адрес фактического проживания"
-                  value={candidateData.actual_residence_address || ""}
-                  readOnly
-                />
-              </div>
-            </div>
-
-            <div
-              className="formRow"
-              style={{ marginTop: "50px" }}
-              id="familyData"
-            >
-              <h3>Состав семьи</h3>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="maritalStatus"
-                  id="maritalStatus"
-                  className="formLabel"
-                >
-                  Семейное положение
-                </label>
-                <input
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="maritalStatus"
-                  id="maritalStatus"
-                  className="formInput"
-                  placeholder="Семейное положение"
-                  value={
-                    candidateData.marital_statuses?.attributes?.title || ""
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-
-            {hasPartner && candidateData.family_partner && (
-              <div className="formRow">
-                <table className="inputTable showTable">
-                  <tbody>
-                    <tr>
-                      <td colSpan={2}>
-                        <input
-                          type="text"
-                          name="FIOSuprug"
-                          placeholder="ФИО супруга(-и)"
-                          value={
-                            Array.isArray(candidateData.family_partner)
-                              ? candidateData.family_partner[0]?.full_name || ""
-                              : candidateData.family_partner?.full_name || ""
-                          }
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="text"
-                          name="dateOfBirthTable"
-                          placeholder="Дата рождения"
-                          value={formatDate(
-                            Array.isArray(candidateData.family_partner)
-                              ? candidateData.family_partner[0]?.birth_date
-                              : candidateData.family_partner?.birth_date
-                          )}
-                          readOnly
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="tel"
-                          name="phoneNumberTable"
-                          placeholder="Телефон"
-                          value={
-                            Array.isArray(candidateData.family_partner)
-                              ? candidateData.family_partner[0]?.phone || ""
-                              : candidateData.family_partner?.phone || ""
-                          }
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          type="text"
-                          name="placeOfStudy"
-                          placeholder="Место учебы/работы, рабочий телефон"
-                          value={
-                            Array.isArray(candidateData.family_partner)
-                              ? candidateData.family_partner[0]
-                                  ?.work_study_place || ""
-                              : candidateData.family_partner
-                                  ?.work_study_place || ""
-                          }
-                          readOnly
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name="placeOfLiving"
-                          placeholder="Место проживания"
-                          value={
-                            Array.isArray(candidateData.family_partner)
-                              ? candidateData.family_partner[0]
-                                  ?.residence_address || ""
-                              : candidateData.family_partner
-                                  ?.residence_address || ""
-                          }
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {hasAdultChildren && candidateData.adult_children && (
-              <>
-                <div className="formRow flex-direction-column">
-                  <h3>Данные совершеннолетнего ребенка</h3>
-                </div>
-                <div className="formRow">
-                  <div className="input-container">
-                    <label
-                      htmlFor="hasGraduatedChild"
-                      id="hasGraduatedChild"
-                      className="formLabel"
-                    >
-                      Наличие совершеннолетних детей
-                    </label>
-                    <input
-                      style={{ width: "100%" }}
-                      type="text"
-                      name="hasGraduatedChild"
-                      id="hasGraduatedChild"
-                      className="formInput"
-                      value="Есть"
-                      readOnly
-                    />
-                  </div>
-                </div>
-                {candidateData.adult_children.map((child, index) => (
-                  <div
-                    key={index}
-                    id="doesHaveAdultChildren"
-                    className="toggle-block"
-                    style={{ width: "100%" }}
-                  >
-                    <div className="formRow showTable">
-                      <table className="inputTable showTable">
-                        <tbody>
-                          <tr>
-                            <td colSpan={2}>
-                              <input
-                                type="text"
-                                name={`FIOChildren${index + 1}`}
-                                placeholder="ФИО ребенка"
-                                value={child?.full_name || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input
-                                type="text"
-                                name={`dateOfBirthChildren${index + 1}`}
-                                placeholder="Дата рождения"
-                                value={formatDate(child?.birth_date)}
-                                readOnly
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="tel"
-                                name={`phoneNumberChildren${index + 1}`}
-                                placeholder="Телефон"
-                                value={child?.phone || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input
-                                type="text"
-                                name={`placeOfStudyChildren${index + 1}`}
-                                placeholder="Место учебы/работы, рабочий телефон"
-                                value={child?.work_study_place || ""}
-                                readOnly
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                name={`placeOfLivingChildren${index + 1}`}
-                                placeholder="Место проживания"
-                                value={child?.residence_address || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
-
-            {hasAdultFamilyMembers && candidateData.adult_family_members && (
-              <>
-                <div className="formRow flex-direction-column">
-                  <h3>2. Члены семьи старше 18 лет</h3>
-                </div>
-
-                {candidateData.adult_family_members.map((member, index) => (
-                  <div
-                    key={index}
-                    id="doesHaveAdultRelative"
-                    className="toggle-block"
-                    style={{ width: "100%" }}
-                  >
-                    <div className="formRow">
-                      <table className="inputTable showTable">
-                        <tbody>
-                          <tr>
-                            <td colSpan={2}>
-                              <input
-                                type="text"
-                                name={`FIORelative${index + 1}`}
-                                placeholder="Степень родства, ФИО члена семьи"
-                                value={member?.relationship_and_name || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input
-                                type="text"
-                                name={`dateOfBirthRelative${index + 1}`}
-                                placeholder="Дата рождения"
-                                value={formatDate(member?.birth_date)}
-                                readOnly
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="tel"
-                                name={`phoneNumberRelative${index + 1}`}
-                                placeholder="Телефон"
-                                value={member?.phone || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input
-                                type="text"
-                                name={`placeOfStudyRelative${index + 1}`}
-                                placeholder="Место учебы/работы, рабочий телефон"
-                                value={member?.work_study_place || ""}
-                                readOnly
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                name={`placeOfLivingRelative${index + 1}`}
-                                placeholder="Место проживания"
-                                value={member?.residence_address || ""}
-                                readOnly
-                              />
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
-
-            <div
-              className="formRow flex-direction-column"
-              style={{ marginTop: "50px" }}
-              id="legalData"
-            >
-              <h3>Юридический статус</h3>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="militaryDuty"
-                  id="militaryDuty"
-                  className="formLabel"
-                >
-                  Статус военнообязанного
-                </label>
-                <input
-                  type="text"
-                  name="militaryDuty"
-                  id="militaryDuty"
-                  className="formInput big"
-                  value={
-                    candidateData.serviceman === 1 ||
-                    candidateData.serviceman === true
-                      ? "Является военнообязанным"
-                      : "Не является военнообязанным"
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="reasonOfChange"
-                  id="formLabel"
-                  className="formLabel"
-                >
-                  Наличие уголовной или административной ответственности
-                </label>
-                <input
-                  type="text"
-                  name="reasonOfChange"
-                  id="reasonOfChange"
-                  className="formInput big"
-                  value={
-                    candidateData.law_breaker !== "Нет" ? "Да, имеется" : "Нет"
-                  }
-                  readOnly
-                />
-              </div>
-            </div>
-            {candidateData.law_breaker &&
-              candidateData.law_breaker !== "Нет" && (
-                <div className="formRow">
-                  <div className="input-container">
-                    <label
-                      htmlFor="whyPrisoner"
-                      id="whyPrisoner"
-                      className="formLabel"
-                    >
-                      Причины привлечения к уголовной или административной
-                      ответственности
-                    </label>
-                    <input
-                      type="text"
-                      name="whyPrisoner"
-                      id="whyPrisoner"
-                      className="formInput big"
-                      value={candidateData.law_breaker || ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              )}
-            <div className="formRow">
-              <div className="input-container">
-                <label
-                  htmlFor="isLegalEntity"
-                  id="isLegalEntity"
-                  className="formLabel"
-                >
-                  Является или нет (со-)учредителем юридического лица
-                </label>
-                <input
-                  type="text"
-                  name="isLegalEntity"
-                  id="isLegalEntity"
-                  className="formInput big"
-                  value={candidateData.legal_entity !== "Нет" ? "Да" : "Нет"}
-                  readOnly
-                />
-              </div>
-            </div>
-            {candidateData.legal_entity &&
-              candidateData.legal_entity !== "Нет" && (
-                <div className="formRow">
-                  <div className="input-container">
-                    <label
-                      htmlFor="LegalEntityActivity"
-                      id="LegalEntityActivity"
-                      className="formLabel"
-                    >
-                      Вид деятельности юридического лица
-                    </label>
-                    <input
-                      type="text"
-                      name="LegalEntityActivity"
-                      id="LegalEntityActivity"
-                      className="formInput big"
-                      value={candidateData.legal_entity || ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              )}
           </div>
         </section>
       </main>

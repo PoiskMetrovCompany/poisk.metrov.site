@@ -1,8 +1,6 @@
-
 import { IMeta } from "./meta"
 
 export interface IApartment {
-
   id: number
   created_at: string
   updated_at: string
@@ -80,8 +78,7 @@ export interface IDoc {
   complex_key: string
 }
 
-export interface IBuilding {
-}
+export interface IBuilding {}
 
 export interface IInclude {
   type: "residentialcomplex" | "doc" | "building"
@@ -103,7 +100,10 @@ export interface IBuildingInclude {
   attributes: IBuilding[]
 }
 
-export type TIncludeTypes = IResidentialComplexInclude | IDocInclude | IBuildingInclude
+export type TIncludeTypes =
+  | IResidentialComplexInclude
+  | IDocInclude
+  | IBuildingInclude
 
 export interface ApartmentResponse {
   identifier: string
@@ -111,3 +111,8 @@ export interface ApartmentResponse {
   meta: IMeta
 }
 
+export interface ApartmentSelectionResponse {
+  identifier: string
+  attributes: IApartment
+  meta: IMeta
+}

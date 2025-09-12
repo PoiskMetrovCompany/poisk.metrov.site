@@ -1,21 +1,27 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+"use client"
 
 import React, { RefObject, useEffect, useState } from "react"
 
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-
-import {
-  ICandidateTableData,
-  ICandidateTableItem,
-  ICandidateTableResponse,
-} from "@/types/Candidate"
-import { useApiMutation } from "@/utils/hooks/use-api"
 
 import styles from "./candidateLoginComponents.module.css"
 
+import MobileCandidateCard from "./MobileCandidateCard"
 import { FormRow } from "./candidatesFormComponents/FormRow"
 import ConfirmationModal from "./confirmationalWindow"
+
+interface Candidate {
+  id: string
+  name: string
+  rop: string
+  datetime: string
+  vacancy: string
+  status: string
+  statusID: string
+  hasVacancyComment: string
+  vacancyKey: string
+  fullData: any
+}
 
 interface Pagination {
   current_page: number
@@ -24,6 +30,18 @@ interface Pagination {
   per_page: number
   from: number
   to: number
+}
+
+interface FilteredData {
+  attributes: {
+    data: any[]
+    current_page: number
+    last_page: number
+    total: number
+    per_page: number
+    from: number
+    to: number
+  }
 }
 
 interface ActiveFilters {
@@ -40,7 +58,7 @@ interface CandidatesTableProps {
   onFiltersClick: () => void
   onRowClick: (vacancyKey: string) => void
   filtersButtonRef: RefObject<HTMLButtonElement | null>
-  filteredData: ICandidateTableResponse | null
+  filteredData: FilteredData | null
   activeFilters: ActiveFilters | null
   onFiltersReset: () => void
   selectedCity: string
@@ -55,21 +73,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   onFiltersReset,
   selectedCity,
 }) => {
-  const queryClient = useQueryClient()
-  const router = useRouter()
-
-  const getAccessToken = () => {
-    const cookies = document.cookie.split(";")
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("access_token=")
-    )
-    return tokenCookie ? tokenCookie.split("=")[1] : null
-  }
-
-  const token = getAccessToken()
-
-  const [candidates, setCandidates] = useState<ICandidateTableItem[]>([])
-  const [loading, setLoading] = useState(false) // Изменено на false, так как родительский компонент управляет загрузкой
+  const [candidates, setCandidates] = useState<Candidate[]>([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
@@ -84,268 +89,38 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   const [isFormatDropdownOpen, setIsFormatDropdownOpen] = useState(false)
   const [selectedFormat, setSelectedFormat] = useState(".xlsx")
-  const [isAuthorized, setIsAuthorized] = useState(true) // Теперь всегда true, так как проверка уже прошла
+  const [downloadLoading, setDownloadLoading] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [singleDownloadLoading, setSingleDownloadLoading] = useState<
+    Record<string, boolean>
+  >({})
 
-  // Состояние для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-
-  // API функции для tanstack/react-query
-  const downloadSingleFile = async ({
-    vacancyKey,
-    candidateName,
-    selectedFormat,
-  }: {
-    vacancyKey: string
-    candidateName: string
-    selectedFormat: string
-  }) => {
-    const token = getAccessToken()
-    if (!token) {
-      throw new Error("Токен авторизации не найден")
-    }
-
-    const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}?keys=${encodeURIComponent(vacancyKey)}`
-
-    const headers: Record<string, string> = {
-      accept:
-        selectedFormat === ".pdf" ? "application/pdf" : "application/json",
-      Authorization: `Bearer ${token}`,
-      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
-    }
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: headers,
-      mode: "cors",
-    })
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-      } else if (response.status === 403) {
-        throw new Error("Доступ запрещен")
-      } else if (response.status === 404) {
-        throw new Error("Файл не найден или некорректный ключ")
-      } else {
-        throw new Error(`Ошибка сервера: ${response.status}`)
-      }
-    }
-
-    // Проверяем Content-Type в зависимости от формата
-    const contentType = response.headers.get("content-type")
-    if (selectedFormat === ".pdf") {
-      if (!contentType || !contentType.includes("application/pdf")) {
-      }
-    } else if (selectedFormat === ".xlsx") {
-      if (
-        !contentType ||
-        (!contentType.includes(
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ) &&
-          !contentType.includes("application/octet-stream"))
-      ) {
-      }
-    }
-
-    const blob = await response.blob()
-
-    if (blob.size === 0) {
-      throw new Error("Получен пустой файл")
-    }
-
-    return { blob, candidateName, selectedFormat }
-  }
-
-  const downloadMultipleFiles = async ({
-    selectedKeys,
-    selectedFormat,
-  }: {
-    selectedKeys: string[]
-    selectedFormat: string
-  }) => {
-    const token = getAccessToken()
-    if (!token) {
-      throw new Error("Токен авторизации не найден")
-    }
-
-    const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-    let url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}`
-
-    if (selectedKeys.length > 0) {
-      const keysParam = selectedKeys.join(",")
-      url += `?keys=${encodeURIComponent(keysParam)}`
-    }
-
-    const headers: Record<string, string> = {
-      accept:
-        selectedFormat === ".pdf" ? "application/pdf" : "application/json",
-      Authorization: `Bearer ${token}`,
-      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
-    }
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: headers,
-      mode: "cors",
-    })
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-      } else if (response.status === 403) {
-        throw new Error("Доступ запрещен")
-      } else if (response.status === 404) {
-        throw new Error("Файл не найден или некорректные ключи")
-      } else {
-        throw new Error(`Ошибка сервера: ${response.status}`)
-      }
-    }
-
-    // Проверяем Content-Type для PDF
-    if (selectedFormat === ".pdf") {
-      const contentType = response.headers.get("content-type")
-      if (!contentType || !contentType.includes("application/pdf")) {
-      }
-    }
-
-    const blob = await response.blob()
-
-    if (blob.size === 0) {
-      throw new Error("Получен пустой файл")
-    }
-
-    return { blob, selectedKeys, selectedFormat }
-  }
-
-  const deleteCandidates = async ({
-    selectedKeys,
-  }: {
-    selectedKeys: string[]
-  }) => {
-    const token = getAccessToken()
-    if (!token) {
-      throw new Error("Токен авторизации не найден")
-    }
-
-    const keysParam = selectedKeys.join(",")
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?key=${encodeURIComponent(keysParam)}`
-
-    const headers: Record<string, string> = {
-      accept: "application/json",
-      Authorization: `Bearer ${token}`,
-      "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
-    }
-
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: headers,
-    })
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Неавторизован. Пожалуйста, войдите в систему")
-      } else if (response.status === 403) {
-        throw new Error("Доступ запрещен")
-      } else if (response.status === 404) {
-        throw new Error("Анкеты не найдены")
-      } else {
-        throw new Error(`Ошибка сервера: ${response.status}`)
-      }
-    }
-
-    return { deletedKeys: selectedKeys }
-  }
-
-  // Мутации для tanstack/react-query
-  const singleDownloadMutation = useMutation({
-    mutationFn: downloadSingleFile,
-    onSuccess: ({ blob, candidateName, selectedFormat }) => {
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = downloadUrl
-      link.style.display = "none"
-
-      const fileName = `${candidateName.replace(/\s+/g, "_")}_${
-        new Date().toISOString().split("T")[0]
-      }${selectedFormat}`
-      link.download = fileName
-
-      document.body.appendChild(link)
-      link.click()
-
-      // Небольшая задержка перед удалением ссылки
-      setTimeout(() => {
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(downloadUrl)
-      }, 100)
-    },
-    onError: (error) => {
-      alert(`Ошибка при скачивании файла: ${error.message}`)
-    },
-  })
-
-  const multipleDownloadMutation = useMutation({
-    mutationFn: downloadMultipleFiles,
-    onSuccess: ({ blob, selectedKeys, selectedFormat }) => {
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = downloadUrl
-      link.style.display = "none"
-
-      const fileName =
-        selectedKeys.length > 0
-          ? `candidates_export_${
-              new Date().toISOString().split("T")[0]
-            }${selectedFormat}`
-          : `all_candidates_export_${
-              new Date().toISOString().split("T")[0]
-            }${selectedFormat}`
-      link.download = fileName
-
-      document.body.appendChild(link)
-      link.click()
-
-      // Небольшая задержка перед удалением ссылки
-      setTimeout(() => {
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(downloadUrl)
-      }, 100)
-
-      const exportMessage =
-        selectedKeys.length > 0
-          ? `Успешно скачано ${selectedKeys.length} анкет в формате ${selectedFormat}`
-          : `Успешно скачаны все анкеты в формате ${selectedFormat}`
-    },
-    onError: (error) => {
-      alert(`Ошибка при скачивании файла: ${error.message}`)
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteCandidates,
-    onSuccess: ({ deletedKeys }) => {
-      // Удаляем анкеты из локального состояния
-      setCandidates((prev) =>
-        prev.filter((candidate) => !deletedKeys.includes(candidate.vacancyKey))
-      )
-      setSelectedKeys([])
-      setIsDeleteModalOpen(false)
-
-      // Инвалидируем кэш кандидатов для обновления данных
-      queryClient.invalidateQueries({ queryKey: ["candidates"] })
-    },
-    onError: (error) => {
-      alert(`Ошибка при удалении: ${error.message}`)
-    },
-  })
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+  const [allCandidates, setAllCandidates] = useState<Candidate[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMorePages, setHasMorePages] = useState(true)
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false)
 
   useEffect(() => {
     const applyStyles = (element: Element) => {
+      if (!element || !element.isConnected) return
+
       const sectionElement = element as HTMLElement
       sectionElement.style.setProperty("max-width", "none", "important")
       sectionElement.style.setProperty("width", "100%", "important")
       sectionElement.style.setProperty("margin", "0", "important")
+    }
+
+    const cleanupStyles = () => {
+      const sectionElement = document.querySelector("section")
+      if (sectionElement && sectionElement.isConnected) {
+        sectionElement.style.removeProperty("max-width")
+        sectionElement.style.removeProperty("width")
+        sectionElement.style.removeProperty("margin")
+      }
     }
 
     const sectionElement = document.querySelector("section")
@@ -380,24 +155,20 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
       return () => {
         observer.disconnect()
-        const sectionElement = document.querySelector("section")
-        if (sectionElement) {
-          sectionElement.style.removeProperty("max-width")
-          sectionElement.style.removeProperty("width")
-          sectionElement.style.removeProperty("margin")
-        }
+        cleanupStyles()
       }
     }
 
-    return () => {
-      const sectionElement = document.querySelector("section")
-      if (sectionElement) {
-        sectionElement.style.removeProperty("max-width")
-        sectionElement.style.removeProperty("width")
-        sectionElement.style.removeProperty("margin")
-      }
-    }
+    return cleanupStyles
   }, [])
+
+  const getAccessToken = () => {
+    const cookies = document.cookie.split(";")
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("access_token=")
+    )
+    return tokenCookie ? tokenCookie.split("=")[1] : null
+  }
 
   const getCsrfToken = () => {
     const metaTag = document.querySelector('meta[name="csrf-token"]')
@@ -431,17 +202,16 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         return "needRevision"
       case "Отклонен":
         return "rejected"
-      case "Принят":
-        return "accepted"
-      case "Не принят":
-        return "not"
-      case "Вышел":
-        return "startWorking"
-      case "Не вышел":
-        return "not"
       default:
-        return "new"
+        return "unknown"
     }
+  }
+
+  const getStatusText = (status: string) => {
+    if (status === "Нужна доработка" && isMobile) {
+      return "Доработка"
+    }
+    return status
   }
 
   const handleCheckboxChange = (vacancyKey: string, isChecked: boolean) => {
@@ -472,31 +242,216 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
-  // Функция для обработки удаления
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedKeys.length === 0) {
+      console.log("Нет выбранных анкет для удаления")
       return
     }
 
-    deleteMutation.mutate({ selectedKeys })
+    setDeleteLoading(true)
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      const keysParam = selectedKeys.join(",")
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?key=${encodeURIComponent(keysParam)}`
+
+      const headers: Record<string, string> = {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+      }
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+        } else if (response.status === 403) {
+          throw new Error("Доступ запрещен")
+        } else if (response.status === 404) {
+          throw new Error("Анкеты не найдены")
+        } else {
+          throw new Error(`Ошибка сервера: ${response.status}`)
+        }
+      }
+
+      setCandidates((prev) => {
+        // Безопасная фильтрация с проверкой существования кандидатов
+        const filtered = prev.filter(
+          (candidate) =>
+            candidate && !selectedKeys.includes(candidate.vacancyKey)
+        )
+        return filtered
+      })
+      setSelectedKeys([])
+
+      console.log(`Успешно удалено ${selectedKeys.length} анкет`)
+    } catch (err) {
+      console.error("Ошибка при удалении анкет:", err)
+      console.error(`Ошибка при удалении: ${(err as Error).message}`)
+    } finally {
+      setDeleteLoading(false)
+    }
   }
 
   const handleDeleteClick = () => {
     if (selectedKeys.length === 0) {
+      console.log("Выберите анкеты для удаления")
       return
     }
     setIsDeleteModalOpen(true)
   }
 
-  const handleSingleDownload = (vacancyKey: string, candidateName: string) => {
-    singleDownloadMutation.mutate({ vacancyKey, candidateName, selectedFormat })
+  const handleSingleDownload = async (
+    vacancyKey: string,
+    candidateName: string
+  ) => {
+    setSingleDownloadLoading((prev) => ({ ...prev, [vacancyKey]: true }))
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/export/pdf-format?keys=${encodeURIComponent(
+        vacancyKey
+      )}`
+
+      const headers: Record<string, string> = {
+        accept: "application/pdf",
+        Authorization: `Bearer ${token}`,
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+        } else if (response.status === 403) {
+          throw new Error("Доступ запрещен")
+        } else if (response.status === 404) {
+          throw new Error("Файл не найден или некорректный ключ")
+        } else {
+          throw new Error(`Ошибка сервера: ${response.status}`)
+        }
+      }
+
+      const blob = await response.blob()
+
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+
+      const fileName = `${candidateName.replace(/\s+/g, "_")}_${
+        new Date().toISOString().split("T")[0]
+      }.pdf`
+      link.download = fileName
+
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      window.URL.revokeObjectURL(downloadUrl)
+
+      console.log(`Успешно скачана анкета кандидата: ${candidateName}`)
+    } catch (err) {
+      console.error("Ошибка при скачивании анкеты:", err)
+      console.error(`Ошибка при скачивании анкеты: ${(err as Error).message}`)
+    } finally {
+      setSingleDownloadLoading((prev) => ({ ...prev, [vacancyKey]: false }))
+    }
   }
 
-  const handleDownload = () => {
-    multipleDownloadMutation.mutate({ selectedKeys, selectedFormat })
+  const handleDownload = async () => {
+    setDownloadLoading(true)
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}`
+
+      if (selectedKeys.length > 0) {
+        const keysParam = selectedKeys.join(",")
+        url += `?keys=${encodeURIComponent(keysParam)}`
+      }
+
+      const headers: Record<string, string> = {
+        accept:
+          selectedFormat === ".pdf" ? "application/pdf" : "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Неавторизован. Пожалуйста, войдите в систему")
+        } else if (response.status === 403) {
+          throw new Error("Доступ запрещен")
+        } else if (response.status === 404) {
+          throw new Error("Файл не найден или некорректные ключи")
+        } else {
+          throw new Error(`Ошибка сервера: ${response.status}`)
+        }
+      }
+
+      const blob = await response.blob()
+
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+
+      const fileName =
+        selectedKeys.length > 0
+          ? `candidates_export_${
+              new Date().toISOString().split("T")[0]
+            }${selectedFormat}`
+          : `all_candidates_export_${
+              new Date().toISOString().split("T")[0]
+            }${selectedFormat}`
+      link.download = fileName
+
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      window.URL.revokeObjectURL(downloadUrl)
+
+      const exportMessage =
+        selectedKeys.length > 0
+          ? `Успешно скачано ${selectedKeys.length} анкет в формате ${selectedFormat}`
+          : `Успешно скачаны все анкеты в формате ${selectedFormat}`
+      console.log(exportMessage)
+    } catch (err) {
+      console.error("Ошибка при скачивании:", err)
+      console.error(`Ошибка при скачивании: ${(err as Error).message}`)
+    } finally {
+      setDownloadLoading(false)
+    }
   }
 
   const fetchCandidates = async (page = 1, useFilters = false) => {
+    setLoading(true)
     setError("")
 
     try {
@@ -529,12 +484,12 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
       if (data.response && data.attributes) {
         const transformedCandidates = data.attributes.data.map(
-          (candidate: ICandidateTableData) => ({
-            id: candidate.id.toString(),
+          (candidate: any) => ({
+            id: candidate.id,
             name: `${candidate.last_name} ${candidate.first_name} ${
               candidate.middle_name || ""
             }`.trim(),
-            rop: candidate.work_team || "-",
+            rop: "Маликова Е.",
             datetime: formatDateTime(
               candidate.created_at || new Date().toISOString()
             ),
@@ -548,6 +503,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         )
 
         setCandidates(transformedCandidates)
+        setAllCandidates(transformedCandidates)
+        setCurrentPage(data.attributes.current_page)
+        setHasMorePages(
+          data.attributes.current_page < data.attributes.last_page
+        )
         setPagination({
           current_page: data.attributes.current_page,
           last_page: data.attributes.last_page,
@@ -561,33 +521,20 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
     } catch (err) {
       console.error("Ошибка при загрузке кандидатов:", err)
-      const mockCandidates: ICandidateTableItem[] = [
+      console.log("Используем mock-данные для разработки")
+
+      const mockCandidates = [
         {
           id: "1",
           name: "Иванов Иван Иванович",
-          rop: "Административный состав",
+          rop: "Маликова Е.",
           datetime: "15.01.2025 14:30",
           vacancy: "Frontend разработчик",
           status: "Новая анкета",
           statusID: "new",
           hasVacancyComment: "Требует дополнительной проверки",
           vacancyKey: "mock-key-1",
-          fullData: {
-            id: 1,
-            key: "mock-key-1",
-            last_name: "Иванов",
-            first_name: "Иван",
-            middle_name: "Иванович",
-            created_at: "2025-01-15T14:30:00Z",
-            status: "Новая анкета",
-            comment: "Требует дополнительной проверки",
-            work_team: "Административный состав",
-            vacancy: {
-              attributes: {
-                title: "Frontend разработчик",
-              },
-            },
-          },
+          fullData: {},
         },
         {
           id: "2",
@@ -599,21 +546,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "checked",
           hasVacancyComment: "Мутный челик, не понравился",
           vacancyKey: "mock-key-2",
-          fullData: {
-            id: 2,
-            key: "mock-key-2",
-            last_name: "Петров",
-            first_name: "Петр",
-            middle_name: "Петрович",
-            created_at: "2025-01-14T10:15:00Z",
-            status: "Проверен",
-            comment: "Мутный челик, не понравился",
-            vacancy: {
-              attributes: {
-                title: "Backend разработчик",
-              },
-            },
-          },
+          fullData: {},
         },
         {
           id: "3",
@@ -625,21 +558,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "needRevision",
           hasVacancyComment: "Необходимо уточнить опыт работы",
           vacancyKey: "mock-key-3",
-          fullData: {
-            id: 3,
-            key: "mock-key-3",
-            last_name: "Сидорова",
-            first_name: "Анна",
-            middle_name: "Михайловна",
-            created_at: "2025-01-13T16:45:00Z",
-            status: "Нужна доработка",
-            comment: "Необходимо уточнить опыт работы",
-            vacancy: {
-              attributes: {
-                title: "UI/UX дизайнер",
-              },
-            },
-          },
+          fullData: {},
         },
         {
           id: "4",
@@ -651,144 +570,52 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           statusID: "rejected",
           hasVacancyComment: "Не соответствует требованиям",
           vacancyKey: "mock-key-4",
-          fullData: {
-            id: 4,
-            key: "mock-key-4",
-            last_name: "Козлов",
-            first_name: "Алексей",
-            middle_name: "Владимирович",
-            created_at: "2025-01-12T09:20:00Z",
-            status: "Отклонен",
-            comment: "Не соответствует требованиям",
-            vacancy: {
-              attributes: {
-                title: "Project Manager",
-              },
-            },
-          },
+          fullData: {},
         },
         {
           id: "5",
-          name: "Козлов Алексей Владимирович",
+          name: "Смирнова Ольга Петровна",
           rop: "Маликова Е.",
-          datetime: "12.01.2025 09:20",
-          vacancy: "Project Manager",
+          datetime: "11.01.2025 11:30",
+          vacancy: "UX Designer",
           status: "Принят",
           statusID: "accepted",
           hasVacancyComment: "Отличный кандидат",
           vacancyKey: "mock-key-5",
-          fullData: {
-            id: 5,
-            key: "mock-key-5",
-            last_name: "Козлов",
-            first_name: "Алексей",
-            middle_name: "Владимирович",
-            created_at: "2025-01-12T09:20:00Z",
-            status: "Принят",
-            comment: "Отличный кандидат",
-            vacancy: {
-              attributes: {
-                title: "Project Manager",
-              },
-            },
-          },
+          fullData: {},
         },
         {
           id: "6",
-          name: "Смирнова Елена Петровна",
+          name: "Васильев Дмитрий Сергеевич",
           rop: "Маликова Е.",
-          datetime: "11.01.2025 15:30",
-          vacancy: "UI/UX дизайнер",
+          datetime: "10.01.2025 14:15",
+          vacancy: "DevOps Engineer",
           status: "Вышел",
           statusID: "startWorking",
-          hasVacancyComment: "Начал работу",
+          hasVacancyComment: "Ушел на другую работу",
           vacancyKey: "mock-key-6",
-          fullData: {
-            id: 6,
-            key: "mock-key-6",
-            last_name: "Смирнова",
-            first_name: "Елена",
-            middle_name: "Петровна",
-            created_at: "2025-01-11T15:30:00Z",
-            status: "Вышел",
-            comment: "Начал работу",
-            vacancy: {
-              attributes: {
-                title: "UI/UX дизайнер",
-              },
-            },
-          },
-        },
-        {
-          id: "7",
-          name: "Петров Сергей Иванович",
-          rop: "Маликова Е.",
-          datetime: "10.01.2025 12:15",
-          vacancy: "Backend разработчик",
-          status: "Не принят",
-          statusID: "not",
-          hasVacancyComment: "Не подошел по требованиям",
-          vacancyKey: "mock-key-7",
-          fullData: {
-            id: 7,
-            key: "mock-key-7",
-            last_name: "Петров",
-            first_name: "Сергей",
-            middle_name: "Иванович",
-            created_at: "2025-01-10T12:15:00Z",
-            status: "Не принят",
-            comment: "Не подошел по требованиям",
-            vacancy: {
-              attributes: {
-                title: "Backend разработчик",
-              },
-            },
-          },
-        },
-        {
-          id: "8",
-          name: "Козлова Мария Сергеевна",
-          rop: "Маликова Е.",
-          datetime: "09.01.2025 18:45",
-          vacancy: "Frontend разработчик",
-          status: "Не вышел",
-          statusID: "not",
-          hasVacancyComment: "Не явился на работу",
-          vacancyKey: "mock-key-8",
-          fullData: {
-            id: 8,
-            key: "mock-key-8",
-            last_name: "Козлова",
-            first_name: "Мария",
-            middle_name: "Сергеевна",
-            created_at: "2025-01-09T18:45:00Z",
-            status: "Не вышел",
-            comment: "Не явился на работу",
-            vacancy: {
-              attributes: {
-                title: "Frontend разработчик",
-              },
-            },
-          },
+          fullData: {},
         },
       ]
 
       setCandidates(mockCandidates)
+      setAllCandidates(mockCandidates)
+      setCurrentPage(1)
+      setHasMorePages(false)
       setPagination({
         current_page: 1,
         last_page: 1,
-        total: 8,
+        total: 4,
         per_page: 8,
         from: 1,
-        to: 8,
+        to: 4,
       })
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handleRowClick = (
-    candidate: ICandidateTableItem,
-    event: React.MouseEvent
-  ) => {
+  const handleRowClick = (candidate: Candidate, event: React.MouseEvent) => {
     if (
       (event.target as HTMLElement).tagName === "INPUT" ||
       (event.target as HTMLElement).closest("button") ||
@@ -809,6 +636,70 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       page !== pagination.current_page
     ) {
       fetchCandidates(page, activeFilters !== null)
+    }
+  }
+
+  const handleLoadMore = async () => {
+    if (loadMoreLoading || !hasMorePages) return
+
+    setLoadMoreLoading(true)
+    const nextPage = currentPage + 1
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${nextPage}&city_work=${encodeURIComponent(
+        selectedCity
+      )}`
+
+      const headers: Record<string, string> = {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.response && data.attributes) {
+        const newCandidates = data.attributes.data.map((candidate: any) => ({
+          id: candidate.id,
+          name: `${candidate.last_name} ${candidate.first_name} ${
+            candidate.middle_name || ""
+          }`.trim(),
+          rop: "Маликова Е.",
+          datetime: formatDateTime(
+            candidate.created_at || new Date().toISOString()
+          ),
+          vacancy: candidate.vacancy?.attributes?.title || "Не указана",
+          status: candidate.status || "Не определен",
+          statusID: getStatusId(candidate.status),
+          hasVacancyComment: candidate.comment,
+          vacancyKey: candidate.key,
+          fullData: candidate,
+        }))
+
+        setAllCandidates((prev) => [...prev, ...newCandidates])
+        setCandidates((prev) => [...prev, ...newCandidates])
+        setCurrentPage(nextPage)
+        setHasMorePages(nextPage < data.attributes.last_page)
+      }
+    } catch (err) {
+      console.error("Ошибка при загрузке дополнительных кандидатов:", err)
+    } finally {
+      setLoadMoreLoading(false)
     }
   }
 
@@ -842,15 +733,16 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }
 
   useEffect(() => {
+    setIsAuthorized(true)
+
     if (filteredData) {
-      // Данные уже получены родительским компонентом, просто обрабатываем их
       const transformedCandidates = filteredData.attributes.data.map(
-        (candidate: ICandidateTableData) => ({
-          id: candidate.id.toString(),
+        (candidate: any) => ({
+          id: candidate.id,
           name: `${candidate.last_name} ${candidate.first_name} ${
             candidate.middle_name || ""
           }`.trim(),
-          rop: candidate.work_team || "-",
+          rop: "Маликова Е.",
           datetime: formatDateTime(
             candidate.created_at || new Date().toISOString()
           ),
@@ -863,6 +755,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         })
       )
       setCandidates(transformedCandidates)
+      setAllCandidates(transformedCandidates)
+      setCurrentPage(filteredData.attributes.current_page)
+      setHasMorePages(
+        filteredData.attributes.current_page < filteredData.attributes.last_page
+      )
       setPagination({
         current_page: filteredData.attributes.current_page,
         last_page: filteredData.attributes.last_page,
@@ -871,10 +768,28 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         from: filteredData.attributes.from,
         to: filteredData.attributes.to,
       })
+    } else {
+      fetchCandidates()
     }
-  }, [filteredData])
+  }, [filteredData, selectedCity])
 
-  useEffect(() => {}, [selectedKeys])
+  useEffect(() => {
+    console.log("Выбранные ключи:", selectedKeys)
+  }, [selectedKeys])
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      setIsTablet(width < 1440)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   const handleFormatDropdownToggle = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -900,12 +815,16 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [isFormatDropdownOpen])
 
+  if (!isAuthorized) {
+    return null
+  }
+
   return (
     <>
-      <section style={{ flexWrap: "wrap", minHeight: "auto" }}>
-        <FormRow className="w-80" justifyContent="space-between">
+      <section style={{ flexWrap: "wrap", minHeight: "auto", padding: "0" }}>
+        <FormRow className="w-80 filtersRow" justifyContent="space-between">
           <div className="flex-direction-column">
-            <h1>Кандидаты</h1>
+            <h1 className="tableHeading">Кандидаты</h1>
             <button className="aButton" id="checkAll" onClick={handleSelectAll}>
               {candidates.length > 0 &&
               candidates.every((c) => selectedKeys.includes(c.vacancyKey))
@@ -938,219 +857,306 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           </div>
         ) : (
           <>
-            <table className="candidatesTable w-80">
-              <thead>
-                <tr style={{ border: "0" }}>
-                  <th></th>
-                  <th>ФИО Кандидата</th>
-                  <th>РОП</th>
-                  <th>Дата и время</th>
-                  <th>Вакансия</th>
-                  <th style={{ textAlign: "right", paddingRight: "30px" }}>
-                    Статус
-                  </th>
-                  <th style={{ width: "100px" }}></th>
-                </tr>
-              </thead>
-              <tbody id="candidatesTableBody">
-                {candidates.map((candidate) => (
-                  <tr
-                    key={candidate.id}
-                    data-keyvacancy={candidate.vacancyKey}
-                    onClick={(e) => handleRowClick(candidate, e)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td>
-                      <label
-                        className="custom-checkbox"
-                        htmlFor={`personalData${candidate.id}`}
-                      >
-                        <input
-                          type="checkbox"
-                          name="personalData"
-                          id={`personalData${candidate.id}`}
-                          checked={selectedKeys.includes(candidate.vacancyKey)}
-                          onChange={(e) =>
-                            handleCheckboxChange(
-                              candidate.vacancyKey,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="checkmark"></span>
-                      </label>
-                    </td>
-                    <td>{candidate.name}</td>
-                    <td>{candidate.rop}</td>
-                    <td>{candidate.datetime}</td>
-                    <td>{candidate.vacancy}</td>
-                    <td
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginRight: "20px",
-                      }}
-                    >
-                      <p id={candidate.statusID}>{candidate.status}</p>
-                    </td>
-                    <td>
-                      {candidate.hasVacancyComment && (
-                        <button
-                          id={`radactBtn${candidate.id}`}
-                          className="redactBtn"
-                          onClick={(e) => e.stopPropagation()}
-                          onMouseEnter={() => setActiveTooltip(candidate.id)}
-                          onMouseLeave={() => setActiveTooltip(null)}
-                        >
-                          <Image
-                            src="/images/candidatesSecurityImg/pen.webp"
-                            alt="Кнопка комментария"
-                            width={20}
-                            height={20}
-                          />
-                          <div
-                            className={`comment-tooltip ${
-                              activeTooltip === candidate.id ? "visible" : ""
-                            }`}
-                          >
-                            {candidate.hasVacancyComment}
-                          </div>
-                        </button>
-                      )}
-                      <button
-                        id={`downloadBtn${candidate.id}`}
-                        className={"downloadBtn"}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleSingleDownload(
-                            candidate.vacancyKey,
-                            candidate.name
-                          )
-                        }}
-                        disabled={singleDownloadMutation.isPending}
-                        title={
-                          singleDownloadMutation.isPending
-                            ? "Скачивание..."
-                            : `Скачать анкету в формате ${selectedFormat}`
-                        }
-                      >
-                        {singleDownloadMutation.isPending ? (
-                          <span>⏳</span>
-                        ) : (
-                          <Image
-                            src="/images/icons/download.svg"
-                            alt="Download"
-                            width={20}
-                            height={20}
-                          />
-                        )}
-                      </button>
-                    </td>
+            {/* Десктопная версия таблицы */}
+            <div className="desktop-table-container">
+              <table className="candidatesTable w-80">
+                <thead>
+                  <tr style={{ border: "0" }}>
+                    <th></th>
+                    <th>ФИО Кандидата</th>
+                    <th>РОП</th>
+                    <th>Дата и время</th>
+                    <th>Вакансия</th>
+                    <th style={{ textAlign: "right", paddingRight: "30px" }}>
+                      Статус
+                    </th>
+                    <th style={{ width: "100px" }}></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <FormRow
-              className="w-80"
-              justifyContent="space-between"
-              style={{ marginTop: "2rem" }}
-            >
-              <div className="left-side">
-                <button
-                  id="prevBtn"
-                  className={`navBtn ${
-                    pagination.current_page === 1 ? "inactive" : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page - 1)}
-                  disabled={pagination.current_page === 1}
-                >
-                  Предыдущая
-                </button>
-                <div className="pagination">
-                  {generatePageNumbers().map((page, index) => (
-                    <button
-                      key={index}
-                      className={`paginationBtn ${
-                        page === pagination.current_page ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        typeof page === "number"
-                          ? handlePageChange(page)
-                          : undefined
-                      }
-                      disabled={typeof page !== "number"}
+                </thead>
+                <tbody id="candidatesTableBody">
+                  {candidates.map((candidate) => (
+                    <tr
+                      key={candidate.id}
+                      data-keyvacancy={candidate.vacancyKey}
+                      onClick={(e) => handleRowClick(candidate, e)}
+                      style={{ cursor: "pointer" }}
                     >
-                      {page}
-                    </button>
+                      <td>
+                        <label
+                          className="custom-checkbox"
+                          htmlFor={`personalData${candidate.id}`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="personalData"
+                            id={`personalData${candidate.id}`}
+                            checked={selectedKeys.includes(
+                              candidate.vacancyKey
+                            )}
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                candidate.vacancyKey,
+                                e.target.checked
+                              )
+                            }
+                          />
+                          <span className="checkmark"></span>
+                        </label>
+                      </td>
+                      <td>{candidate.name}</td>
+                      <td>{candidate.rop}</td>
+                      <td>{candidate.datetime}</td>
+                      <td>{candidate.vacancy}</td>
+                      <td
+                        style={{
+                          marginRight: "20px",
+                        }}
+                      >
+                        <p className="status" id={candidate.statusID}>
+                          {getStatusText(candidate.status)}
+                        </p>
+                      </td>
+                      <td>
+                        {candidate.hasVacancyComment && (
+                          <button
+                            id={`radactBtn${candidate.id}`}
+                            className="redactBtn"
+                            onClick={(e) => e.stopPropagation()}
+                            onMouseEnter={() => setActiveTooltip(candidate.id)}
+                            onMouseLeave={() => setActiveTooltip(null)}
+                          >
+                            <Image
+                              src="/images/candidatesSecurityImg/pen.webp"
+                              alt="Кнопка комментария"
+                              width={20}
+                              height={20}
+                            />
+                            <div
+                              className={`comment-tooltip ${
+                                activeTooltip === candidate.id ? "visible" : ""
+                              }`}
+                            >
+                              {candidate.hasVacancyComment}
+                            </div>
+                          </button>
+                        )}
+                        <button
+                          id={`downloadBtn${candidate.id}`}
+                          className={"downloadBtn"}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleSingleDownload(
+                              candidate.vacancyKey,
+                              candidate.name
+                            )
+                          }}
+                          disabled={singleDownloadLoading[candidate.vacancyKey]}
+                          title={
+                            singleDownloadLoading[candidate.vacancyKey]
+                              ? "Скачивание..."
+                              : "Скачать анкету в PDF"
+                          }
+                        >
+                          {singleDownloadLoading[candidate.vacancyKey] ? (
+                            <span>⏳</span>
+                          ) : (
+                            <Image
+                              src="/images/icons/download.svg"
+                              alt="Download"
+                              width={20}
+                              height={20}
+                            />
+                          )}
+                        </button>
+                      </td>
+                    </tr>
                   ))}
-                </div>
-                <button
-                  id="nexBtn"
-                  className={`navBtn ${
-                    pagination.current_page === pagination.last_page
-                      ? "inactive"
-                      : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page + 1)}
-                  disabled={pagination.current_page === pagination.last_page}
-                >
-                  Следующая
-                </button>
-              </div>
-              <div className="download-button-group right-side">
-                <button
-                  className="deleteBtn"
-                  onClick={handleDeleteClick}
-                  disabled={
-                    selectedKeys.length === 0 || deleteMutation.isPending
-                  }
-                >
-                  {deleteMutation.isPending ? "Удаление..." : "Удалить"}
-                </button>
-                <button
-                  className="download-btn primary"
-                  onClick={handleDownload}
-                  disabled={multipleDownloadMutation.isPending}
-                >
-                  {multipleDownloadMutation.isPending
-                    ? "Скачивание..."
-                    : "Скачать"}
-                </button>
-                <button
-                  className="download-btn dropdown-toggle"
-                  onClick={handleFormatDropdownToggle}
-                  disabled={multipleDownloadMutation.isPending}
-                >
-                  <span className="format-text">{selectedFormat}</span>
-                  <Image
-                    src="/images/icons/chevron-down.svg"
-                    alt="Dropdown"
-                    width={16}
-                    height={16}
-                    className="chevron-down"
-                  />
-                </button>
-                <div
-                  className={`file-formats-card ${
-                    isFormatDropdownOpen ? "" : "hide"
-                  }`}
-                >
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".xlsx")}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Мобильная версия карточек */}
+            <div className="mobile-cards-container">
+              {candidates.map((candidate) => (
+                <MobileCandidateCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  isSelected={selectedKeys.includes(candidate.vacancyKey)}
+                  onCheckboxChange={handleCheckboxChange}
+                  onRowClick={handleRowClick}
+                  onSingleDownload={handleSingleDownload}
+                  singleDownloadLoading={singleDownloadLoading}
+                  activeTooltip={activeTooltip}
+                  setActiveTooltip={setActiveTooltip}
+                  getStatusText={getStatusText}
+                />
+              ))}
+            </div>
+
+            {/* Мобильная пагинация */}
+            {isMobile ? (
+              <div className="mobile-pagination-container">
+                <div className="load-more-section">
+                  <button
+                    className="load-more-btn"
+                    onClick={handleLoadMore}
+                    disabled={!hasMorePages || loadMoreLoading}
                   >
-                    .xlsx
-                  </div>
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".pdf")}
+                    {loadMoreLoading ? "Загрузка..." : "Показать еще"}
+                  </button>
+                </div>
+                <div className="download-button-group">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={selectedKeys.length === 0 || deleteLoading}
                   >
-                    .pdf
+                    {deleteLoading ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={downloadLoading}
+                  >
+                    {downloadLoading ? "Скачивание..." : "Скачать выбранные"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={downloadLoading}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
+                    >
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
                   </div>
                 </div>
               </div>
-            </FormRow>
+            ) : (
+              /* Десктопная пагинация */
+              <FormRow
+                className="w-80 pagination-container"
+                justifyContent="space-between"
+                style={{ marginTop: "2rem", padding: "0 20px" }}
+              >
+                <div className="left-side">
+                  <button
+                    id="prevBtn"
+                    className={`navBtn ${
+                      pagination.current_page === 1 ? "inactive" : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page - 1)
+                    }
+                    disabled={pagination.current_page === 1}
+                  >
+                    {isTablet ? "Пред" : "Предыдущая"}
+                  </button>
+                  <div className="pagination">
+                    {generatePageNumbers().map((page, index) => (
+                      <button
+                        key={index}
+                        className={`paginationBtn ${
+                          page === pagination.current_page ? "active" : ""
+                        }`}
+                        onClick={() =>
+                          typeof page === "number"
+                            ? handlePageChange(page)
+                            : undefined
+                        }
+                        disabled={typeof page !== "number"}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    id="nexBtn"
+                    className={`navBtn ${
+                      pagination.current_page === pagination.last_page
+                        ? "inactive"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page + 1)
+                    }
+                    disabled={pagination.current_page === pagination.last_page}
+                  >
+                    {isTablet ? "След" : "Следующая"}
+                  </button>
+                </div>
+                <div className="download-button-group right-side">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={selectedKeys.length === 0 || deleteLoading}
+                  >
+                    {deleteLoading ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={downloadLoading}
+                  >
+                    {downloadLoading ? "Скачивание..." : "Скачать"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={downloadLoading}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
+                    >
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
+                  </div>
+                </div>
+              </FormRow>
+            )}
           </>
         )}
       </section>

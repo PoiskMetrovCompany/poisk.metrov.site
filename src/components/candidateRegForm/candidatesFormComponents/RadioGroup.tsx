@@ -1,16 +1,16 @@
-import React, { FC } from "react";
+import React, { FC } from "react"
 
 interface RadioOption<T = string | boolean> {
-  value: T;
-  label: string;
+  value: T
+  label: string
 }
 
 interface RadioGroupProps<T = string | boolean> {
-  name: string;
-  options: RadioOption<T>[];
-  value: T;
-  onChange: (value: T) => void;
-  className?: string;
+  name: string
+  options: RadioOption<T>[]
+  value: T
+  onChange: (value: T) => void
+  className?: string
 }
 
 export const RadioGroup = <T extends string | boolean>({
@@ -35,5 +35,5 @@ export const RadioGroup = <T extends string | boolean>({
         </label>
       ))}
     </div>
-  );
-};
+  )
+}
