@@ -1,6 +1,9 @@
-import React, { useState, KeyboardEvent } from "react"
-import styles from "./accessTable.module.scss"
+import React, { KeyboardEvent, useState } from "react"
+
 import Image from "next/image"
+
+import styles from "./accessTable.module.scss"
+
 import ConfirmationModal from "../confirmationalWindow"
 
 interface User {
@@ -183,12 +186,17 @@ const AccessTable = () => {
 
   return (
     <>
-      <div className="center-card big">
+      <div className="center-card big" style={{ marginTop: "24px" }}>
         <div className="formRow">
           <h3 style={{ textAlign: "left" }}>Управление доступами</h3>
         </div>
         <div className="formRow" style={{ marginTop: "0" }}>
-          <h4 style={{ textAlign: "left" }}>
+          <h4
+            className={styles.tableLabel}
+            style={{ textAlign: "left" }}
+            tabIndex={0}
+            aria-label="Пользователи, имеющие доступ к системе"
+          >
             Пользователи, имеющие доступ к системе
           </h4>
         </div>
@@ -249,6 +257,55 @@ const AccessTable = () => {
               ))}
             </tbody>
           </table>
+
+          {/* Мобильная версия карточек */}
+          <div className={styles.mobileCards}>
+            {users.map((user, index) => (
+              <div key={user.id} className={styles.mobileCard}>
+                <div className={styles.mobileCardContent}>
+                  <div className={styles.mobileName}>{user.name}</div>
+                  <div className={styles.mobilePosition}>{user.position}</div>
+                  <div className={styles.mobileEmail}>{user.email}</div>
+                  <div className={styles.mobilePasswordRow}>
+                    <span className={styles.mobilePasswordLabel}>Пароль:</span>
+                    <span
+                      className={styles.mobilePassword}
+                      onTouchStart={() => setHoveredPassword(user.id)}
+                      onTouchEnd={() => setHoveredPassword(null)}
+                    >
+                      {hoveredPassword === user.id ? user.password : "•••••••"}
+                    </span>
+                    {isEditing && (
+                      <div className={styles.mobileButtonGroup}>
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => handleEdit(index)}
+                        >
+                          <Image
+                            src={"/images/icons/editBtn.svg"}
+                            alt={"Редактировать"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => handleDeleteClick(index)}
+                        >
+                          <Image
+                            src={"/images/icons/trashBox.svg"}
+                            alt={"Удалить"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {(isAdding || editingIndex !== null) && (
@@ -262,7 +319,7 @@ const AccessTable = () => {
               marginTop: "1rem",
             }}
           >
-            <table className="inputTable" style={{ height: "140px" }}>
+            <table className={`inputTable ${styles.inputTableHeight}`}>
               <caption className="tableLabel">
                 {editingIndex !== null
                   ? "Редактировать пользователя"
@@ -390,8 +447,8 @@ const AccessTable = () => {
             {editingIndex !== null
               ? "Подтвердить"
               : isAdding
-              ? "Сохранить"
-              : "Добавить доступ"}
+                ? "Сохранить"
+                : "Добавить доступ"}
           </button>
 
           {isAdding || editingIndex !== null ? (

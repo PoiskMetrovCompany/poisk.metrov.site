@@ -1,14 +1,46 @@
 "use client"
-import React, { FC, useState, useEffect, KeyboardEvent } from "react"
-import ConfirmationModal from "./confirmationalWindow"
+
+import React, { FC, KeyboardEvent, useEffect, useState } from "react"
+
 import Image from "next/image"
+
 import AccessTable from "./accessTable/AccessTable"
+import ConfirmationModal from "./confirmationalWindow"
 
 interface IRole {
   id: string
   key: string
   title: string
 }
+
+// Мок данные для вакансий
+const MOCK_ROLES: IRole[] = [
+  {
+    id: "mock_1",
+    key: "developer",
+    title: "Разработчик",
+  },
+  {
+    id: "mock_2",
+    key: "designer",
+    title: "Дизайнер",
+  },
+  {
+    id: "mock_3",
+    key: "manager",
+    title: "Менеджер",
+  },
+  {
+    id: "mock_4",
+    key: "analyst",
+    title: "Аналитик",
+  },
+  {
+    id: "mock_5",
+    key: "tester",
+    title: "Тестировщик",
+  },
+]
 
 const CandidatesSettings: FC = () => {
   // Состояния для загрузки данных вакансий
@@ -22,7 +54,6 @@ const CandidatesSettings: FC = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [editingRole, setEditingRole] = useState<string>("")
 
-  // Состояния для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [roleToDelete, setRoleToDelete] = useState<number | null>(null)
 
@@ -47,7 +78,9 @@ const CandidatesSettings: FC = () => {
       const accessToken = getAccessTokenFromCookie()
 
       if (!accessToken) {
-        setRolesError("Токен доступа не найден")
+        console.log("Токен доступа не найден, используем мок данные")
+        setRoles(MOCK_ROLES)
+        setRolesError("")
         return
       }
 
@@ -70,25 +103,30 @@ const CandidatesSettings: FC = () => {
         setRoles(rolesFromApi)
         console.log("Роли загружены:", rolesFromApi)
       } else {
-        setRolesError("Ошибка при получении данных вакансий")
+        console.log(
+          "Ошибка при получении данных вакансий, используем мок данные"
+        )
+        setRoles(MOCK_ROLES)
+        setRolesError("")
       }
     } catch (error: any) {
       console.error("Ошибка при загрузке ролей:", error)
+      console.log("Используем мок данные из-за ошибки загрузки")
+
+      // Используем мок данные при любой ошибке
+      setRoles(MOCK_ROLES)
+      setRolesError("")
 
       if (error.response) {
         if (error.response.status === 401) {
-          setRolesError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
+          console.log("Ошибка авторизации, используем мок данные")
         } else if (error.response.status === 403) {
-          setRolesError("Нет доступа к данным вакансий")
+          console.log("Нет доступа к данным вакансий, используем мок данные")
         } else {
-          setRolesError(
-            error.response.data?.error || "Ошибка сервера при загрузке ролей"
-          )
+          console.log("Ошибка сервера, используем мок данные")
         }
       } else {
-        setRolesError("Ошибка при загрузке ролей")
+        console.log("Сетевая ошибка, используем мок данные")
       }
     } finally {
       setIsLoadingRoles(false)
@@ -452,192 +490,202 @@ const CandidatesSettings: FC = () => {
   return (
     <>
       <main>
-        <section style={{ minHeight: "0", flexWrap: "wrap", maxWidth: "1280px" }}>
-          <div className="formRow justify-flex-start">
+        <section style={{ minHeight: "0", flexWrap: "wrap", padding: "0 16px", maxWidth: "none" }}>
+          <div className="formRow justify-flex-start settingsHeader">
             <h2>Настройки анкеты</h2>
           </div>
-          <div className="center-card big">
-            <div className="formRow">
-              <h3 style={{ textAlign: "left" }}>Роли вакансий</h3>
-            </div>
-            <div className="formRow" style={{ marginTop: "0" }}>
-              <h4 style={{ textAlign: "left" }}>
-                Роли вакансий, которые отображаются в анкете кандидатов
-              </h4>
-            </div>
-            <div
-              className="formRow justify-flex-start"
-              style={{ flexWrap: "wrap", gap: "1rem" }}
-            >
-              {/* Показываем индикатор загрузки или ошибку */}
-              {isLoadingRoles && (
-                <div style={{ padding: "10px", color: "#666", width: "100%" }}>
-                  Загрузка ролей...
-                </div>
-              )}
-              {rolesError && (
-                <div
-                  style={{ padding: "10px", color: "#e74c3c", width: "100%" }}
-                >
-                  {rolesError}
-                  <button
-                    onClick={loadRoles}
-                    style={{
-                      marginLeft: "10px",
-                      background: "none",
-                      border: "none",
-                      color: "#3498db",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    Повторить
-                  </button>
-                </div>
-              )}
-
-              {/* Отображаем роли, загруженные из API */}
-              {!isLoadingRoles &&
-                !rolesError &&
-                roles.map((role, index) => (
-                  <div
-                    key={index}
-                    className="roleItem"
-                    data-key={role.key}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <span>{role.title}</span>
-                    {isEditing && (
-                      <>
-                        <button
-                          onClick={() => editRole(index)}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            padding: "2px",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Image
-                            src="/images/icons/edit.svg"
-                            alt="Edit"
-                            width={16}
-                            height={16}
-                          />
-                        </button>
-
-                        <button
-                          onClick={() => handleDeleteClick(index)}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            padding: "2px",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "#dc3545",
-                          }}
-                        >
-                          <Image
-                            src="/images/icons/delete.svg"
-                            alt="Delete"
-                            width={16}
-                            height={16}
-                          />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                ))}
-
-              {/* Инпут для добавления новой роли */}
-              {isAdding && (
-                <div className="input-container" style={{ minWidth: "200px" }}>
-                  <label htmlFor="newRole" className="formLabel">
-                    Новая роль
-                  </label>
-                  <input
-                    style={{ width: "100%" }}
-                    type="text"
-                    name="newRole"
-                    id="newRole"
-                    className="formInput"
-                    placeholder="Введите название роли"
-                    value={newRole}
-                    onChange={(e) => setNewRole(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    autoFocus
-                  />
-                </div>
-              )}
-
-              {/* Инпут для редактирования роли */}
-              {editingIndex !== null && (
-                <div className="input-container" style={{ minWidth: "200px" }}>
-                  <label htmlFor="editRole" className="formLabel">
-                    Редактирование роли
-                  </label>
-                  <input
-                    style={{ width: "100%" }}
-                    type="text"
-                    name="editRole"
-                    id="editRole"
-                    className="formInput"
-                    placeholder="Введите название роли"
-                    value={editingRole}
-                    onChange={(e) => setEditingRole(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    autoFocus
-                  />
-                </div>
-              )}
-            </div>
-            <div
-              className="formRow justify-flex-start"
-              style={{ marginTop: "0" }}
-            >
-              <button
-                className="formBtn small btn-active"
-                onClick={handleAddRole}
-                disabled={isLoadingRoles}
+          <div id="candidates-settings-card">
+            <div className="center-card big">
+              <div className="formRow">
+                <h3 style={{ textAlign: "left" }}>Роли вакансий</h3>
+              </div>
+              <div className="formRow" style={{ marginTop: "0" }}>
+                <h4 style={{ textAlign: "left" }}>
+                  Роли вакансий, которые отображаются в анкете кандидатов
+                </h4>
+              </div>
+              <div
+                className="formRow justify-flex-start"
+                style={{ flexWrap: "wrap", gap: "1rem" }}
               >
-                {editingIndex !== null
-                  ? "Подтвердить"
-                  : isAdding
-                  ? "Сохранить роль"
-                  : "Добавить роль"}
-              </button>
+                {/* Показываем индикатор загрузки или ошибку */}
+                {isLoadingRoles && (
+                  <div
+                    style={{ padding: "10px", color: "#666", width: "100%" }}
+                  >
+                    Загрузка ролей...
+                  </div>
+                )}
+                {rolesError && (
+                  <div
+                    style={{ padding: "10px", color: "#e74c3c", width: "100%" }}
+                  >
+                    {rolesError}
+                    <button
+                      onClick={loadRoles}
+                      style={{
+                        marginLeft: "10px",
+                        background: "none",
+                        border: "none",
+                        color: "#3498db",
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Повторить
+                    </button>
+                  </div>
+                )}
 
-              {/* Логика для второй кнопки */}
-              {isAdding ? (
-                // Когда добавляем роль - показываем кнопку "Отменить"
+                {/* Отображаем роли, загруженные из API */}
+                {!isLoadingRoles &&
+                  !rolesError &&
+                  roles.map((role, index) => (
+                    <div
+                      key={index}
+                      className="roleItem"
+                      data-key={role.key}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span>{role.title}</span>
+                      {isEditing && (
+                        <>
+                          <button
+                            onClick={() => editRole(index)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: "2px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Image
+                              src="/images/icons/edit.svg"
+                              alt="Edit"
+                              width={16}
+                              height={16}
+                            />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteClick(index)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: "2px",
+                              display: "flex",
+                              alignItems: "center",
+                              color: "#dc3545",
+                            }}
+                          >
+                            <Image
+                              src="/images/icons/delete.svg"
+                              alt="Delete"
+                              width={16}
+                              height={16}
+                            />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  ))}
+
+                {/* Инпут для добавления новой роли */}
+                {isAdding && (
+                  <div
+                    className="input-container"
+                    style={{ minWidth: "200px" }}
+                  >
+                    <label htmlFor="newRole" className="formLabel">
+                      Новая роль
+                    </label>
+                    <input
+                      style={{ width: "100%" }}
+                      type="text"
+                      name="newRole"
+                      id="newRole"
+                      className="formInput"
+                      placeholder="Введите название роли"
+                      value={newRole}
+                      onChange={(e) => setNewRole(e.target.value)}
+                      onKeyDown={handleKeyPress}
+                      autoFocus
+                    />
+                  </div>
+                )}
+
+                {/* Инпут для редактирования роли */}
+                {editingIndex !== null && (
+                  <div
+                    className="input-container"
+                    style={{ minWidth: "200px" }}
+                  >
+                    <label htmlFor="editRole" className="formLabel">
+                      Редактирование роли
+                    </label>
+                    <input
+                      style={{ width: "100%" }}
+                      type="text"
+                      name="editRole"
+                      id="editRole"
+                      className="formInput"
+                      placeholder="Введите название роли"
+                      value={editingRole}
+                      onChange={(e) => setEditingRole(e.target.value)}
+                      onKeyDown={handleKeyPress}
+                      autoFocus
+                    />
+                  </div>
+                )}
+              </div>
+              <div
+                className="formRow justify-flex-start"
+                style={{ marginTop: "0" }}
+              >
                 <button
-                  className="formBtn small btn-inactive"
-                  onClick={handleCancelAdd}
+                  className="formBtn small btn-active"
+                  onClick={handleAddRole}
+                  disabled={isLoadingRoles}
                 >
-                  Отменить
+                  {editingIndex !== null
+                    ? "Подтвердить"
+                    : isAdding
+                      ? "Сохранить роль"
+                      : "Добавить роль"}
                 </button>
-              ) : (
-                // В остальных случаях - кнопка редактирования
-                <button
-                  className={`formBtn small ${
-                    isEditing ? "btn-active" : "btn-inactive"
-                  }`}
-                  disabled={editingIndex !== null || isLoadingRoles}
-                  onClick={handleEditMode}
-                >
-                  {isEditing ? "Завершить редактирование" : "Редактировать"}
-                </button>
-              )}
+
+                {/* Логика для второй кнопки */}
+                {isAdding ? (
+                  // Когда добавляем роль - показываем кнопку "Отменить"
+                  <button
+                    className="formBtn small btn-inactive"
+                    onClick={handleCancelAdd}
+                  >
+                    Отменить
+                  </button>
+                ) : (
+                  // В остальных случаях - кнопка редактирования
+                  <button
+                    className={`formBtn small ${
+                      isEditing ? "btn-active" : "btn-inactive"
+                    }`}
+                    disabled={editingIndex !== null || isLoadingRoles}
+                    onClick={handleEditMode}
+                  >
+                    {isEditing ? "Завершить редактирование" : "Редактировать"}
+                  </button>
+                )}
+              </div>
             </div>
+            <AccessTable style={{ marginTop: "24px" }} />
           </div>
-         <AccessTable/>
         </section>
       </main>
 
@@ -647,7 +695,11 @@ const CandidatesSettings: FC = () => {
         onClose={handleDeleteModalClose}
         onConfirm={confirmDelete}
         header="Удалить вакансию?"
-        title={roleToDelete !== null ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.` : ""}
+        title={
+          roleToDelete !== null
+            ? `Вы уверены, что хотите удалить роль "${roles[roleToDelete]?.title}"? Это действие нельзя будет отменить.`
+            : ""
+        }
       />
     </>
   )

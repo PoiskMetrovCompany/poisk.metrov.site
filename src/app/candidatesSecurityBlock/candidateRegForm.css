@@ -113,6 +113,41 @@ article p {
   }
 }
 
+/* Специфичные стили для страницы настроек кандидатов */
+#candidates-settings-card,
+#candidates-settings-card .center-card.big {
+  flex: none;
+  width: 1280px;
+}
+
+@media (min-width: 1921px) {
+  #candidates-settings-card,
+  #candidates-settings-card .center-card.big {
+    width: 1280px;
+  }
+}
+@media (max-width: 1440px) {
+  #candidates-settings-card,
+  #candidates-settings-card .center-card.big {
+    width: 944px;
+  }
+}
+
+@media (max-width: 1024px) {
+  #candidates-settings-card,
+  #candidates-settings-card .center-card.big {
+    width: 688px;
+  }
+}
+
+@media (max-width: 768px) {
+  #candidates-settings-card,
+  #candidates-settings-card .center-card.big {
+    flex: 1;
+    width: 100%;
+  }
+}
+
 /* Типография карточек */
 .center-card h1 {
   font-size: 1.25rem;
@@ -795,12 +830,110 @@ input[type="checkbox"] + label {
   border-top: none !important;
 }
 
-.inputTable tr:last-child td:first-child {
-  border-bottom-left-radius: 1rem;
+.settingsHeader {
+  max-width: none !important;
+  width: 1280px;
+  @media (max-width: 1440px) {
+    width: 944px;
+  }
+  @media (max-width: 1024px) {
+    width: 688px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
-.inputTable tr:last-child td:last-child {
-  border-bottom-right-radius: 1rem; /* 16px */
+@media (max-width: 768px) {
+  .inputTable tr:first-child td:first-child {
+    border: none;
+    border-bottom: 1px solid #d2d2d2;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .inputTable tr:first-child td:last-child {
+    border: none;
+    border-bottom: 1px solid #d2d2d2;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .inputTable tr:last-child td:first-child {
+    border: none;
+    border-bottom: 1px solid #d2d2d2;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .inputTable tr:last-child td:last-child {
+    border: none;
+    border-bottom-right-radius: 1rem;
+  }
+}
+
+/* Стили для модального окна подтверждения */
+.modal-overlay {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-backdrop {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.modal-content-confirmation {
+  background-color: white;
+  border-radius: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  padding: 2rem;
+  width: 90%;
+}
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-content {
+    margin-bottom: 20px;
+    max-width: 400px;
+    width: calc(100% - 40px);
+  }
+
+  .modal-backdrop {
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-content-confirmation {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-width: none;
+    max-height: none;
+  }
 }
 
 .inputTable td input {
@@ -811,6 +944,15 @@ input[type="checkbox"] + label {
   height: 100%;
   padding: 0;
   width: 100%;
+}
+
+/* Ограничения ширины столбцов для inputTable */
+.inputTable td {
+  width: 50%; /* По умолчанию 50% для двухколоночных таблиц */
+}
+
+.inputTable td[colspan="2"] {
+  width: 100%; /* Полная ширина для объединенных ячеек */
 }
 
 .inputTable td input:focus {
@@ -1275,9 +1417,6 @@ input[type="checkbox"] + label {
 
 .candidatesTable th:nth-child(3) {
   width: 12%;
-  @media (width <1024px) {
-    width: 15%;
-  }
 }
 
 .candidatesTable th:nth-child(4) {
@@ -2654,6 +2793,7 @@ input[type="checkbox"] + label {
   }
 
   .center-card.big {
+    flex: 1;
     padding: 1rem 1.5rem;
     width: 100%;
   }

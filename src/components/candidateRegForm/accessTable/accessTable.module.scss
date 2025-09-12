@@ -1,58 +1,123 @@
 .tableContainer {
-  overflow-x: auto;
-
-  width: 100%;
-  padding: 20px;
-  border-radius: 12px;
-
   background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 20px;
+  width: 100%;
 }
 
 .accessTable {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 
   thead {
     tr {
       th {
-        padding: 18px 24px;
-
+        border: none;
+        color: var(--color-text-gray);
         font-size: 14px;
         font-weight: 400;
-        color: var(--color-text-gray);
+        overflow: hidden;
+        padding: 18px 12px;
         text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+          padding: 12px 8px;
+        }
+      }
+
+      th:nth-child(1) {
+        width: 35%;
+        @media (max-width: 1440px) {
+          width: 25%;
+        }
+        @media (max-width: 1024px) {
+          width: 45%;
+        }
+        @media (max-width: 768px) {
+          width: 30%;
+        }
+      }
+
+      th:nth-child(2) {
+        width: 12%;
+        @media (max-width: 1440px) {
+          width: 10%;
+        }
+        @media (max-width: 1024px) {
+          width: 15%;
+        }
+        @media (max-width: 768px) {
+          width: 15%;
+        }
+      }
+
+      th:nth-child(3) {
+        width: 25%;
+        @media (max-width: 1440px) {
+          width: 20%;
+        }
+        @media (max-width: 1024px) {
+          width: 40%;
+        }
+        @media (max-width: 768px) {
+          width: 30%;
+        }
+      }
+
+      th:nth-child(4) {
+        width: 15%;
+        @media (max-width: 768px) {
+          width: 15%;
+        }
+      }
+
+      th:nth-child(5) {
+        text-align: center;
+        width: 10%; /* Controls */
+        @media (max-width: 768px) {
+          width: 10%;
+        }
       }
     }
   }
 
+
+
   tbody {
     tr {
-      height: 30px;
       border-bottom: 2px solid var(--color-gray);
+      height: 30px;
 
       td {
-        height: 30px;
-        padding: 18px 24px;
-
+        border: none;
+        color: #494949;
         font-size: 14px;
         font-weight: 300;
-        color: #494949;
+        height: 30px;
+        overflow: hidden;
+        padding: 18px 12px;
         text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
       }
 
       .name {
-        font-weight: 400;
         color: #181817;
+        font-weight: 400;
       }
 
       .password {
         cursor: pointer;
-
         font-size: 16px;
         font-weight: 800;
-        line-height: 1.4;
         letter-spacing: 2px;
-
+        line-height: 1.4;
         transition: background-color 0.2s ease;
 
         &:hover {
@@ -62,8 +127,7 @@
       }
 
       .controls {
-        width: 120px;
-        min-width: 120px;
+        padding: 18px 6px;
         text-align: center;
         vertical-align: middle;
       }
@@ -71,22 +135,117 @@
   }
 }
 
+.tableLabel {
+  font-size: 18px !important;
+  @media (max-width: 1920px) {
+    font-size: 15px !important;
+  }
+  @media (max-width: 768px) {
+    font-size: 13px !important;
+  }
+}
 .buttonGroup {
+  align-items: center;
   display: flex;
   gap: 8px;
-  align-items: center;
   justify-content: flex-end;
+}
+
+.mobileCards {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.mobileCard {
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 16px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.mobileCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileName {
+  color: #181817;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.mobilePosition,
+.mobileEmail {
+  color: #494949;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.mobilePasswordRow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.mobilePasswordLabel {
+  color: #818181;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.mobilePassword {
+  color: #494949;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+  min-width: 0;
+  user-select: none;
+
+  &:hover,
+  &:active {
+    color: #ec7d3f;
+  }
+}
+
+.mobileButtonGroup {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Скрываем таблицу на мобильных */
+@media (max-width: 768px) {
+  .accessTable {
+    display: none;
+  }
 }
 
 .editBtn,
 .deleteBtn {
-  display: flex;
   align-items: center;
+  border-radius: 10px;
+  display: flex;
+  height: 30px;
   justify-content: center;
 
   width: 30px;
-  height: 30px;
-  border-radius: 10px;
 }
 
 .editBtn {
@@ -98,39 +257,46 @@
 }
 
 .custom-input-container {
-  position: relative;
   height: 72px;
+  position: relative;
 
   input {
-    width: 100%;
-    height: 72px;
-    padding: 24px 16px 8px;
+    background: transparent;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
 
     font-size: 14px;
-
-    background: transparent;
+    height: 72px;
     outline: none;
+    padding: 24px 16px 8px;
+    width: 100%;
 
     &.has-value + label,
     &:focus + label {
-      top: 8px;
-      font-size: 12px;
       color: #666;
+      font-size: 12px;
+      top: 8px;
     }
   }
 
   .custom-placeholder {
+    color: #999;
+
+    font-size: 14px;
+    left: 16px;
     pointer-events: none;
 
     position: absolute;
     top: 24px;
-    left: 16px;
-
-    font-size: 14px;
-    color: #999;
 
     transition: all 0.2s ease;
+  }
+}
+
+.inputTableHeight {
+  height: 140px;
+
+  @media (max-width: 768px) {
+    height: auto;
   }
 }

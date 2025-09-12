@@ -1,26 +1,32 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode } from "react"
 
 interface FormRowProps {
-  children: ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+  children: ReactNode
+  className?: string
+  style?: React.CSSProperties
+  justifyContent?:
+    | "flex-start"
+    | "center"
+    | "flex-end"
+    | "space-between"
+    | "space-around"
+    | "space-evenly"
 }
 
-export const FormRow: FC<FormRowProps> = ({ 
-  children, 
-  className = "", 
-  style, 
-  justifyContent 
+export const FormRow: FC<FormRowProps> = ({
+  children,
+  className = "",
+  style,
+  justifyContent,
 }) => {
   const combinedStyle: React.CSSProperties = {
     ...style,
-    ...(justifyContent && { justifyContent })
-  };
+    ...(justifyContent && { justifyContent }),
+  }
 
   return (
     <div className={`formRow ${className}`} style={combinedStyle}>
       {children}
     </div>
-  );
-};
+  )
+}

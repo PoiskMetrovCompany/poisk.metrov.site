@@ -374,7 +374,7 @@ const CandidateRegForm: FC = () => {
     <HeaderFormSmall></HeaderFormSmall>
 
       <main>
-        <section>
+        <section style={{ padding: "0", maxWidth: "440px" }}>
           <div className="center-card">
             <h1>Регистрация кандидата</h1>
             <p>Введите номер телефона, чтобы авторизоваться в системе и получить доступ к анкете кандидата</p>
