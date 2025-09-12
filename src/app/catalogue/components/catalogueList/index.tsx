@@ -76,13 +76,13 @@ const CatalogueList = () => {
   // Always define URLs regardless of selectedPropertyType
   const RESIDENTIAL_COMPLEX_API_URL = useMemo(
     () =>
-      `http://localhost:1080/api/v1/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`,
     [currentPage]
   )
 
   const APARTMENTS_API_URL = useMemo(
     () =>
-      `http://localhost:1080/api/v1/apartments/selections?city_code=${CITY}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/apartments/selections?city_code=${CITY}`,
     []
   )
 
