@@ -256,7 +256,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      const url = `/api/v1/candidates/delete`
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/delete`
 
       const headers: Record<string, string> = {
         accept: "application/json",
@@ -328,7 +328,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      const url = `/api/v1/export/pdf-format?keys=${encodeURIComponent(
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/export/pdf-format?keys=${encodeURIComponent(
         vacancyKey
       )}`
 
@@ -395,7 +395,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
 
       const endpoint = selectedFormat === ".pdf" ? "pdf-format" : "xlsx-format"
-      let url = `/api/v1/export/${endpoint}`
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/export/${endpoint}`
 
       if (selectedKeys.length > 0) {
         const keysParam = selectedKeys.join(",")
@@ -669,7 +669,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      let url = `/api/v1/candidates/?page=${nextPage}&city_work=${encodeURIComponent(
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${nextPage}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
