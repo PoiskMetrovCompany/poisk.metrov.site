@@ -46,8 +46,9 @@ export function useApiQuery<T>(
     retryDelay?: number
     useMock?: boolean
     mockFn?: () => Promise<T>
-    refetchOnWindowFocus?: boolean
     refetchOnMount?: boolean
+    refetchOnWindowFocus?: boolean
+    refetchOnReconnect?: boolean
     refetchInterval?: number
     refetchIntervalInBackground?: boolean
   }
@@ -65,9 +66,28 @@ export function useApiQuery<T>(
         const response = await client.get<unknown>(url)
         const payload: unknown = response.data
 
+        // Логирование для отладки запросов к вакансиям
+        if (key.includes("vacancies")) {
+          console.log("🌐 API Query для вакансий:", {
+            url,
+            isExternal: isExternalUrl(url),
+            responseStatus: response.status,
+            payloadType: typeof payload,
+            payloadKeys:
+              payload && typeof payload === "object"
+                ? Object.keys(payload as object)
+                : "not object",
+            payload,
+          })
+        }
+
         // Если это внешний API, возвращаем данные напрямую (или null, но не undefined)
         if (isExternalUrl(url)) {
-          return (payload ?? null) as T | null
+          const result = (payload ?? null) as T | null
+          if (key.includes("vacancies")) {
+            console.log("📤 Возвращаем результат внешнего API:", result)
+          }
+          return result
         }
 
         // Нет содержимого
@@ -77,12 +97,21 @@ export function useApiQuery<T>(
 
         // Если сервер оборачивает ответ в { data: ... }
         if (hasDataKey(payload)) {
-          return ((payload.data as unknown) ?? null) as T | null
+          const result = ((payload.data as unknown) ?? null) as T | null
+          if (key.includes("vacancies")) {
+            console.log("📤 Возвращаем результат из payload.data:", result)
+          }
+          return result
         }
 
         // Иначе возвращаем payload как есть или null (чтобы не вернуть undefined)
-        return (payload ?? null) as T | null
-      } catch {
+        const result = (payload ?? null) as T | null
+        if (key.includes("vacancies")) {
+          console.log("📤 Возвращаем payload как есть:", result)
+        }
+        return result
+      } catch (error) {
+        console.error("❌ Ошибка в useApiQuery:", error)
         return null
       }
     },
@@ -91,8 +120,9 @@ export function useApiQuery<T>(
     gcTime: options?.gcTime,
     retry: options?.retry ?? 2,
     retryDelay: options?.retryDelay ?? 1000,
-    refetchOnWindowFocus: options?.refetchOnWindowFocus,
-    refetchOnMount: options?.refetchOnMount,
+    refetchOnMount: options?.refetchOnMount ?? true,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? true,
+    refetchOnReconnect: options?.refetchOnReconnect ?? true,
     refetchInterval: options?.refetchInterval,
     refetchIntervalInBackground: options?.refetchIntervalInBackground ?? false,
   })
@@ -181,8 +211,7 @@ export function useApiUpdate<T, V>(
   })
 }
 
-// Хук для DELETE запросов
-export function useApiDelete<T>(
+export function useApiDelete<T, V = void>(
   url: string,
   options?: {
     onSuccess?: (data: T) => void
@@ -192,10 +221,26 @@ export function useApiDelete<T>(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (): Promise<T> => {
+    mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.delete<unknown>(url)
+
+        let requestUrl = url
+        if (variables && typeof variables === "object") {
+          const params = new URLSearchParams()
+          Object.entries(variables as Record<string, any>).forEach(
+            ([key, value]) => {
+              if (value !== undefined && value !== null) {
+                params.append(key, String(value))
+              }
+            }
+          )
+          if (params.toString()) {
+            requestUrl += (url.includes("?") ? "&" : "?") + params.toString()
+          }
+        }
+
+        const response = await client.delete<unknown>(requestUrl)
         const payload: unknown = response.data
 
         if (isExternalUrl(url)) {

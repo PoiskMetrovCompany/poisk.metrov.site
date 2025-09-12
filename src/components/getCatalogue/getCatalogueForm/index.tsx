@@ -17,7 +17,8 @@ interface FormDataGetCatalogue {
   firstName: string
   phoneNumber: string
   messenger: string
-  isAgreed: boolean
+  privacyAgreed: boolean
+  marketingAgreed: boolean
 }
 
 interface GetCatalogueFormProps {
@@ -36,7 +37,8 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
     firstName: "",
     phoneNumber: "",
     messenger: "",
-    isAgreed: false,
+    privacyAgreed: false,
+    marketingAgreed: false,
   })
 
   const handleInputChange = (name: string, value: string) => {
@@ -54,7 +56,8 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
         firstName: "",
         phoneNumber: "",
         messenger: "",
-        isAgreed: false,
+        privacyAgreed: false,
+        marketingAgreed: false,
       })
     },
     onError: (error) => {
@@ -62,12 +65,16 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
     },
   })
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isAgreed: checked }))
+  const handlePrivacyChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, privacyAgreed: checked }))
+  }
+
+  const handleMarketingChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, marketingAgreed: checked }))
   }
 
   const handleSubmit = () => {
-    if (!formData.isAgreed) return
+    if (!formData.privacyAgreed) return
     if (!formData.firstName || !formData.phoneNumber || !formData.messenger) {
       console.log("Пожалуйста заполните все поля")
       return
@@ -136,7 +143,7 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
 
       <FormRow justifyContent="flex-start">
         <ActionButton
-          type={formData.isAgreed ? "primary" : "gray"}
+          type={formData.privacyAgreed ? "primary" : "gray"}
           size="medium"
           svgHeight={30}
           svgWidth={30}
@@ -155,13 +162,11 @@ const GetCatalogueForm: FC<GetCatalogueFormProps> = ({ className }) => {
         justifyContent="flex-start"
       >
         <CheckboxRow
-          checked={formData.isAgreed}
-          onChange={handleCheckboxChange}
-          text="Нажимая на кнопку вы даете согласие"
-          linkText="своих персональных данных"
-          linkHref="/privatePolicy"
-          name="getCatalogue"
-          id="getCatalogue"
+          privacyChecked={formData.privacyAgreed}
+          onPrivacyChange={handlePrivacyChange}
+          marketingChecked={formData.marketingAgreed}
+          onMarketingChange={handleMarketingChange}
+          idPrefix="catalogue"
         />
       </FormRow>
     </div>

@@ -1,12 +1,11 @@
 "use client"
+
 import React, { FC } from "react"
 
 interface IRelativeTableProps {
   index: number
   formData: Record<string, any>
-  setFormData: (
-    updater: (prev: Record<string, any>) => Record<string, any>
-  ) => void
+  setFormData: (fieldName: string, value: string) => void
   requiredFields?: string[]
   errors?: Record<string, boolean>
 }
@@ -78,7 +77,7 @@ const RelativeTable: FC<IRelativeTableProps> = ({
   }
 
   const handleInputChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(name, value)
   }
 
   const handleDateChange = (name: string, value: string) => {
@@ -116,11 +115,11 @@ const RelativeTable: FC<IRelativeTableProps> = ({
       `dateOfBirthRelative${index}`,
       `phoneNumberRelative${index}`,
       `placeOfStudyRelative${index}`,
-      `placeOfLivingRelative${index}`
+      `placeOfLivingRelative${index}`,
     ]
-    
-    return fieldsToCheck.some(fieldName => 
-      isRequired(fieldName) && hasError(fieldName)
+
+    return fieldsToCheck.some(
+      (fieldName) => isRequired(fieldName) && hasError(fieldName)
     )
   }
 
@@ -226,7 +225,9 @@ const RelativeTable: FC<IRelativeTableProps> = ({
                 )}
               </td>
               <td
-                className={hasError(`phoneNumberRelative${index}`) ? "error" : ""}
+                className={
+                  hasError(`phoneNumberRelative${index}`) ? "error" : ""
+                }
                 style={{
                   borderColor: hasError(`phoneNumberRelative${index}`)
                     ? "#e74c3c"
@@ -289,16 +290,18 @@ const RelativeTable: FC<IRelativeTableProps> = ({
           </tbody>
         </table>
       </div>
-      
+
       {hasRequiredFieldsErrors() && (
-        <div style={{
-          color: '#e74c3c',
-          fontSize: '14px',
-          marginTop: '5px',
-          fontWeight: '400',
-          textAlign: "left",
-          marginLeft: "32px",
-        }}>
+        <div
+          style={{
+            color: "#e74c3c",
+            fontSize: "14px",
+            marginTop: "5px",
+            fontWeight: "400",
+            textAlign: "left",
+            marginLeft: "32px",
+          }}
+        >
           Обязательно для заполнения
         </div>
       )}

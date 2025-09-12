@@ -96,7 +96,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     )
   }
 
-  const FULL_API_URL = `http://localhost:1080/api/v1/residential-complex/read?key=${key}`
+  const FULL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${key}`
 
   const {
     data: complexData,

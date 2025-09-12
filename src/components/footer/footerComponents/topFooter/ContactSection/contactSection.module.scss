@@ -1,55 +1,98 @@
 .contactSection {
   display: flex;
-  width: 100%;
-  padding: 0;
-  gap: 72px;
+  gap: 320px;
   justify-content: space-between;
-  @media (max-width: 1440px) {
-    gap: 32px;
+  padding: 0;
+  width: 100%;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    gap: 160px;
+  }
+
+  @media (max-width: 1439px) {
+    gap: 24px;
+  }
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 56px;
   }
 }
 .contactSection__content {
   height: 100%;
-  padding: 40px;
+  @media screen and (width >= 1920px) {
+    width: 461px;
+  }
 }
 .contactSection__title {
   font-size: 48px;
   font-weight: 500;
+  line-height: 130%;
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    font-size: 36px;
+  }
 }
 .contactSection__description {
   font-size: 18px;
   font-weight: 400;
-  width: 380px;
-  margin-top: 30px;
+  margin: 0;
+
+  margin-top: 16px;
+
+  @media screen and (width >= 1920px) {
+    width: 380px;
+  }
+
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    font-size: 15px;
+    margin-top: 16px;
+    width: 407px;
+  }
 }
 
-@media (max-width: 1440px) {
+@media (max-width: 1439px) {
   .contactSection__title {
-    font-size: 36px;
+    font-size: 28px;
   }
+  .contactSection__description {
+    font-size: 14px;
+    margin-top: 16px;
+    width: 375px;
+  }
+
   .contactSection__content {
     padding-left: 0;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .contactSection__title {
     font-size: 28px;
+    line-height: 130%;
+    margin-top: 4px;
+    width: 50%;
   }
   .contactSection__description {
-    width: 200px;
+    font-size: 14px;
+    margin-top: 16px;
+    width: 258px;
   }
 }
-@media (max-width: 680px) {
+@media (width <= 768px) {
   .contactSection {
     flex-wrap: wrap;
   }
   .contactSection__content {
-    height: 25%;
+    // height: 25%;
+    height: auto;
+    padding: 0px;
     width: 100%;
-    padding: 10px;
+  }
+  .contactSection__title {
+    font-size: 26px;
   }
   .contactSection__description {
+    font-size: 12px;
+    margin-top: 12px;
     width: 100%;
   }
 }

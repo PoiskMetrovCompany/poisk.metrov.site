@@ -5,6 +5,8 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+import { IApartment } from "@/types/api/complex"
+
 import styles from "./flatLayoutCard.module.scss"
 
 import IconImage from "../ui/IconImage"
@@ -18,17 +20,7 @@ interface IFlatLayoutCardProps {
   description?: string[]
   imageUrl?: string
   linkUrl?: string
-  apartment?: {
-    id: number
-    apartment_type: string
-    area: number
-    price: number
-    floor: number
-    apartment_number: string
-    renovation: string
-    plan_URL: string
-    key: string
-  }
+  apartment?: IApartment
 }
 
 const FlatLayoutCard = ({

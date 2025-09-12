@@ -46,7 +46,7 @@ const Compilation = ({
   similarApartmentParams,
 }: compilationProps) => {
   const similarApartmentsUrl = similarApartmentParams
-    ? `http://localhost:1080/api/v1/apartments/similar?` +
+    ? `${process.env.NEXT_PUBLIC_API_URL}/apartments/similar?` +
       `city_code=${encodeURIComponent(similarApartmentParams.city_code)}&` +
       `city=${encodeURIComponent(similarApartmentParams.city)}&` +
       `price=${similarApartmentParams.price}&` +
@@ -417,7 +417,7 @@ const Compilation = ({
                   imageUrl={
                     card.apartment?.plan_URL || "/images/temporary/room.png"
                   }
-                  apartment={card.apartment}
+                  apartment={card.apartment || undefined}
                   linkUrl={
                     card.apartment
                       ? `/detailsFlat?key=${card.apartment.key}`

@@ -36,11 +36,13 @@ const Request = () => {
     clientPatronymic: "",
     clientPhone: "",
     city: "",
-    checked: false,
+    privacyChecked: false,
+    marketingChecked: false,
   })
 
   const isDisabled =
-    Object.values(formData).some((value) => value === "") || !formData.checked
+    Object.values(formData).some((value) => value === "") ||
+    !formData.privacyChecked
 
   const handleInputChange = (name: string, value: string | boolean) => {
     setFormData({ ...formData, [name]: value })
@@ -61,7 +63,8 @@ const Request = () => {
           clientPatronymic: "",
           clientPhone: "",
           city: "",
-          checked: false,
+          privacyChecked: false,
+          marketingChecked: false,
         })
       },
       onError: (error) => {
@@ -71,7 +74,7 @@ const Request = () => {
   )
 
   const handleSubmit = () => {
-    if (!formData.checked) return
+    if (!formData.privacyChecked) return
     if (
       !formData.agentLastname ||
       !formData.agentFirstname ||
@@ -196,18 +199,20 @@ const Request = () => {
             disabled={submitMutation.isPending}
             className={styles.request__form__submit__button}
             onClick={handleSubmit}
-            type= {formData.checked ? "primary" : "gray"}
+            type={formData.privacyChecked ? "primary" : "gray"}
           >
             {submitMutation.isPending ? "Отправка..." : "Отправить"}
           </ActionButton>
           <CheckboxRow
-            checked={formData.checked}
-            onChange={() => handleInputChange("checked", !formData.checked)}
-            text="Нажимая на кнопку, вы даете согласие на обработку"
-            linkText="своих персональных данных"
-            linkHref="/privacy-policy"
-            name="personalData"
-            id="personalData"
+            privacyChecked={formData.privacyChecked}
+            onPrivacyChange={(checked) =>
+              handleInputChange("privacyChecked", checked)
+            }
+            marketingChecked={formData.marketingChecked}
+            onMarketingChange={(checked) =>
+              handleInputChange("marketingChecked", checked)
+            }
+            idPrefix="partners"
           />
         </div>
       </div>

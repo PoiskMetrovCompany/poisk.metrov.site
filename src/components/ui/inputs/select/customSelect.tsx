@@ -11,7 +11,10 @@ interface ICustomSelectProps {
   options: string[]
   placeholder: string
   value: string
+  show?: boolean
   onChange?: (value: string) => void
+  onSelect?: (value: string) => void
+  onToggle?: () => void
   isLoading?: boolean
   error?: string | boolean
   className?: string
@@ -19,6 +22,7 @@ interface ICustomSelectProps {
   disabled?: boolean
   required?: boolean
   style?: React.CSSProperties
+  ropSelect?: boolean
 }
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -26,7 +30,10 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   options,
   placeholder,
   value,
+  show,
   onChange,
+  onSelect,
+  onToggle,
   className,
   labelClassName,
   isLoading = false,
@@ -34,9 +41,13 @@ const CustomSelect: FC<ICustomSelectProps> = ({
   disabled = false,
   required = false,
   style,
+  ropSelect = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [internalIsOpen, setInternalIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
+
+  // Use external show prop if provided, otherwise use internal state
+  const isOpen = show !== undefined ? show : internalIsOpen
 
   const hasValidationError = typeof error === "boolean" ? error : false
   const errorMessage = typeof error === "string" ? error : ""
@@ -47,7 +58,11 @@ const CustomSelect: FC<ICustomSelectProps> = ({
         selectRef.current &&
         !selectRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false)
+        if (onToggle) {
+          onToggle()
+        } else {
+          setInternalIsOpen(false)
+        }
       }
     }
 
@@ -58,12 +73,16 @@ const CustomSelect: FC<ICustomSelectProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [isOpen])
+  }, [isOpen, onToggle])
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
-        setIsOpen(false)
+        if (onToggle) {
+          onToggle()
+        } else {
+          setInternalIsOpen(false)
+        }
       }
     }
 
@@ -74,22 +93,33 @@ const CustomSelect: FC<ICustomSelectProps> = ({
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
-  }, [isOpen])
+  }, [isOpen, onToggle])
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
     if (!isLoading && !disabled) {
-      setIsOpen(!isOpen)
+      if (onToggle) {
+        onToggle()
+      } else {
+        setInternalIsOpen(!internalIsOpen)
+      }
     }
   }
 
   const handleSelect = (option: string) => {
-    if (onChange) {
+    if (onSelect) {
+      onSelect(option)
+    } else if (onChange) {
       onChange(option)
     }
-    setIsOpen(false)
+
+    if (onToggle) {
+      onToggle()
+    } else {
+      setInternalIsOpen(false)
+    }
   }
 
   const getDisplayValue = () => {
@@ -145,6 +175,9 @@ const CustomSelect: FC<ICustomSelectProps> = ({
             className={styles.selectItems}
             role="listbox"
             aria-label={label || placeholder}
+            style={{
+              position: ropSelect ? "relative" : undefined,
+            }}
           >
             {options.map((option, index) => (
               <div
