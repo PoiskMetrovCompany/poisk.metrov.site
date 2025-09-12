@@ -84,12 +84,15 @@ const CandidatesSettings: FC = () => {
         return
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/vacancy/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
 
       const data = await response.json()
 
@@ -230,14 +233,17 @@ const CandidatesSettings: FC = () => {
             Authorization: `Bearer ${accessToken.substring(0, 10)}...`,
           })
 
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/store`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify(requestData),
-          })
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/vacancy/store`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+              body: JSON.stringify(requestData),
+            }
+          )
 
           console.log("Статус ответа при создании:", response.status)
           console.log("Статус OK при создании:", response.ok)
@@ -490,7 +496,14 @@ const CandidatesSettings: FC = () => {
   return (
     <>
       <main>
-        <section style={{ minHeight: "0", flexWrap: "wrap", padding: "0 16px", maxWidth: "none" }}>
+        <section
+          style={{
+            minHeight: "0",
+            flexWrap: "wrap",
+            padding: "0 16px",
+            maxWidth: "none",
+          }}
+        >
           <div className="formRow justify-flex-start settingsHeader">
             <h2>Настройки анкеты</h2>
           </div>

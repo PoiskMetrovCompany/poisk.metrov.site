@@ -931,8 +931,8 @@ input[type="checkbox"] + label {
   .modal-content-confirmation {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    max-width: none;
     max-height: none;
+    max-width: none;
   }
 }
 
@@ -2899,13 +2899,28 @@ input[type="checkbox"] + label {
 }
 
 /* Адаптивность для полей формы */
-.formRow.justify-space-between {
-  flex-direction: column;
-  gap: 1rem;
+@media screen and (width <= 768px) {
+  .formRow.justify-space-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .w-49 {
+    width: 100% !important;
+  }
 }
 
-.w-49 {
-  width: 100% !important;
+/* Стили для десктопа - поля в строку по 2 с отступом 32px */
+@media screen and (width > 768px) {
+  .formRow.justify-space-between {
+    flex-direction: row;
+    gap: 2rem; /* 32px */
+    justify-content: space-between;
+  }
+
+  .w-49 {
+    width: calc(50% - 1rem) !important; /* 49% с учетом gap */
+  }
 }
 
 /* Адаптивность для кнопок */

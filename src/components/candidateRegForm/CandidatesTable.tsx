@@ -256,25 +256,18 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/delete`
+      const keysParam = selectedKeys.join(",")
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?key=${encodeURIComponent(keysParam)}`
 
       const headers: Record<string, string> = {
         accept: "application/json",
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
         method: "DELETE",
         headers: headers,
-        body: JSON.stringify({
-          keys: selectedKeys,
-        }),
       })
 
       if (!response.ok) {
@@ -333,13 +326,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       )}`
 
       const headers: Record<string, string> = {
-        accept: "application/json",
+        accept: "application/pdf",
         Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -403,13 +392,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       }
 
       const headers: Record<string, string> = {
-        accept: "application/json",
+        accept:
+          selectedFormat === ".pdf" ? "application/pdf" : "application/json",
         Authorization: `Bearer ${token}`,
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -482,11 +468,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         accept: "*/*",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {
@@ -677,11 +659,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         accept: "*/*",
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-      }
-
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
       }
 
       const response = await fetch(url, {

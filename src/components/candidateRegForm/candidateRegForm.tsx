@@ -114,7 +114,7 @@ const CandidateRegForm: FC = () => {
           const redirectUrl =
             data.attributes.user.role === "candidate"
               ? "/candidatesSecurityBlock/candidatesForm"
-              : "/candidatesSecurityTable"
+              : "/candidatesSecurityBlock/candidatesSecurityTable"
 
           window.location.href = redirectUrl
         }

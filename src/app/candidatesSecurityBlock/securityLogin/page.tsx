@@ -168,7 +168,7 @@ const SecurityRegForm: FC = () => {
       )
 
       if (success) {
-        router.push("/candidatesSecurityTable")
+        router.push("/candidatesSecurityBlock/candidatesSecurityTable")
       }
     } else {
       console.log("Форма не валидна")
@@ -194,7 +194,7 @@ const SecurityRegForm: FC = () => {
   // Если администратор аутентифицирован, перенаправляем
   useEffect(() => {
     if (isAuthenticated && authResult) {
-      router.push("/candidatesSecurityTable")
+      router.push("/candidatesSecurityBlock/candidatesSecurityTable")
     }
   }, [isAuthenticated, authResult, router])
 

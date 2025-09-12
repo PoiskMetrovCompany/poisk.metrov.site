@@ -142,12 +142,15 @@ const CustomSelect: FC<ICustomSelectProps> = ({
           {label}
         </label>
       )}
-      <div className={clsx(styles.customSelect)}>
+      <div
+        className={clsx(styles.customSelect, ropSelect && styles.yellowSelect)}
+      >
         <div
           className={clsx(styles.selectSelected, className, {
             [styles.selectArrowActive]: isOpen,
             [styles.disabled]: disabled || isLoading,
             [styles.error]: !!errorMessage || hasValidationError,
+            [styles.selectTrigger]: ropSelect,
           })}
           onClick={handleToggle}
           role="button"
@@ -172,7 +175,10 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 
         {shouldShowDropdown && (
           <div
-            className={styles.selectItems}
+            className={clsx(
+              styles.selectItems,
+              ropSelect && styles.selectDropdown
+            )}
             role="listbox"
             aria-label={label || placeholder}
             style={{
@@ -184,6 +190,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
                 key={index}
                 className={clsx({
                   [styles.sameAsSelected]: value === option,
+                  [styles.selectOption]: ropSelect,
                 })}
                 onClick={() => handleSelect(option)}
                 role="option"

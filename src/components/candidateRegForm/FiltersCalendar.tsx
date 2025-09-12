@@ -251,7 +251,6 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     return null
   }
 
-
   const setMockVacancies = () => {
     const mockVacancies = [
       { value: "showAll", text: "Показать все", title: null, key: null },
@@ -1124,14 +1123,14 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
             style={{ flexWrap: "wrap" }}
           >
             {statusFilters.map((filter) => (
-                <button
-                  key={filter.value}
-                  className={`filterButton ${selectedFilters.status.includes(filter.value) ? "active" : ""}`}
-                  onClick={() => handleFilterToggle("status", filter.value)}
-                  disabled={applyFiltersMutation.isPending}
-                >
-                  {filter.text}
-                </button>
+              <button
+                key={filter.value}
+                className={`filterButton ${selectedFilters.status.includes(filter.value) ? "active" : ""}`}
+                onClick={() => handleFilterToggle("status", filter.value)}
+                disabled={applyFiltersMutation.isPending}
+              >
+                {filter.text}
+              </button>
             ))}
           </div>
 

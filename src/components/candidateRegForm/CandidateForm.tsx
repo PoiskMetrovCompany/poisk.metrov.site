@@ -1,8 +1,20 @@
-"use client"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 import React, { FC, useEffect, useState } from "react"
 
 import Image from "next/image"
+
+import {
+  IApiError,
+  ICandidateFormData,
+  ICandidateFormResponse,
+  IMaritalStatusItem,
+  IROPAccount,
+  IROPAccountsResponse,
+  IRopItem,
+  IVacancyItem,
+} from "@/types/Candidate"
 
 import ChildrenTable from "./ChildrenTable"
 import CourseDataTable from "./CourseDataTable"
@@ -20,6 +32,56 @@ import { SuccessMessage } from "./candidatesFormComponents/successMessage"
 import HeaderFormSmall from "./header"
 
 import CustomSelect from "@/components/ui/inputs/select/customSelect"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+
+interface ICandidateFormRequest {
+  vacancies_key: string
+  marital_statuses_key: string
+  rop_key: string | null
+  work_team: string | null
+  status: string
+  first_name: string
+  last_name: string
+  middle_name: string
+  reason_for_changing_surnames: string | null
+  city_work: string
+  birth_date: string | null
+  country_birth: string
+  city_birth: string
+  level_educational: string
+  courses: string
+  educational_institution: string
+  organization_name: string
+  organization_phone: string
+  field_of_activity: string
+  organization_address: string
+  organization_job_title: string
+  organization_price: string
+  date_of_hiring: string | null
+  date_of_dismissal: string | null
+  reason_for_dismissal: string
+  recommendation_contact: string
+  mobile_phone_candidate: string
+  home_phone_candidate: string
+  mail_candidate: string
+  inn: string
+  passport_series: string
+  passport_number: string
+  passport_issued: string
+  passport_issue_date: string | null
+  permanent_registration_address: string
+  temporary_registration_address: string
+  actual_residence_address: string
+  family_partner: string
+  adult_family_members: string
+  adult_children: string
+  serviceman: boolean
+  law_breaker: string
+  legal_entity: string
+  is_data_processing: boolean
+  comment: string
+}
 
 const CandidateForm: FC = () => {
   const [surnameChanged, setSurnameChanged] = useState(true)
@@ -44,7 +106,9 @@ const CandidateForm: FC = () => {
   const [spouseErrors, setSpouseErrors] = useState<Record<string, boolean>>({})
 
   const [formErrors, setFormErrors] = useState<Record<string, boolean>>({})
-  const [childrenErrors, setChildrenErrors] = useState({})
+  const [childrenErrors, setChildrenErrors] = useState<Record<string, boolean>>(
+    {}
+  )
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({})
@@ -75,16 +139,11 @@ const CandidateForm: FC = () => {
     number[]
   >([])
 
-  const [vacancyOptions, setVacancyOptions] = useState<string[]>([])
-  const [isLoadingVacancies, setIsLoadingVacancies] = useState(true)
-  const [vacancyError, setVacancyError] = useState("")
-
   const [maritalStatusError, setMaritalStatusError] = useState(false)
   const [cityError, setCityError] = useState(false)
   const [maritalStatusApiOptions, setMaritalStatusApiOptions] = useState<
     string[]
   >([])
-  const [isLoadingMaritalStatuses, setIsLoadingMaritalStatuses] = useState(true)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
@@ -100,7 +159,9 @@ const CandidateForm: FC = () => {
   const [selectedROP, setSelectedROP] = useState("")
   const [showROPOptions, setShowROPOptions] = useState(false)
 
-  const [formData, setFormData] = useState<Record<string, any>>({})
+  const [formData, setFormData] = useState<ICandidateFormData>(
+    {} as ICandidateFormData
+  )
 
   const mockVacancyData = [
     { title: "Frontend разработчик", key: "frontend_dev" },
@@ -117,6 +178,9 @@ const CandidateForm: FC = () => {
   ]
 
   const [ropOptions, setRopOptions] = useState<string[]>([])
+  const [ropData, setRopData] = useState<IROPAccount[]>([])
+  const [isLoadingROP, setIsLoadingROP] = useState(false)
+  const [ropError, setRopError] = useState("")
 
   const mockMaritalStatusData = [
     { title: "Не женат/Не замужем", key: "single" },
@@ -127,6 +191,7 @@ const CandidateForm: FC = () => {
   ]
 
   const getAccessTokenFromCookie = (): string | null => {
+    if (typeof document === "undefined") return null
     const cookies = document.cookie.split(";")
     for (let cookie of cookies) {
       const [name, value] = cookie.trim().split("=")
@@ -137,11 +202,150 @@ const CandidateForm: FC = () => {
     return null
   }
 
+  const {
+    data: vacanciesData,
+    isLoading: isLoadingVacancies,
+    error: vacancyQueryError,
+  } = useQuery<IVacancyItem[]>({
+    queryKey: ["vacancies"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        return mockVacancyData
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/vacancy/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      if (response.data.response && response.data.attributes) {
+        return response.data.attributes
+      } else {
+        throw new Error("Ошибка при получении данных вакансий")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const {
+    data: maritalStatusData,
+    isLoading: isLoadingMaritalStatuses,
+    error: maritalStatusQueryError,
+  } = useQuery<IMaritalStatusItem[]>({
+    queryKey: ["maritalStatuses"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        return mockMaritalStatusData
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/marital-statuses/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+      if (response.data.response && response.data.attributes) {
+        return response.data.attributes
+      } else {
+        throw new Error("Ошибка при получении данных семейного положения")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const {
+    data: ropAccountsData,
+    isLoading: isLoadingROPAccounts,
+    error: ropAccountsQueryError,
+  } = useQuery<IROPAccount[]>({
+    queryKey: ["ropAccounts"],
+    queryFn: async () => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        return []
+      }
+
+      const response = await axios.get<IROPAccountsResponse>(
+        `${API_BASE_URL}/account/list`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+
+      if (response.data.request && response.data.attributes) {
+        // Фильтруем только РОПов
+        return response.data.attributes.filter(
+          (account) => account.role === "РОП"
+        )
+      } else {
+        throw new Error("Ошибка при получении данных РОП")
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const submitFormMutation = useMutation<
+    ICandidateFormResponse,
+    IApiError,
+    ICandidateFormRequest
+  >({
+    mutationFn: async (
+      data: ICandidateFormRequest
+    ): Promise<ICandidateFormResponse> => {
+      const accessToken = getAccessTokenFromCookie()
+
+      if (!accessToken) {
+        throw new Error("Токен доступа не найден")
+      }
+
+      const response = await axios.post<ICandidateFormResponse>(
+        `${API_BASE_URL}/candidates/store`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      )
+
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.request) {
+        setSubmitSuccess(true)
+      } else {
+        setSubmitSuccess(true)
+      }
+    },
+    onError: (error: IApiError) => {
+      setSubmitError(
+        error.response?.data?.message ||
+          error.message ||
+          "Произошла ошибка при отправке формы"
+      )
+    },
+  })
+
   const validateRelativesTables = (): boolean => {
     const errors: Record<string, boolean> = {}
     let isValid = true
 
-    // Проверяем первую таблицу (index = 1)
     const requiredFields1 = [
       "FIORelative1",
       "dateOfBirthRelative1",
@@ -156,7 +360,6 @@ const CandidateForm: FC = () => {
       }
     })
 
-    // Проверяем дополнительные таблицы
     additionalRelativeTables.forEach((index) => {
       const requiredFields = [
         `FIORelative${index}`,
@@ -178,7 +381,7 @@ const CandidateForm: FC = () => {
   }
 
   const validateChildrenTables = () => {
-    const errors = {}
+    const errors: Record<string, boolean> = {}
     let isValid = true
 
     const allIndexes = [1, ...additionalChildrenTables]
@@ -207,7 +410,6 @@ const CandidateForm: FC = () => {
   const validateSelectFields = () => {
     let isValid = true
 
-    // Проверка семейного положения
     if (!selectedMaritalStatus) {
       setMaritalStatusError(true)
       isValid = false
@@ -215,7 +417,6 @@ const CandidateForm: FC = () => {
       setMaritalStatusError(false)
     }
 
-    // Проверка города работы
     if (!selectedCity) {
       setCityError(true)
       isValid = false
@@ -226,7 +427,6 @@ const CandidateForm: FC = () => {
     return isValid
   }
   const validateWorkExperienceTable = (): boolean => {
-    // Проверяем только если выбран "Опыт есть"
     if (selectedProfessionalExperience !== "Опыт есть") {
       return true
     }
@@ -317,7 +517,6 @@ const CandidateForm: FC = () => {
       requiredSelects.push({ key: "selectedROP", value: selectedROP })
     }
 
-    // Проверяем обычные поля
     requiredFields.forEach((field) => {
       if (!field.value || field.value.trim() === "") {
         errors[field.key] = true
@@ -349,7 +548,7 @@ const CandidateForm: FC = () => {
       "adressOfFactialLiving",
     ]
 
-    const errors: Record<string, boolean> = { ...formErrors } // Сохраняем существующие ошибки
+    const errors: Record<string, boolean> = { ...formErrors }
     let isValid = true
 
     requiredFields.forEach((field) => {
@@ -365,7 +564,7 @@ const CandidateForm: FC = () => {
     return isValid
   }
 
-  const formatDateForDatabase = (dateString: string): string | null => {
+  const formatDateForDatabase = (dateString: string | null): string | null => {
     if (!dateString || dateString.trim() === "") {
       return null
     }
@@ -385,12 +584,19 @@ const CandidateForm: FC = () => {
       return dateString
     }
 
-    console.warn(`Неверный формат даты: ${dateString}`)
     return null
   }
 
   const handleFormDataChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
+
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
+    }
   }
 
   const collectEducationData = () => {
@@ -519,161 +725,42 @@ const CandidateForm: FC = () => {
     return familyMembers.length > 0 ? familyMembers : null
   }
 
-  const loadVacancies = async () => {
-    try {
-      setIsLoadingVacancies(true)
-      setVacancyError("")
-
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        // Используем mock данные
-        console.log(
-          "Токен доступа не найден, используем mock данные для вакансий"
-        )
-        setTimeout(() => {
-          const vacancies = mockVacancyData.map((vacancy) => vacancy.title)
-          setVacancyOptions(vacancies)
-          ;(window as any).vacanciesData = mockVacancyData
-          console.log("Mock вакансии загружены:", vacancies)
-          setIsLoadingVacancies(false)
-        }, 500) // Имитируем задержку API
-        return
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        const vacancies = data.attributes.map((vacancy: any) => vacancy.title)
-        setVacancyOptions(vacancies)
-        ;(window as any).vacanciesData = data.attributes
-        console.log("Вакансии загружены:", vacancies)
-      } else {
-        setVacancyError("Ошибка при получении данных вакансий")
-      }
-    } catch (error: any) {
-      console.error("Ошибка при загрузке вакансий:", error)
-
-      if (error.response) {
-        if (error.response.status === 401) {
-          setVacancyError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
-        } else if (error.response.status === 403) {
-          setVacancyError("Нет доступа к данным вакансий")
-        } else {
-          setVacancyError(
-            error.response.data?.error || "Ошибка сервера при загрузке вакансий"
-          )
-        }
-      } else {
-        setVacancyError("Ошибка при загрузке вакансий")
-      }
-    } finally {
-      setIsLoadingVacancies(false)
-    }
-  }
-
-  // Функция для загрузки семейного положения из API
-  const loadMaritalStatuses = async () => {
-    try {
-      setIsLoadingMaritalStatuses(true)
-      setMaritalStatusError("")
-
-      const accessToken = getAccessTokenFromCookie()
-
-      if (!accessToken) {
-        // Используем mock данные
-        console.log(
-          "Токен доступа не найден, используем mock данные для семейного положения"
-        )
-        setTimeout(() => {
-          const maritalStatuses = mockMaritalStatusData.map(
-            (status) => status.title
-          )
-          setMaritalStatusApiOptions(maritalStatuses)
-          ;(window as any).maritalStatusData = mockMaritalStatusData
-          console.log("Mock семейное положение загружено:", maritalStatuses)
-          setIsLoadingMaritalStatuses(false)
-        }, 300) // Имитируем задержку API
-        return
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/marital-statuses/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (data.response && data.attributes) {
-        const maritalStatuses = data.attributes.map(
-          (status: any) => status.title
-        )
-        setMaritalStatusApiOptions(maritalStatuses)
-        ;(window as any).maritalStatusData = data.attributes
-        console.log("Семейное положение загружено:", maritalStatuses)
-      } else {
-        setMaritalStatusError("Ошибка при получении данных семейного положения")
-      }
-    } catch (error: any) {
-      console.error("Ошибка при загрузке семейного положения:", error)
-
-      if (error.response) {
-        if (error.response.status === 401) {
-          setMaritalStatusError(
-            "Ошибка авторизации. Пожалуйста, войдите в систему заново."
-          )
-        } else if (error.response.status === 403) {
-          setMaritalStatusError("Нет доступа к данным семейного положения")
-        } else {
-          setMaritalStatusError(
-            error.response.data?.error ||
-              "Ошибка сервера при загрузке семейного положения"
-          )
-        }
-      } else {
-        setMaritalStatusError("Ошибка при загрузке семейного положения")
-      }
-    } finally {
-      setIsLoadingMaritalStatuses(false)
-    }
-  }
-
-  // Функция для загрузки данных РОП
   const loadROPData = () => {
-    console.log("Загрузка данных РОП...")
-    const ropTitles = mockROPData.map((rop) => rop.title)
-    setRopOptions(ropTitles)
-    ;(window as any).ropData = mockROPData
-    console.log("Mock РОП данные загружены:", ropTitles)
+    if (ropAccountsData && ropAccountsData.length > 0) {
+      const ropTitles = ropAccountsData.map((rop) => {
+        const fullName =
+          `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        return fullName || "Не указано"
+      })
+      setRopOptions(ropTitles)
+      setRopData(ropAccountsData)
+    } else {
+      const ropTitles = mockROPData.map((rop) => rop.title)
+      setRopOptions(ropTitles)
+      setRopData([])
+    }
+  }
+
+  const loadROP = () => {
+    window.location.reload()
   }
 
   useEffect(() => {
-    loadVacancies()
-    loadMaritalStatuses()
     loadROPData()
-  }, [])
+  }, [ropAccountsData])
 
-  const maritalStatusOptions =
-    maritalStatusApiOptions.length > 0
-      ? maritalStatusApiOptions
-      : [
-          "Не женат/Не замужем",
-          "Женат/Замужем",
-          "В разводе",
-          "Вдовец/Вдова",
-          "Гражданский брак",
-        ]
+  const vacancyOptions = vacanciesData
+    ? vacanciesData.map((vacancy: IVacancyItem) => vacancy.title)
+    : []
+  const maritalStatusOptions = maritalStatusData
+    ? maritalStatusData.map((status: IMaritalStatusItem) => status.title)
+    : [
+        "Не женат/Не замужем",
+        "Женат/Замужем",
+        "В разводе",
+        "Вдовец/Вдова",
+        "Гражданский брак",
+      ]
 
   const cityOptions = ["Новосибирск", "Санкт-Петербург"]
 
@@ -689,40 +776,59 @@ const CandidateForm: FC = () => {
     return () => document.removeEventListener("click", handleClickOutside)
   }, [])
 
-  // Функция для добавления таблицы члена семьи
   const addRelativeTable = () => {
     const newCounter = relativeCounter + 1
     setRelativeCounter(newCounter)
     setAdditionalRelativeTables((prev) => [...prev, newCounter])
   }
 
-  // Функция для добавления таблицы ребенка
   const addChildrenTable = () => {
     const newCounter = childrenCounter + 1
     setChildrenCounter(newCounter)
     setAdditionalChildrenTables((prev) => [...prev, newCounter])
   }
 
-  // Функция для получения ключа вакансии
   const getVacancyKey = (selectedTitle: string): string => {
-    if ((window as any).vacanciesData) {
-      const vacancy = (window as any).vacanciesData.find(
-        (v: any) => v.title === selectedTitle
+    if (vacanciesData) {
+      const vacancy = vacanciesData.find(
+        (v: IVacancyItem) => v.title === selectedTitle
       )
       return vacancy ? vacancy.key : ""
     }
     return ""
   }
 
-  // Функция для получения ключа РОП
   const getROPKey = (selectedTitle: string): string => {
-    if ((window as any).ropData) {
-      const rop = (window as any).ropData.find(
-        (r: any) => r.title === selectedTitle
-      )
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop ? rop.key : ""
+    } else {
+      // Fallback на моковые данные
+      const rop = mockROPData.find((r: IRopItem) => r.title === selectedTitle)
       return rop ? rop.key : ""
     }
-    return ""
+  }
+
+  const getROPFullName = (selectedTitle: string): string => {
+    if (ropData && ropData.length > 0) {
+      // Ищем в данных из API
+      const rop = ropData.find((r) => {
+        const fullName =
+          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
+        return fullName === selectedTitle
+      })
+      return rop
+        ? `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
+        : ""
+    } else {
+      // Fallback на моковые данные
+      return selectedTitle
+    }
   }
 
   const addEducationTable = () => {
@@ -738,9 +844,9 @@ const CandidateForm: FC = () => {
   }
 
   const getMaritalStatusKey = (selectedTitle: string): string => {
-    if ((window as any).maritalStatusData) {
-      const status = (window as any).maritalStatusData.find(
-        (s: any) => s.title === selectedTitle
+    if (maritalStatusData) {
+      const status = maritalStatusData.find(
+        (s: IMaritalStatusItem) => s.title === selectedTitle
       )
       return status ? status.key : ""
     }
@@ -774,7 +880,7 @@ const CandidateForm: FC = () => {
     }
   }
 
-  const handleChildrenFieldChange = (fieldName, value) => {
+  const handleChildrenFieldChange = (fieldName: string, value: string) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }))
 
     if (value && value.trim() !== "" && childrenErrors[fieldName]) {
@@ -785,155 +891,130 @@ const CandidateForm: FC = () => {
       })
     }
   }
-  const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true)
-      setSubmitError("")
-      setChildrenErrors({})
-      setRelativesErrors({})
-      setWorkExperienceErrors({})
-      setSpouseErrors({}) // Добавьте сброс ошибок супруга
 
-      const isPersonalInfoValid = validatePersonalInfoSection()
-      const isPassportValid = validatePassportSection()
-      const isChildrenValid = haveChildren ? validateChildrenTables() : true
-      const isRelativesValid = haveFamilyMembers
-        ? validateRelativesTables()
-        : true
-      const isWorkExperienceValid = validateWorkExperienceTable()
-      const isSpouseValid = validateSpouseTable() // Добавьте валидацию супруга
-      const isSelectFieldsValid = validateSelectFields()
+  const handleRelativeFieldChange = (fieldName: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
 
-      if (
-        !isPersonalInfoValid ||
-        !isPassportValid ||
-        !isChildrenValid ||
-        !isRelativesValid ||
-        !isWorkExperienceValid ||
-        !isSpouseValid || // Добавьте проверку супруга
-        !isSelectFieldsValid
-      ) {
-        setIsSubmitting(false)
-        setHasError(true)
-        return
-      }
-
-      setTriggerValidation(false)
-      setValidationErrors({})
-      setMaritalStatusError(false)
-      setHasError(false)
-      setCityError(false)
-      const nameData = splitFullName(formData.FIO || "")
-
-      const passportData = splitPassportData(formData.passwordSeriaNumber || "")
-
-      const birthPlaceData = splitBirthPlace(formData.birthPlace)
-
-      const childrenData = collectChildrenData()
-      const familyMembersData = collectFamilyMembersData()
-
-      const apiData = {
-        vacancies_key: getVacancyKey(selectedVacancy),
-        marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
-        rop_key: goingToROP ? getROPKey(selectedROP) : null,
-        status: "active",
-        first_name: nameData.first_name,
-        last_name: nameData.last_name,
-        middle_name: nameData.middle_name,
-        reason_for_changing_surnames: surnameChanged
-          ? formData.reasonOfChange || ""
-          : null,
-        city_work: selectedCity,
-        birth_date: formatDateForDatabase(formData.birthDate),
-        country_birth: birthPlaceData.country,
-        city_birth: birthPlaceData.city,
-        level_educational: selectedEducationLevel,
-        courses: JSON.stringify(collectCoursesData()),
-        educational_institution: JSON.stringify(collectEducationData()),
-        organization_name: formData.companyName || "",
-        organization_phone: formData.companyPhone || "",
-        field_of_activity: formData.companyActivity || "",
-        organization_address: formData.companyAddress || "",
-        organization_job_title: formData.position || "",
-        organization_price: formData.salary || "",
-        date_of_hiring: formatDateForDatabase(formData.hireDate),
-        date_of_dismissal: formatDateForDatabase(formData.dismissalDate),
-        reason_for_dismissal: formData.dismissalReason || "",
-        recommendation_contact: formData.referenceContact || "",
-        mobile_phone_candidate: formData.mobileNumber || "",
-        home_phone_candidate: formData.domesticNumber || "",
-        mail_candidate: formData.email || "",
-        inn: formData.INN || "",
-        passport_series: passportData.passport_series,
-        passport_number: passportData.passport_number,
-        passport_issued: formData.issuedBy || "",
-        passport_issue_date: formatDateForDatabase(formData.dateOfIssue),
-        permanent_registration_address: formData.adressOfPermanentReg || "",
-        temporary_registration_address: formData.adressOfTemporaryReg || "",
-        actual_residence_address: formData.adressOfFactialLiving || "",
-        family_partner:
-          selectedMaritalStatus === "Состою в зарегистрированном браке"
-            ? JSON.stringify({
-                full_name: formData.FIOSuprug || "",
-                birth_date:
-                  formatDateForDatabase(formData.dateOfBirthTable) || "",
-                phone: formData.phoneNumberTable || "",
-                work_study_place: formData.placeOfStudy || "",
-                residence_address: formData.placeOfLiving || "",
-              })
-            : JSON.stringify({}),
-        adult_family_members: familyMembersData
-          ? JSON.stringify(familyMembersData)
-          : JSON.stringify([]),
-        adult_children: childrenData
-          ? JSON.stringify(childrenData)
-          : JSON.stringify([]),
-        serviceman: militaryDuty,
-        law_breaker: criminalResponsibility
-          ? formData.whyPrisoner || "Да"
-          : "Нет",
-        legal_entity: legalEntity ? formData.LegalEntity || "Да" : "Нет",
-        is_data_processing: personalDataChecked,
-        comment: "Коммент",
-      }
-
-      console.table(apiData)
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/store`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          Accept: "application/json",
-        },
-        body: JSON.stringify(apiData),
+    if (value && value.trim() !== "" && relativesErrors[fieldName]) {
+      setRelativesErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldName]
+        return newErrors
       })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        setSubmitSuccess(true)
-        console.log("Анкета успешно отправлена:", result)
-      } else {
-        console.error("Ошибка при отправке:", result)
-        if (result.errors) {
-          const errorMessages = Object.values(result.errors).flat()
-          setSubmitError(
-            `Ошибки в форме: ${(errorMessages as string[])
-              .slice(0, 3)
-              .join(", ")}${errorMessages.length > 3 ? "..." : ""}`
-          )
-        } else {
-          setSubmitError(result.message || "Ошибка при отправке анкеты")
-        }
-      }
-    } catch (error) {
-      console.error("Ошибка при отправке анкеты:", error)
-      setSubmitError("Ошибка соединения с сервером")
-    } finally {
-      setIsSubmitting(false)
-      console.log("Ошибки валидации:", formErrors)
     }
+  }
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+    setSubmitError("")
+    setChildrenErrors({})
+    setRelativesErrors({})
+    setWorkExperienceErrors({})
+    setSpouseErrors({})
+
+    const isPersonalInfoValid = validatePersonalInfoSection()
+    const isPassportValid = validatePassportSection()
+    const isChildrenValid = haveChildren ? validateChildrenTables() : true
+    const isRelativesValid = haveFamilyMembers
+      ? validateRelativesTables()
+      : true
+    const isWorkExperienceValid = validateWorkExperienceTable()
+    const isSpouseValid = validateSpouseTable()
+    const isSelectFieldsValid = validateSelectFields()
+
+    if (
+      !isPersonalInfoValid ||
+      !isPassportValid ||
+      !isChildrenValid ||
+      !isRelativesValid ||
+      !isWorkExperienceValid ||
+      !isSpouseValid ||
+      !isSelectFieldsValid
+    ) {
+      setIsSubmitting(false)
+      setHasError(true)
+      return
+    }
+
+    setTriggerValidation(false)
+    setValidationErrors({})
+    setMaritalStatusError(false)
+    setHasError(false)
+    setCityError(false)
+
+    const nameData = splitFullName(formData.FIO || "")
+    const passportData = splitPassportData(formData.passwordSeriaNumber || "")
+    const birthPlaceData = splitBirthPlace(formData.birthPlace)
+
+    const childrenData = collectChildrenData()
+    const familyMembersData = collectFamilyMembersData()
+
+    const apiData: ICandidateFormRequest = {
+      vacancies_key: getVacancyKey(selectedVacancy),
+      marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
+      rop_key: goingToROP ? getROPKey(selectedROP) : null,
+      work_team: goingToROP ? getROPFullName(selectedROP) : null,
+      status: "active",
+      first_name: nameData.first_name,
+      last_name: nameData.last_name,
+      middle_name: nameData.middle_name,
+      reason_for_changing_surnames: surnameChanged
+        ? formData.reasonOfChange || ""
+        : "",
+      city_work: selectedCity,
+      birth_date: formatDateForDatabase(formData.birthDate) || "",
+      country_birth: birthPlaceData.country,
+      city_birth: birthPlaceData.city,
+      level_educational: selectedEducationLevel,
+      courses: JSON.stringify(collectCoursesData()),
+      educational_institution: JSON.stringify(collectEducationData()),
+      organization_name: formData.companyName || "",
+      organization_phone: formData.companyPhone || "",
+      field_of_activity: formData.companyActivity || "",
+      organization_address: formData.companyAddress || "",
+      organization_job_title: formData.position || "",
+      organization_price: formData.salary || "",
+      date_of_hiring: formatDateForDatabase(formData.hireDate),
+      date_of_dismissal: formatDateForDatabase(formData.dismissalDate),
+      reason_for_dismissal: formData.dismissalReason || "",
+      recommendation_contact: formData.referenceContact || "",
+      mobile_phone_candidate: formData.mobileNumber || "",
+      home_phone_candidate: formData.domesticNumber || "",
+      mail_candidate: formData.email || "",
+      inn: formData.INN || "",
+      passport_series: passportData.passport_series,
+      passport_number: passportData.passport_number,
+      passport_issued: formData.issuedBy || "",
+      passport_issue_date: formatDateForDatabase(formData.dateOfIssue),
+      permanent_registration_address: formData.adressOfPermanentReg || "",
+      temporary_registration_address: formData.adressOfTemporaryReg || "",
+      actual_residence_address: formData.adressOfFactialLiving || "",
+      family_partner:
+        selectedMaritalStatus === "Состою в зарегистрированном браке"
+          ? JSON.stringify({
+              full_name: formData.FIOSuprug || "",
+              birth_date:
+                formatDateForDatabase(formData.dateOfBirthTable) || "",
+              phone: formData.phoneNumberTable || "",
+              work_study_place: formData.placeOfStudy || "",
+              residence_address: formData.placeOfLiving || "",
+            })
+          : JSON.stringify({}),
+      adult_family_members: familyMembersData
+        ? JSON.stringify(familyMembersData)
+        : JSON.stringify([]),
+      adult_children: childrenData
+        ? JSON.stringify(childrenData)
+        : JSON.stringify([]),
+      serviceman: militaryDuty,
+      law_breaker: criminalResponsibility
+        ? formData.whyPrisoner || "Да"
+        : "Нет",
+      legal_entity: legalEntity ? formData.LegalEntity || "Да" : "Нет",
+      is_data_processing: personalDataChecked,
+      comment: "Коммент",
+    }
+
+    submitFormMutation.mutate(apiData)
   }
 
   return (
@@ -950,7 +1031,7 @@ const CandidateForm: FC = () => {
       )}
 
       <main>
-        <section style={{ padding: "0" }}>
+        <section>
           {submitSuccess ? (
             <SuccessMessage onClose={() => window.location.reload()} />
           ) : (
@@ -966,8 +1047,8 @@ const CandidateForm: FC = () => {
                 vacancyOptions={vacancyOptions}
                 cityOptions={cityOptions}
                 isLoadingVacancies={isLoadingVacancies}
-                vacancyError={vacancyError}
-                loadVacancies={loadVacancies}
+                vacancyError={vacancyQueryError?.message || ""}
+                loadVacancies={() => {}}
                 surnameChanged={surnameChanged}
                 setSurnameChanged={setSurnameChanged}
                 goingToROP={goingToROP}
@@ -975,6 +1056,9 @@ const CandidateForm: FC = () => {
                 selectedROP={selectedROP}
                 setSelectedROP={setSelectedROP}
                 ropOptions={ropOptions}
+                isLoadingROP={isLoadingROPAccounts}
+                ropError={ropAccountsQueryError?.message || ""}
+                loadROP={loadROP}
                 validationErrors={validationErrors}
                 triggerValidation={triggerValidation}
               />
@@ -987,12 +1071,16 @@ const CandidateForm: FC = () => {
                   setSelectedProfessionalExperience
                 }
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={
+                  setFormData as React.Dispatch<
+                    React.SetStateAction<Record<string, any>>
+                  >
+                }
                 additionalEducationTables={additionalEducationTables}
                 additionalCourseTables={additionalCourseTables}
                 onAddEducationTable={addEducationTable}
                 onAddCourseTable={addCourseTable}
-                workExperienceErrors={workExperienceErrors} // Передаем ошибки
+                workExperienceErrors={workExperienceErrors}
               />
               {/* Паспортные данные */}
               <PassportSection
@@ -1107,16 +1195,17 @@ const CandidateForm: FC = () => {
                   <RelativeTable
                     index={1}
                     formData={formData}
-                    setFormData={setFormData}
+                    setFormData={handleRelativeFieldChange}
                     requiredFields={[""]}
                     errors={relativesErrors}
                   />
 
                   {additionalRelativeTables.map((index) => (
                     <RelativeTable
-                      index={1}
+                      key={index}
+                      index={index}
                       formData={formData}
-                      setFormData={setFormData}
+                      setFormData={handleRelativeFieldChange}
                       requiredFields={[""]}
                       errors={relativesErrors}
                     />
@@ -1313,10 +1402,14 @@ const CandidateForm: FC = () => {
                       ? "formBtn btn-active"
                       : "formBtn btn-inactive"
                   }
-                  disabled={!personalDataChecked || isSubmitting}
+                  disabled={
+                    !personalDataChecked || submitFormMutation.isPending
+                  }
                   onClick={handleSubmit}
                 >
-                  {isSubmitting ? "Отправка..." : "Отправить анкету"}
+                  {submitFormMutation.isPending
+                    ? "Отправка..."
+                    : "Отправить анкету"}
                 </button>
               </FormRow>
               {submitError && (
