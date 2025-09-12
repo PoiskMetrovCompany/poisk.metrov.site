@@ -110,7 +110,7 @@ const BigHeader: FC<IHeaderProps> = ({
   useEffect(() => {
     const fetchNotifications = async () => {
       setLoading(true)
-      const url = "/api/v1/notification/new-candidates"
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/notification/new-candidates`
 
       const getAccessToken = (): string | null => {
         const cookies = document.cookie.split(";")

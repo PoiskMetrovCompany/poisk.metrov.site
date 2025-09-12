@@ -577,7 +577,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
         headers["X-CSRF-TOKEN"] = csrfToken
       }
 
-      const response = await fetch("/api/v1/candidates/update", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/update`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(requestData),
@@ -670,7 +670,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
         headers["X-CSRF-TOKEN"] = csrfToken
       }
 
-      const response = await fetch("/api/v1/candidates/update", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/update`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(requestData),

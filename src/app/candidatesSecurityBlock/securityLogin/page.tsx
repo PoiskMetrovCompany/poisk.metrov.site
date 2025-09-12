@@ -77,7 +77,7 @@ const SecurityRegForm: FC = () => {
       console.log("Отправляем запрос на авторизацию администратора...")
 
       const response = await axios.post<ApiResponse>(
-        "/api/v1/account/auth",
+        `${process.env.NEXT_PUBLIC_API_URL}/account/auth`,
         {
           email: login,
           password: password,

@@ -84,7 +84,7 @@ const CandidatesSettings: FC = () => {
         return
       }
 
-      const response = await fetch("/api/v1/vacancy/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -230,7 +230,7 @@ const CandidatesSettings: FC = () => {
             Authorization: `Bearer ${accessToken.substring(0, 10)}...`,
           })
 
-          const response = await fetch("/api/v1/vacancy/store", {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/store`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -346,7 +346,7 @@ const CandidatesSettings: FC = () => {
         const accessToken = getAccessTokenFromCookie()
 
         if (accessToken) {
-          fetch("/api/v1/vacancy/update", {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancy/update`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -413,7 +413,7 @@ const CandidatesSettings: FC = () => {
       )
 
       if (accessToken) {
-        const deleteUrl = `/api/v1/vacancy/destroy?key=${roleToDeleteData.key}`
+        const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}/vacancy/destroy?key=${roleToDeleteData.key}`
         console.log("URL для удаления:", deleteUrl)
         console.log("Метод запроса: DELETE")
         console.log("Заголовки запроса:", {
