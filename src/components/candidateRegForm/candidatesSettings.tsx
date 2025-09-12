@@ -697,7 +697,7 @@ const CandidatesSettings: FC = () => {
                 )}
               </div>
             </div>
-            <AccessTable style={{ marginTop: "24px" }} />
+            <AccessTable />
           </div>
         </section>
       </main>
