@@ -352,7 +352,7 @@ const ShowForm: React.FC<ShowFormProps> = ({
       }
 
       const response = await fetch(
-        `/api/v1/candidates/read?key=${vacancyKey}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/read?key=${vacancyKey}`,
         {
           method: "GET",
           headers: headers,
@@ -577,11 +577,14 @@ const ShowForm: React.FC<ShowFormProps> = ({
         headers["X-CSRF-TOKEN"] = csrfToken
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/update`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(requestData),
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestData),
+        }
+      )
 
       if (response.ok) {
         const result = await response.json()
@@ -670,11 +673,14 @@ const ShowForm: React.FC<ShowFormProps> = ({
         headers["X-CSRF-TOKEN"] = csrfToken
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/candidates/update`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(requestData),
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/update`,
+        {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(requestData),
+        }
+      )
 
       if (response.ok) {
         const result = await response.json()
