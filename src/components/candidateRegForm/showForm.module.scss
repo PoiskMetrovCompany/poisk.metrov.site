@@ -2,6 +2,9 @@
   flex-direction: row !important;
   height: auto !important;
   justify-content: space-between !important;
+  @media (width < 768px) {
+    flex-wrap: wrap;
+  }
 }
 @media (width <= 1024px) {
   .center-card h1 {
@@ -71,8 +74,7 @@
     margin-top: 2rem;
   }
 
-
-  .inputTable{
+  .inputTable {
     overflow: hidden;
   }
   .inputTable td input {
@@ -364,7 +366,7 @@
   }
 
   .inputTable tr:last-child td:first-child {
-    border-bottom-left-radius: 1rem !important;
+    border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
@@ -380,6 +382,41 @@
   /* Убираем закругления с промежуточных строк */
   .inputTable tr:not(:first-child):not(:last-child) td {
     border-radius: 0 !important;
+  }
+
+  /* Исправление для строк с colSpan={2} - когда ячейка занимает всю ширину */
+  .inputTable tr:first-child td[colspan="2"] {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+
+  .inputTable tr:last-child td[colspan="2"] {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  /* Для строк с colSpan={2} между первой и последней - убираем все закругления */
+  .inputTable tr:not(:first-child):not(:last-child) td[colspan="2"] {
+    border-radius: 0 !important;
+  }
+
+  /* Дополнительные стили для правильного закругления углов в мобильной версии */
+  /* Когда строка содержит только одну ячейку (colSpan={2}), применяем закругления ко всем углам */
+  .inputTable tr:first-child:only-child td[colspan="2"] {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+
+  /* Для предпоследней строки с colSpan={2} - убираем нижние закругления */
+  .inputTable tr:nth-last-child(2) td[colspan="2"] {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
   }
 
   .inputTable td input {
@@ -889,10 +926,6 @@
   border-top-right-radius: 1rem;
 }
 
-.inputTable tr:last-child td:first-child {
-  border-bottom-left-radius: 1rem;
-}
-
 .inputTable tr:last-child td:last-child {
   border-bottom-right-radius: 1rem;
 }
@@ -903,7 +936,7 @@
     width: 692px;
   }
   @media (width < 1024px) {
-    width: 100%;
     padding: 0;
+    width: 100%;
   }
 }

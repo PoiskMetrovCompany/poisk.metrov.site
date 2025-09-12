@@ -797,10 +797,6 @@ input[type="checkbox"] + label {
 
 .inputTable tr:last-child td:first-child {
   border-bottom-left-radius: 1rem;
-
-  @media (width <= 768px) {
-    border-bottom-left-radius: 0 !important;
-  }
 }
 
 .inputTable tr:last-child td:last-child {
@@ -3355,7 +3351,7 @@ input[type="checkbox"] + label {
   }
 
   .inputTable tr:last-child td:first-child {
-    border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0 !important;
   }
 
   /* Правильные закругления для мобильной версии таблиц */
@@ -3374,7 +3370,7 @@ input[type="checkbox"] + label {
   }
 
   .inputTable tr:last-child td:first-child {
-    border-bottom-left-radius: 1rem !important;
+    border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
@@ -3390,6 +3386,32 @@ input[type="checkbox"] + label {
   /* Убираем закругления с промежуточных строк */
   .inputTable tr:not(:first-child):not(:last-child) td {
     border-radius: 0 !important;
+  }
+
+  /* Исправление для строк с colSpan={2} - когда ячейка занимает всю ширину */
+  .inputTable tr:first-child td[colspan="2"] {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+
+  .inputTable tr:last-child td[colspan="2"] {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  /* Для строк с colSpan={2} между первой и последней - убираем все закругления */
+  .inputTable tr:not(:first-child):not(:last-child) td[colspan="2"] {
+    border-radius: 0 !important;
+  }
+
+  /* Для предпоследней строки с colSpan={2} - убираем нижние закругления */
+  .inputTable tr:nth-last-child(2) td[colspan="2"] {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
   }
 
   .tableLabel {
@@ -3419,10 +3441,6 @@ input[type="checkbox"] + label {
 
 .inputTable tr:first-child td:last-child {
   border-top-right-radius: 1rem; /* 16px */
-}
-
-.inputTable tr:last-child td:first-child {
-  border-bottom-left-radius: 1rem; /* 16px */
 }
 
 .inputTable tr:last-child td:last-child {
