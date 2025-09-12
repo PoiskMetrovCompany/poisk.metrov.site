@@ -32,6 +32,21 @@ interface CatalogueListContentProps {
   setShowFilters: (show: boolean) => void
   activeFilters: FiltersRequest | null
   setActiveFilters: (filters: FiltersRequest | null) => void
+  selectedSorting: "cards" | "list"
+  selectedPropertyType: string
+  currentPage: number
+  isLoading: boolean
+  onSortingChange: (sorting: "cards" | "list") => void
+  onShowFilters: () => void
+  onPageChange: (page: number) => void
+  onApplyFilters: (filters: FiltersRequest) => void
+  renderSkeletons: () => React.ReactNode[]
+  renderCards: () => React.ReactNode[]
+  renderAdditionalComponents: () => React.ReactNode
+  elementRef: React.RefObject<HTMLDivElement>
+  isSticky: boolean
+  isVisible: boolean
+  isLaptop: boolean
 }
 
 export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
@@ -39,10 +54,23 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   setShowFilters,
   activeFilters,
   setActiveFilters,
+  selectedSorting,
+  selectedPropertyType,
+  currentPage,
+  isLoading,
+  onSortingChange,
+  onShowFilters,
+  onPageChange,
+  onApplyFilters,
+  renderSkeletons,
+  renderCards,
+  renderAdditionalComponents,
+  elementRef,
+  isSticky,
+  isVisible,
+  isLaptop,
 }) => {
-  const { isSticky, isVisible, elementRef } = useStickyState()
   const { filtersData: storeFiltersData } = useFiltersStore()
-  const { isLaptop } = useCatalogueSorting()
 
   // Синхронизация с URL
   useUrlSync()
@@ -50,22 +78,23 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   useInitialFiltersFromUrl()
 
   const {
-    selectedSorting,
-    currentPage,
+    selectedSorting: hookSelectedSorting,
+    currentPage: hookCurrentPage,
     filtersData,
     apartmentData,
     complexData,
     isApartmentData,
     isComplexData,
     isLoadingFilters,
-    handleSorting,
-    handleApplyFilters,
-    handlePageChange,
+    handleSorting: hookHandleSorting,
+    handleApplyFilters: hookHandleApplyFilters,
+    handlePageChange: hookHandlePageChange,
   } = useCatalogueData(activeFilters, setActiveFilters)
 
-  const { renderSkeletons } = useCatalogueSkeletons()
-  const { renderCards } = useCatalogueCards()
-  const { renderAdditionalComponents } = useCatalogueAdditionalComponents()
+  const { renderSkeletons: hookRenderSkeletons } = useCatalogueSkeletons()
+  const { renderCards: hookRenderCards } = useCatalogueCards()
+  const { renderAdditionalComponents: hookRenderAdditionalComponents } =
+    useCatalogueAdditionalComponents()
 
   // Автоматически переключаемся на карточки на мобильных устройствах
   useEffect(() => {

@@ -1,29 +1,29 @@
+"use client"
+
 import { useMutation } from "@tanstack/react-query"
 
 import React, { RefObject, useEffect, useRef, useState } from "react"
 
-import { CandidateStatus, ICandidatesResponse } from "@/types/Candidate"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./candidateLoginComponents.module.css"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-const getAccessTokenFromCookie = () => {
-  const cookies = document.cookie.split(";")
-  for (let cookie of cookies) {
-    const [name, value] = cookie.trim().split("=")
-    if (name === "access_token") {
-      return value
-    }
+interface FilteredData {
+  attributes: {
+    data: any[]
+    current_page: number
+    last_page: number
+    total: number
+    per_page: number
+    from: number
+    to: number
   }
-  return null
 }
 
-type FilterStatus = CandidateStatus | "showAll"
-
 interface ActiveFilters {
-  status: FilterStatus[]
+  status: string[]
   vacancy: string[]
   dateRange: {
     type: string
@@ -58,7 +58,7 @@ interface FiltersCalendarProps {
   isOpen: boolean
   onClose: () => void
   filtersButtonRef: RefObject<HTMLButtonElement | null>
-  onFiltersApply: (data: ICandidatesResponse, filters: ActiveFilters) => void
+  onFiltersApply: (data: FilteredData, filters: ActiveFilters) => void
   selectedCity: string
 }
 
@@ -116,6 +116,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
   const [calendar1Date, setCalendar1Date] = useState(new Date(2022, 8, 1))
   const [calendar2Date, setCalendar2Date] = useState(new Date(2024, 8, 1))
   const [isCustomSelectOpen, setIsCustomSelectOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const [vacancyOptions, setVacancyOptions] = useState<VacancyOption[]>([])
 
@@ -155,18 +156,18 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
   }, [vacanciesData, vacancyError])
 
   const monthNames = [
-    "Янв",
-    "Фев",
+    "Январь",
+    "Февраль",
     "Март",
-    "Апр",
+    "Апрель",
     "Май",
     "Июнь",
     "Июль",
-    "Авг",
-    "Сент",
-    "Окт",
-    "Нояб",
-    "Дек",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь",
   ]
 
   const [candidatesError, setCandidatesError] = useState("")
@@ -239,6 +240,42 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
       .filter(Boolean)
   }
 
+  const getAccessTokenFromCookie = () => {
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
+  const setMockVacancies = () => {
+    const mockVacancies = [
+      { value: "showAll", text: "Показать все", title: null, key: null },
+      {
+        value: "bcb609e6-95ae-4168-a168-3491eb4d8681",
+        text: "Специалист по продаже недвижимости",
+        title: "Специалист по продаже недвижимости",
+        key: "bcb609e6-95ae-4168-a168-3491eb4d8681",
+      },
+      {
+        value: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
+        text: "Ипотечный специалист",
+        title: "Ипотечный специалист",
+        key: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
+      },
+      {
+        value: "db147302-cf22-4f1a-ae93-0e3e56d22131",
+        text: "Бухгалтер",
+        title: "Бухгалтер",
+        key: "db147302-cf22-4f1a-ae93-0e3e56d22131",
+      },
+    ]
+    setVacancyOptions(mockVacancies)
+  }
+
   const executeFiltersQuery = async ({
     queryString,
   }: {
@@ -249,7 +286,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
       throw new Error("Токен доступа не найден")
     }
 
-    const apiUrl = `${API_BASE_URL}/candidates/${queryString ? "?" + queryString : ""}`
+    const apiUrl = `${API_BASE_URL}/candidates${queryString ? "?" + queryString : ""}`
 
     const response = await fetch(apiUrl, {
       headers: {
@@ -287,31 +324,6 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     },
   })
 
-  const setMockVacancies = () => {
-    const mockVacancies = [
-      { value: "showAll", text: "Показать все", title: null, key: null },
-      {
-        value: "bcb609e6-95ae-4168-a168-3491eb4d8681",
-        text: "Специалист по продаже недвижимости",
-        title: "Специалист по продаже недвижимости",
-        key: "bcb609e6-95ae-4168-a168-3491eb4d8681",
-      },
-      {
-        value: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
-        text: "Ипотечный специалист",
-        title: "Ипотечный специалист",
-        key: "38b54878-7910-4de7-bc85-9a0b0ccc8197",
-      },
-      {
-        value: "db147302-cf22-4f1a-ae93-0e3e56d22131",
-        text: "Бухгалтер",
-        title: "Бухгалтер",
-        key: "db147302-cf22-4f1a-ae93-0e3e56d22131",
-      },
-    ]
-    setVacancyOptions(mockVacancies)
-  }
-
   const handleCustomSelectToggle = (e: React.MouseEvent) => {
     e.stopPropagation()
     setIsCustomSelectOpen(!isCustomSelectOpen)
@@ -328,37 +340,25 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     setSelectedFilters((prev) => {
       const newFilters = { ...prev }
 
-      if (filter === "status") {
+      if (filter === "status" || filter === "vacancy") {
         if (value === "showAll") {
-          newFilters.status = ["showAll"]
+          // Если нажата "Показать все", очищаем все остальные фильтры этого типа
+          newFilters[filter] = ["showAll"]
         } else {
-          if (newFilters.status.includes("showAll")) {
-            newFilters.status = [value as FilterStatus]
+          // Если нажат любой другой фильтр
+          if (newFilters[filter].includes("showAll")) {
+            // Убираем "Показать все" и добавляем выбранный фильтр
+            newFilters[filter] = [value]
           } else {
-            if (newFilters.status.includes(value as FilterStatus)) {
-              newFilters.status = newFilters.status.filter((v) => v !== value)
-              if (newFilters.status.length === 0) {
-                newFilters.status = ["showAll"]
+            // Обычная логика добавления/удаления фильтра
+            if (newFilters[filter].includes(value)) {
+              newFilters[filter] = newFilters[filter].filter((v) => v !== value)
+              // Если не осталось выбранных фильтров, возвращаем "Показать все"
+              if (newFilters[filter].length === 0) {
+                newFilters[filter] = ["showAll"]
               }
             } else {
-              newFilters.status = [...newFilters.status, value as FilterStatus]
-            }
-          }
-        }
-      } else if (filter === "vacancy") {
-        if (value === "showAll") {
-          newFilters.vacancy = ["showAll"]
-        } else {
-          if (newFilters.vacancy.includes("showAll")) {
-            newFilters.vacancy = [value]
-          } else {
-            if (newFilters.vacancy.includes(value)) {
-              newFilters.vacancy = newFilters.vacancy.filter((v) => v !== value)
-              if (newFilters.vacancy.length === 0) {
-                newFilters.vacancy = ["showAll"]
-              }
-            } else {
-              newFilters.vacancy = [...newFilters.vacancy, value]
+              newFilters[filter] = [...newFilters[filter], value]
             }
           }
         }
@@ -499,6 +499,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     applyFiltersMutation.mutate({ queryString })
   }
 
+  // Функции для генерации календаря
   const generateCalendar = (
     year: number,
     month: number
@@ -591,6 +592,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     return years
   }
 
+  // Функции для проверки выбранности дат
   const isDateSelected = (dateStr: string): boolean => {
     if (!startDate) return false
     const date = new Date(dateStr)
@@ -707,6 +709,17 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     }
   }, [isOpen])
 
+  useEffect(() => {
+    const checkIsMobile = () => {
+      const mobile = window.innerWidth <= 768
+      setIsMobile(mobile)
+    }
+
+    checkIsMobile()
+    window.addEventListener("resize", checkIsMobile)
+    return () => window.removeEventListener("resize", checkIsMobile)
+  }, [])
+
   return (
     <>
       <aside
@@ -715,8 +728,8 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
         ref={calendarPanelRef}
       >
         <div
-          className="center-card"
-          style={{ minWidth: "800px", height: "105%", paddingBottom: "50px" }}
+          className="filters-window"
+          style={{ height: "105%", paddingBottom: "50px" }}
         >
           <div
             className="formRow flex-direction-column"
@@ -932,7 +945,9 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
               </table>
             </div>
 
-            <div className="calendar-wrapper">
+            <div
+              className={`calendar-wrapper ${isMobile ? "mobile-hidden" : ""}`}
+            >
               <div className="calendar-header">
                 <span
                   className="nav-arrow"
@@ -1101,21 +1116,17 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
           </div>
 
           <div className="formRow">
-            <h3 style={{ textAlign: "left", paddingLeft: "10px" }}>
-              Фильтр по статусу
-            </h3>
+            <h3 style={{ textAlign: "left" }}>Фильтр по статусу</h3>
           </div>
           <div
             className="formRow justify-flex-start"
-            style={{ paddingLeft: "10px", flexWrap: "wrap" }}
+            style={{ flexWrap: "wrap" }}
           >
             {statusFilters.map((filter) => (
               <button
                 key={filter.value}
-                className={`filterButton ${selectedFilters.status.includes(filter.value as FilterStatus) ? "active" : ""}`}
-                onClick={() =>
-                  handleFilterToggle("status", filter.value as FilterStatus)
-                }
+                className={`filterButton ${selectedFilters.status.includes(filter.value) ? "active" : ""}`}
+                onClick={() => handleFilterToggle("status", filter.value)}
                 disabled={applyFiltersMutation.isPending}
               >
                 {filter.text}
@@ -1124,14 +1135,13 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
           </div>
 
           <div className="formRow">
-            <h3 style={{ textAlign: "left", paddingLeft: "10px" }}>
-              Фильтр по вакансии
-            </h3>
+            <h3 style={{ textAlign: "left" }}>Фильтр по вакансии</h3>
           </div>
           <div
             className="formRow justify-flex-start"
-            style={{ paddingLeft: "10px", flexWrap: "wrap" }}
+            style={{ flexWrap: "wrap" }}
           >
+            {/* Показываем индикатор загрузки или ошибку */}
             {isLoadingVacancies && (
               <div style={{ padding: "10px", color: "#666", fontSize: "14px" }}>
                 <div
@@ -1167,9 +1177,24 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   maxWidth: "100%",
                 }}
               >
-                Ошибка загрузки вакансий. Используются mock-данные.
+                {vacancyError}
+                <button
+                  onClick={() => window.location.reload()}
+                  style={{
+                    marginLeft: "10px",
+                    background: "none",
+                    border: "none",
+                    color: "#3498db",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    fontSize: "14px",
+                  }}
+                >
+                  Повторить
+                </button>
               </div>
             )}
+            {/* Отображаем кнопки фильтров, загруженные из API */}
             {!isLoadingVacancies &&
               !vacancyError &&
               vacancyOptions.map((filter) => (
@@ -1243,6 +1268,11 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                 setEndDate(null)
                 setCurrentRangeType("dates")
                 setCandidatesError("")
+                // Сбрасываем состояние мобильного календаря
+                if (isMobile) {
+                  setIsMobile(false)
+                  setTimeout(() => setIsMobile(window.innerWidth <= 768), 0)
+                }
               }}
               disabled={applyFiltersMutation.isPending}
               style={{
