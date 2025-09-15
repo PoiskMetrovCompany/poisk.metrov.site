@@ -29,10 +29,20 @@ const getAccessTokenFromCookie = (): string | null => {
   return null
 }
 
-type FilterStatus = CandidateStatus | "showAll"
+interface FilteredData {
+  attributes: {
+    data: ICandidate[]
+    current_page: number
+    last_page: number
+    total: number
+    per_page: number
+    from: number
+    to: number
+  }
+}
 
 interface ActiveFilters {
-  status: FilterStatus[]
+  status: string[]
   vacancy: string[]
   dateRange: {
     type: string
@@ -47,9 +57,7 @@ const CandidatesLoginPage = () => {
   const [selectedVacancyKey, setSelectedVacancyKey] = useState<string | null>(
     null
   )
-  const [filteredData, setFilteredData] = useState<ICandidatesResponse | null>(
-    null
-  )
+  const [filteredData, setFilteredData] = useState<FilteredData | null>(null)
   const [activeFilters, setActiveFilters] = useState<ActiveFilters | null>(null)
   const [selectedCity, setSelectedCity] = useState("Новосибирск")
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
@@ -71,7 +79,7 @@ const CandidatesLoginPage = () => {
     error: candidatesError,
     refetch: refetchCandidates,
   } = useQuery({
-    queryKey: ["candidates"],
+    queryKey: ["candidates", selectedCity],
     queryFn: async (): Promise<ICandidatesResponse> => {
       const accessToken = getAccessTokenFromCookie()
 
@@ -80,7 +88,7 @@ const CandidatesLoginPage = () => {
       }
 
       const response = await axios.get<ICandidatesResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/candidates/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/candidates/?city_work=${encodeURIComponent(selectedCity)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -117,10 +125,7 @@ const CandidatesLoginPage = () => {
     setSelectedVacancyKey(null)
   }
 
-  const handleFiltersApply = (
-    data: ICandidatesResponse,
-    filters: ActiveFilters
-  ) => {
+  const handleFiltersApply = (data: FilteredData, filters: ActiveFilters) => {
     setFilteredData(data)
     setActiveFilters(filters)
     setIsCalendarOpen(false)
@@ -198,7 +203,7 @@ const CandidatesLoginPage = () => {
                 onFiltersClick={handleFiltersClick}
                 onRowClick={handleRowClick}
                 filtersButtonRef={filtersButtonRef}
-                filteredData={filteredData || candidatesFilteredData}
+                filteredData={filteredData}
                 activeFilters={activeFilters}
                 onFiltersReset={handleFiltersReset}
                 selectedCity={selectedCity}
