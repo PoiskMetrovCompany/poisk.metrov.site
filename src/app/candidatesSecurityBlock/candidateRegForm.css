@@ -1797,7 +1797,7 @@ input[type="checkbox"] + label {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-
+  gap: 6px;
   margin: 0;
   margin-left: 1rem;
 }
@@ -1806,7 +1806,7 @@ input[type="checkbox"] + label {
   align-items: center;
   border-radius: 4px;
   cursor: pointer;
-
+  padding: 4px;
   display: flex;
 
   transition: background-color 0.2s ease;
@@ -2465,10 +2465,10 @@ input[type="checkbox"] + label {
 .city-dropdown {
   background: rgb(255 255 255 / 100%);
   border: 1px solid #e1e5e9;
-  border-radius: 8px;
+  border-radius: 16px;
 
   color: rgb(73 73 73 / 100%);
-  left: 100px;
+  left: 71px;
   margin-top: 4px;
   max-height: 240px;
 
@@ -2505,9 +2505,8 @@ input[type="checkbox"] + label {
 
 #selectCity {
   border-radius: 4px;
-  margin-left: 4px;
-  padding: 4px 8px;
   transition: background-color 0.2s ease;
+
 }
 
 #city svg {
