@@ -10,7 +10,7 @@
         font-size: 22px !important;
       }
 
-      @media (width <= 1024px) {
+      @media (width < 1024px) {
         font-size: 20px !important;
       }
     }
@@ -18,14 +18,14 @@
     &__navigation {
       display: none;
 
-      @media (width <= 768px) {
+      @media (width < 768px) {
         display: flex;
         gap: 30px;
         align-items: center;
       }
     }
 
-    @media (width <= 768px) {
+    @media (width < 768px) {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -35,30 +35,60 @@
   &__content {
     position: relative;
 
+
     &__item {
       display: flex;
       gap: 80px;
       align-items: center;
+      justify-content: center;
       width: 100%;
       padding: 0 110px;
+
+      @media (width < 1920px) {
+        padding: 0 74px;
+        gap: 64px;
+      }
+      @media (width < 1440px) {
+        padding: 0 40px;
+        gap: 24px;
+      }
 
       &__image {
         overflow: hidden;
         width: 707px;
         height: 532px;
         border-radius: 500px;
+
+        @media (width < 1920px) {
+          width: 570px;
+          height: 444px;
+        }
+        @media (width < 1440px) {
+          width: 430px;
+          height: 310px;
+        }
+        @media (width < 1024px) {
+          width: 492px;
+          height: 355px;
+        }
+        @media (width < 768px) {
+          width: 328px;
+          height: 236px;
+        }
       }
 
       &__content {
-        flex: 1;
-
+        width: 672px;
+        @media (width < 1920px) {
+          width: auto;
+        }
         &__title {
           font-size: 34px;
-          font-weight: 400;
+          font-weight: 500;
           line-height: 130%;
           color: var(--color-orange);
 
-          @media (width <= 1920px) {
+          @media (width < 1920px) {
             font-size: 22px;
           }
         }
@@ -66,22 +96,27 @@
         &__description {
           margin: 0;
           font-size: 34px;
-          font-weight: 400;
+          font-weight: 500;
           line-height: 130%;
           color: var(--color-black);
 
-          @media (width <= 1920px) {
+          @media (width < 1920px) {
             font-size: 22px;
+            width: 498px;
+          }
+          @media (width < 1440px) {
+            width: 374px;
+          }
+          @media (width < 1024px) {
+            width: 100%;
+            font-size: 20px;
           }
         }
       }
 
-      @media (width <= 1440px) {
-        gap: 40px;
-      }
     }
 
-    @media (width <= 1024px) {
+    @media (width < 1024px) {
       &__item {
         flex-direction: column;
         gap: 30px;
@@ -90,32 +125,32 @@
 
         &__image {
           width: 100%;
-          max-width: 400px;
           height: 300px;
           margin: 0 auto;
 
-          @media (width <= 1920px) {
+          @media (width < 1920px) {
             width: 570px;
             height: 444px;
           }
 
-          @media (width <= 1440px) {
+          @media (width < 1440px) {
             width: 430px;
             height: 310px;
           }
 
-          @media (width <= 1024px) {
+          @media (width < 1024px) {
             width: 492px;
             height: 355px;
           }
 
-          @media (width <= 768px) {
+          @media (width < 768px) {
             width: 328px;
             height: 236px;
           }
         }
 
         &__content {
+
           &__title {
             font-size: 20px;
           }
@@ -126,7 +161,7 @@
           }
         }
 
-        @media (width <= 768px) {
+        @media (width < 768px) {
           padding: 0;
         }
       }
@@ -183,7 +218,7 @@
 }
 
 .navigationButtonMobile {
-  @media (width <= 768px) {
+  @media (width < 768px) {
     position: static !important;
     transform: none !important;
     width: 40px;
@@ -202,7 +237,7 @@
 }
 
 .navigationButtonDesktop {
-  @media (width <= 768px) {
+  @media (width < 768px) {
     display: none !important;
   }
 }
@@ -212,7 +247,7 @@
   transform: translateX(-50%) translateY(-22.5px);
 
   &.navigationButtonMobile {
-    @media (width <= 768px) {
+    @media (width < 768px) {
       left: auto;
       transform: none;
     }
@@ -224,7 +259,7 @@
   transform: translateX(50%) translateY(-22.5px);
 
   &.navigationButtonMobile {
-    @media (width <= 768px) {
+    @media (width < 768px) {
       right: auto;
       transform: none;
     }

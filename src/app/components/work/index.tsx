@@ -9,22 +9,22 @@ import IconImage from "@/components/ui/IconImage"
 
 const workContent = [
   {
-    imageLink: "/images/temporary/people.png",
+    imageLink: "/images/temporary/people.webp",
     title: "Экскурсии по новостройкам",
     description:
       "Раскрывать потенциал каждой локации, делая жизнь в доме источником положительных эмоций",
   },
   {
-    imageLink: "/images/temporary/people.png",
-    title: "Экскурсии по новостройкам",
+    imageLink: "/images/temporary/forest.webp",
+    title: "Только актуальные цены",
     description:
-      "Раскрывать потенциал каждой локации, делая жизнь в доме источником положительных эмоций",
+      "Данные на сайте обновляются мгновенно, чтобы вы могли быть уверены в их достоверности",
   },
   {
-    imageLink: "/images/temporary/people.png",
-    title: "Экскурсии по новостройкам",
+    imageLink: "/images/temporary/noComission.webp",
+    title: "Недвижимость без комиссий",
     description:
-      "Раскрывать потенциал каждой локации, делая жизнь в доме источником положительных эмоций",
+      "Мы ценим ваше время и финансовые ресурсы, поэтому предлагаем прозрачные условия покупки",
   },
 ]
 
