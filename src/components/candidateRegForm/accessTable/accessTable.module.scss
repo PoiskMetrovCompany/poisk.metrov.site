@@ -1,25 +1,87 @@
 .tableContainer {
   background: #fff;
   border-radius: 12px;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 20px;
-
   width: 100%;
 }
 
 .accessTable {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 
   thead {
     tr {
       th {
+        border: none;
         color: var(--color-text-gray);
-
         font-size: 14px;
         font-weight: 400;
-        padding: 18px 24px;
+        overflow: hidden;
+        padding: 18px 12px;
         text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+          padding: 12px 8px;
+        }
+      }
+
+      th:nth-child(1) {
+        width: 35%;
+        @media (max-width: 1440px) {
+          width: 25%;
+        }
+        @media (max-width: 1024px) {
+          width: 45%;
+        }
+        @media (max-width: 768px) {
+          width: 30%;
+        }
+      }
+
+      th:nth-child(2) {
+        width: 12%;
+        @media (max-width: 1440px) {
+          width: 10%;
+        }
+        @media (max-width: 1024px) {
+          width: 15%;
+        }
+        @media (max-width: 768px) {
+          width: 15%;
+        }
+      }
+
+      th:nth-child(3) {
+        width: 25%;
+        @media (max-width: 1440px) {
+          width: 20%;
+        }
+        @media (max-width: 1024px) {
+          width: 40%;
+        }
+        @media (max-width: 768px) {
+          width: 30%;
+        }
+      }
+
+      th:nth-child(4) {
+        width: 15%;
+        @media (max-width: 768px) {
+          width: 15%;
+        }
+      }
+
+      th:nth-child(5) {
+        text-align: center;
+        width: 10%; /* Controls */
+        @media (max-width: 768px) {
+          width: 10%;
+        }
       }
     }
   }
@@ -30,13 +92,16 @@
       height: 30px;
 
       td {
+        border: none;
         color: #494949;
-
         font-size: 14px;
         font-weight: 300;
         height: 30px;
-        padding: 18px 24px;
+        overflow: hidden;
+        padding: 18px 12px;
         text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .name {
@@ -45,27 +110,128 @@
       }
 
       .password {
+        cursor: pointer;
         font-size: 16px;
         font-weight: 800;
         letter-spacing: 2px;
         line-height: 1.4;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          font-size: 14px;
+          font-weight: 400;
+        }
       }
 
       .controls {
-        min-width: 120px;
+        padding: 18px 6px;
         text-align: center;
         vertical-align: middle;
-        width: 120px;
       }
     }
   }
 }
 
+.tableLabel {
+  font-size: 18px !important;
+  @media (max-width: 1920px) {
+    font-size: 15px !important;
+  }
+  @media (max-width: 768px) {
+    font-size: 13px !important;
+  }
+}
 .buttonGroup {
   align-items: center;
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+.mobileCards {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.mobileCard {
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 16px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.mobileCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileName {
+  color: #181817;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.mobilePosition,
+.mobileEmail {
+  color: #494949;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.mobilePasswordRow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.mobilePasswordLabel {
+  color: #818181;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.mobilePassword {
+  color: #494949;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+  min-width: 0;
+  user-select: none;
+
+  &:hover,
+  &:active {
+    color: #ec7d3f;
+  }
+}
+
+.mobileButtonGroup {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Скрываем таблицу на мобильных */
+@media (max-width: 768px) {
+  .accessTable {
+    display: none;
+  }
 }
 
 .editBtn,
@@ -121,5 +287,13 @@
     top: 24px;
 
     transition: all 0.2s ease;
+  }
+}
+
+.inputTableHeight {
+  height: 140px;
+
+  @media (max-width: 768px) {
+    height: auto;
   }
 }

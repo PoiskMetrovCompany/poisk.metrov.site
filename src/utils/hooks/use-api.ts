@@ -111,7 +111,7 @@ export function useApiQuery<T>(
         }
         return result
       } catch (error) {
-        console.error("❌ Ошибка в useApiQuery:", error)
+        console.log("❌ Ошибка в useApiQuery:", error)
         return null
       }
     },

@@ -1033,7 +1033,7 @@ const CandidateForm: FC = () => {
       )}
 
       <main>
-        <section>
+        <section style={{ padding: "0" }}>
           {submitSuccess ? (
             <SuccessMessage onClose={() => window.location.reload()} />
           ) : (

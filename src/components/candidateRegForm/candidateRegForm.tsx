@@ -114,7 +114,7 @@ const CandidateRegForm: FC = () => {
           const redirectUrl =
             data.attributes.user.role === "candidate"
               ? "/candidatesSecurityBlock/candidatesForm"
-              : "/candidatesSecurityTable"
+              : "/candidatesSecurityBlock/candidatesSecurityTable"
 
           window.location.href = redirectUrl
         }
@@ -366,7 +366,7 @@ const CandidateRegForm: FC = () => {
       <HeaderFormSmall></HeaderFormSmall>
 
       <main>
-        <section>
+        <section style={{ padding: "0", maxWidth: "440px" }}>
           <div className="center-card">
             <h1>Регистрация кандидата</h1>
             <p>

@@ -36,7 +36,7 @@ export default function Home() {
         <Filter />
         <Favourites />
         <MonthlyPayment />
-        <Mortage />
+        {/* <Mortage /> */}
         <Compilation header="Подборка квартир" hasPromoCard={true} />
         <Work />
         <Partners

@@ -24,8 +24,10 @@ const BigHeader: FC<IHeaderProps> = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [selectedCity, setSelectedCity] = useState<string>("Новосибирск")
   const [showCityDropdown, setShowCityDropdown] = useState<boolean>(false)
+  const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
   const notificationButtonRef = useRef<HTMLButtonElement>(null)
   const cityDropdownRef = useRef<HTMLDivElement>(null)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
 
   // Список городов
   const cities = ["Новосибирск", "Санкт-Петербург"]
@@ -76,6 +78,13 @@ const BigHeader: FC<IHeaderProps> = ({
       ) {
         setShowCityDropdown(false)
       }
+
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowMobileMenu(false)
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
@@ -84,10 +93,24 @@ const BigHeader: FC<IHeaderProps> = ({
     }
   }, [])
 
+  // Обработчик переключения мобильного меню
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu)
+  }
+
+  // Обработчик выбора города в мобильном меню
+  const handleMobileCitySelect = (city: string) => {
+    setSelectedCity(city)
+    setShowMobileMenu(false)
+    if (onCityChange) {
+      onCityChange(city)
+    }
+  }
+
   useEffect(() => {
     const fetchNotifications = async () => {
       setLoading(true)
-      const url = "/api/v1/notification/new-candidates"
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/notification/new-candidates`
 
       const getAccessToken = (): string | null => {
         const cookies = document.cookie.split(";")
@@ -218,7 +241,10 @@ const BigHeader: FC<IHeaderProps> = ({
 
   return (
     <header>
-      <div className="formRow justify-space-between w-80">
+      <div
+        className="formRow justify-space-between w-80"
+        style={{ flexDirection: "row" }}
+      >
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image
             id="nonTextImg"
@@ -227,7 +253,11 @@ const BigHeader: FC<IHeaderProps> = ({
             width={40}
             height={40}
           />
-          <div style={{ position: "relative" }} ref={cityDropdownRef}>
+          <div
+            style={{ position: "relative" }}
+            ref={cityDropdownRef}
+            className="city-selectorFull"
+          >
             <h5 id="city">
               Город:
               <div className="city-selector" onClick={toggleCityDropdown}>
@@ -291,7 +321,7 @@ const BigHeader: FC<IHeaderProps> = ({
           style={{
             display: "flex",
             justifyContent: "space-between",
-            minWidth: "250px",
+            gap: "16px",
             position: "relative",
           }}
         >
@@ -356,6 +386,8 @@ const BigHeader: FC<IHeaderProps> = ({
               </div>
             )}
           </div>
+
+          {/* Кнопка выхода для десктопа */}
           <button id="exitBtn" onClick={handleLogout}>
             Выйти из ЛК
             <Image
@@ -365,6 +397,54 @@ const BigHeader: FC<IHeaderProps> = ({
               height={16}
             />
           </button>
+
+          {/* Кнопка-гамбургер для мобильных */}
+          <div style={{ position: "relative" }} ref={mobileMenuRef}>
+            <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+              <Image
+                src="/images/candidatesSecurityImg/details.svg"
+                alt="Меню"
+                width={16}
+                height={16}
+              />
+            </button>
+
+            {/* Мобильное меню */}
+            {showMobileMenu && (
+              <div className="mobile-menu open">
+                <div className="mobile-menu-content">
+                  {/* Селектор города */}
+                  <div className="mobile-city-selector">
+                    <h5>Город:</h5>
+                    <div className="mobile-city-dropdown">
+                      {cities.map((city) => (
+                        <div
+                          key={city}
+                          className={`mobile-city-option ${
+                            city === selectedCity ? "selected" : ""
+                          }`}
+                          onClick={() => handleMobileCitySelect(city)}
+                        >
+                          {city}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Кнопка выхода */}
+                  <button className="mobile-exit-btn" onClick={handleLogout}>
+                    Выйти из ЛК
+                    <Image
+                      src="/images/candidatesSecurityImg/arowRight.webp"
+                      alt="Стрелочка вправо"
+                      width={16}
+                      height={16}
+                    />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

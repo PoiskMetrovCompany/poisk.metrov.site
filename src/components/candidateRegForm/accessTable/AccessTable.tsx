@@ -1,34 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-
 import React, { KeyboardEvent, useState } from "react"
 
 import Image from "next/image"
 
-import { useApiQuery } from "@/utils/hooks/use-api"
-
 import styles from "./accessTable.module.scss"
 
 import ConfirmationModal from "../confirmationalWindow"
-
-interface Account {
-  id: number
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
-  key: string
-  role: string
-  phone: string
-  email: string | null
-  secret: string
-  last_name: string | null
-  first_name: string | null
-  middle_name: string | null
-}
-
-interface AccountsResponse {
-  request: boolean
-  attributes: Account[]
-}
 
 interface User {
   id: number
@@ -36,7 +12,6 @@ interface User {
   position: string
   email: string
   password: string
-  key: string
 }
 
 interface NewAccess {
@@ -46,41 +21,8 @@ interface NewAccess {
   password: string
 }
 
-interface CreateAccountRequest {
-  last_name: string
-  first_name: string
-  middle_name: string
-  email: string
-  role: string
-  password: string
-}
-
-interface UpdateAccountRequest {
-  key: string
-  last_name: string
-  first_name: string
-  middle_name: string
-  email: string
-  role: string
-  password: string
-}
-
 const AccessTable = () => {
-  const getCsrfToken = (): string => {
-    const metaTag = document.querySelector('meta[name="csrf-token"]')
-    if (metaTag) {
-      return metaTag.getAttribute("content") || ""
-    }
-
-    const cookies = document.cookie.split(";")
-    for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "XSRF-TOKEN") {
-        return decodeURIComponent(value)
-      }
-    }
-    return ""
-  }
+  const [hoveredPassword, setHoveredPassword] = useState<number | null>(null)
   const [isAdding, setIsAdding] = useState<boolean>(false)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [newAccess, setNewAccess] = useState<NewAccess>({
@@ -93,247 +35,37 @@ const AccessTable = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [userToDelete, setUserToDelete] = useState<number | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string>("")
-  const [passwordError, setPasswordError] = useState<string>("")
 
-  const {
-    data: accountsData,
-    isLoading: isLoadingAccounts,
-    error: accountsError,
-  } = useApiQuery<AccountsResponse>(
-    ["accounts"],
-    `${process.env.NEXT_PUBLIC_API_URL}/account/list`,
+  const [users, setUsers] = useState<User[]>([
     {
-      staleTime: 30 * 60 * 1000,
-      gcTime: 60 * 60 * 1000,
-      retry: 2,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    }
-  )
-
-  const queryClient = useQueryClient()
-
-  // Мутация для создания нового аккаунта
-  const createAccountMutation = useMutation({
-    mutationFn: async (accountData: CreateAccountRequest) => {
-      const csrfToken = getCsrfToken()
-
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/account/store`,
-        {
-          method: "POST",
-          headers,
-          body: JSON.stringify(accountData),
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw {
-          status: response.status,
-          response: { data: errorData },
-          message: errorData.message || `HTTP ${response.status}`,
-        }
-      }
-
-      return await response.json()
+      id: 1,
+      name: "Гавриш Елена Владимировна",
+      position: "РОП",
+      email: "emailexample@gmail.com",
+      password: "K9mP2nQ7",
     },
-    onSuccess: (data) => {
-      setErrorMessage("")
-      setNewAccess({ name: "", position: "", email: "", password: "" })
-      setIsAdding(false)
-      queryClient.invalidateQueries({ queryKey: ["accounts"] })
+    {
+      id: 2,
+      name: "Гавриш Елена Владимировна",
+      position: "РОП",
+      email: "emailexample@gmail.com",
+      password: "X3vL8sR4",
     },
-    onError: (error: any) => {
-      if (error?.status === 201) {
-        setErrorMessage(
-          "Доступ с таким email уже присутствует, укажите другой!"
-        )
-      } else if (error?.status === 422) {
-        const validationErrors = error?.response?.data?.errors
-
-        if (validationErrors) {
-          if (
-            validationErrors.email &&
-            validationErrors.email.includes("The email has already been taken.")
-          ) {
-            setErrorMessage("Такой email уже занят")
-          } else if (validationErrors.email) {
-            setErrorMessage("Некорректный формат email")
-          } else if (validationErrors.password) {
-            setErrorMessage("Пароль не соответствует требованиям")
-          } else if (
-            validationErrors.last_name ||
-            validationErrors.first_name
-          ) {
-            setErrorMessage("Проверьте правильность заполнения ФИО")
-          } else {
-            setErrorMessage(
-              "Ошибка валидации данных. Проверьте правильность заполнения полей."
-            )
-          }
-        } else {
-          setErrorMessage(
-            "Ошибка валидации данных. Проверьте правильность заполнения полей."
-          )
-        }
-      } else {
-        setErrorMessage(error?.message || "Ошибка при создании аккаунта")
-      }
+    {
+      id: 3,
+      name: "Гавриш Елена Владимировна",
+      position: "РОП",
+      email: "emailexample@gmail.com",
+      password: "M5tY9wE6",
     },
-  })
-
-  // Мутация для обновления аккаунта
-  const updateAccountMutation = useMutation({
-    mutationFn: async (accountData: UpdateAccountRequest) => {
-      const csrfToken = getCsrfToken()
-
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/account/update`,
-        {
-          method: "POST",
-          headers,
-          body: JSON.stringify(accountData),
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw {
-          status: response.status,
-          response: { data: errorData },
-          message: errorData.message || `HTTP ${response.status}`,
-        }
-      }
-
-      return await response.json()
+    {
+      id: 4,
+      name: "Гавриш Елена Владимировна",
+      position: "РОП",
+      email: "emailexample@gmail.com",
+      password: "N2jH7pA1",
     },
-    onSuccess: (data) => {
-      setErrorMessage("")
-      setPasswordError("")
-      setNewAccess({ name: "", position: "", email: "", password: "" })
-      setEditingIndex(null)
-      setIsEditing(false)
-      queryClient.invalidateQueries({ queryKey: ["accounts"] })
-    },
-    onError: (error: any) => {
-      if (error?.status === 201) {
-        setErrorMessage("Такой email уже занят")
-      } else if (error?.status === 422) {
-        const validationErrors = error?.response?.data?.errors
-
-        if (validationErrors) {
-          if (
-            validationErrors.email &&
-            validationErrors.email.includes("The email has already been taken.")
-          ) {
-            setErrorMessage("Такой email уже занят")
-          } else if (validationErrors.email) {
-            setErrorMessage("Некорректный формат email")
-          } else if (validationErrors.password) {
-            setErrorMessage("Пароль не соответствует требованиям")
-          } else if (
-            validationErrors.last_name ||
-            validationErrors.first_name
-          ) {
-            setErrorMessage("Проверьте правильность заполнения ФИО")
-          } else {
-            setErrorMessage(
-              "Ошибка валидации данных. Проверьте правильность заполнения полей."
-            )
-          }
-        } else {
-          setErrorMessage(
-            "Ошибка валидации данных. Проверьте правильность заполнения полей."
-          )
-        }
-      } else {
-        setErrorMessage(error?.message || "Ошибка при обновлении аккаунта")
-      }
-    },
-  })
-
-  // Мутация для удаления аккаунта
-  const deleteAccountMutation = useMutation({
-    mutationFn: async (key: string) => {
-      const csrfToken = getCsrfToken()
-
-      const headers: Record<string, string> = {
-        Accept: "*/*",
-      }
-
-      if (csrfToken) {
-        headers["X-CSRF-TOKEN"] = csrfToken
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/account/delete?key=${key}`,
-        {
-          method: "DELETE",
-          headers,
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw {
-          status: response.status,
-          response: { data: errorData },
-          message: errorData.message || `HTTP ${response.status}`,
-        }
-      }
-
-      return await response.json()
-    },
-    onSuccess: (data) => {
-      setErrorMessage("")
-      queryClient.invalidateQueries({ queryKey: ["accounts"] })
-    },
-    onError: (error: any) => {
-      setErrorMessage(error?.message || "Ошибка при удалении аккаунта")
-    },
-  })
-
-  const users: User[] =
-    accountsData?.attributes?.map((account) => ({
-      id: account.id,
-      name:
-        `${account.last_name || ""} ${account.first_name || ""} ${account.middle_name || ""}`.trim() ||
-        "Не указано",
-      position: account.role,
-      email: account.email || account.phone,
-      password: "•••••",
-      key: account.key,
-    })) || []
-
-  const validatePassword = (password: string): boolean => {
-    if (password.length < 8) {
-      setPasswordError("Пароль должен содержать минимум 8 символов")
-      return false
-    }
-    setPasswordError("")
-    return true
-  }
+  ])
 
   const handleAddAccess = () => {
     if (editingIndex !== null) {
@@ -346,8 +78,6 @@ const AccessTable = () => {
       setIsAdding(true)
       setIsEditing(false)
       setEditingIndex(null)
-      setErrorMessage("")
-      setPasswordError("")
     }
   }
 
@@ -362,33 +92,20 @@ const AccessTable = () => {
     setNewAccess({ name: "", position: "", email: "", password: "" })
     setIsAdding(false)
     setEditingIndex(null)
-    setErrorMessage("")
-    setPasswordError("")
   }
 
   const saveNewAccess = async () => {
     if (newAccess.name.trim() && newAccess.email.trim()) {
-      const password = newAccess.password.trim() || "temp123"
-
-      if (!validatePassword(password)) {
-        return
-      }
-
-      const nameParts = newAccess.name.trim().split(" ")
-      const lastName = nameParts[0] || ""
-      const firstName = nameParts[1] || ""
-      const middleName = nameParts.slice(2).join(" ") || ""
-
-      const accountData: CreateAccountRequest = {
-        last_name: lastName,
-        first_name: firstName,
-        middle_name: middleName,
+      const newAccessObj: User = {
+        id: Date.now(),
+        name: newAccess.name.trim(),
+        position: newAccess.position.trim() || "Не указано",
         email: newAccess.email.trim(),
-        role: newAccess.position.trim() || "РОП",
-        password: password,
+        password: newAccess.password.trim() || "temp123",
       }
-
-      createAccountMutation.mutate(accountData)
+      setUsers([...users, newAccessObj])
+      setNewAccess({ name: "", position: "", email: "", password: "" })
+      setIsAdding(false)
     }
   }
 
@@ -398,29 +115,19 @@ const AccessTable = () => {
       newAccess.name.trim() &&
       newAccess.email.trim()
     ) {
-      const password = newAccess.password.trim() || "temp123"
-
-      if (!validatePassword(password)) {
-        return
-      }
-
-      const userToEdit = users[editingIndex]
-      const nameParts = newAccess.name.trim().split(" ")
-      const lastName = nameParts[0] || ""
-      const firstName = nameParts[1] || ""
-      const middleName = nameParts.slice(2).join(" ") || ""
-
-      const accountData: UpdateAccountRequest = {
-        key: userToEdit.key,
-        last_name: lastName,
-        first_name: firstName,
-        middle_name: middleName,
+      const updatedUsers = [...users]
+      updatedUsers[editingIndex] = {
+        ...updatedUsers[editingIndex],
+        name: newAccess.name.trim(),
+        position: newAccess.position.trim() || "Не указано",
         email: newAccess.email.trim(),
-        role: newAccess.position.trim() || "РОП",
-        password: password,
+        password:
+          newAccess.password.trim() || updatedUsers[editingIndex].password,
       }
-
-      updateAccountMutation.mutate(accountData)
+      setUsers(updatedUsers)
+      setEditingIndex(null)
+      setIsEditing(false)
+      setNewAccess({ name: "", position: "", email: "", password: "" })
     }
   }
 
@@ -466,8 +173,8 @@ const AccessTable = () => {
   const confirmDelete = () => {
     if (userToDelete === null) return
 
-    const userToDeleteData = users[userToDelete]
-    if (!userToDeleteData) return
+    const updatedUsers = users.filter((_, i) => i !== userToDelete)
+    setUsers(updatedUsers)
 
     if (editingIndex === userToDelete) {
       setEditingIndex(null)
@@ -475,106 +182,130 @@ const AccessTable = () => {
     }
 
     setIsEditing(false)
-    setIsDeleteModalOpen(false)
-    setUserToDelete(null)
-
-    deleteAccountMutation.mutate(userToDeleteData.key)
   }
 
   return (
     <>
-      <div className="center-card big">
+      <div className="center-card big" style={{ marginTop: "24px" }}>
         <div className="formRow">
           <h3 style={{ textAlign: "left" }}>Управление доступами</h3>
         </div>
         <div className="formRow" style={{ marginTop: "0" }}>
-          <h4 style={{ textAlign: "left" }}>
+          <h4
+            className={styles.tableLabel}
+            style={{ textAlign: "left" }}
+            tabIndex={0}
+            aria-label="Пользователи, имеющие доступ к системе"
+          >
             Пользователи, имеющие доступ к системе
           </h4>
         </div>
 
         <div className={styles.tableContainer}>
-          {isLoadingAccounts && (
-            <div
-              style={{ padding: "20px", color: "#666", textAlign: "center" }}
-            >
-              Загрузка аккаунтов...
-            </div>
-          )}
-          {accountsError && (
-            <div
-              style={{ padding: "20px", color: "#e74c3c", textAlign: "center" }}
-            >
-              {accountsError.message || "Ошибка при загрузке аккаунтов"}
-              <button
-                onClick={() =>
-                  queryClient.invalidateQueries({ queryKey: ["accounts"] })
-                }
-                style={{
-                  marginLeft: "10px",
-                  background: "none",
-                  border: "none",
-                  color: "#3498db",
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
-              >
-                Повторить
-              </button>
-            </div>
-          )}
-
-          {!isLoadingAccounts && !accountsError && (
-            <table className={styles.accessTable}>
-              <thead>
-                <tr>
-                  <th>ФИО</th>
-                  <th>Должность</th>
-                  <th>E-mail</th>
-                  <th>Пароль</th>
-                  <th className={styles.controls}></th>
+          <table className={styles.accessTable}>
+            <thead>
+              <tr>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>E-mail</th>
+                <th>Пароль</th>
+                <th className={styles.controls}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr key={user.id}>
+                  <td className={styles.name}>{user.name}</td>
+                  <td>{user.position}</td>
+                  <td>{user.email}</td>
+                  <td
+                    className={styles.password}
+                    onMouseEnter={() => setHoveredPassword(user.id)}
+                    onMouseLeave={() => setHoveredPassword(null)}
+                  >
+                    {hoveredPassword === user.id ? user.password : "•••••••"}
+                  </td>
+                  <td className={styles.controls}>
+                    {isEditing && (
+                      <div className={styles.buttonGroup}>
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => handleEdit(index)}
+                        >
+                          <Image
+                            src={"/images/icons/editBtn.svg"}
+                            alt={"Редактировать"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => handleDeleteClick(index)}
+                        >
+                          <Image
+                            src={"/images/icons/trashBox.svg"}
+                            alt={"Удалить"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((user, index) => (
-                  <tr key={user.id}>
-                    <td className={styles.name}>{user.name}</td>
-                    <td>{user.position}</td>
-                    <td>{user.email}</td>
-                    <td className={styles.password}>{user.password}</td>
-                    <td className={styles.controls}>
-                      {isEditing && (
-                        <div className={styles.buttonGroup}>
-                          <button
-                            className={styles.editBtn}
-                            onClick={() => handleEdit(index)}
-                          >
-                            <Image
-                              src={"/images/icons/editBtn.svg"}
-                              alt={"Редактировать"}
-                              width={20}
-                              height={20}
-                            />
-                          </button>
-                          <button
-                            className={styles.deleteBtn}
-                            onClick={() => handleDeleteClick(index)}
-                          >
-                            <Image
-                              src={"/images/icons/trashBox.svg"}
-                              alt={"Удалить"}
-                              width={20}
-                              height={20}
-                            />
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
+
+          {/* Мобильная версия карточек */}
+          <div className={styles.mobileCards}>
+            {users.map((user, index) => (
+              <div key={user.id} className={styles.mobileCard}>
+                <div className={styles.mobileCardContent}>
+                  <div className={styles.mobileName}>{user.name}</div>
+                  <div className={styles.mobilePosition}>{user.position}</div>
+                  <div className={styles.mobileEmail}>{user.email}</div>
+                  <div className={styles.mobilePasswordRow}>
+                    <span className={styles.mobilePasswordLabel}>Пароль:</span>
+                    <span
+                      className={styles.mobilePassword}
+                      onTouchStart={() => setHoveredPassword(user.id)}
+                      onTouchEnd={() => setHoveredPassword(null)}
+                    >
+                      {hoveredPassword === user.id ? user.password : "•••••••"}
+                    </span>
+                    {isEditing && (
+                      <div className={styles.mobileButtonGroup}>
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => handleEdit(index)}
+                        >
+                          <Image
+                            src={"/images/icons/editBtn.svg"}
+                            alt={"Редактировать"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => handleDeleteClick(index)}
+                        >
+                          <Image
+                            src={"/images/icons/trashBox.svg"}
+                            alt={"Удалить"}
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {(isAdding || editingIndex !== null) && (
@@ -588,7 +319,7 @@ const AccessTable = () => {
               marginTop: "1rem",
             }}
           >
-            <table className="inputTable" style={{ height: "140px" }}>
+            <table className={`inputTable ${styles.inputTableHeight}`}>
               <caption className="tableLabel">
                 {editingIndex !== null
                   ? "Редактировать пользователя"
@@ -682,14 +413,12 @@ const AccessTable = () => {
                         name="newPassword"
                         id="newPassword"
                         value={newAccess.password}
-                        onChange={(e) => {
-                          const password = e.target.value
+                        onChange={(e) =>
                           setNewAccess({
                             ...newAccess,
-                            password: password,
+                            password: e.target.value,
                           })
-                          validatePassword(password)
-                        }}
+                        }
                         onKeyDown={handleKeyPress}
                         className={newAccess.password ? "has-value" : ""}
                       />
@@ -707,40 +436,6 @@ const AccessTable = () => {
           </div>
         )}
 
-        {passwordError && (
-          <div
-            style={{
-              padding: "10px",
-              marginTop: "10px",
-              backgroundColor: "#fee",
-              border: "1px solid #fcc",
-              borderRadius: "8px",
-              color: "#c33",
-              fontSize: "14px",
-              textAlign: "center",
-            }}
-          >
-            {passwordError}
-          </div>
-        )}
-
-        {errorMessage && (
-          <div
-            style={{
-              padding: "10px",
-              marginTop: "10px",
-              backgroundColor: "#fee",
-              border: "1px solid #fcc",
-              borderRadius: "8px",
-              color: "#c33",
-              fontSize: "14px",
-              textAlign: "center",
-            }}
-          >
-            {errorMessage}
-          </div>
-        )}
-
         <div
           className="formRow justify-flex-start"
           style={{ marginTop: "1rem" }}
@@ -748,14 +443,6 @@ const AccessTable = () => {
           <button
             className="formBtn small btn-active"
             onClick={handleAddAccess}
-            disabled={
-              isLoadingAccounts ||
-              createAccountMutation.isPending ||
-              updateAccountMutation.isPending ||
-              deleteAccountMutation.isPending ||
-              (isAdding && passwordError !== "") ||
-              (editingIndex !== null && passwordError !== "")
-            }
           >
             {editingIndex !== null
               ? "Подтвердить"
@@ -768,12 +455,6 @@ const AccessTable = () => {
             <button
               className="formBtn small btn-inactive"
               onClick={handleCancelAdd}
-              disabled={
-                isLoadingAccounts ||
-                createAccountMutation.isPending ||
-                updateAccountMutation.isPending ||
-                deleteAccountMutation.isPending
-              }
             >
               Отменить
             </button>
@@ -782,13 +463,7 @@ const AccessTable = () => {
               className={`formBtn small ${
                 isEditing ? "btn-active" : "btn-inactive"
               }`}
-              disabled={
-                editingIndex !== null ||
-                isLoadingAccounts ||
-                createAccountMutation.isPending ||
-                updateAccountMutation.isPending ||
-                deleteAccountMutation.isPending
-              }
+              disabled={editingIndex !== null}
               onClick={handleEditMode}
             >
               {isEditing ? "Завершить редактирование" : "Редактировать"}

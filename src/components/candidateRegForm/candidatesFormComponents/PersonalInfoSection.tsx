@@ -60,7 +60,9 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   triggerValidation,
 }) => {
   const formatNameInput = (value: string) => {
+
     return value.replace(/[^а-яёА-ЯЁa-zA-Z\s\-']/g, "")
+
   }
 
   const formatDateInput = (value: string) => {
