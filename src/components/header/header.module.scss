@@ -101,7 +101,7 @@
   }
 
   @media screen and (width < 768px) {
-    padding: 8px 16px;
+    padding: 8px 12px;
   }
 
   // margin: 0 50px;
@@ -124,8 +124,16 @@
   &__right {
     align-items: center;
     display: flex;
-    gap: 30px;
+    gap: 32px;
     justify-content: space-between;
+
+    @media screen and (width >= 768px) and (width < 1024px) {
+      gap: 24px;
+    }
+
+    @media screen and (width < 768px) {
+      gap: 16px;
+    }
   }
 }
 
@@ -134,12 +142,16 @@
   display: flex;
   gap: 32px;
 
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    gap: 24px;
+  }
+
   @media screen and (width >= 768px) and (width < 1024px) {
     gap: 16px;
   }
 
   @media screen and (width < 768px) {
-    gap: 16px;
+    gap: 12px;
   }
 
   &__favorites {
@@ -239,18 +251,13 @@
 
     width: 40px;
 
-    // Показываем только для экранов >=1024px и <1440px
-    @media screen and (max-width: 1023px) {
-      display: none;
-    }
-
     @media screen and (min-width: 1440px) {
       display: none;
     }
 
     @media screen and (width < 768px) {
-      height: 32px;
-      width: 32px;
+      height: 40px;
+      width: 40px;
     }
 
     &__icon {
@@ -258,8 +265,8 @@
       width: 20px !important;
 
       @media screen and (width < 768px) {
-        height: 16px !important;
-        width: 16px !important;
+        height: 20px !important;
+        width: 20px !important;
       }
     }
 
@@ -292,14 +299,14 @@
 .contact_info {
   &__phone {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
 
     @media screen and (width >= 768px) and (width < 1920px) {
       font-size: 15px !important;
     }
 
     @media screen and (width < 768px) {
-      font-size: 14px !important;
+      font-size: 13px !important;
     }
   }
 }
@@ -767,86 +774,6 @@
   .header_fixed .top_bar {
     display: none;
   }
-
-  // .user-actions {
-  //     &__text {
-  //         font-size: 16px;
-  //     }
-
-  //     &__label {
-  //         font-size: 16px;
-  //     }
-  // }
-
-  // .contact-info {
-  //     &__phone {
-  //         font-size: 16px;
-  //     }
-  // }
-
-  // .navigation {
-  //     &__button {
-  //         font-size: 16px;
-  //     }
-  // }
-
-  // .location-selector {
-  //     &__button {
-  //         font-size: 16px;
-  //     }
-  // }
-
-  // .top_bar {
-  //     &__item {
-  //         font-size: 14px;
-  //     }
-  // }
-
-  // .main_bar {
-  //     &__left {
-  //         gap: 18px;
-  //     }
-
-  //     &__right {
-  //         gap: 18px;
-  //     }
-  // }
-
-  // .user-actions {
-  //     gap: 18px;
-
-  //     &__favorites {
-  //         gap: 6px;
-  //     }
-
-  //     &__login {
-  //         gap: 6px;
-  //     }
-  // }
-
-  // .navigation {
-  //     &__list {
-  //         gap: 18px;
-  //     }
-  // }
-
-  // .top_bar {
-  //     &__left {
-  //         gap: 18px;
-  //     }
-
-  //     &__list {
-  //         gap: 18px;
-  //     }
-  // }
-
-  // .location-selector {
-  //     gap: 13px;
-
-  //     &__button {
-  //         gap: 6px;
-  //     }
-  // }
 }
 
 @media (width <= 1099px) {
@@ -939,8 +866,8 @@
       width: 40px !important;
 
       @media screen and (width < 768px) {
-        height: 32px !important;
-        width: 32px !important;
+        height: 40px !important;
+        width: 40px !important;
       }
     }
 
@@ -958,47 +885,57 @@
   }
 }
 
-@media (width <= 500px) {
-  .top_bar {
-    margin: 0 auto;
-    padding: 10px 10px;
-  }
-
-  .main_bar {
-    margin: 0 auto;
-    padding: 10px 10px;
-  }
-
+@media (width < 768px) {
   .logo {
     &__image {
       height: 32px;
+      margin-top: 5px;
       width: 32px;
     }
   }
 }
 
-@media (width <= 430px) {
-  .location_selector {
-    &__text {
-      font-size: 12px;
-    }
-  }
+// @media (width <= 500px) {
+// .top_bar {
+//   margin: 0 auto;
+//   padding: 10px 10px;
+// }
 
-  .top_bar {
-    &__list {
-      gap: 5px;
-    }
-  }
-}
+// .main_bar {
+//   margin: 0 auto;
+//   padding: 10px 10px;
+// }
 
-@media (width <= 767px) {
-  .main_bar {
-    &__right {
-      gap: 10px;
-    }
-  }
+//   .logo {
+//     &__image {
+//       height: 32px;
+//       width: 32px;
+//     }
+//   }
+// }
 
-  .user_actions {
-    gap: 12px;
-  }
-}
+// @media (width <= 430px) {
+//   .location_selector {
+//     &__text {
+//       font-size: 12px;
+//     }
+//   }
+
+//   .top_bar {
+//     &__list {
+//       gap: 5px;
+//     }
+//   }
+// }
+
+// @media (width <= 767px) {
+//   .main_bar {
+//     &__right {
+//       gap: 10px;
+//     }
+//   }
+
+//   .user_actions {
+//     gap: 12px;
+//   }
+// }

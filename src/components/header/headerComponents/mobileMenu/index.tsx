@@ -6,6 +6,9 @@ import clsx from "clsx"
 
 import React, { FC } from "react"
 
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+
 import { useLocationStore } from "@/stores/useLocationStore"
 import { CityResponse } from "@/types/api"
 import { useApiQuery } from "@/utils/hooks/use-api"
@@ -28,6 +31,7 @@ const MobileMenu: FC<IMobileMenuProps> = ({
   initialCity,
 }) => {
   const { selectedCity, setSelectedCity } = useLocationStore()
+  const router = useRouter()
 
   const {
     data: citiesData,
@@ -58,6 +62,11 @@ const MobileMenu: FC<IMobileMenuProps> = ({
         document.cookie = `selectedCity=${cookieValue}; Path=/; Max-Age=${60 * 60 * 24 * 365}`
       } catch {}
     }
+  }
+
+  const handleNavigation = (href: string): void => {
+    router.push(href)
+    onOpenChange(false)
   }
 
   return (
@@ -107,6 +116,17 @@ const MobileMenu: FC<IMobileMenuProps> = ({
                   >
                     Санкт-Петербург
                   </button>
+                  <button
+                    className={clsx(
+                      styles.mobileMenu__tab,
+                      "Санкт-Петербург" === currentCity?.name &&
+                        styles.mobileMenu__tab_active
+                    )}
+                    onClick={() => handleCitySelect("Санкт-Петербург")}
+                    type="button"
+                  >
+                    Крым
+                  </button>
                 </>
               ) : (
                 cities.slice(0, 3).map((city) => (
@@ -128,48 +148,114 @@ const MobileMenu: FC<IMobileMenuProps> = ({
 
             <div
               className={clsx(
-                styles.mobileMenu__divider,
-                styles.mobileMenu__divider_mobile
+                styles.mobileMenu__items,
+                styles.mobileMenu__items_mobile
               )}
-            />
+            >
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/catalogue")}
+                type="button"
+              >
+                <span className={styles.mobileMenu__itemText}>
+                  Каталог недвижимости
+                </span>
+                <IconImage
+                  iconLink="/images/icons/header/mobile-arrow.svg"
+                  alt="arrow"
+                  className={styles.mobileMenu__itemIcon}
+                />
+              </button>
+
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/sell")}
+                type="button"
+              >
+                <span className={styles.mobileMenu__itemText}>Продать</span>
+                <IconImage
+                  iconLink="/images/icons/header/mobile-arrow.svg"
+                  alt="arrow"
+                  className={styles.mobileMenu__itemIcon}
+                />
+              </button>
+
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/mortgage")}
+                type="button"
+              >
+                <span className={styles.mobileMenu__itemText}>Ипотека</span>
+                <IconImage
+                  iconLink="/images/icons/header/mobile-arrow.svg"
+                  alt="arrow"
+                  className={styles.mobileMenu__itemIcon}
+                />
+              </button>
+            </div>
+
+            <div className={clsx(styles.mobileMenu__divider)} />
 
             <div className={styles.mobileMenu__items}>
-              <div className={styles.mobileMenu__item}>
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/about")}
+                type="button"
+              >
                 <span className={styles.mobileMenu__itemText}>О компании</span>
                 <IconImage
                   iconLink="/images/icons/header/mobile-arrow.svg"
                   alt="arrow"
                   className={styles.mobileMenu__itemIcon}
                 />
-              </div>
+              </button>
 
-              <div className={styles.mobileMenu__item}>
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/partners")}
+                type="button"
+              >
                 <span className={styles.mobileMenu__itemText}>Партнёрам</span>
                 <IconImage
                   iconLink="/images/icons/header/mobile-arrow.svg"
                   alt="arrow"
                   className={styles.mobileMenu__itemIcon}
                 />
-              </div>
+              </button>
 
-              <div className={styles.mobileMenu__item}>
+              <button
+                className={styles.mobileMenu__item}
+                onClick={() => handleNavigation("/offices")}
+                type="button"
+              >
                 <span className={styles.mobileMenu__itemText}>Офисы</span>
                 <IconImage
                   iconLink="/images/icons/header/mobile-arrow.svg"
                   alt="arrow"
                   className={styles.mobileMenu__itemIcon}
                 />
-              </div>
+              </button>
             </div>
 
-            <div className={styles.mobileMenu__divider} />
+            <div
+              className={clsx(
+                styles.mobileMenu__divider,
+                styles.mobileMenu__divider_last
+              )}
+            />
 
             <div className={styles.mobileMenu__contact}>
               <div className={styles.mobileMenu__phone}>
-                <span className={styles.mobileMenu__phoneNumber}>
+                <a
+                  href="tel:+79994484695"
+                  className={styles.mobileMenu__phoneNumber}
+                >
                   +7 999 448 46-95
-                </span>
-                <button className={styles.mobileMenu__callButton}>
+                </a>
+                <a
+                  href="tel:+79994484695"
+                  className={styles.mobileMenu__callButton}
+                >
                   <IconImage
                     iconLink="/images/icons/header/phone.svg"
                     alt="arrow"
@@ -179,32 +265,52 @@ const MobileMenu: FC<IMobileMenuProps> = ({
                   <span className={styles.mobileMenu__callButtonText}>
                     Заказать звонок
                   </span>
-                </button>
+                </a>
               </div>
 
               <div className={styles.mobileMenu__social}>
-                <IconButton
-                  size="sm"
-                  type="secondary"
-                  iconLink="/images/icons/header/telegram.svg"
-                  alt="telegram"
-                  className={styles.mobileMenu__socialButton__icon}
-                />
-                <IconButton
-                  size="sm"
-                  type="secondary"
-                  iconLink="/images/icons/header/whatsapp.svg"
-                  alt="whatsapp"
-                  className={styles.mobileMenu__socialButton__icon}
-                />
-
-                <IconButton
-                  size="sm"
-                  type="secondary"
-                  iconLink="/images/icons/header/inst.svg"
-                  alt="instagram"
-                  className={styles.mobileMenu__socialButton__icon}
-                />
+                <Link
+                  href="https://t.me/poisk_metrov"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Перейти в Telegram"
+                >
+                  <IconButton
+                    size="sm"
+                    type="secondary"
+                    iconLink="/images/icons/header/telegram.svg"
+                    alt="telegram"
+                    className={styles.mobileMenu__socialButton__icon}
+                  />
+                </Link>
+                <Link
+                  href="https://wa.me/79994484695"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Перейти в WhatsApp"
+                >
+                  <IconButton
+                    size="sm"
+                    type="secondary"
+                    iconLink="/images/icons/header/whatsapp.svg"
+                    alt="whatsapp"
+                    className={styles.mobileMenu__socialButton__icon}
+                  />
+                </Link>
+                <Link
+                  href="https://instagram.com/poisk_metrov"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Перейти в Instagram"
+                >
+                  <IconButton
+                    size="sm"
+                    type="secondary"
+                    iconLink="/images/icons/header/inst.svg"
+                    alt="instagram"
+                    className={styles.mobileMenu__socialButton__icon}
+                  />
+                </Link>
               </div>
             </div>
           </div>
