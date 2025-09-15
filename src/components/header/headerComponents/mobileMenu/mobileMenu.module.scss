@@ -1,0 +1,197 @@
+.mobileMenu {
+  &__overlay {
+    background-color: rgba(24, 24, 23, 0.2);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 72px; // Оставляем место для header
+    z-index: 1000;
+  }
+
+  &__content {
+    background-color: #ffffff;
+    border-radius: 0 0 40px 40px;
+    left: 0;
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+    padding: 40px;
+    position: fixed;
+    right: 0;
+    top: 72px; // Оставляем место для header
+    z-index: 1001;
+
+    // Показываем только для экранов >=1024px и <1440px
+    @media (width >= 1024px) and (width < 1440px) {
+      display: block;
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__tabs {
+    background-color: var(--color-beige-light);
+    border-radius: 16px;
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+  }
+
+  &__tab_active {
+    background-color: rgba(236, 125, 63, 0.2);
+    border: none;
+    border-radius: 12px;
+    color: var(--color-orange);
+    cursor: pointer;
+    flex: 1;
+
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    line-height: 1.5;
+    padding: 0 24px;
+  }
+
+  &__tab {
+    background-color: transparent;
+    border: none;
+    border-radius: 12px;
+    color: #9f9898;
+    cursor: pointer;
+    flex: 1;
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    line-height: 1.5;
+    padding: 0 24px;
+
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-orange);
+    }
+  }
+
+  &__divider {
+    background-color: #f1eded;
+    height: 1px;
+    width: 100%;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__item {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: space-between;
+
+    &:hover &Text {
+      color: #ec7d3f;
+    }
+  }
+
+  &__itemText {
+    color: var(--color-black);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: color 0.2s ease;
+  }
+
+  &__itemIcon {
+    height: 16px;
+    width: 16px;
+  }
+
+  &__contact {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  &__phone {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__phoneNumber {
+    color: var(--color-black);
+
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  &__callButton {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    gap: 6px;
+    padding: 0;
+
+    &:hover &Text {
+      color: #ec7d3f;
+    }
+
+    &:focus {
+      border-radius: 8px;
+      outline: 2px solid #ec7d3f;
+      outline-offset: 2px;
+    }
+
+    &__icon {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  &__callButtonText {
+    color: #ec7d3f;
+    font-family: "Onest", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: color 0.2s ease;
+  }
+
+  &__social {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+  }
+
+  &__socialButton {
+    align-items: center;
+    background-color: #f4f4f1;
+    border: 1.5px solid #e8e4e4;
+    border-radius: 40px;
+    color: #504848;
+    cursor: pointer;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+
+    &:hover {
+      background-color: #e8e4e4;
+    }
+
+    &:focus {
+      outline: 2px solid #ec7d3f;
+      outline-offset: 2px;
+    }
+  }
+}

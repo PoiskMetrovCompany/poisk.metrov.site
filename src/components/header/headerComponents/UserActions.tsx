@@ -1,10 +1,6 @@
 "use client"
 
-import clsx from "clsx"
-
 import React, { FC, useState } from "react"
-
-import Image from "next/image"
 
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
@@ -12,7 +8,7 @@ import { useApiQuery } from "@/utils/hooks/use-api"
 import styles from "../header.module.scss"
 
 import LoginForm from "../loginForm"
-import ProfilePopover from "./profilePopover/ProfilePopover"
+import MobileMenu from "./mobileMenu"
 
 import IconImage from "@/components/ui/IconImage"
 import Skeleton from "@/components/ui/skeleton"
@@ -28,7 +24,7 @@ const UserActions: FC<IUserActionsProps> = ({
   onFavoritesClick,
   onMenuClick,
 }) => {
-  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
@@ -37,43 +33,22 @@ const UserActions: FC<IUserActionsProps> = ({
   }
 
   const USER_KEY = "e8fe3d65-822b-11f0-8411-10f60a82b815"
-  const {
-    data: fCountData,
-    isLoading: fCountLoading,
-    isError: fCountError,
-  } = useApiQuery<IFavoritesCountResponse>(
-    ["fCount"],
-    `/favorites/count?user_key=${USER_KEY}`,
-    {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-    }
-  )
+  const { data: fCountData, isLoading: fCountLoading } =
+    useApiQuery<IFavoritesCountResponse>(
+      ["fCount"],
+      `/favorites/count?user_key=${USER_KEY}`,
+      {
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+      }
+    )
   const favoritesCount = fCountData?.attributes
 
-  const handleLoginClick = (): void => {
-    if (isLoggedIn) {
-      setIsProfilePopoverOpen(true)
-    } else if (onLoginClick) {
-      onLoginClick()
-    }
-  }
-
   const handleMenuClick = (): void => {
+    setIsMobileMenuOpen(true)
     if (onMenuClick) {
       onMenuClick()
     }
-  }
-
-  const handleSettingsClick = (): void => {
-    // Обработка клика по настройкам профиля
-    console.log("Настройки профиля")
-  }
-
-  const handleLogoutClick = (): void => {
-    // Обработка выхода из личного кабинета
-    console.log("Выход из личного кабинета")
-    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -145,10 +120,19 @@ const UserActions: FC<IUserActionsProps> = ({
       >
         <IconImage
           className={styles.user_actions__showMenu__icon}
-          iconLink="/images/icons/header/showMenu-2.svg"
+          iconLink={
+            isMobileMenuOpen
+              ? "/images/icons/header/closeMenu.svg"
+              : "/images/icons/header/showMenu-2.svg"
+          }
           alt="Menu"
         />
       </button>
+
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onOpenChange={setIsMobileMenuOpen}
+      />
     </div>
   )
 }
