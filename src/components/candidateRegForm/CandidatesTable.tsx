@@ -535,9 +535,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
               candidate.middle_name || ""
             }`.trim(),
             rop:
-              candidate.work_team === "Административный состав"
-                ? "-"
-                : candidate.work_team || "-",
+              candidate.work_team &&
+              candidate.work_team !== "Административный состав"
+                ? candidate.work_team
+                : "-",
             datetime: formatDateTime(
               candidate.created_at || new Date().toISOString()
             ),
@@ -861,9 +862,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             candidate.middle_name || ""
           }`.trim(),
           rop:
-            candidate.work_team === "Административный состав"
-              ? "-"
-              : candidate.work_team || "-",
+            candidate.work_team &&
+            candidate.work_team !== "Административный состав"
+              ? candidate.work_team
+              : "-",
           datetime: formatDateTime(
             candidate.created_at || new Date().toISOString()
           ),
