@@ -1,11 +1,8 @@
 "use client"
 
-import React, { useState, useEffect, useMemo, useCallback } from "react"
 import clsx from "clsx"
 
-import { FiltersRequest } from "@/types/api/filters"
-
-import { CatalogueListContent } from "./CatalogueListContent"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import Download from "@/app/components/download"
 import Selection from "@/components/apartmentSelection"
@@ -25,6 +22,7 @@ import {
   IResidentialComplex,
   ResidentialComplexDataResponse,
 } from "@/types/api/complex"
+import { FiltersRequest } from "@/types/api/filters"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 import { mapResidentialComplexesToProperties } from "@/utils/mappers/propertyMapper"
@@ -33,6 +31,7 @@ import styles from "./catalogueList.module.scss"
 
 import CatalogueFilters from "../catalogueFiltersNavbar"
 import FiltersDialog from "../filters"
+import { CatalogueListContent } from "./CatalogueListContent"
 
 import IconImage from "@/components/ui/IconImage"
 import Heading2 from "@/components/ui/heading2"
@@ -45,9 +44,12 @@ const PER_PAGE = "4"
 
 const CatalogueList = () => {
   const [showFilters, setShowFilters] = useState(false)
-  const [activeFilters, setActiveFilters] = useState<FiltersRequest | null>(null)
+  const [activeFilters, setActiveFilters] = useState<FiltersRequest | null>(
+    null
+  )
   const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
-  const [selectedPropertyType, setSelectedPropertyType] = useState("Жилой комплекс")
+  const [selectedPropertyType, setSelectedPropertyType] =
+    useState("Жилой комплекс")
   const [currentPage, setCurrentPage] = useState(1)
   const { isLaptop } = useScreenSize(0)
   const { isSticky, isVisible, elementRef } = useStickyState()
@@ -76,13 +78,13 @@ const CatalogueList = () => {
   // Always define URLs regardless of selectedPropertyType
   const RESIDENTIAL_COMPLEX_API_URL = useMemo(
     () =>
-      `http://localhost:1080/api/v1/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/?city=${CITY}&page=${currentPage}&per_page=${PER_PAGE}`,
     [currentPage]
   )
 
   const APARTMENTS_API_URL = useMemo(
     () =>
-      `http://localhost:1080/api/v1/apartments/selections?city_code=${CITY}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/apartments/selections?city_code=${CITY}`,
     []
   )
 
@@ -123,21 +125,27 @@ const CatalogueList = () => {
   // Check if data is empty to show NotFound component
   const isEmpty = useMemo(() => {
     if (isLoading) return false
-    
+
     if (selectedPropertyType === "Жилой комплекс") {
       const complexes = Array.isArray(catalogueResidentialComplexes)
         ? catalogueResidentialComplexes
-        : catalogueResidentialComplexes?.attributes || []
-      return complexes.length === 0
+        : (catalogueResidentialComplexes as ResidentialComplexDataResponse)
+            ?.attributes || []
+      return Array.isArray(complexes) && complexes.length === 0
     } else if (selectedPropertyType === "Квартира") {
       const apartments = Array.isArray(catalogueApartments)
         ? catalogueApartments
-        : catalogueApartments?.attributes || []
-      return apartments.length === 0
+        : (catalogueApartments as ApartmentSelectionResponse)?.attributes || []
+      return Array.isArray(apartments) && apartments.length === 0
     }
-    
+
     return false
-  }, [isLoading, selectedPropertyType, catalogueResidentialComplexes, catalogueApartments])
+  }, [
+    isLoading,
+    selectedPropertyType,
+    catalogueResidentialComplexes,
+    catalogueApartments,
+  ])
 
   const renderSkeletons = useCallback((): React.ReactNode[] => {
     const result: React.ReactNode[] = []
@@ -280,17 +288,9 @@ const CatalogueList = () => {
       activeFilters={activeFilters}
       setActiveFilters={setActiveFilters}
       selectedSorting={selectedSorting}
-      selectedPropertyType={selectedPropertyType}
+      setSelectedSorting={setSelectedSorting}
       currentPage={currentPage}
-      isLoading={isLoading}
-      onSortingChange={handleSorting}
-      onShowFilters={handleShowFilters}
-      onPageChange={handlePageChange}
-      onApplyFilters={applyFilters}
-      renderSkeletons={renderSkeletons}
-      renderCards={renderCards}
-      renderAdditionalComponents={renderAdditionalComponents}
-      elementRef={elementRef}
+      elementRef={elementRef as React.RefObject<HTMLDivElement>}
       isSticky={isSticky}
       isVisible={isVisible}
       isLaptop={isLaptop}

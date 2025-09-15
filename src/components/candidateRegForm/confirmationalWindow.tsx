@@ -17,7 +17,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = ({
   header,
   title,
   confirmText = "Да, удалить",
-  cancelText = "Отмена"
+  cancelText = "Отмена",
 }) => {
   if (!isOpen) return null
 
@@ -33,56 +33,35 @@ const ConfirmationModal: FC<ConfirmationModalProps> = ({
   }
 
   return (
-    <div 
-      className="modal-backdrop"
-      onClick={handleBackdropClick}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000
-      }}
-    >
-      <div 
-        className="modal-content"
-        style={{
-          backgroundColor: "white",
-          padding: "2rem",
-          borderRadius: "40px",
-          maxWidth: "400px",
-          width: "90%",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-        }}
-      >
-        <h3 style={{ marginBottom: "1rem", color: "#333", textAlign: "center" }}>
+    <div className="modal-backdrop" onClick={handleBackdropClick}>
+      <div className="modal-content-confirmation">
+        <h3
+          style={{ marginBottom: "1rem", color: "#333", textAlign: "center" }}
+        >
           {header}
         </h3>
-        
+
         <p style={{ marginBottom: "2rem", color: "#666", textAlign: "center" }}>
           {title}
         </p>
-        
-        <div 
+
+        <div
           style={{
             display: "flex",
             gap: "1rem",
-            justifyContent: "flex-end"
+            justifyContent: "space-between",
           }}
         >
-          <button style={{marginBottom: "0"}}
+          <button
+            style={{ marginBottom: "0" }}
             className="formBtn small btn-inactive"
             onClick={onClose}
           >
             {cancelText}
           </button>
-          
-          <button style={{marginBottom: "0"}}
+
+          <button
+            style={{ marginBottom: "0", marginRight: "0" }}
             className="formBtn small btn-active"
             onClick={handleConfirm}
           >

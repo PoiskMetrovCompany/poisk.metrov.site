@@ -26,6 +26,7 @@ export interface IProperty {
   description: IDescription[]
   image: string
   linkKey?: string
+  isApartment?: boolean
 }
 
 export interface IPropertyCardGeneral {

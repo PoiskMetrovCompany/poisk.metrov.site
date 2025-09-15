@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react"
 
 import { difference } from "next/dist/build/utils"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { CbrResponse } from "@/types/api/cbr"
 import { useApiQuery } from "@/utils/hooks/use-api"
@@ -21,6 +22,7 @@ import Button from "@/components/ui/buttons/ActionButton"
 import Skeleton from "@/components/ui/skeleton"
 
 const HeaderCards = () => {
+  const router = useRouter()
   const [currentTime, setCurrentTime] = useState(new Date())
   const CITY = "novosibirsk"
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/cbr/actual-date/`
@@ -59,13 +61,17 @@ const HeaderCards = () => {
   const hours = splitNumber(days.decimal * 24)
   const minutes = splitNumber(hours.decimal * 60)
 
+  const handleMortgageClick = () => {
+    router.push("/mortage")
+  }
+
   return (
     <div className={styles.headerCards}>
       <div className={styles.headerCards__title}>
         <h1 className={styles.headerCards__title__heading}>
           Поиск Метров – бесплатный сервис бронирования новостроек
         </h1>
-        <Link href="/" className={styles.headerCards__title__link}>
+        <Link href="/about" className={styles.headerCards__title__link}>
           <IconImage
             className={styles.headerCards__title__link__icon}
             iconLink="/images/icons/title-arrow.svg"
@@ -133,7 +139,11 @@ const HeaderCards = () => {
           )}
         </div>
 
-        <Button type="beige" className={styles.headerCards__percent__button}>
+        <Button
+          type="beige"
+          className={styles.headerCards__percent__button}
+          onClick={handleMortgageClick}
+        >
           Узнать об ипотеке
         </Button>
       </div>

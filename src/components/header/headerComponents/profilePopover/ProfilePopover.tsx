@@ -5,6 +5,8 @@ import clsx from "clsx"
 
 import React, { FC } from "react"
 
+import { useRouter } from "next/navigation"
+
 import styles from "./ProfilePopover.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
@@ -26,15 +28,24 @@ const ProfilePopover: FC<IProfilePopoverProps> = ({
   onLogoutClick,
   children,
 }) => {
+  const router = useRouter()
+
   const handleSettingsClick = (): void => {
     if (onSettingsClick) {
       onSettingsClick()
+    } else {
+      router.push("/LK")
+      onOpenChange(false)
     }
   }
 
   const handleLogoutClick = (): void => {
     if (onLogoutClick) {
       onLogoutClick()
+    } else {
+      // Обработка выхода из личного кабинета
+      console.log("Выход из личного кабинета")
+      onOpenChange(false)
     }
   }
 

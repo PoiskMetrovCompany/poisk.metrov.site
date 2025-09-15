@@ -25,8 +25,6 @@ interface ApiResponse {
   error?: string
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-
 const SecurityRegForm: FC = () => {
   const router = useRouter()
   const [loginValue, setLoginValue] = useState<string>("")
@@ -79,7 +77,7 @@ const SecurityRegForm: FC = () => {
       console.log("Отправляем запрос на авторизацию администратора...")
 
       const response = await axios.post<ApiResponse>(
-        `${API_BASE_URL}/account/auth`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/auth`,
         {
           email: login,
           password: password,
@@ -193,6 +191,7 @@ const SecurityRegForm: FC = () => {
     console.log("Токен удален из cookie")
   }
 
+  // Если администратор аутентифицирован, перенаправляем
   useEffect(() => {
     if (isAuthenticated && authResult) {
       router.push("/candidatesSecurityBlock/candidatesSecurityTable")
@@ -204,7 +203,7 @@ const SecurityRegForm: FC = () => {
       <HeaderFormSmall></HeaderFormSmall>
 
       <main>
-        <section>
+        <section style={{ padding: "0", maxWidth: "440px" }}>
           <div className="center-card">
             <h1>Вход для администратора</h1>
             <p style={{ maxWidth: "100%" }}>

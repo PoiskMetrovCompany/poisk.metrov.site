@@ -24,6 +24,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn-dataout.trendagent.ru",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   async rewrites() {
