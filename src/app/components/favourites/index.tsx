@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import React from "react"
 
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 import { IProperty } from "@/types/PropertyCard"
 import { IResidentialComplex } from "@/types/api/ResidentialComplex"
@@ -22,6 +23,7 @@ import Heading2 from "@/components/ui/heading2"
 import Skeleton from "@/components/ui/skeleton"
 
 const Favourites = () => {
+  const router = useRouter()
   const cityCode = useCityCode()
 
   const { data: bestOffers, isLoading } = useApiQuery<IResidentialComplex[]>(
@@ -29,14 +31,18 @@ const Favourites = () => {
     `/residential-complex/best-offers/?city_code=${cityCode}`,
     {
       enabled: !!cityCode,
-      staleTime: 5 * 60 * 1000, 
-      gcTime: 10 * 60 * 1000, 
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
     }
   )
 
   const apiCards: IProperty[] = bestOffers
     ? bestOffers.map(mapResidentialComplexToProperty)
     : []
+
+  const handleCatalogueClick = () => {
+    router.push("/catalogue")
+  }
 
   if (isLoading || !cityCode) {
     return (
@@ -108,7 +114,10 @@ const Favourites = () => {
           Лучшие предложения
         </Heading2>
         <div className={styles.favourites__header__button}>
-          <ActionButton className={styles.favourites__header__button__action}>
+          <ActionButton
+            className={styles.favourites__header__button__action}
+            onClick={handleCatalogueClick}
+          >
             Перейти в каталог
           </ActionButton>
         </div>
@@ -181,7 +190,10 @@ const Favourites = () => {
       </div>
 
       <div className={styles.favourites__buttons}>
-        <ActionButton className={styles.favourites__buttons__button}>
+        <ActionButton
+          className={styles.favourites__buttons__button}
+          onClick={handleCatalogueClick}
+        >
           Перейти в каталог
         </ActionButton>
       </div>

@@ -4,7 +4,7 @@ import clsx from "clsx"
 
 import React, { FC } from "react"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { IProperty } from "@/types/PropertyCard"
 
@@ -32,6 +32,8 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   subtitleClassName,
   listClassName,
 }) => {
+  const router = useRouter()
+
   const {
     title,
     price,
@@ -43,6 +45,19 @@ const PropertyCard: FC<IPropertyCardProps> = ({
     specifications,
     linkKey,
   } = property
+
+  const handleCatalogueClick = () => {
+    router.push("/catalogue")
+  }
+
+  const handleDetailsClick = () => {
+    if (linkKey) {
+      const route = property.isApartment
+        ? `/detailsFlat?key=${linkKey}`
+        : `/details/${linkKey}`
+      router.push(route)
+    }
+  }
 
   // Выбираем иконку в зависимости от типа передвижения до метро
   const getMetroIcon = () => {
@@ -168,6 +183,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             <ActionButton
               size="tiny"
               className={styles.property_card__actions__button}
+              onClick={handleCatalogueClick}
             >
               Каталог
             </ActionButton>
@@ -180,8 +196,9 @@ const PropertyCard: FC<IPropertyCardProps> = ({
             )}
             type={isMap ? "primary" : "outline"}
             size="tiny"
+            onClick={handleDetailsClick}
           >
-            <Link href={`/details?linkKey=${linkKey}`}>Подробнее</Link>
+            Подробнее
           </ActionButton>
           <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
         </div>

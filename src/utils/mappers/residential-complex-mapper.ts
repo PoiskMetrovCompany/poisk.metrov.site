@@ -12,6 +12,7 @@ export const mapResidentialComplexToProperty = (
   return {
     id: complex.id,
     title: complex.name,
+
     price,
     subtitle: complex.address,
     badge: {
@@ -38,5 +39,6 @@ export const mapResidentialComplexToProperty = (
       { type: "Квартир", status: complex.apartments_count.toString() },
     ],
     image: "/images/buildingCarousel/buidingExpandImg.webp",
+    linkKey: complex.key,
   }
 }

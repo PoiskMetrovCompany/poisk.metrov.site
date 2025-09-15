@@ -3,6 +3,7 @@
 import React, { FC } from "react"
 
 import Image from "next/image"
+import Link from "next/link"
 
 import styles from "./telegramPromo.module.scss"
 
@@ -21,8 +22,8 @@ const TelegramPromo: FC = () => {
             и будьте в курсе событий и полезных новостей!
           </p>
         </div>
-        <a
-          href="https://t.me/your_channel"
+        <Link
+          href="https://t.me/poisk_metrov"
           className={styles.telegramPromo__button}
           target="_blank"
           rel="noopener noreferrer"
@@ -34,7 +35,7 @@ const TelegramPromo: FC = () => {
             // width={22}
             // height={24}
           />
-        </a>
+        </Link>
       </div>
     </div>
   )

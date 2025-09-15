@@ -288,16 +288,8 @@ const CatalogueList = () => {
       activeFilters={activeFilters}
       setActiveFilters={setActiveFilters}
       selectedSorting={selectedSorting}
-      selectedPropertyType={selectedPropertyType}
+      setSelectedSorting={setSelectedSorting}
       currentPage={currentPage}
-      isLoading={isLoading}
-      onSortingChange={handleSorting}
-      onShowFilters={handleShowFilters}
-      onPageChange={handlePageChange}
-      onApplyFilters={applyFilters}
-      renderSkeletons={renderSkeletons}
-      renderCards={renderCards}
-      renderAdditionalComponents={renderAdditionalComponents}
       elementRef={elementRef as React.RefObject<HTMLDivElement>}
       isSticky={isSticky}
       isVisible={isVisible}

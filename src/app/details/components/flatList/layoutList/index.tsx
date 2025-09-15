@@ -4,6 +4,8 @@ import { Accordion } from "radix-ui"
 
 import React, { useState } from "react"
 
+import { useRouter } from "next/navigation"
+
 import NotFound from "@/components/notFound"
 import { IApartment } from "@/types/api/complex"
 
@@ -14,12 +16,18 @@ interface LayoutListProps {
 }
 
 const LayoutList = ({ apartmentTypes }: LayoutListProps) => {
+  const router = useRouter()
+
   const typeNames: Record<string, string> = {
     study: "Студии",
     "1_rooms": "1-комнатные",
     "2_rooms": "2-комнатные",
     "3_rooms": "3-комнатные",
     "4_rooms": "4-комнатные",
+  }
+
+  const handleNavigateToCatalogue = () => {
+    router.push("/catalogue")
   }
 
   // Проверяем тип данных и обрабатываем соответственно
@@ -50,6 +58,7 @@ const LayoutList = ({ apartmentTypes }: LayoutListProps) => {
         title="Подходящих вариантов нет"
         description="Измените фильтры, чтобы изучить другие предложения в этом ЖК"
         buttonText="Изменить фильтры"
+        onClick={handleNavigateToCatalogue}
       />
     )
   }
