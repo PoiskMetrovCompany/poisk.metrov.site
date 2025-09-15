@@ -952,7 +952,9 @@ const CandidateForm: FC = () => {
       vacancies_key: getVacancyKey(selectedVacancy),
       marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
       rop_key: goingToROP ? getROPKey(selectedROP) : null,
-      work_team: goingToROP ? getROPFullName(selectedROP) : null,
+      work_team: goingToROP
+        ? getROPFullName(selectedROP) || "Не указано"
+        : "Административный состав",
       status: "active",
       first_name: nameData.first_name,
       last_name: nameData.last_name,
