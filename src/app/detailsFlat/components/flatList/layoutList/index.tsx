@@ -1,12 +1,23 @@
 "use client"
-import React, { useState } from "react"
+
 import { Accordion } from "radix-ui"
-import LayoutItem from "./layoutItem"
+
+import React, { useState } from "react"
+
+import { useRouter } from "next/navigation"
+
 import NotFound from "@/components/notFound"
 
+import LayoutItem from "./layoutItem"
+
 const LayoutList = () => {
+  const router = useRouter()
   const [openId, setOpenId] = useState<string[]>([])
   const [isEmpty, setIsEmpty] = useState(false)
+
+  const handleNavigateToCatalogue = () => {
+    router.push("/catalogue")
+  }
 
   if (isEmpty) {
     return (
@@ -14,6 +25,7 @@ const LayoutList = () => {
         title="Подходящих вариантов нет"
         description="Измените фильтры, чтобы изучить другие предложения в этом ЖК"
         buttonText="Изменить фильтры"
+        onClick={handleNavigateToCatalogue}
       />
     )
   }

@@ -4,6 +4,8 @@ import clsx from "clsx"
 
 import React, { FC } from "react"
 
+import { useRouter } from "next/navigation"
+
 import { IProperty } from "@/types/PropertyCard"
 
 import styles from "./propertyCardList.module.scss"
@@ -17,11 +19,30 @@ interface IPropertyCardListProps {
 }
 
 const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
+  const router = useRouter()
+
   // Выбираем иконку в зависимости от типа передвижения до метро
   const getMetroIcon = () => {
     return property.metroType === "on_foot"
       ? "/images/icons/walk.svg"
       : "/images/icons/car.svg"
+  }
+
+  const handleDetailsClick = () => {
+    if (property.linkKey) {
+      const route = property.isApartment
+        ? `/detailsFlat?key=${property.linkKey}`
+        : `/details/${property.linkKey}`
+      router.push(route)
+    }
+  }
+
+  const handleMortgageClick = () => {
+    router.push("/mortage")
+  }
+
+  const handleCatalogueClick = () => {
+    router.push("/catalogue")
   }
 
   return (
@@ -215,6 +236,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                 }
                 size="tiny"
                 type="secondary"
+                onClick={handleMortgageClick}
               >
                 от 23 538 ₽/мес
               </ActionButton>
@@ -287,6 +309,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   }
                   type="outline"
                   size="small"
+                  onClick={handleDetailsClick}
                 >
                   Подробнее
                 </ActionButton>
@@ -295,6 +318,7 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                     styles.property_card_list__content__actions__builder__buttons__more__button
                   }
                   size="small"
+                  onClick={handleCatalogueClick}
                 >
                   Каталог
                 </ActionButton>

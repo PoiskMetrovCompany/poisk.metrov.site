@@ -2,6 +2,10 @@
 
 import React, { FC, useState } from "react"
 
+
+import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
@@ -24,11 +28,18 @@ const UserActions: FC<IUserActionsProps> = ({
   onFavoritesClick,
   onMenuClick,
 }) => {
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+  const router = useRouter()
+
 
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
       onFavoritesClick()
+    } else {
+      router.push("/favourites")
     }
   }
 
@@ -44,11 +55,30 @@ const UserActions: FC<IUserActionsProps> = ({
     )
   const favoritesCount = fCountData?.attributes
 
+  const handleLoginClick = (): void => {
+    if (isLoggedIn) {
+      setIsProfilePopoverOpen(true)
+    } else {
+      // Открыть форму входа
+      console.log("Открыть форму входа")
+    }
+  }
+
   const handleMenuClick = (): void => {
     setIsMobileMenuOpen(true)
     if (onMenuClick) {
       onMenuClick()
     }
+  }
+  const handleSettingsClick = (): void => {
+    router.push("/LK")
+    setIsProfilePopoverOpen(false)
+  }
+
+  const handleLogoutClick = (): void => {
+    // Обработка выхода из личного кабинета
+    console.log("Выход из личного кабинета")
+    setIsProfilePopoverOpen(false)
   }
 
   return (

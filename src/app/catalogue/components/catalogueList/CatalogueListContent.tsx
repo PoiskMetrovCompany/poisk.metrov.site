@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
 import { useInitialFiltersFromUrl } from "@/hooks/useInitialFiltersFromUrl"
-import { useStickyState } from "@/hooks/useStickyState"
 import { useUrlChangeListener } from "@/hooks/useUrlChangeListener"
 import { useUrlSync } from "@/hooks/useUrlSync"
 import { useFiltersStore } from "@/stores/useFiltersStore"
@@ -24,7 +23,6 @@ import {
   useCatalogueCards,
   useCatalogueData,
   useCatalogueSkeletons,
-  useCatalogueSorting,
 } from "./hooks"
 
 interface CatalogueListContentProps {
@@ -33,16 +31,8 @@ interface CatalogueListContentProps {
   activeFilters: FiltersRequest | null
   setActiveFilters: (filters: FiltersRequest | null) => void
   selectedSorting: "cards" | "list"
-  selectedPropertyType: string
+  setSelectedSorting: (sorting: "cards" | "list") => void
   currentPage: number
-  isLoading: boolean
-  onSortingChange: (sorting: "cards" | "list") => void
-  onShowFilters: () => void
-  onPageChange: (page: number) => void
-  onApplyFilters: (filters: FiltersRequest) => void
-  renderSkeletons: () => React.ReactNode[]
-  renderCards: () => React.ReactNode[]
-  renderAdditionalComponents: () => React.ReactNode
   elementRef: React.RefObject<HTMLDivElement>
   isSticky: boolean
   isVisible: boolean
@@ -55,16 +45,8 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   activeFilters,
   setActiveFilters,
   selectedSorting,
-  selectedPropertyType,
+  setSelectedSorting,
   currentPage,
-  isLoading,
-  onSortingChange,
-  onShowFilters,
-  onPageChange,
-  onApplyFilters,
-  renderSkeletons,
-  renderCards,
-  renderAdditionalComponents,
   elementRef,
   isSticky,
   isVisible,
@@ -78,30 +60,30 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   useInitialFiltersFromUrl()
 
   const {
-    selectedSorting: hookSelectedSorting,
-    currentPage: hookCurrentPage,
     filtersData,
-    apartmentData,
-    complexData,
-    isApartmentData,
-    isComplexData,
     isLoadingFilters,
-    handleSorting: hookHandleSorting,
-    handleApplyFilters: hookHandleApplyFilters,
-    handlePageChange: hookHandlePageChange,
+    handleApplyFilters,
+    handlePageChange,
   } = useCatalogueData(activeFilters, setActiveFilters)
 
-  const { renderSkeletons: hookRenderSkeletons } = useCatalogueSkeletons()
-  const { renderCards: hookRenderCards } = useCatalogueCards()
-  const { renderAdditionalComponents: hookRenderAdditionalComponents } =
-    useCatalogueAdditionalComponents()
+  const { renderSkeletons } = useCatalogueSkeletons()
+  const { renderCards } = useCatalogueCards()
+  const { renderAdditionalComponents } = useCatalogueAdditionalComponents()
+
+  // Мемоизируем функцию для переключения сортировки
+  const handleSortingCallback = useCallback(
+    (sorting: "cards" | "list") => {
+      setSelectedSorting(sorting)
+    },
+    [setSelectedSorting]
+  )
 
   // Автоматически переключаемся на карточки на мобильных устройствах
   useEffect(() => {
     if (!isLaptop) {
-      handleSorting("cards")
+      handleSortingCallback("cards")
     }
-  }, [isLaptop, handleSorting])
+  }, [isLaptop, handleSortingCallback])
 
   const handleShowFilters = () => {
     setShowFilters(true)
@@ -162,7 +144,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
             selectedPropertyType={storeFiltersData.propertyType}
             selectedSorting={selectedSorting}
             isLaptop={isLaptop}
-            onSortingChange={handleSorting}
+            onSortingChange={handleSortingCallback}
           />
 
           <CatalogueCardsContainer
@@ -171,11 +153,7 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
           >
             {isLoadingFilters
               ? renderSkeletons(selectedSorting)
-              : renderCards(
-                  filtersData,
-                  storeFiltersData.propertyType,
-                  selectedSorting
-                )}
+              : renderCards(filtersData, selectedSorting)}
           </CatalogueCardsContainer>
 
           <CataloguePagination
