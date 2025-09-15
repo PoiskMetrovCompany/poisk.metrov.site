@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 
 import React, { RefObject, useEffect, useRef, useState } from "react"
 
+import { ICandidate } from "@/types/Candidate"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./candidateLoginComponents.module.css"
@@ -12,7 +13,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface FilteredData {
   attributes: {
-    data: any[]
+    data: ICandidate[]
     current_page: number
     last_page: number
     total: number
