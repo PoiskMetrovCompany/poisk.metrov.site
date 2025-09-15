@@ -4,18 +4,14 @@ import clsx from "clsx"
 
 import React, { useEffect, useMemo, useRef, useState } from "react"
 
+import { useRouter } from "next/navigation"
 
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
-
-
-import { IProperty } from "@/types/PropertyCard"
-
 import { Coordinate } from "@/types/Coordintes"
 import { IFavouriteView } from "@/types/Favourites"
-import { IApartment } from "@/types/api/apartment"
-import { IResidentialComplex } from "@/types/api/complex"
+import { IApartment, IResidentialComplex } from "@/types/api/complex"
 import { FListResponse } from "@/types/api/favouritesList"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import {
@@ -23,14 +19,11 @@ import {
   mapFavoriteComplexToProperty,
 } from "@/utils/mappers/favouritesMapper"
 
-
 import styles from "./favouritesList.module.scss"
 
 import ListFilter from "../listFilter"
 
-
 import Skeleton from "@/components/ui/skeleton"
-
 
 interface IFavouritesListProps {
   selectedView: IFavouriteView
@@ -44,109 +37,6 @@ interface IFavouritesListProps {
   setIsLoading: (isLoading: boolean) => void
 }
 
-
-const cards: IProperty[] = [
-  {
-    id: 1,
-    title: "Европейский берег",
-    price: "от 5.6 млн ₽",
-    subtitle: "Микрорайон на набережной Оби",
-    badge: { developer: "Брусника", period: "I – IV 2026" },
-    metro: "Октябрьская",
-    driveTime: "25 минут",
-    metroType: "on_foot",
-    specifications: [
-      { type: "Студии", price: "от 5,6 млн ₽" },
-      { type: "1-комн. кв", price: "от 7,1 млн ₽" },
-      { type: "2-комн. кв", price: "от 8,5 млн ₽" },
-      { type: "3-комн. кв", price: "от 10,8 млн ₽" },
-      { type: "4+ комн. кв", price: "от 14,9 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 2,
-    title: "Солнечная долина",
-    price: "от 4.8 млн ₽",
-    subtitle: "Жилой комплекс в центре города",
-    badge: { developer: "ПИК", period: "III – IV 2025" },
-    metro: "Центральная",
-    driveTime: "15 минут",
-    metroType: "on_foot",
-    specifications: [
-      { type: "Студии", price: "от 4,8 млн ₽" },
-      { type: "1-комн. кв", price: "от 6,2 млн ₽" },
-      { type: "2-комн. кв", price: "от 7,8 млн ₽" },
-      { type: "3-комн. кв", price: "от 9,5 млн ₽" },
-      { type: "4+ комн. кв", price: "от 12,1 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 3,
-    title: "Зеленый парк",
-    price: "от 6.2 млн ₽",
-    subtitle: "Элитный комплекс у парка",
-    badge: { developer: "Самолет", period: "II – III 2026" },
-    metro: "Парковая",
-    driveTime: "20 минут",
-    metroType: "by_transport",
-    specifications: [
-      { type: "Студии", price: "от 6,2 млн ₽" },
-      { type: "1-комн. кв", price: "от 8,0 млн ₽" },
-      { type: "2-комн. кв", price: "от 9,8 млн ₽" },
-      { type: "3-комн. кв", price: "от 12,5 млн ₽" },
-      { type: "4+ комн. кв", price: "от 16,8 млн ₽" },
-      { type: "5+ комн. кв", price: "от 24,8 млн ₽" },
-      { type: "6+ комн. кв", price: "от 36,8 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-  {
-    id: 4,
-    title: "Морской бриз",
-    price: "от 7.1 млн ₽",
-    subtitle: "Премиум класс у моря",
-    badge: { developer: "Эталон", period: "I – II 2027" },
-    metro: "Морская",
-    driveTime: "30 минут",
-    metroType: "by_transport",
-    specifications: [
-      { type: "Студии", price: "от 7,1 млн ₽" },
-      { type: "1-комн. кв", price: "от 9,3 млн ₽" },
-      { type: "2-комн. кв", price: "от 11,2 млн ₽" },
-      { type: "3-комн. кв", price: "от 14,8 млн ₽" },
-      { type: "4+ комн. кв", price: "от 19,5 млн ₽" },
-    ],
-    description: [
-      { type: "Срок сдачи", status: "Сдан — IV 2028" },
-      { type: "Недвижимость", status: "Жилая" },
-      { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: "8 402" },
-    ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
-  },
-]
-
-
 const FavoutiresList = ({
   selectedView,
   setIsComparison,
@@ -158,8 +48,13 @@ const FavoutiresList = ({
   setApartments,
   setIsLoading,
 }: IFavouritesListProps) => {
+  const router = useRouter()
   const [isEmpty, setIsEmpty] = useState(false)
   const USER_KEY = "06cf32b1-83c2-11f0-a013-10f60a82b815"
+
+  const handleNavigateToCatalogue = () => {
+    router.push("/catalogue")
+  }
 
   const prevComplexesLength = useRef(0)
   const prevApartmentsLength = useRef(0)
@@ -252,6 +147,7 @@ const FavoutiresList = ({
         description="Чтобы добавить квартиры или ЖК в избранное, перейдите в каталог"
         buttonText="Перейти в каталог"
         className={styles.notFound}
+        onClick={handleNavigateToCatalogue}
       />
     )
   }
@@ -342,7 +238,7 @@ const FavoutiresList = ({
                       description={mappedApartment.description}
                       imageUrl={mappedApartment.imageUrl}
                       linkUrl={mappedApartment.linkUrl}
-                      apartment={mappedApartment.apartment}
+                      apartment={mappedApartment.apartment as IApartment}
                     />
                   )
                 })}

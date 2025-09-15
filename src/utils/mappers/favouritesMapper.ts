@@ -75,6 +75,6 @@ export const mapFavoriteApartmentToFlatLayout = (
       apartment.floor_plan_url ||
       "/images/temporary/room.png",
     linkUrl: `/detailsFlat/${apartment.key}`,
-    apartment,
+    apartment: apartment as any,
   }
 }

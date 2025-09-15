@@ -2,6 +2,8 @@
 
 import React from "react"
 
+import { useRouter } from "next/navigation"
+
 import { useScreenSize } from "@/utils/hooks/use-screen-size"
 
 import styles from "./filter.module.scss"
@@ -38,6 +40,11 @@ const FilterContent: React.FC<FilterContentProps> = ({
   onShowFilters,
 }) => {
   const { isTablet } = useScreenSize()
+  const router = useRouter()
+
+  const handleMapClick = () => {
+    router.push("/map")
+  }
 
   return (
     <div className={styles.filter__content}>
@@ -79,7 +86,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
         </ActionButton>
         <IconButton
           iconLink="/images/icons/map-orange.svg"
-          onClick={onShowFilters}
+          onClick={handleMapClick}
           className={styles.filter__content__buttonsDesktop__button__filter}
           size="md"
           type="orange-light"
