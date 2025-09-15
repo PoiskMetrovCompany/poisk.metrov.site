@@ -4,6 +4,8 @@ import React, { RefObject, useEffect, useState } from "react"
 
 import Image from "next/image"
 
+import { ICandidate } from "@/types/Candidate"
+
 import styles from "./candidateLoginComponents.module.css"
 
 import MobileCandidateCard from "./MobileCandidateCard"
@@ -34,7 +36,7 @@ interface Pagination {
 
 interface FilteredData {
   attributes: {
-    data: any[]
+    data: ICandidate[]
     current_page: number
     last_page: number
     total: number
