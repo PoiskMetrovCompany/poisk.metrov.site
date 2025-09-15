@@ -2136,12 +2136,6 @@ const ShowForm: React.FC<ShowFormProps> = ({
                     ))}
                   </div>
                 </div>
-                <a className="#activeLink" href="#generalData">
-                  Общие сведенья
-                </a>
-                <a href="#passportData">Паспортные данные</a>
-                <a href="#familyData">Состав семьи</a>
-                <a href="#legalData">Юридический статус</a>
               </div>
               <div className="navArea" style={{ marginTop: "3rem" }}>
                 <textarea

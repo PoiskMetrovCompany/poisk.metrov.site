@@ -25,7 +25,6 @@ export const useCatalogueData = (
   activeFilters: FiltersRequest | null,
   setActiveFilters: (filters: FiltersRequest | null) => void
 ) => {
-  const [selectedSorting, setSelectedSorting] = useState<SortType>("cards")
   const [currentPage, setCurrentPage] = useState(1)
   const { filtersData: storeFiltersData, isLoadedFromUrl } = useFiltersStore()
   const queryClient = useQueryClient()
@@ -112,10 +111,6 @@ export const useCatalogueData = (
       }
     }, [filtersData])
 
-  const handleSorting = useCallback((sort: SortType) => {
-    setSelectedSorting(sort)
-  }, [])
-
   const handleApplyFilters = useCallback(
     (formData: FiltersFormData) => {
       // Преобразуем данные формы в параметры API
@@ -144,7 +139,6 @@ export const useCatalogueData = (
   }, [errorFilters])
 
   return {
-    selectedSorting,
     currentPage,
     filtersData,
     apartmentData,
@@ -153,7 +147,6 @@ export const useCatalogueData = (
     isComplexData,
     isLoadingFilters,
     errorFilters,
-    handleSorting,
     handleApplyFilters,
     handlePageChange,
   }

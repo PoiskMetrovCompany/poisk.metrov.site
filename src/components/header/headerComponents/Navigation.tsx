@@ -43,8 +43,8 @@ const Navigation = ({ onCatalogClick }: INavigationProps) => {
 
   const navItems: INavItem[] = [
     { text: "Каталог недвижимости", href: "/catalogue", onClick: catalogClick },
-    { text: "Продать", href: "/sell" },
-    { text: "Ипотека", href: "/mortgage" },
+    { text: "Продать", href: "/sendSellApplication" },
+    { text: "Ипотека", href: "/mortage" },
   ]
 
   return (

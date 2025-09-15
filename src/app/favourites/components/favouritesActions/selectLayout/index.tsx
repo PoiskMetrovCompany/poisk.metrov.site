@@ -1,9 +1,19 @@
 import React from "react"
+
+import { useRouter } from "next/navigation"
+
 import styles from "./selectLayout.module.scss"
+
 import IconImage from "@/components/ui/IconImage"
 import IconButton from "@/components/ui/buttons/IconButton"
 
 const SelectLayout = () => {
+  const router = useRouter()
+
+  const handleNavigateToCatalogue = () => {
+    router.push("/catalogue")
+  }
+
   return (
     <div className={styles.selectLayout}>
       <IconButton
@@ -11,6 +21,7 @@ const SelectLayout = () => {
         alt="layout"
         type="orange"
         className={styles.selectLayout__icon}
+        onClick={handleNavigateToCatalogue}
       />
       <div className={styles.selectLayout__content}>
         <span className={styles.selectLayout__content__title}>
