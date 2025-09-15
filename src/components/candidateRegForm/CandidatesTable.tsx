@@ -584,7 +584,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-15T14:30:00Z",
             status: "Новая анкета",
             comment: "Требует дополнительной проверки",
-            work_team: "Административный состав", 
+            work_team: "Административный состав",
             vacancy: {
               attributes: {
                 title: "Frontend разработчик",
