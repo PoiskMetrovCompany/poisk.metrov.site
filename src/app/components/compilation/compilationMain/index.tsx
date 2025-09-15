@@ -10,6 +10,7 @@ import Image from "next/image"
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import FlatLayoutCardSkeleton from "@/components/flatLayoutCard/FlatLayoutCardSkeleton"
 import { IApartment, IResidentialComplex } from "@/types/api/apartment"
+import { IApartment as IApartmentComplex } from "@/types/api/complex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import { useCityCode } from "@/utils/hooks/use-city-code"
 
@@ -35,21 +36,22 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
   const cityCode = useCityCode()
   const userKey = ""
 
-  const {
-    data: selectionsData,
-    isLoading,
-    error,
-  } = useApiQuery<SelectionsResponse>(
+  const { data: selectionsData, isLoading } = useApiQuery<SelectionsResponse>(
     ["selections", cityCode, userKey],
     `${process.env.NEXT_PUBLIC_API_URL}/apartments/selections?city_code=${cityCode}`,
     {
       enabled: !!cityCode,
-      staleTime: 5 * 60 * 1000, 
-      gcTime: 10 * 60 * 1000, 
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
     }
   )
 
   const apartments = selectionsData?.attributes || []
+
+  const convertApartmentType = (apartment: IApartment): IApartmentComplex => ({
+    ...apartment,
+    offer_id: apartment.offer_id.toString(),
+  })
 
   const generateApartmentDescription = (apartment: IApartment) => {
     const description = []
@@ -174,9 +176,10 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
           >
             <div className={styles.navigationButton__icon}>
               <Image
-                src="/images/icons/arrow-slider.svg"
+                src="/images/icons/arrow-slider-mobile.svg"
                 alt="arrow-left"
                 fill
+                className={styles.navigationButtonMobile__prev}
               />
             </div>
           </div>
@@ -185,10 +188,10 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
           >
             <div className={styles.navigationButton__icon}>
               <Image
-                src="/images/icons/arrow-slider.svg"
+                src="/images/icons/arrow-slider-mobile.svg"
                 alt="arrow-right"
                 fill
-                className={styles.navigationButton__icon__icon_next}
+                className={styles.navigationButtonMobile__next}
               />
             </div>
           </div>
@@ -207,15 +210,19 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
           breakpoints={{
             768: {
               slidesPerView: 2,
-              spaceBetween: 10,
+              spaceBetween: 24,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 25,
             },
             1440: {
               slidesPerView: 3,
-              spaceBetween: 15,
+              spaceBetween: 32,
             },
             1920: {
               slidesPerView: 4,
-              spaceBetween: 30,
+              spaceBetween: 40,
             },
           }}
           className={styles.swiper}
@@ -238,18 +245,24 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
                           card.apartment?.plan_URL ||
                           "/images/temporary/room.png"
                         }
-                        apartment={card.apartment}
+                        apartment={
+                          card.apartment
+                            ? convertApartmentType(card.apartment)
+                            : undefined
+                        }
                         linkUrl={
                           card.apartment
                             ? `/detailsFlat?key=${card.apartment.key}`
                             : "/details/1"
                         }
+                        isOnlyFavourite
                       />
                     </SwiperSlide>
                   ))}
                   <SwiperSlide className={styles.swiper__slide}>
                     <PromoCard />
                   </SwiperSlide>
+
                   {rest.map((card) => (
                     <SwiperSlide key={card.id} className={styles.swiper__slide}>
                       <FlatLayoutCard
@@ -261,12 +274,17 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
                           card.apartment?.plan_URL ||
                           "/images/temporary/room.png"
                         }
-                        apartment={card.apartment}
+                        apartment={
+                          card.apartment
+                            ? convertApartmentType(card.apartment)
+                            : undefined
+                        }
                         linkUrl={
                           card.apartment
                             ? `/detailsFlat?key=${card.apartment.key}`
                             : "/details/1"
                         }
+                        isOnlyFavourite
                       />
                     </SwiperSlide>
                   ))}
@@ -284,7 +302,11 @@ const Compilation = ({ header, hasPromoCard }: compilationProps) => {
                   imageUrl={
                     card.apartment?.plan_URL || "/images/temporary/room.png"
                   }
-                  apartment={card.apartment}
+                  apartment={
+                    card.apartment
+                      ? convertApartmentType(card.apartment)
+                      : undefined
+                  }
                   linkUrl={
                     card.apartment
                       ? `/detailsFlat?key=${card.apartment.key}`

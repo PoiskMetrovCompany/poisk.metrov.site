@@ -1,9 +1,7 @@
 import React from "react"
+
 import styles from "./promoCard.module.scss"
-import Image from "next/image"
-import IconButton from "@/components/ui/buttons/IconButton"
-import Link from "next/link"
-import IconImage from "@/components/ui/IconImage"
+
 import ActionButton from "@/components/ui/buttons/ActionButton"
 
 const description = [
