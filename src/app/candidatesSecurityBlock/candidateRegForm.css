@@ -1796,8 +1796,8 @@ input[type="checkbox"] + label {
 
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.5;
   gap: 6px;
+  line-height: 1.5;
   margin: 0;
   margin-left: 1rem;
 }
@@ -1806,23 +1806,20 @@ input[type="checkbox"] + label {
   align-items: center;
   border-radius: 4px;
   cursor: pointer;
-  padding: 4px;
   display: flex;
+  padding: 4px;
 
   transition: background-color 0.2s ease;
 }
 
-.city-selector:hover {
-  background-color: rgb(236 125 63 / 10%); /* легкий фон при hover */
-}
-
-.city-selector:hover span {
-  color: rgb(220 100 50); /* изменение цвета текста при hover */
+.city-selector:hover #selectCity {
+  color: #E46219;
 }
 
 #city span {
   color: rgb(236 125 63 / 100%);
-  margin-right: 4px; /* небольшой отступ между текстом и стрелкой */
+
+  margin-right: 4px;
   padding-right: 0;
   width: max-content;
 }
@@ -2506,7 +2503,6 @@ input[type="checkbox"] + label {
 #selectCity {
   border-radius: 4px;
   transition: background-color 0.2s ease;
-
 }
 
 #city svg {
