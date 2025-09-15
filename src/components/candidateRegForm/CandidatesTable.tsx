@@ -534,7 +534,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             name: `${candidate.last_name} ${candidate.first_name} ${
               candidate.middle_name || ""
             }`.trim(),
-            rop: candidate.work_team || "-",
+            rop:
+              candidate.work_team === "Административный состав"
+                ? "-"
+                : candidate.work_team || "-",
             datetime: formatDateTime(
               candidate.created_at || new Date().toISOString()
             ),
@@ -565,7 +568,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         {
           id: "1",
           name: "Иванов Иван Иванович",
-          rop: "Административный состав",
+          rop: "-",
           datetime: "15.01.2025 14:30",
           vacancy: "Frontend разработчик",
           status: "Новая анкета",
@@ -581,7 +584,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             created_at: "2025-01-15T14:30:00Z",
             status: "Новая анкета",
             comment: "Требует дополнительной проверки",
-            work_team: "Административный состав",
+            work_team: "Административный состав", 
             vacancy: {
               attributes: {
                 title: "Frontend разработчик",
@@ -857,7 +860,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           name: `${candidate.last_name} ${candidate.first_name} ${
             candidate.middle_name || ""
           }`.trim(),
-          rop: candidate.work_team || "-",
+          rop:
+            candidate.work_team === "Административный состав"
+              ? "-"
+              : candidate.work_team || "-",
           datetime: formatDateTime(
             candidate.created_at || new Date().toISOString()
           ),
