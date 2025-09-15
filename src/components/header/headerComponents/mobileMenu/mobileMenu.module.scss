@@ -25,12 +25,22 @@
     @media (width >= 1024px) and (width < 1440px) {
       display: block;
     }
+
+    @media (width >= 768px) and (width < 1024px) {
+      border-radius: 0;
+      display: block;
+      height: calc(100vh - 72px);
+    }
   }
 
   &__navigation {
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    @media (width >= 768px) and (width < 1024px) {
+      gap: 20px;
+    }
   }
 
   &__tabs {
@@ -74,6 +84,19 @@
     &:hover {
       color: var(--color-orange);
     }
+  }
+
+  &__error {
+    align-items: center;
+    color: #dc2626;
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    justify-content: center;
+    line-height: 1.5;
+    text-align: center;
+    width: 100%;
   }
 
   &__divider {
@@ -146,12 +169,6 @@
       color: #ec7d3f;
     }
 
-    &:focus {
-      border-radius: 8px;
-      outline: 2px solid #ec7d3f;
-      outline-offset: 2px;
-    }
-
     &__icon {
       height: 20px;
       width: 20px;
@@ -159,10 +176,9 @@
   }
 
   &__callButtonText {
-    color: #ec7d3f;
-    font-family: "Onest", sans-serif;
+    color: var(--color-orange);
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.5;
     transition: color 0.2s ease;
   }
@@ -187,11 +203,6 @@
 
     &:hover {
       background-color: #e8e4e4;
-    }
-
-    &:focus {
-      outline: 2px solid #ec7d3f;
-      outline-offset: 2px;
     }
   }
 }
