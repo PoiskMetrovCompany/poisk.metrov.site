@@ -39,7 +39,7 @@ export interface IFavoriteResComplexes {
   h1: string
 }
 
-export interface IFavouriteApartments{
+export interface IFavouriteApartments {
   id: number
   created_at: string
   updated_at: string
@@ -59,7 +59,7 @@ export interface IFavouriteApartments{
   price: number
   area: number
   living_space: number
-  litchen_space: number
+  kitchen_space: number
   floor_plan_url: string | null
   windows_directions: string | null
   meta: string

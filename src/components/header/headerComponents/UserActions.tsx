@@ -5,6 +5,8 @@ import clsx from "clsx"
 import React, { FC, useState } from "react"
 
 import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
@@ -29,10 +31,13 @@ const UserActions: FC<IUserActionsProps> = ({
   onMenuClick,
 }) => {
   const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+  const router = useRouter()
 
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
       onFavoritesClick()
+    } else {
+      router.push("/favourites")
     }
   }
 
@@ -54,8 +59,9 @@ const UserActions: FC<IUserActionsProps> = ({
   const handleLoginClick = (): void => {
     if (isLoggedIn) {
       setIsProfilePopoverOpen(true)
-    } else if (onLoginClick) {
-      onLoginClick()
+    } else {
+      // Открыть форму входа
+      console.log("Открыть форму входа")
     }
   }
 
@@ -66,8 +72,8 @@ const UserActions: FC<IUserActionsProps> = ({
   }
 
   const handleSettingsClick = (): void => {
-    // Обработка клика по настройкам профиля
-    console.log("Настройки профиля")
+    router.push("/LK")
+    setIsProfilePopoverOpen(false)
   }
 
   const handleLogoutClick = (): void => {

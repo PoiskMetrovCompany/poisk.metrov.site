@@ -799,36 +799,35 @@ const CandidateForm: FC = () => {
   }
 
   const getROPKey = (selectedTitle: string): string => {
-    if (ropData && ropData.length > 0) {
-      // Ищем в данных из API
-      const rop = ropData.find((r) => {
-        const fullName =
-          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
-        return fullName === selectedTitle
-      })
-      return rop ? rop.key : ""
-    } else {
-      // Fallback на моковые данные
-      const rop = mockROPData.find((r: IRopItem) => r.title === selectedTitle)
-      return rop ? rop.key : ""
-    }
+    // Хардкодные данные РОПов
+    const hardcodedROPs = [
+      "Доронина А.О.",
+      "Иванова А.А.",
+      "Гавриш Е.А.",
+      "Маликова Ю.А.",
+      "Урбан К.Д.",
+      "Руковод КЦ",
+      "Морозова В.А.",
+    ]
+
+    // Возвращаем само ФИО как ключ, так как это хардкодные данные
+    return hardcodedROPs.includes(selectedTitle) ? selectedTitle : ""
   }
 
   const getROPFullName = (selectedTitle: string): string => {
-    if (ropData && ropData.length > 0) {
-      // Ищем в данных из API
-      const rop = ropData.find((r) => {
-        const fullName =
-          `${r.last_name || ""} ${r.first_name || ""} ${r.middle_name || ""}`.trim()
-        return fullName === selectedTitle
-      })
-      return rop
-        ? `${rop.last_name || ""} ${rop.first_name || ""} ${rop.middle_name || ""}`.trim()
-        : ""
-    } else {
-      // Fallback на моковые данные
-      return selectedTitle
-    }
+    // Хардкодные данные РОПов
+    const hardcodedROPs = [
+      "Доронина А.О.",
+      "Иванова А.А.",
+      "Гавриш Е.А.",
+      "Маликова Ю.А.",
+      "Урбан К.Д.",
+      "Руковод КЦ",
+      "Морозова В.А.",
+    ]
+
+    // Возвращаем само ФИО, так как это хардкодные данные
+    return hardcodedROPs.includes(selectedTitle) ? selectedTitle : ""
   }
 
   const addEducationTable = () => {
@@ -952,7 +951,9 @@ const CandidateForm: FC = () => {
       vacancies_key: getVacancyKey(selectedVacancy),
       marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
       rop_key: goingToROP ? getROPKey(selectedROP) : null,
-      work_team: goingToROP ? getROPFullName(selectedROP) : null,
+      work_team: goingToROP
+        ? getROPFullName(selectedROP) || "Не указано"
+        : "Административный состав",
       status: "active",
       first_name: nameData.first_name,
       last_name: nameData.last_name,
@@ -1055,10 +1056,6 @@ const CandidateForm: FC = () => {
                 setGoingToROP={setGoingToROP}
                 selectedROP={selectedROP}
                 setSelectedROP={setSelectedROP}
-                ropOptions={ropOptions}
-                isLoadingROP={isLoadingROPAccounts}
-                ropError={ropAccountsQueryError?.message || ""}
-                loadROP={loadROP}
                 validationErrors={validationErrors}
                 triggerValidation={triggerValidation}
               />

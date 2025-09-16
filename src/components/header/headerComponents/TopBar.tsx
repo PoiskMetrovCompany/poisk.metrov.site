@@ -2,6 +2,8 @@
 
 import React, { FC } from "react"
 
+import Link from "next/link"
+
 import styles from "../header.module.scss"
 
 import LocationSelector from "./LocationSelector"
@@ -33,9 +35,9 @@ const TopBar: FC<TopBarProps> = ({ initialCity }) => {
             <ul className={styles.top_bar__list}>
               {links.map((link, index) => (
                 <li key={index} className={styles.top_bar__item}>
-                  <a href={link.href} className={styles.top_bar__link}>
+                  <Link href={link.href} className={styles.top_bar__link}>
                     {link.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
