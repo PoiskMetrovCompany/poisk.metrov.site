@@ -1058,7 +1058,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   useEffect(() => {
     if (selectedCity && !filteredData && candidates.length > 0) {
-      // При смене города сбрасываем фильтры и загружаем данные без фильтров
       fetchCandidates(1, false)
     }
   }, [selectedCity])
