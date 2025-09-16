@@ -1,5 +1,7 @@
 "use client"
 
+import clsx from "clsx"
+
 import React, { useState } from "react"
 
 import Image from "next/image"
@@ -339,7 +341,12 @@ const MonthlyPayment = () => {
   if (viewState === "form") {
     return (
       <div className={styles.monthlyPayment}>
-        <div className={styles.monthlyPayment__container}>
+        <div
+          className={clsx(
+            styles.monthlyPayment__container,
+            styles.monthlyPayment__container_form
+          )}
+        >
           <Image
             src="/images/keyMonthly.webp"
             alt="quiz"
@@ -391,6 +398,7 @@ const MonthlyPayment = () => {
                     value={formData.name}
                     onChange={handleInputChange("name")}
                     required
+                    bordered={false}
                   />
                   <InputContainer
                     name="phone"
@@ -401,6 +409,7 @@ const MonthlyPayment = () => {
                     value={formData.phone}
                     onChange={handleInputChange("phone")}
                     required
+                    bordered={false}
                   />
                 </div>
                 <div
