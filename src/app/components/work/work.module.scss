@@ -52,6 +52,9 @@
         padding: 0 40px;
         gap: 24px;
       }
+      @media screen and (width < 768px) {
+        gap: 16px;
+      }
 
       &__image {
         overflow: hidden;
@@ -119,7 +122,7 @@
     @media (width < 1024px) {
       &__item {
         flex-direction: column;
-        gap: 30px;
+        gap: 24px;
         padding: 0 20px;
         text-align: center;
 
@@ -194,16 +197,31 @@
   border-radius: 50%;
   background: var(--color-white);
   transition: all 0.3s ease;
-
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    width: 56px;
+    height: 56px;
+  }
+  @media screen and (width >= 768px) and (width < 1440px) {
+    width: 48px;
+    height: 48px;
+  }
   &::after {
     display: none;
   }
 
   &__icon {
     position: relative;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
 
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 24px;
+      height: 24px;
+    }
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 20px;
+      height: 20px;
+    }
     &__icon_next {
       transform: rotate(180deg);
     }
