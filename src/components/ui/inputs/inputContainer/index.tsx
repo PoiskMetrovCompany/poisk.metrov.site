@@ -19,6 +19,7 @@ interface InputContainerProps {
   disabled?: boolean
   className?: string
   labelClassName?: string
+  bordered?: boolean
 }
 
 const InputContainer: FC<InputContainerProps> = ({
@@ -34,20 +35,21 @@ const InputContainer: FC<InputContainerProps> = ({
   grayInput = false,
   className,
   labelClassName,
+  bordered = true,
 }) => {
   const formatPhoneNumber = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
     if (numbers.length === 0) return ""
-    
+
     let cleanNumbers = numbers
     if (numbers.startsWith("8")) {
       cleanNumbers = "7" + numbers.slice(1)
     } else if (!numbers.startsWith("7")) {
       cleanNumbers = "7" + numbers
     }
-    
+
     cleanNumbers = cleanNumbers.slice(0, 11)
-    
+
     if (cleanNumbers.length <= 1) return `+${cleanNumbers}`
     if (cleanNumbers.length <= 4)
       return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(1)}`
@@ -73,7 +75,7 @@ const InputContainer: FC<InputContainerProps> = ({
   const formatDate = (input: string): string => {
     const numbers = input.replace(/\D/g, "")
     const limitedNumbers = numbers.slice(0, 8)
-    
+
     if (limitedNumbers.length === 0) return ""
     if (limitedNumbers.length <= 2) return limitedNumbers
     if (limitedNumbers.length <= 4)
@@ -86,13 +88,13 @@ const InputContainer: FC<InputContainerProps> = ({
 
   const handleInputChange = (inputValue: string) => {
     let formattedValue = inputValue
-    
+
     if (type === "phone") {
       formattedValue = formatPhoneNumber(inputValue)
     } else if (type === "date") {
       formattedValue = formatDate(inputValue)
     }
-    
+
     onChange(formattedValue)
   }
 
@@ -116,7 +118,8 @@ const InputContainer: FC<InputContainerProps> = ({
           name={name}
           className={clsx(
             styles.inputContainer__input,
-            grayInput && styles.inputContainer__input_gray
+            grayInput && styles.inputContainer__input_gray,
+            bordered && styles.inputContainer__input_bordered
           )}
           placeholder={placeholder}
           value={value}
