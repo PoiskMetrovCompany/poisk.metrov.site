@@ -14,6 +14,8 @@ import {
 } from "@/types/Candidate"
 import { useApiMutation } from "@/utils/hooks/use-api"
 
+import { ICandidate } from "@/types/Candidate"
+
 import styles from "./candidateLoginComponents.module.css"
 
 import { FormRow } from "./candidatesFormComponents/FormRow"
@@ -26,6 +28,18 @@ interface Pagination {
   per_page: number
   from: number
   to: number
+}
+
+interface FilteredData {
+  attributes: {
+    data: ICandidate[]
+    current_page: number
+    last_page: number
+    total: number
+    per_page: number
+    from: number
+    to: number
+  }
 }
 
 interface ActiveFilters {

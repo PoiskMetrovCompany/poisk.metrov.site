@@ -263,10 +263,10 @@ const BigHeader: FC<IHeaderProps> = ({
               <div className="city-selector" onClick={toggleCityDropdown}>
                 <span id="selectCity">{selectedCity}</span>
                 <Image
-                  src="/images/icons/chevron-down.svg"
+                  src="/images/candidatesSecurityImg/arrowDown.svg"
                   alt="Dropdown arrow"
-                  width={12}
-                  height={12}
+                  width={16}
+                  height={16}
                   style={{
                     transform: showCityDropdown
                       ? "rotate(180deg)"
