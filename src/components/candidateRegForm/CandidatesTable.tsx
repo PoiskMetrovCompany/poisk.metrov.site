@@ -6,9 +6,11 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 import {
+  ICandidate,
   ICandidateTableData,
   ICandidateTableItem,
   ICandidateTableResponse,
+  ICandidatesResponse,
 } from "@/types/Candidate"
 import { useApiMutation } from "@/utils/hooks/use-api"
 
@@ -40,7 +42,7 @@ interface CandidatesTableProps {
   onFiltersClick: () => void
   onRowClick: (vacancyKey: string) => void
   filtersButtonRef: RefObject<HTMLButtonElement | null>
-  filteredData: ICandidateTableResponse | null
+  filteredData: ICandidatesResponse | null
   activeFilters: ActiveFilters | null
   onFiltersReset: () => void
   selectedCity: string
@@ -421,6 +423,37 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
+  const transformCandidateToTableItem = (
+    candidate: ICandidate
+  ): ICandidateTableItem => ({
+    id: candidate.id.toString(),
+    name: `${candidate.last_name} ${candidate.first_name} ${
+      candidate.middle_name || ""
+    }`.trim(),
+    rop:
+      candidate.work_team && candidate.work_team !== "Административный состав"
+        ? candidate.work_team
+        : "-",
+    datetime: formatDateTime(candidate.created_at || new Date().toISOString()),
+    vacancy: candidate.vacancy?.attributes?.title || "Не указана",
+    status: candidate.status || "Не определен",
+    statusID: getStatusId(candidate.status),
+    hasVacancyComment: candidate.comment,
+    vacancyKey: candidate.key,
+    fullData: {
+      id: candidate.id,
+      key: candidate.key,
+      last_name: candidate.last_name,
+      first_name: candidate.first_name,
+      middle_name: candidate.middle_name,
+      created_at: candidate.created_at,
+      status: candidate.status,
+      comment: candidate.comment,
+      work_team: candidate.work_team,
+      vacancy: candidate.vacancy,
+    },
+  })
+
   const getStatusId = (status: string) => {
     switch (status) {
       case "Новая анкета":
@@ -525,30 +558,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error(`Ошибка сервера: ${response.status}`)
       }
 
-      const data = await response.json()
+      const data: ICandidatesResponse = await response.json()
 
       if (data.response && data.attributes) {
         const transformedCandidates = data.attributes.data.map(
-          (candidate: ICandidateTableData) => ({
-            id: candidate.id.toString(),
-            name: `${candidate.last_name} ${candidate.first_name} ${
-              candidate.middle_name || ""
-            }`.trim(),
-            rop:
-              candidate.work_team &&
-              candidate.work_team !== "Административный состав"
-                ? candidate.work_team
-                : "-",
-            datetime: formatDateTime(
-              candidate.created_at || new Date().toISOString()
-            ),
-            vacancy: candidate.vacancy?.attributes?.title || "Не указана",
-            status: candidate.status || "Не определен",
-            statusID: getStatusId(candidate.status),
-            hasVacancyComment: candidate.comment,
-            vacancyKey: candidate.key,
-            fullData: candidate,
-          })
+          (candidate: ICandidate) => transformCandidateToTableItem(candidate)
         )
 
         setCandidates(transformedCandidates)
@@ -856,26 +870,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     if (filteredData) {
       // Данные уже получены родительским компонентом, просто обрабатываем их
       const transformedCandidates = filteredData.attributes.data.map(
-        (candidate: ICandidateTableData) => ({
-          id: candidate.id.toString(),
-          name: `${candidate.last_name} ${candidate.first_name} ${
-            candidate.middle_name || ""
-          }`.trim(),
-          rop:
-            candidate.work_team &&
-            candidate.work_team !== "Административный состав"
-              ? candidate.work_team
-              : "-",
-          datetime: formatDateTime(
-            candidate.created_at || new Date().toISOString()
-          ),
-          vacancy: candidate.vacancy?.attributes?.title || "Не указана",
-          status: candidate.status || "Не определен",
-          statusID: getStatusId(candidate.status),
-          hasVacancyComment: candidate.comment,
-          vacancyKey: candidate.key,
-          fullData: candidate,
-        })
+        (candidate: ICandidate) => transformCandidateToTableItem(candidate)
       )
       setCandidates(transformedCandidates)
       setPagination({
@@ -1006,7 +1001,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
                         marginRight: "20px",
                       }}
                     >
-                      <p id={candidate.statusID}>{candidate.status}</p>
+                      <p className={"status"} id={candidate.statusID}>
+                        {candidate.status}
+                      </p>
                     </td>
                     <td>
                       {candidate.hasVacancyComment && (
