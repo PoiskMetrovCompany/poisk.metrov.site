@@ -137,19 +137,6 @@ const ContactForm: FC = () => {
             type="phone"
             className={styles.w_50}
           />
-          <ArrowButton
-            onClick={handleSubmit}
-            size="medium"
-            absolute={true}
-            disabled={submitMutation.isPending}
-            loading={submitMutation.isPending}
-            className={clsx(
-              !formData.privacyAgreed
-                ? styles.contactForm__submitButton_disabled
-                : "",
-              styles.position
-            )}
-          />
         </FormRow>
 
         <FormRow className={styles.hideOnDesktop}>
@@ -179,6 +166,18 @@ const ContactForm: FC = () => {
           />
         </FormRow>
       </form>
+      <ArrowButton
+        onClick={handleSubmit}
+        size="medium"
+        disabled={submitMutation.isPending}
+        loading={submitMutation.isPending}
+        className={clsx(
+          !formData.privacyAgreed
+            ? styles.contactForm__submitButton_disabled
+            : "",
+          styles.position
+        )}
+      />
     </div>
   )
 }

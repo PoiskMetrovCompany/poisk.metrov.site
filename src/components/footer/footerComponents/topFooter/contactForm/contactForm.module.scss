@@ -32,22 +32,52 @@
 
 .container {
   display: flex;
-  flex: 1;
+  gap: 20px;
   justify-content: flex-start;
+  // flex: 1;
+  width: 890px;
+
+  @media (width >= 1440px) and (width < 1920px) {
+    width: 762px;
+  }
+  @media (width >= 1024px) and (width < 1440px) {
+    width: 537px;
+  }
+  @media (width >= 768px) and (width < 1024px) {
+    width: 374px;
+  }
+  @media (width < 768px) {
+    width: 100%;
+  }
+
   &__contactForm {
-    width: 90%;
-    @media (max-width: 1440px) {
-      width: 94%;
-    }
-    @media (max-width: 1024px) {
-      width: 100%;
-    }
+    flex: 1;
+    // width: 90%;
+    // @media (max-width: 1440px) {
+    //   width: 94%;
+    // }
+    // @media (max-width: 1024px) {
+    //   width: 100%;
+    // }
   }
 }
 
 .position {
-  right: -70px;
-  top: 2px;
+  height: 72px !important;
+  margin-top: 120px;
+  width: 72px !important;
+
+  @media (width >= 1440px) and (width < 1920px) {
+    height: 64px !important;
+    margin-top: 112px;
+    width: 64px !important;
+  }
+  @media (width < 1440px) {
+    display: none !important;
+  }
+
+  // right: -70px;
+  // top: 2px;
 }
 
 .borderRadius {
@@ -68,7 +98,7 @@
   }
 }
 
-@media (width <= 1024px) {
+@media (width < 1024px) {
   .w_50 {
     width: 100% !important;
   }
@@ -78,7 +108,7 @@
   }
 }
 
-@media (width <= 680px) {
+@media (width < 680px) {
   .contactForm {
     width: 100%;
   }
