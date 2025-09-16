@@ -4,11 +4,11 @@ import React, { useState } from "react"
 
 import Image from "next/image"
 
-
 import { useApiMutation } from "@/utils/hooks/use-api"
 
 import styles from "./monthlyPayment.module.scss"
 
+import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
 import { FormRow } from "@/components/ui/forms/formRow/FormRow"
 import InputContainer from "@/components/ui/inputs/inputContainer"
@@ -144,7 +144,6 @@ interface FormData {
   phone: string
 }
 
-
 interface ApiRequestData {
   name: string
   phone: string
@@ -164,7 +163,6 @@ const MonthlyPayment = () => {
     name: "",
     phone: "",
   })
-
 
   const submitMutation = useApiMutation<ApiRequestData, ApiRequestData>(
     "/crm/store",
@@ -200,7 +198,6 @@ const MonthlyPayment = () => {
   }
 
   const handleAnswerSelect = (answer: string) => {
-
     let currentQuestion
     if (currentBranch === "Ипотека") {
       currentQuestion = mortgageQuestions[currentQuestionIndex]
@@ -247,7 +244,6 @@ const MonthlyPayment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-
     if (!formData.name || !formData.phone) {
       console.log("Пожалуйста, заполните все поля")
       return
@@ -269,7 +265,6 @@ const MonthlyPayment = () => {
     }
 
     submitMutation.mutate(apiData)
-
   }
 
   if (viewState === "quiz" && currentBranch) {
@@ -413,11 +408,10 @@ const MonthlyPayment = () => {
                     styles.monthlyPayment__container__content__form__button
                   }
                 >
-
                   <ActionButton
                     type="primary"
                     size="small"
-                    loading = {submitMutation.isPending}
+                    loading={submitMutation.isPending}
                     disabled={submitMutation.isPending}
                   >
                     {submitMutation.isPending
@@ -436,18 +430,14 @@ const MonthlyPayment = () => {
   return (
     <div className={styles.monthlyPayment}>
       <div className={styles.monthlyPayment__container}>
-        <Image
-          src="/images/keyMonthly.webp"
+        <IconImage
+          iconLink="/images/keyMonthly.webp"
           alt="quiz"
-          width={365}
-          height={365}
           className={styles.monthlyPayment__container__image__key}
         />
-        <Image
-          src="/images/noteBookMonthly.webp"
+        <IconImage
+          iconLink="/images/noteBookMonthly.webp"
           alt="quiz"
-          width={365}
-          height={365}
           className={styles.monthlyPayment__container__image__noteBook}
         />
         <div className={styles.monthlyPayment__container__content}>
