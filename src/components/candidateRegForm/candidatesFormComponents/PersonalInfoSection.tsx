@@ -25,11 +25,7 @@ interface PersonalInfoSectionProps {
   setGoingToROP: React.Dispatch<React.SetStateAction<boolean>>
   selectedROP: string
   setSelectedROP: React.Dispatch<React.SetStateAction<string>>
-  ropOptions: string[]
-  isLoadingROP: boolean
-  ropError: string
-  loadROP: () => void
-  // Добавляем новые пропсы для валидации
+
   validationErrors: Record<string, boolean>
   triggerValidation: boolean
 }
@@ -52,13 +48,18 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   setGoingToROP,
   selectedROP,
   setSelectedROP,
-  ropOptions,
-  isLoadingROP,
-  ropError,
-  loadROP,
   validationErrors,
   triggerValidation,
 }) => {
+  const ropOptions = [
+    "Доронина А.О.",
+    "Иванова А.А.",
+    "Гавриш Е.А.",
+    "Маликова Ю.А.",
+    "Урбан К.Д.",
+    "Руковод КЦ",
+    "Морозова В.А.",
+  ]
   const formatNameInput = (value: string) => {
     return value.replace(/[^а-яёА-ЯЁa-zA-Z\s\-']/g, "")
   }
@@ -189,43 +190,17 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
                 placeholder="Выберите РОП"
                 value={selectedROP}
                 onChange={setSelectedROP}
-                isLoading={isLoadingROP}
                 required={true}
                 error={hasError("selectedROP")}
                 ropSelect={true}
               />
-              {ropError && (
-                <div
-                  className="error-message"
-                  style={{
-                    marginTop: "5px",
-                    fontSize: "14px",
-                    color: "#e74c3c",
-                  }}
-                >
-                  {ropError}
-                  <button
-                    onClick={loadROP}
-                    style={{
-                      marginLeft: "10px",
-                      background: "none",
-                      border: "none",
-                      color: "#3498db",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    Повторить
-                  </button>
-                </div>
-              )}
             </div>
           </FormRow>
         </div>
       )}
 
       <SectionHeader
-        title="Сведенья о вас"
+        title="Сведения о вас"
         subtitle="Мы не передаём эти данные третьим лицам и используем их только для целей адаптации и сопровождения кандидатов"
       />
 
