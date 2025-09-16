@@ -2388,9 +2388,8 @@ input[type="checkbox"] + label {
 
   font-weight: 500;
   height: 40px;
-  width: 100%;
-;
   margin: 12px auto;
+  width: 100%;
 }
 
 .notification-header {
