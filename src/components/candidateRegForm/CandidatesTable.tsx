@@ -545,6 +545,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   const fetchCandidates = async (page = 1, useFilters = false) => {
     setError("")
+    setLoading(true)
 
     try {
       const token = getAccessToken()
@@ -821,6 +822,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         from: 1,
         to: 8,
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -882,7 +885,6 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   useEffect(() => {
     if (filteredData) {
-      // Данные уже получены родительским компонентом, просто обрабатываем их
       const transformedCandidates = filteredData.attributes.data.map(
         (candidate: ICandidate) => transformCandidateToTableItem(candidate)
       )
@@ -897,6 +899,28 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       })
     }
   }, [filteredData])
+
+  useEffect(() => {
+    if (!filteredData && candidates.length === 0) {
+      fetchCandidates(1, false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (selectedCity && !filteredData && candidates.length > 0) {
+      fetchCandidates(1, false)
+    }
+  }, [selectedCity])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (candidates.length === 0 && !loading && !filteredData) {
+        fetchCandidates(1, false)
+      }
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {}, [selectedKeys])
 
@@ -959,6 +983,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
             style={{ textAlign: "center", padding: "40px" }}
           >
             <p>Нет данных для отображения</p>
+            {loading && <p>Загрузка данных...</p>}
+            {error && (
+              <p style={{ color: "red", marginTop: "10px" }}>Ошибка: {error}</p>
+            )}
           </div>
         ) : (
           <>
