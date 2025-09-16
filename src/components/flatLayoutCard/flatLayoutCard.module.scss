@@ -1,6 +1,9 @@
 .flatLayoutCard {
   background-color: var(--color-white);
   border-radius: 32px;
+
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 586px;
   padding: 32px 32px 27px;
@@ -43,11 +46,55 @@
       @media screen and (width < 1440px) {
         gap: 8px;
       }
+
+      &__onlyFavourite {
+        &__text {
+          @media screen and (width < 1440px) {
+            background: var(--color-beige);
+            border: none !important;
+          }
+        }
+
+        &__heart {
+          @media screen and (width < 1440px) {
+            background-color: transparent !important;
+            border: 1.5px solid #e8e4e4 !important;
+          }
+
+          @media screen and (width < 1440px) {
+            height: 48px !important;
+            width: 48px !important;
+
+            > div {
+              height: 24px !important;
+              width: 24px !important;
+            }
+          }
+
+          // @media screen and (width >= 768px) and (width < 1024px) {
+          //   height: 48px !important;
+          //   width: 48px !important;
+          // }
+
+          // @media screen and (width < 768px) {
+          //   height: 48px !important;
+          //   width: 48px !important;
+          // }
+        }
+
+        &__share {
+          @media screen and (width < 1440px) {
+            display: none !important;
+          }
+        }
+      }
     }
   }
 
   &__content {
     display: flex;
+
+    flex: 1;
     flex-direction: column;
     gap: 16px;
 
@@ -169,6 +216,7 @@
       gap: 12px;
 
       // margin-top: 16px;
+      margin-top: auto;
 
       &__value {
         color: var(--color-text-black);

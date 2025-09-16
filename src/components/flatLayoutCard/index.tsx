@@ -21,11 +21,11 @@ interface IFlatLayoutCardProps {
   imageUrl?: string
   linkUrl?: string
   apartment?: IApartment
+  isOnlyFavourite?: boolean
 }
 
 const FlatLayoutCard = ({
   listClassName,
-
   title,
   price,
   complex = "Европейский берег",
@@ -33,6 +33,7 @@ const FlatLayoutCard = ({
   imageUrl,
   linkUrl,
   apartment,
+  isOnlyFavourite = false,
 }: IFlatLayoutCardProps) => {
   const apartmentData = apartment
     ? {
@@ -66,17 +67,32 @@ const FlatLayoutCard = ({
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
-        <span>{complex}</span>
+        <span
+          className={clsx(
+            isOnlyFavourite &&
+              styles.flatLayoutCard__header__actions__onlyFavourite__text
+          )}
+        >
+          {complex}
+        </span>
         <div className={styles.flatLayoutCard__header__actions}>
           <IconButton
             size="sm"
             type="secondary"
             iconLink="/images/icons/heart.svg"
+            className={clsx(
+              isOnlyFavourite &&
+                styles.flatLayoutCard__header__actions__onlyFavourite__heart
+            )}
           />
           <IconButton
             size="sm"
             type="secondary"
             iconLink="/images/icons/share.svg"
+            className={clsx(
+              isOnlyFavourite &&
+                styles.flatLayoutCard__header__actions__onlyFavourite__share
+            )}
           />
         </div>
       </div>
