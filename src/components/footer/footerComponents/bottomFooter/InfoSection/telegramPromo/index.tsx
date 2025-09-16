@@ -1,5 +1,7 @@
 "use client"
 
+import clsx from "clsx"
+
 import React, { FC } from "react"
 
 import Image from "next/image"
@@ -9,9 +11,9 @@ import styles from "./telegramPromo.module.scss"
 
 import IconImage from "@/components/ui/IconImage"
 
-const TelegramPromo: FC = () => {
+const TelegramPromo: FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className={styles.telegramPromo}>
+    <div className={clsx(styles.telegramPromo, className)}>
       <div className={styles.divider}></div>
       <div className={styles.telegramPromo__content}>
         <div className={styles.telegramPromo__content__text}>
