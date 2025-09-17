@@ -1,35 +1,38 @@
 .inputContainer {
-  position: relative;
   display: inline-block;
+  position: relative;
   width: 100%;
 
   &.big {
     flex-wrap: wrap;
-    width: auto;
     text-align: left;
+    width: auto;
   }
 
   &__input {
-    box-sizing: border-box;
-    width: 100%;
-    height: 72px;
-    padding: 24px 32px;
-    border: 1.5px solid rgb(210 210 210 / 100%);
+    background-color: var(--color-white, #ffffff);
+    border: none;
     border-radius: 1rem;
+    box-sizing: border-box;
     font-family: var(--font-onest);
     font-size: 18px;
     font-weight: 300;
+    height: 72px;
     line-height: 1.5;
+    padding: 24px 32px;
     transition: border-color 0.3s ease;
-    background-color: var(--color-white, #ffffff);
+    width: 100%;
+    &_bordered {
+      border: 1.5px solid rgb(210 210 210 / 100%);
+    }
 
     &::placeholder {
       font-size: 18px;
-      
+
       @media (width <= 1440px) {
         font-size: 16px;
       }
-      
+
       @media (width <= 768px) {
         font-size: 14px;
       }
@@ -44,9 +47,9 @@
     }
 
     &[readonly] {
-      padding-top: 1rem;
-      border: none;
       background: rgb(249 249 247 / 100%);
+      border: none;
+      padding-top: 1rem;
     }
 
     &_gray {
@@ -54,46 +57,46 @@
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 16px;
       height: 64px;
       padding: 19px 24px;
-      font-size: 16px;
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 16px;
       height: 56px;
       padding: 17px 24px;
-      font-size: 16px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      height: 48px;
-      padding: 17px 24px;
       border-radius: 12px;
       font-size: 14px;
+      height: 48px;
+      padding: 17px 24px;
     }
 
     @media screen and (width < 768px) {
-      height: 48px;
-      padding: 17px 24px;
       border-radius: 12px;
       font-size: 14px;
+      height: 48px;
+      padding: 17px 24px;
     }
   }
 
   &__wrapper {
-    position: relative;
-    display: flex;
     align-items: center;
+    display: flex;
+    position: relative;
   }
 
   &__prefix {
+    color: #333;
+    font-size: 1rem;
+    font-weight: 400;
+    left: 0.875rem;
     pointer-events: none;
     position: absolute;
     z-index: 1;
-    left: 0.875rem;
-    font-size: 1rem;
-    font-weight: 400;
-    color: #333;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       font-size: 16px;
@@ -113,60 +116,60 @@
   }
 
   &__label {
-    position: absolute;
-    z-index: 2;
-    top: -0.6875rem;
-    left: 18px;
-    padding: 0 12px;
+    background-color: var(--color-white);
     font-size: 16px;
     font-weight: 400;
+    left: 18px;
     line-height: 1.5;
-    background-color: var(--color-white);
+    padding: 0 12px;
+    position: absolute;
+    top: -0.6875rem;
+    z-index: 2;
 
     &::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      top: 50%;
-      right: 0;
-      left: 0;
-      transform: translateY(-50%);
-      height: 2px;
       background-color: inherit;
+      content: "";
+      height: 2px;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: -1;
     }
 
     &:has(+ .inputContainer__input[readonly]),
     &:has(+ .inputContainer__wrapper .inputContainer__input[readonly]) {
-      top: 0;
+      background: none;
       font-size: 16px;
       font-weight: 600;
-      background: none;
+      top: 0;
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
+      font-size: 14px;
       left: 16px;
       padding: 0 8px;
-      font-size: 14px;
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
+      font-size: 14px;
       left: 16px;
       padding: 0 8px;
-      font-size: 14px;
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      top: -9px;
+      font-size: 12px;
       left: 14px;
       padding: 0 8px;
-      font-size: 12px;
+      top: -9px;
     }
 
     @media screen and (width < 768px) {
-      top: -8px;
+      font-size: 11px;
       left: 14px;
       padding: 0 8px;
-      font-size: 11px;
+      top: -8px;
     }
   }
 

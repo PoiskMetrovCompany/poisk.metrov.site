@@ -1,6 +1,7 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   typescript: {
     // !! ВНИМАНИЕ !!
     // Опасно: это позволит сборке завершиться успешно даже при наличии TypeScript ошибок

@@ -77,7 +77,7 @@
     width: 258px;
   }
 }
-@media (width <= 768px) {
+@media (width < 768px) {
   .contactSection {
     flex-wrap: wrap;
   }

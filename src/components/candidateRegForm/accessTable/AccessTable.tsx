@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useState } from "react"
+import React, { KeyboardEvent, useEffect, useState } from "react"
 
 import Image from "next/image"
 
@@ -12,6 +12,7 @@ interface User {
   position: string
   email: string
   password: string
+  key: string
 }
 
 interface NewAccess {
@@ -19,6 +20,21 @@ interface NewAccess {
   position: string
   email: string
   password: string
+}
+
+interface ApiAccount {
+  id: number
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+  key: string
+  role: string
+  phone: string | null
+  email: string
+  secret: string
+  last_name: string
+  first_name: string
+  middle_name: string
 }
 
 const AccessTable = () => {
@@ -36,36 +52,67 @@ const AccessTable = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [userToDelete, setUserToDelete] = useState<number | null>(null)
 
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      name: "Гавриш Елена Владимировна",
-      position: "РОП",
-      email: "emailexample@gmail.com",
-      password: "K9mP2nQ7",
-    },
-    {
-      id: 2,
-      name: "Гавриш Елена Владимировна",
-      position: "РОП",
-      email: "emailexample@gmail.com",
-      password: "X3vL8sR4",
-    },
-    {
-      id: 3,
-      name: "Гавриш Елена Владимировна",
-      position: "РОП",
-      email: "emailexample@gmail.com",
-      password: "M5tY9wE6",
-    },
-    {
-      id: 4,
-      name: "Гавриш Елена Владимировна",
-      position: "РОП",
-      email: "emailexample@gmail.com",
-      password: "N2jH7pA1",
-    },
-  ])
+  const [users, setUsers] = useState<User[]>([])
+
+  // Функция для получения токена из cookie
+  const getAccessTokenFromCookie = (): string | null => {
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
+  const loadAccounts = async () => {
+    const accessToken = getAccessTokenFromCookie()
+
+    if (!accessToken) {
+      return
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/account/list`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+
+      const data = await response.json()
+
+      if (response.ok && data.attributes) {
+        // Фильтруем только пользователей с ролью "РОП" и преобразуем в формат User
+        const ropAccounts: User[] = data.attributes
+          .filter((account: ApiAccount) => account.role === "РОП")
+          .map((account: ApiAccount, index: number) => ({
+            id: account.id || index + 1,
+            name:
+              `${account.last_name || ""} ${account.first_name || ""} ${account.middle_name || ""}`.trim() ||
+              "Без имени",
+            position: account.role || "РОП",
+            email: account.email || "Email не указан",
+            password: "••••••••", // Пароль не приходит с API, показываем заглушку
+            key: account.key || "", // Сохраняем ключ для удаления
+          }))
+
+        setUsers(ropAccounts)
+        console.log("Загруженные аккаунты РОП:", ropAccounts)
+      }
+    } catch (error) {
+      // Игнорируем ошибки
+    }
+  }
+
+  // Загружаем аккаунты при монтировании компонента
+  useEffect(() => {
+    loadAccounts()
+  }, [])
 
   const handleAddAccess = () => {
     if (editingIndex !== null) {
@@ -96,16 +143,48 @@ const AccessTable = () => {
 
   const saveNewAccess = async () => {
     if (newAccess.name.trim() && newAccess.email.trim()) {
-      const newAccessObj: User = {
-        id: Date.now(),
-        name: newAccess.name.trim(),
-        position: newAccess.position.trim() || "Не указано",
+      // Парсим ФИО по пробелу
+      const nameParts = newAccess.name.trim().split(" ")
+      const lastName = nameParts[0] || ""
+      const firstName = nameParts[1] || ""
+      const middleName = nameParts[2] || ""
+
+      // Подготавливаем данные для API
+      const requestData = {
+        last_name: lastName,
+        first_name: firstName,
+        middle_name: middleName,
         email: newAccess.email.trim(),
+        role: "РОП",
         password: newAccess.password.trim() || "temp123",
       }
-      setUsers([...users, newAccessObj])
-      setNewAccess({ name: "", position: "", email: "", password: "" })
-      setIsAdding(false)
+
+      try {
+        const accessToken = getAccessTokenFromCookie()
+
+        if (accessToken) {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/account/store`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+              body: JSON.stringify(requestData),
+            }
+          )
+
+          if (response.ok) {
+            // После успешного создания перезагружаем список аккаунтов
+            await loadAccounts()
+            setNewAccess({ name: "", position: "", email: "", password: "" })
+            setIsAdding(false)
+          }
+        }
+      } catch (error) {
+        // Игнорируем ошибки
+      }
     }
   }
 
@@ -170,11 +249,19 @@ const AccessTable = () => {
     setUserToDelete(null)
   }
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (userToDelete === null) return
 
+    const userToDeleteData = users[userToDelete]
+    console.log("=== НАЧАЛО УДАЛЕНИЯ ===")
+    console.log("Индекс удаляемого пользователя:", userToDelete)
+    console.log("Данные пользователя:", userToDeleteData)
+    console.log("Key для удаления:", userToDeleteData.key)
+
+    // Сначала удаляем из UI
     const updatedUsers = users.filter((_, i) => i !== userToDelete)
     setUsers(updatedUsers)
+    console.log("Пользователь удален из UI")
 
     if (editingIndex === userToDelete) {
       setEditingIndex(null)
@@ -182,6 +269,44 @@ const AccessTable = () => {
     }
 
     setIsEditing(false)
+
+    // Закрываем модальное окно
+    setIsDeleteModalOpen(false)
+    setUserToDelete(null)
+
+    // Отправляем DELETE запрос на сервер
+    try {
+      const accessToken = getAccessTokenFromCookie()
+      console.log("Токен доступа:", accessToken ? "найден" : "НЕ найден")
+
+      if (accessToken && userToDeleteData.key) {
+        const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}/account/delete?key=${userToDeleteData.key}`
+        console.log("URL для удаления:", deleteUrl)
+
+        const response = await fetch(deleteUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+
+        console.log("Статус ответа:", response.status)
+        console.log("Статус OK:", response.ok)
+
+        if (response.ok) {
+          console.log("✅ Удаление выполнено успешно")
+        } else {
+          console.error("❌ Ошибка при удалении")
+        }
+      } else {
+        console.error("❌ Нет токена или ключа для удаления")
+      }
+    } catch (error) {
+      console.error("❌ Исключение при удалении:", error)
+    }
+
+    console.log("=== КОНЕЦ УДАЛЕНИЯ ===")
   }
 
   return (

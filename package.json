@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:5174": "next dev --turbopack --port 5174",
     "dev:5173": "next dev --turbopack --port 5173 --experimental-https",
-    "build": "next build",
+    "build": "next build && ./copy-public.sh",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",

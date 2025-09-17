@@ -1,16 +1,21 @@
 "use client"
 
-import React, { FC } from "react"
+import { useAuthState } from "@/hooks/useAuthState"
+import React, { FC, useState } from "react"
 
+
+import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-import { useAuthState } from "@/hooks/useAuthState"
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "../header.module.scss"
 
 import LoginForm from "../loginForm"
+
+import MobileMenu from "./mobileMenu"
 
 import IconImage from "@/components/ui/IconImage"
 import Skeleton from "@/components/ui/skeleton"
@@ -29,6 +34,11 @@ const UserActions: FC<IUserActionsProps> = ({
   // Используем новую систему авторизации
   const { isAuthenticated, user } = useAuthState()
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
+
+
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
       onFavoritesClick()
@@ -36,7 +46,6 @@ const UserActions: FC<IUserActionsProps> = ({
       router.push("/favourites")
     }
   }
-
   // Используем ключ пользователя из состояния авторизации
   const userKey = user?.key || ""
   const { data: fCountData, isLoading: fCountLoading } =
@@ -52,9 +61,20 @@ const UserActions: FC<IUserActionsProps> = ({
   const favoritesCount = fCountData?.attributes
 
   const handleMenuClick = (): void => {
+    setIsMobileMenuOpen(true)
     if (onMenuClick) {
       onMenuClick()
     }
+
+  const handleSettingsClick = (): void => {
+    router.push("/LK")
+    setIsProfilePopoverOpen(false)
+  }
+
+  const handleLogoutClick = (): void => {
+    // Обработка выхода из личного кабинета
+    console.log("Выход из личного кабинета")
+    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -126,10 +146,19 @@ const UserActions: FC<IUserActionsProps> = ({
       >
         <IconImage
           className={styles.user_actions__showMenu__icon}
-          iconLink="/images/icons/header/showMenu-2.svg"
+          iconLink={
+            isMobileMenuOpen
+              ? "/images/icons/header/closeMenu.svg"
+              : "/images/icons/header/showMenu-2.svg"
+          }
           alt="Menu"
         />
       </button>
+
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onOpenChange={setIsMobileMenuOpen}
+      />
     </div>
   )
 }

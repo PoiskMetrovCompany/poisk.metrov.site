@@ -1,10 +1,10 @@
 import React from "react"
 
-import { useRouter } from "next/navigation"
-
 import styles from "./promoCard.module.scss"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
+
+import { useRouter } from "next/navigation"
 
 const PromoCard = () => {
   const router = useRouter()

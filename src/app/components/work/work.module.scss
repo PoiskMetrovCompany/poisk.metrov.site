@@ -4,6 +4,22 @@
   gap: 40px;
   padding-top: 120px;
 
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    padding-top: 100px;
+  }
+  @media screen and (width >= 1024px) and (width < 1440px) {
+    padding-top: 80px;
+  }
+
+  @media screen and (width >= 768px) and (width < 1024px) {
+    gap: 24px;
+    padding-top: 64px;
+  }
+  @media (width < 768px) {
+    gap: 16px;
+    padding-top: 64px;
+  }
+
   &__header {
     &__h2 {
       @media (width < 1920px) {
@@ -20,7 +36,7 @@
 
       @media (width < 768px) {
         display: flex;
-        gap: 30px;
+        gap: 16px;
         align-items: center;
       }
     }
@@ -51,6 +67,9 @@
       @media (width < 1440px) {
         padding: 0 40px;
         gap: 24px;
+      }
+      @media screen and (width < 768px) {
+        gap: 16px;
       }
 
       &__image {
@@ -119,7 +138,7 @@
     @media (width < 1024px) {
       &__item {
         flex-direction: column;
-        gap: 30px;
+        gap: 24px;
         padding: 0 20px;
         text-align: center;
 
@@ -194,16 +213,31 @@
   border-radius: 50%;
   background: var(--color-white);
   transition: all 0.3s ease;
-
+  @media screen and (width >= 1440px) and (width < 1920px) {
+    width: 56px;
+    height: 56px;
+  }
+  @media screen and (width >= 768px) and (width < 1440px) {
+    width: 48px;
+    height: 48px;
+  }
   &::after {
     display: none;
   }
 
   &__icon {
     position: relative;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
 
+    @media screen and (width >= 1440px) and (width < 1920px) {
+      width: 24px;
+      height: 24px;
+    }
+    @media screen and (width >= 1024px) and (width < 1440px) {
+      width: 20px;
+      height: 20px;
+    }
     &__icon_next {
       transform: rotate(180deg);
     }
@@ -226,8 +260,8 @@
     margin-top: 5px;
 
     .navigationButton__icon {
-      width: 24px;
-      height: 24px;
+      width: 16px;
+      height: 16px;
     }
   }
 

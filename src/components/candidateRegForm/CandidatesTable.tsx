@@ -543,6 +543,114 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     multipleDownloadMutation.mutate({ selectedKeys, selectedFormat })
   }
 
+  // Утилиты для работы с фильтрами
+  const formatApiDateRange = (
+    startDate: Date,
+    endDate: Date,
+    type: string
+  ): string | null => {
+    if (!startDate || !endDate) return null
+
+    const formatDate = (date: Date): string => {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, "0")
+      const day = String(date.getDate()).padStart(2, "0")
+      return `${year}-${month}-${day}`
+    }
+
+    const formatMonth = (date: Date): string => {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, "0")
+      return `${year}-${month}`
+    }
+
+    const formatYear = (date: Date): string => {
+      return String(date.getFullYear())
+    }
+
+    switch (type) {
+      case "dates":
+        return `${formatDate(startDate)},${formatDate(endDate)}`
+      case "months":
+        return `${formatMonth(startDate)},${formatMonth(endDate)}`
+      case "years":
+        return `${formatYear(startDate)},${formatYear(endDate)}`
+      default:
+        return `${formatDate(startDate)},${formatDate(endDate)}`
+    }
+  }
+
+  const getStatusApiValues = (statusFilters: string[]): string[] => {
+    const statusMap: Record<string, string> = {
+      showAll: "",
+      new: "Новая анкета",
+      checked: "Проверен",
+      "needs-work": "Нужна доработка",
+      rejected: "Отклонен",
+      accepted: "Принят",
+      not: "Не принят",
+      "start-working": "Вышел",
+      "not-working": "Не вышел",
+    }
+
+    return statusFilters
+      .filter((status) => status !== "showAll")
+      .map((status) => statusMap[status] || status)
+      .filter(Boolean)
+  }
+
+  const getVacancyApiValues = (vacancyFilters: string[]): string[] => {
+    return vacancyFilters.filter((vacancy) => vacancy !== "showAll")
+  }
+
+  const buildFiltersQueryString = (filters: ActiveFilters | null): string => {
+    if (!filters) return ""
+
+    const queryParams: string[] = []
+
+    // Добавляем город
+    if (selectedCity) {
+      queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
+    }
+
+    // Добавляем диапазон дат
+    if (filters.dateRange.start && filters.dateRange.end) {
+      const dateRange = formatApiDateRange(
+        filters.dateRange.start,
+        filters.dateRange.end,
+        filters.dateRange.type
+      )
+
+      if (dateRange) {
+        switch (filters.dateRange.type) {
+          case "years":
+            queryParams.push(`year_range=${dateRange}`)
+            break
+          case "months":
+            queryParams.push(`month_range=${dateRange}`)
+            break
+          case "dates":
+            queryParams.push(`date_range=${dateRange}`)
+            break
+        }
+      }
+    }
+
+    // Добавляем статусы
+    const statusValues = getStatusApiValues(filters.status)
+    if (statusValues.length > 0) {
+      queryParams.push(`candidate_statuses=${statusValues.join(",")}`)
+    }
+
+    // Добавляем вакансии
+    const vacancyValues = getVacancyApiValues(filters.vacancy)
+    if (vacancyValues.length > 0) {
+      queryParams.push(`vacancy_keys=${vacancyValues.join(",")}`)
+    }
+
+    return queryParams.join("&")
+  }
+
   const fetchCandidates = async (page = 1, useFilters = false) => {
     setError("")
     setLoading(true)
@@ -553,9 +661,35 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
+      // Формируем базовый URL с пагинацией
       let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
+
+      // Если есть активные фильтры, добавляем их к URL
+      if (useFilters && activeFilters) {
+        const filtersQueryString = buildFiltersQueryString(activeFilters)
+        if (filtersQueryString) {
+          // Убираем city_work из filtersQueryString, так как он уже есть в базовом URL
+          const filtersWithoutCity = filtersQueryString.replace(
+            /city_work=[^&]*&?/g,
+            ""
+          )
+          if (filtersWithoutCity) {
+            url += `&${filtersWithoutCity}`
+          }
+        }
+
+        // Логирование для отладки
+        console.log("🔍 Запрос с фильтрами:", {
+          page,
+          useFilters,
+          activeFilters,
+          finalUrl: url,
+        })
+      } else {
+        console.log("📄 Запрос без фильтров:", { page, url })
+      }
 
       const headers: Record<string, string> = {
         accept: "*/*",
@@ -850,7 +984,20 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       page <= pagination.last_page &&
       page !== pagination.current_page
     ) {
-      fetchCandidates(page, activeFilters !== null)
+      // Передаем true если есть активные фильтры, иначе false
+      const hasActiveFilters =
+        activeFilters !== null &&
+        ((activeFilters.status &&
+          activeFilters.status.length > 0 &&
+          !activeFilters.status.includes("showAll")) ||
+          (activeFilters.vacancy &&
+            activeFilters.vacancy.length > 0 &&
+            !activeFilters.vacancy.includes("showAll")) ||
+          (activeFilters.dateRange &&
+            activeFilters.dateRange.start !== null &&
+            activeFilters.dateRange.end !== null))
+
+      fetchCandidates(page, hasActiveFilters)
     }
   }
 
@@ -897,6 +1044,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         from: filteredData.attributes.from,
         to: filteredData.attributes.to,
       })
+
+      // Сбрасываем выбранные элементы при применении фильтров
+      setSelectedKeys([])
     }
   }, [filteredData])
 
