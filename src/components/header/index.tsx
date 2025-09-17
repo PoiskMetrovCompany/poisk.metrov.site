@@ -25,7 +25,10 @@ const Header = ({ initialCity, hideTopBar = false }: HeaderProps) => {
       <header className={styles.header}>
         {!hideTopBar && <TopBar initialCity={initialCity} />}
       </header>
-      <MainBar onCatalogClick={() => setIsMenuPopupOpen(true)} />
+      <MainBar
+        onCatalogClick={() => setIsMenuPopupOpen(true)}
+        initialCity={initialCity}
+      />
     </>
   )
 }

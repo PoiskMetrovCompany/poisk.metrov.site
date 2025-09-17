@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 
+import { AuthProvider } from "@/components/AuthProvider"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import QueryProvider from "@/providers/query-provider"
@@ -21,11 +22,13 @@ export default function LayoutClient({
 
   return (
     <QueryProvider>
-      {!hideHeader && (
-        <Header initialCity={initialCity} hideTopBar={hideTopBar} />
-      )}
-      <main className="container">{children}</main>
-      {!hideHeader && <Footer />}
+      <AuthProvider>
+        {!hideHeader && (
+          <Header initialCity={initialCity} hideTopBar={hideTopBar} />
+        )}
+        <main className="container">{children}</main>
+        {!hideHeader && <Footer />}
+      </AuthProvider>
     </QueryProvider>
   )
 }
