@@ -3,8 +3,26 @@ import axios from "axios"
 
 // Базовый API клиент для внутренних запросов
 const api = axios.create({
+  // baseURL: "https://poisk-metrov.ru",
   baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   timeout: 10000,
+})
+
+// Интерцептор для добавления токена авторизации
+api.interceptors.request.use((config) => {
+  // Получаем токен из cookies
+  const cookies = document.cookie.split(";")
+  const tokenCookie = cookies.find((cookie) =>
+    cookie.trim().startsWith("access_token=")
+  )
+
+  if (tokenCookie) {
+    const token = tokenCookie.split("=")[1]
+    // config.headers.Authentication = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
 })
 
 // Внешний API клиент для запросов к внешним серверам
@@ -228,7 +246,7 @@ export function useApiDelete<T, V = void>(
         let requestUrl = url
         if (variables && typeof variables === "object") {
           const params = new URLSearchParams()
-          Object.entries(variables as Record<string, any>).forEach(
+          Object.entries(variables as Record<string, unknown>).forEach(
             ([key, value]) => {
               if (value !== undefined && value !== null) {
                 params.append(key, String(value))
