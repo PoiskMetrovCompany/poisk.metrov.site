@@ -21,15 +21,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Запрос для получения данных пользователя при наличии токена
   const { data: currentUserData, error: currentUserError } =
-    useApiQuery<CurrentUserResponse>(
-      ["currentUser"],
-      "api/proxy/users/get-current",
-      {
-        enabled: !!token && !isAuthenticated, // Запрос только если есть токен но нет данных пользователя
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
-      }
-    )
+    useApiQuery<CurrentUserResponse>(["currentUser"], "/users/get-current", {
+      enabled: !!token && !isAuthenticated, // Запрос только если есть токен но нет данных пользователя
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    })
 
   useEffect(() => {
     // Проверяем наличие токена в cookies при загрузке приложения

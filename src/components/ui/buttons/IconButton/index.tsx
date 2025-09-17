@@ -41,6 +41,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         [styles.iconButton_orange]: type === "orange",
         [styles.iconButton_orangeLight]: type === "orange-light",
         [styles.iconButton_disabled]: disabled,
+        [styles.iconButton_active]: isActive,
       })}
       onClick={onClick}
       disabled={disabled}

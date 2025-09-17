@@ -1,10 +1,13 @@
 import clsx from "clsx"
 
-import React from "react"
+import React, { useState } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
 
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 import { IApartment } from "@/types/api/complex"
 
 import styles from "./flatLayoutCard.module.scss"
@@ -25,7 +28,6 @@ interface IFlatLayoutCardProps {
 
 const FlatLayoutCard = ({
   listClassName,
-
   title,
   price,
   complex = "Европейский берег",
@@ -34,6 +36,16 @@ const FlatLayoutCard = ({
   linkUrl,
   apartment,
 }: IFlatLayoutCardProps) => {
+  // Хуки для авторизации и избранного
+  const { isAuthenticated } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const { user } = useAuthState()
+  const userKey = user?.key || ""
+
+  // Состояние для отслеживания избранного
+  // TODO: Убрать и сделать через запрос
+  const [isFavorite, setIsFavorite] = useState(false)
   const apartmentData = apartment
     ? {
         title: `${apartment.apartment_type}, ${apartment.area} м²`,
@@ -63,6 +75,45 @@ const FlatLayoutCard = ({
     apartmentData?.imageUrl || imageUrl || "/images/temporary/room.png"
   const finalLinkUrl =
     apartmentData?.linkUrl || linkUrl || `/detailsFlat?key=asdf1231sdas`
+
+  // Обработчик клика по избранному
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    // Получаем ключ квартиры из apartment или из linkUrl
+    const apartmentKey =
+      apartment?.key ||
+      (linkUrl?.includes("key=") ? linkUrl.split("key=")[1] : null)
+
+    if (!apartmentKey) {
+      console.log("Нет ключа квартиры")
+      return
+    }
+
+    const action = isFavorite ? "remove" : "add"
+    const type = "apartment" // Для квартир всегда apartment
+
+    switchLikeMutation.mutate(
+      {
+        code: apartmentKey,
+        type,
+        action,
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          setIsFavorite(!isFavorite)
+        },
+        onError: (error) => {
+          console.error("Ошибка при обновлении избранного:", error)
+        },
+      }
+    )
+  }
   return (
     <div className={styles.flatLayoutCard}>
       <div className={styles.flatLayoutCard__header}>
@@ -72,6 +123,9 @@ const FlatLayoutCard = ({
             size="sm"
             type="secondary"
             iconLink="/images/icons/heart.svg"
+            isActive={isFavorite}
+            onClick={handleFavoriteClick}
+            disabled={switchLikeMutation.isPending}
           />
           <IconButton
             size="sm"

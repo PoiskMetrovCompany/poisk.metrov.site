@@ -39,7 +39,8 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   const { isAuthenticated } = useAuthState()
   const { openLoginForm } = useAuthStore()
   const switchLikeMutation = useSwitchLike()
-
+  const { user } = useAuthState()
+  const userKey = user?.key || ""
   // Состояние для отслеживания избранного
   // TODO: Убрать и сделать через запрос
   const [isFavorite, setIsFavorite] = useState(false)
@@ -89,6 +90,7 @@ const PropertyCard: FC<IPropertyCardProps> = ({
         code: linkKey,
         type,
         action,
+        user_key: userKey,
       },
       {
         onSuccess: () => {

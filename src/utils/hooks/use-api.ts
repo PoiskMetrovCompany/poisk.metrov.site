@@ -3,8 +3,7 @@ import axios from "axios"
 
 // Базовый API клиент для внутренних запросов
 const api = axios.create({
-  // baseURL: "https://poisk-metrov.ru",
-  // baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   timeout: 10000,
 })
 

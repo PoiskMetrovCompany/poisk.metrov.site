@@ -4,6 +4,9 @@ import React from "react"
 
 import Link from "next/link"
 
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 import { IFlatLayoutCardFullWithDifferences } from "@/types/PropertyCard"
 
 import styles from "./comparisonCards.module.scss"
@@ -26,6 +29,11 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
   isInView = false,
   isOnlyDifferences = false,
 }) => {
+  // Хуки для авторизации и удаления из избранного
+  const { isAuthenticated, user } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const userKey = user?.key || ""
   // Функция для проверки, нужно ли показывать элемент
   const shouldShowItem = (
     blockType: "apartmentInfo" | "complex",
@@ -69,8 +77,42 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
     return <span>{String(value)}</span>
   }
 
-  const onTrashClick = () => {
-    console.log("track")
+  // Обработчик удаления из избранного
+  const handleRemoveFromFavorites = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    // Получаем ID из данных карточки
+    const cardId = data.id?.toString()
+
+    if (!cardId) {
+      console.log("Нет ID карточки для удаления")
+      return
+    }
+
+    // Для квартир всегда используем тип "apartment"
+    const type = "apartment"
+
+    switchLikeMutation.mutate(
+      {
+        code: cardId,
+        type,
+        action: "remove",
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          console.log("✅ Квартира удалена из избранного")
+          // Здесь можно добавить дополнительную логику, например, закрытие модального окна сравнения
+        },
+        onError: (error) => {
+          console.error("❌ Ошибка при удалении из избранного:", error)
+        },
+      }
+    )
   }
 
   return (
@@ -105,7 +147,8 @@ const FlatLayoutCardComparison: React.FC<FlatLayoutCardComparisonProps> = ({
               className={
                 styles.comparisonCards__content__heading__image__delete
               }
-              onClick={onTrashClick}
+              onClick={handleRemoveFromFavorites}
+              disabled={switchLikeMutation.isPending}
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>

@@ -52,7 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   // Запрос для получения данных пользователя после успешной авторизации
   const { data: currentUserData } = useApiQuery<CurrentUserResponse>(
     ["currentUser"],
-    "api/proxy/users/get-current",
+    "/users/get-current",
     {
       enabled: authSuccess, // Запрос только после успешной авторизации
       staleTime: 5 * 60 * 1000,

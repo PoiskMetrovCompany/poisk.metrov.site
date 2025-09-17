@@ -41,8 +41,8 @@ const UserActions: FC<IUserActionsProps> = ({
   const userKey = user?.key || ""
   const { data: fCountData, isLoading: fCountLoading } =
     useApiQuery<IFavoritesCountResponse>(
-      ["fCount", userKey],
-      userKey ? `/api/proxy/favorites/count?user_key=${userKey}` : "",
+      ["fCount", userKey, "favourite_list"],
+      userKey ? `/favorites/count?user_key=${userKey}` : "",
       {
         enabled: !!userKey,
         staleTime: 5 * 60 * 1000,
