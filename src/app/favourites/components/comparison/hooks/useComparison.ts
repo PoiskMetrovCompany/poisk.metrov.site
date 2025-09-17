@@ -2,6 +2,7 @@ import type { Swiper as SwiperType } from "swiper"
 
 import { useRef, useState } from "react"
 
+import { useAuthState } from "@/hooks/useAuthState"
 import { IFavouriteView } from "@/types/Favourites"
 import {
   ComparisonResponse,
@@ -67,16 +68,20 @@ export const useComparisonSlider = () => {
  * Хук для получения данных сравнения
  */
 export const useComparisonData = (selectedView: IFavouriteView) => {
+  // Получаем user key из состояния авторизации
+  const { user } = useAuthState()
+  const USER_KEY = user?.key || ""
+
   // Определяем тип сравнения на основе выбранной вкладки
   const typeComparison =
     selectedView === "complexes" ? "ResidentialComplexes" : "Apartments"
 
   // Запрос данных сравнения с правильной типизацией
   const { data: comparisonData } = useApiQuery<ComparisonResponse>(
-    ["comparison", typeComparison],
-    `/comparison?user_key=06cf5002-83c2-11f0-a013-10f60a82b815&type_comparison=${typeComparison}`,
+    ["comparison", typeComparison, USER_KEY],
+    `/comparison?user_key=${USER_KEY}&type_comparison=${typeComparison}`,
     {
-      enabled: true,
+      enabled: !!USER_KEY, // Запрос выполняется только если есть USER_KEY
       staleTime: 10 * 60 * 1000, // 10 минут
       gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
       retry: 2,
@@ -103,13 +108,17 @@ export const useComparisonData = (selectedView: IFavouriteView) => {
  * Хук для получения всех данных сравнения (квартиры + комплексы)
  */
 export const useAllComparisonData = () => {
+  // Получаем user key из состояния авторизации
+  const { user } = useAuthState()
+  const USER_KEY = user?.key || ""
+
   // Запрос данных сравнения квартир
   const { data: apartmentsData, isLoading: isLoadingApartments } =
     useApiQuery<ComparisonResponse>(
-      ["comparison", "Apartments"],
-      `/comparison?user_key=06cf5002-83c2-11f0-a013-10f60a82b815&type_comparison=Apartments`,
+      ["comparison", "Apartments", USER_KEY],
+      `/comparison?user_key=${USER_KEY}&type_comparison=Apartments`,
       {
-        enabled: true,
+        enabled: !!USER_KEY, // Запрос выполняется только если есть USER_KEY
         staleTime: 10 * 60 * 1000, // 10 минут
         gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
         retry: 2,
@@ -123,10 +132,10 @@ export const useAllComparisonData = () => {
   // Запрос данных сравнения комплексов
   const { data: complexesData, isLoading: isLoadingComplexes } =
     useApiQuery<ComparisonResponse>(
-      ["comparison", "ResidentialComplexes"],
-      `/comparison?user_key=06cf32b1-83c2-11f0-a013-10f60a82b815&type_comparison=ResidentialComplexes`,
+      ["comparison", "ResidentialComplexes", USER_KEY],
+      `/comparison?user_key=${USER_KEY}&type_comparison=ResidentialComplexes`,
       {
-        enabled: true,
+        enabled: !!USER_KEY, // Запрос выполняется только если есть USER_KEY
         staleTime: 10 * 60 * 1000, // 10 минут
         gcTime: 30 * 60 * 1000, // 30 минут для garbage collection
         retry: 2,

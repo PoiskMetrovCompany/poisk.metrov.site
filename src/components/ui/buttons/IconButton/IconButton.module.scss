@@ -1,143 +1,143 @@
 .iconButton {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
+  background-color: var(--color-white);
   border: 1.5px solid var(--color-border-gray);
   border-radius: 50%;
+  display: flex;
   font-family: var(--font-onest);
-  background-color: var(--color-white);
+  height: 64px;
+  justify-content: center;
   transition: all 0.3s ease;
+  width: 64px;
 
   &_sm {
-    width: 48px;
     height: 48px;
+    width: 48px;
 
     @media screen and (width < 1920px) {
-      width: 40px;
       height: 40px;
+      width: 40px;
 
       .iconButton__icon {
-        width: 20px;
         height: 20px;
+        width: 20px;
       }
     }
   }
 
   &_md {
-    width: 64px;
     height: 64px;
+    width: 64px;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
-      width: 56px;
       height: 56px;
+      width: 56px;
 
       .iconButton__icon {
-        width: 28px;
         height: 28px;
+        width: 28px;
       }
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
-      width: 48px;
       height: 48px;
+      width: 48px;
 
       .iconButton__icon {
-        width: 24px;
         height: 24px;
+        width: 24px;
       }
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      width: 48px;
       height: 48px;
+      width: 48px;
 
       .iconButton__icon {
-        width: 24px;
         height: 24px;
+        width: 24px;
       }
     }
 
     @media screen and (width < 768px) {
-      width: 40px;
       height: 40px;
+      width: 40px;
 
       .iconButton__icon {
-        width: 20px;
         height: 20px;
+        width: 20px;
       }
     }
   }
 
   &_lg {
-    width: 80px;
     height: 80px;
+    width: 80px;
   }
 
   &__icon {
+    border: none;
+    height: 32px;
     position: relative;
     width: 32px;
-    height: 32px;
-    border: none;
 
     &_primary {
-      width: 32px;
       height: 32px;
+      width: 32px;
     }
 
     &_secondary {
-      width: 24px;
       height: 24px;
+      width: 24px;
     }
   }
 
   &_tiny {
-    width: 56px;
     height: 56px;
+    width: 56px;
 
     .iconButton__icon {
-      width: 28px;
       height: 28px;
+      width: 28px;
     }
 
     @media screen and (width >= 1440px) and (width < 1920px) {
-      width: 48px;
       height: 48px;
+      width: 48px;
 
       .iconButton__icon {
-        width: 24px;
         height: 24px;
+        width: 24px;
       }
     }
 
     @media screen and (width >= 1024px) and (width < 1440px) {
-      width: 40px;
       height: 40px;
+      width: 40px;
 
       .iconButton__icon {
-        width: 20px;
         height: 20px;
+        width: 20px;
       }
     }
 
     @media screen and (width >= 768px) and (width < 1024px) {
-      width: 40px;
       height: 40px;
+      width: 40px;
 
       .iconButton__icon {
-        width: 20px;
         height: 20px;
+        width: 20px;
       }
     }
 
     @media screen and (width < 768px) {
-      width: 40px;
       height: 40px;
+      width: 40px;
 
       .iconButton__icon {
-        width: 20px;
         height: 20px;
+        width: 20px;
       }
     }
   }
@@ -151,19 +151,26 @@
     }
   }
 
+  &_active {
+    .iconButton__icon {
+      filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+        saturate(2476%) hue-rotate(346deg) brightness(118%) contrast(119%);
+    }
+  }
+
   &_primary {
-    border: 1.5px solid var(--color-border-gray);
     background-color: var(--color-white);
+    border: 1.5px solid var(--color-border-gray);
   }
 
   &_secondary {
-    border: none;
     background-color: var(--color-beige);
+    border: none;
   }
 
   &_orange {
-    border: 1.5px solid var(--color-orange);
     background-color: var(--color-orange);
+    border: 1.5px solid var(--color-orange);
 
     &:hover {
       background-color: var(--color-orange-hover);
@@ -175,8 +182,8 @@
   }
 
   &_disabled {
-    opacity: 0.5;
     cursor: not-allowed;
+    opacity: 0.5;
     pointer-events: none;
 
     &:hover {
@@ -187,12 +194,12 @@
   }
 
   &_orangeLight {
-    border: none;
     background-color: rgb(236 125 63 / 20%);
+    border: none;
 
     &:hover {
-      border: none;
       background-color: rgb(228 98 25 / 20%);
+      border: none;
 
       .iconButton__icon {
         filter: none;

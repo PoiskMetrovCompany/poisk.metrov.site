@@ -35,10 +35,14 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
-      {
-        source: "/api/proxy/:path*",
-        destination: "http://poisk-metrov-demos.ru:8080/api/:path*",
-      },
+      // {
+      //   source: "/:path*",
+      //   destination: "https://poisk-metrov.ru:4443/api/v1/:path*",
+      // },
+      // {
+      //   source: "/api/proxy/:path*",
+      //   destination: "http://poisk-metrov-demos.ru:8080/api/:path*",
+      // },
     ]
   },
 }

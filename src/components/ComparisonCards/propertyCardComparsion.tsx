@@ -4,11 +4,13 @@ import React from "react"
 
 import Link from "next/link"
 
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 import {
   IPropertyCardApartments,
   IPropertyCardConveniences,
   IPropertyCardCost,
-  IPropertyCardFull,
   IPropertyCardFullWithDifferences,
   IPropertyCardGeneral,
   IPropertyCardLocation,
@@ -37,6 +39,12 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
   isInView = false,
   isOnlyDifferences = false,
 }) => {
+  // Хуки для авторизации и удаления из избранного
+  const { isAuthenticated, user } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const userKey = user?.key || ""
+
   // Используем данные по умолчанию только если data не передан
   const cardData =
     data || (PropertyCardData as IPropertyCardFullWithDifferences)
@@ -136,6 +144,44 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
     return <span>{String(value)}</span>
   }
 
+  // Обработчик удаления из избранного
+  const handleRemoveFromFavorites = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    // Получаем ID из данных карточки
+    const cardId = cardData.id?.toString()
+
+    if (!cardId) {
+      console.log("Нет ID карточки для удаления")
+      return
+    }
+
+    // Для PropertyCardComparison всегда используем тип "building" (жилые комплексы)
+    const type = "building"
+
+    switchLikeMutation.mutate(
+      {
+        code: cardId,
+        type,
+        action: "remove",
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          console.log("✅ Объект удален из избранного")
+          // Здесь можно добавить дополнительную логику, например, закрытие модального окна сравнения
+        },
+        onError: (error) => {
+          console.error("❌ Ошибка при удалении из избранного:", error)
+        },
+      }
+    )
+  }
+
   return (
     <div
       className={clsx(styles.comparisonCards, {
@@ -170,6 +216,8 @@ const PropertyCardComparison: React.FC<PropertyCardComparisonProps> = ({
               className={
                 styles.comparisonCards__content__heading__image__delete
               }
+              onClick={handleRemoveFromFavorites}
+              disabled={switchLikeMutation.isPending}
             />
           </div>
           <div className={styles.comparisonCards__content__heading__text}>
