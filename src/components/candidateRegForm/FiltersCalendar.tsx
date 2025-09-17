@@ -4,20 +4,15 @@ import { useMutation } from "@tanstack/react-query"
 
 import React, { RefObject, useEffect, useRef, useState } from "react"
 
-
 import { ICandidatesResponse } from "@/types/Candidate"
-
 import { ICandidate } from "@/types/Candidate"
-
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./candidateLoginComponents.module.css"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-
 type FilteredData = ICandidatesResponse
-
 
 interface ActiveFilters {
   status: string[]
@@ -238,10 +233,23 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
   }
 
   const getAccessTokenFromCookie = () => {
+    if (typeof document === "undefined") return null
     const cookies = document.cookie.split(";")
     for (let cookie of cookies) {
       const [name, value] = cookie.trim().split("=")
       if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
+  const getROPKeyFromCookie = () => {
+    if (typeof document === "undefined") return null
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "ropKey") {
         return value
       }
     }
@@ -457,6 +465,11 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
 
     if (selectedCity) {
       queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
+    }
+
+    const ropKey = getROPKeyFromCookie()
+    if (ropKey) {
+      queryParams.push(`rop_key=${encodeURIComponent(ropKey)}`)
     }
 
     if (updatedFilters.dateRange.start && updatedFilters.dateRange.end) {
@@ -1174,7 +1187,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   maxWidth: "100%",
                 }}
               >
-                {vacancyError}
+                {vacancyError.message || "Ошибка загрузки вакансий"}
                 <button
                   onClick={() => window.location.reload()}
                   style={{
