@@ -4,20 +4,15 @@ import { useMutation } from "@tanstack/react-query"
 
 import React, { RefObject, useEffect, useRef, useState } from "react"
 
-
 import { ICandidatesResponse } from "@/types/Candidate"
-
 import { ICandidate } from "@/types/Candidate"
-
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./candidateLoginComponents.module.css"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-
 type FilteredData = ICandidatesResponse
-
 
 interface ActiveFilters {
   status: string[]
@@ -177,6 +172,10 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     { value: "Проверен", text: "Проверен" },
     { value: "Нужна доработка", text: "Нужна доработка" },
     { value: "Отклонен", text: "Отклонен" },
+    { value: "Вышел", text: "Вышел" },
+    { value: "Не вышел", text: "Не вышел" },
+    { value: "Принят", text: "Принят" },
+    { value: "Не принят", text: "Не принят" },
   ]
 
   const formatApiDateRange = (startDate: Date, endDate: Date, type: string) => {
@@ -215,6 +214,10 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
       Проверен: "Проверен",
       "Нужна доработка": "Нужна доработка",
       Отклонен: "Отклонен",
+      Вышел: "start_work",
+      "Не вышел": "not_start_work",
+      Принят: "hired",
+      "Не принят": "not_hired",
     }
 
     return statusValues
@@ -1174,7 +1177,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   maxWidth: "100%",
                 }}
               >
-                {vacancyError}
+                {String(vacancyError)}
                 <button
                   onClick={() => window.location.reload()}
                   style={{
