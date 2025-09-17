@@ -4,7 +4,7 @@ import axios from "axios"
 // Базовый API клиент для внутренних запросов
 const api = axios.create({
   // baseURL: "https://poisk-metrov.ru",
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
+  // baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   timeout: 10000,
 })
 
@@ -152,6 +152,7 @@ export function useApiMutation<T, V>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false // Добавляем опцию для контроля инвалидации
   }
 ) {
   const queryClient = useQueryClient()
@@ -179,8 +180,23 @@ export function useApiMutation<T, V>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      // Инвалидируем все запросы для обновления данных
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        // Не инвалидируем ничего
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        // Инвалидируем только указанные ключи запросов
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        // По умолчанию инвалидируем все запросы (для обратной совместимости)
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)
@@ -194,6 +210,7 @@ export function useApiUpdate<T, V>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false
   }
 ) {
   const queryClient = useQueryClient()
@@ -221,7 +238,20 @@ export function useApiUpdate<T, V>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)
@@ -234,6 +264,7 @@ export function useApiDelete<T, V = void>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false
   }
 ) {
   const queryClient = useQueryClient()
@@ -277,7 +308,20 @@ export function useApiDelete<T, V = void>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)

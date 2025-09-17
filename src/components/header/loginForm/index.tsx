@@ -29,6 +29,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onClose,
   trigger,
 }) => {
+  // Используем Zustand state для управления формой
+  const { isLoginFormOpen, closeLoginForm } = useAuthStore()
   const [open, setOpen] = useState(isOpen)
   const [phone, setPhone] = useState("")
   const [isAgreed, setIsAgreed] = useState(false)
@@ -80,7 +82,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const handleOpenChange = useCallback(
     (newOpen: boolean) => {
       setOpen(newOpen)
-      if (!newOpen && onClose) {
+      if (!newOpen) {
         // Сброс состояния при закрытии
         setStep("phone")
         setPhone("")
@@ -88,10 +90,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
         setIsTimerActive(false)
         setTimer(60)
         setAuthSuccess(false)
-        onClose()
+        // Закрываем форму через Zustand
+        closeLoginForm()
+        if (onClose) {
+          onClose()
+        }
       }
     },
-    [onClose]
+    [onClose, closeLoginForm]
   )
 
   // Обработка данных пользователя после успешной авторизации
@@ -200,8 +206,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <ActionButton type="primary">Личный кабинет</ActionButton>
   )
 
+  // Используем Zustand state для открытия формы
+  const isFormOpen = isLoginFormOpen || open
+
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
+    <Dialog.Root open={isFormOpen} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{triggerElement}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className={styles.loginForm__overlay} />

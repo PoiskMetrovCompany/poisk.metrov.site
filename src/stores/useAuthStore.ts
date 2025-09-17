@@ -23,22 +23,27 @@ interface AuthState {
   isAuthenticated: boolean
   token: string | null
   user: AuthUser | null
+  isLoginFormOpen: boolean
   login: (token: string, user: AuthUser) => void
   logout: () => void
   setToken: (token: string) => void
   setUser: (user: AuthUser) => void
+  openLoginForm: () => void
+  closeLoginForm: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   token: null,
   user: null,
+  isLoginFormOpen: false,
 
   login: (token: string, user: AuthUser) => {
     set({
       isAuthenticated: true,
       token,
       user,
+      isLoginFormOpen: false, // Закрываем форму после успешной авторизации
     })
   },
 
@@ -47,6 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: false,
       token: null,
       user: null,
+      isLoginFormOpen: false,
     })
   },
 
@@ -56,5 +62,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setUser: (user: AuthUser) => {
     set({ user })
+  },
+
+  openLoginForm: () => {
+    set({ isLoginFormOpen: true })
+  },
+
+  closeLoginForm: () => {
+    set({ isLoginFormOpen: false })
   },
 }))

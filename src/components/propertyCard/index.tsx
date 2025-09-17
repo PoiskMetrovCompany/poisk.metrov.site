@@ -2,10 +2,13 @@
 
 import clsx from "clsx"
 
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 
 import { useRouter } from "next/navigation"
 
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 import { IProperty } from "@/types/PropertyCard"
 
 import styles from "./propertyCard.module.scss"
@@ -33,6 +36,13 @@ const PropertyCard: FC<IPropertyCardProps> = ({
   listClassName,
 }) => {
   const router = useRouter()
+  const { isAuthenticated } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+
+  // Состояние для отслеживания избранного
+  // TODO: Убрать и сделать через запрос
+  const [isFavorite, setIsFavorite] = useState(false)
 
   const {
     title,
@@ -57,6 +67,38 @@ const PropertyCard: FC<IPropertyCardProps> = ({
         : `/details/${linkKey}`
       router.push(route)
     }
+  }
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    if (!linkKey) {
+      console.log("Нет ключа карточки")
+      return
+    }
+
+    const action = isFavorite ? "remove" : "add"
+    const type = property.isApartment ? "apartment" : "building"
+
+    switchLikeMutation.mutate(
+      {
+        code: linkKey,
+        type,
+        action,
+      },
+      {
+        onSuccess: () => {
+          setIsFavorite(!isFavorite)
+        },
+        onError: (error) => {
+          console.error("Ошибка при обновлении избранного:", error)
+        },
+      }
+    )
   }
 
   // Выбираем иконку в зависимости от типа передвижения до метро
@@ -200,7 +242,13 @@ const PropertyCard: FC<IPropertyCardProps> = ({
           >
             Подробнее
           </ActionButton>
-          <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
+          <IconButton
+            size="tiny"
+            iconLink={"/images/icons/heart.svg"}
+            isActive={isFavorite}
+            onClick={handleFavoriteClick}
+            disabled={switchLikeMutation.isPending}
+          />
         </div>
       </div>
     </article>
