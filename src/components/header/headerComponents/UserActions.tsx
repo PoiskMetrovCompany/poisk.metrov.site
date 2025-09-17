@@ -1,20 +1,16 @@
 "use client"
 
-import { useAuthState } from "@/hooks/useAuthState"
 import React, { FC, useState } from "react"
 
-
-import Image from "next/image"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 
+import { useAuthState } from "@/hooks/useAuthState"
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "../header.module.scss"
 
 import LoginForm from "../loginForm"
-
 import MobileMenu from "./mobileMenu"
 
 import IconImage from "@/components/ui/IconImage"
@@ -23,11 +19,13 @@ import Skeleton from "@/components/ui/skeleton"
 interface IUserActionsProps {
   onFavoritesClick?: () => void
   onMenuClick?: () => void
+  initialCity: { name: string; id: string; slug: string } | null
 }
 
 const UserActions: FC<IUserActionsProps> = ({
   onFavoritesClick,
   onMenuClick,
+  initialCity,
 }) => {
   const router = useRouter()
 
@@ -35,9 +33,6 @@ const UserActions: FC<IUserActionsProps> = ({
   const { isAuthenticated, user } = useAuthState()
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
-
 
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
@@ -65,16 +60,6 @@ const UserActions: FC<IUserActionsProps> = ({
     if (onMenuClick) {
       onMenuClick()
     }
-
-  const handleSettingsClick = (): void => {
-    router.push("/LK")
-    setIsProfilePopoverOpen(false)
-  }
-
-  const handleLogoutClick = (): void => {
-    // Обработка выхода из личного кабинета
-    console.log("Выход из личного кабинета")
-    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -158,6 +143,7 @@ const UserActions: FC<IUserActionsProps> = ({
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onOpenChange={setIsMobileMenuOpen}
+        initialCity={initialCity}
       />
     </div>
   )
