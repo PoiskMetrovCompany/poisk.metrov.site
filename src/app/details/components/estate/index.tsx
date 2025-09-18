@@ -1,9 +1,17 @@
-import React from "react"
-import styles from "./estate.module.scss"
+import React, { useEffect, useState } from "react"
+
 import Image from "next/image"
-import ActionButton from "@/components/ui/buttons/ActionButton"
 import Link from "next/link"
+
+import styles from "./estate.module.scss"
+
 import IconImage from "@/components/ui/IconImage"
+import ActionButton from "@/components/ui/buttons/ActionButton"
+import Skeleton from "@/components/ui/skeleton"
+
+interface EstateProps {
+  images?: string[]
+}
 
 const features = [
   {
@@ -28,16 +36,75 @@ const features = [
   },
 ]
 
-const Estate = () => {
+const Estate = ({ images }: EstateProps) => {
+  const [isImageLoading, setIsImageLoading] = useState(true)
+  const [isHandled, setIsHandled] = useState(false)
+
+  const imageToShow = images && images.length > 0 ? images[0] : ""
+
+  useEffect(() => {
+    setIsImageLoading(true)
+    setIsHandled(false)
+
+    const img = new window.Image()
+
+    const handleLoad = () => {
+      if (!isHandled) {
+        setIsHandled(true)
+        setIsImageLoading(false)
+      }
+    }
+
+    const handleError = () => {
+      if (!isHandled) {
+        setIsHandled(true)
+        setIsImageLoading(false)
+      }
+    }
+
+    img.onload = handleLoad
+    img.onerror = handleError
+    img.src = imageToShow
+
+    return () => {
+      img.onload = null
+      img.onerror = null
+    }
+  }, [imageToShow])
+
+  const handleImageLoad = () => {
+    if (!isHandled) {
+      setIsHandled(true)
+      setIsImageLoading(false)
+    }
+  }
+
+  const handleImageError = () => {
+    if (!isHandled) {
+      setIsHandled(true)
+      setIsImageLoading(false)
+    }
+  }
+
   return (
     <div className={styles.info}>
       <div className={styles.info__slider}>
+        {isImageLoading && (
+          <Skeleton
+            className={styles.info__slider__skeleton}
+            width="100%"
+            height="100%"
+          />
+        )}
         <Image
-          src="/images/temporary/house.png"
+          src={imageToShow}
           alt="details"
           width={560}
           height={400}
           className={styles.info__slider__image}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          style={{ display: isImageLoading ? "none" : "block" }}
         />
       </div>
       <div className={styles.info__description}>

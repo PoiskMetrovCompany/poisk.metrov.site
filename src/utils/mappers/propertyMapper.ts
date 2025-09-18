@@ -1,6 +1,8 @@
 import { IProperty } from "@/types/PropertyCard"
 import { IResidentialComplex } from "@/types/api/complex"
 
+import { extractImageFromMeta } from "../../utils/lib/metaUtils"
+
 export function mapResidentialComplexToProperty(
   complex: IResidentialComplex
 ): IProperty {
@@ -44,7 +46,11 @@ export function mapResidentialComplexToProperty(
     metroType: complex.metro_type as "on_foot" | "by_transport",
     specifications: specifications,
     description: description,
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
+    image: extractImageFromMeta(
+      complex.meta,
+      "/images/buildingCarousel/buidingExpandImg.webp"
+    ),
+    linkKey: complex.key,
   }
 }
 

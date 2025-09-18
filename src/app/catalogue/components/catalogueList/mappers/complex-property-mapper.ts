@@ -1,5 +1,6 @@
 import { IProperty } from "@/types/PropertyCard"
 import { ComplexItem } from "@/types/api/filters"
+import { extractImageFromMeta } from "@/utils/lib/metaUtils"
 
 /**
  * Создает объект IProperty из данных жилого комплекса
@@ -15,7 +16,7 @@ export const createComplexProperty = (
   title: itemData.name || "Жилой комплекс",
   subtitle: itemData.code || "",
   price: "Цена не указана", // У комплексов нет поля price
-  image: "/images/temporary/house.png",
+  image: extractImageFromMeta(itemData.meta, "/images/temporary/house.png"),
   badge: {
     developer: "Застройщик",
     period: "2024",

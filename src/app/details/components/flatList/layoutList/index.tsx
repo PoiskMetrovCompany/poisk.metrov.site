@@ -30,23 +30,23 @@ const LayoutList = ({ apartmentTypes }: LayoutListProps) => {
     router.push("/catalogue")
   }
 
-  // Проверяем тип данных и обрабатываем соответственно
+
   let availableTypes: [string, IApartment[]][]
 
   if (Array.isArray(apartmentTypes)) {
-    // Если пришел массив квартир одного типа (старый формат)
+  
     availableTypes = [["apartments", apartmentTypes]]
   } else if (
     typeof apartmentTypes === "object" &&
     apartmentTypes !== null &&
     !Array.isArray(apartmentTypes)
   ) {
-    // Если пришел объект с типами квартир (новый формат)
+
     availableTypes = Object.entries(apartmentTypes).filter(
       ([, apartments]) => apartments && apartments.length > 0
     )
   } else {
-    // Если данных нет
+    
     availableTypes = []
   }
 

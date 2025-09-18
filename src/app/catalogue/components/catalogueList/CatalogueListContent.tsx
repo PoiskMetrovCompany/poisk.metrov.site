@@ -1,11 +1,21 @@
-import React, { useCallback, useEffect, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { FiltersFormData } from "@/app/catalogue/components/filters/types"
+import FlatLayoutCard from "@/components/flatLayoutCard"
+import GetYourDreamFlat from "@/components/getYourDreamFlat"
+import PropertyCard from "@/components/propertyCard"
+import PropertyCardList from "@/components/propertyCardList"
 import { useInitialFiltersFromUrl } from "@/hooks/useInitialFiltersFromUrl"
 import { useUrlChangeListener } from "@/hooks/useUrlChangeListener"
 import { useUrlSync } from "@/hooks/useUrlSync"
 import { useFiltersStore } from "@/stores/useFiltersStore"
+import { ApartmentSelectionResponse } from "@/types/api/apartment"
+import {
+  IResidentialComplex,
+  ResidentialComplexDataResponse,
+} from "@/types/api/complex"
 import { FiltersRequest } from "@/types/api/filters"
+import { mapResidentialComplexesToProperties } from "@/utils/mappers/propertyMapper"
 
 import styles from "./catalogueList.module.scss"
 
@@ -21,7 +31,6 @@ import {
 import {
   useCatalogueAdditionalComponents,
   useCatalogueCards,
-  useCatalogueData,
   useCatalogueSkeletons,
 } from "./hooks"
 
@@ -37,6 +46,17 @@ interface CatalogueListContentProps {
   isSticky: boolean
   isVisible: boolean
   isLaptop: boolean
+  // Данные из API
+  catalogueResidentialComplexes:
+    | ResidentialComplexDataResponse
+    | IResidentialComplex[]
+    | null
+    | undefined
+  catalogueApartments: ApartmentSelectionResponse | null | undefined
+  isLoadingComplexes: boolean
+  isLoadingApartments: boolean
+  selectedPropertyType: string
+  onPageChange: (page: number) => void
 }
 
 export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
@@ -51,6 +71,12 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   isSticky,
   isVisible,
   isLaptop,
+  catalogueResidentialComplexes,
+  catalogueApartments,
+  isLoadingComplexes,
+  isLoadingApartments,
+  selectedPropertyType,
+  onPageChange,
 }) => {
   const { filtersData: storeFiltersData } = useFiltersStore()
 
@@ -59,16 +85,109 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
   useUrlChangeListener()
   useInitialFiltersFromUrl()
 
-  const {
-    filtersData,
-    isLoadingFilters,
-    handleApplyFilters,
-    handlePageChange,
-  } = useCatalogueData(activeFilters, setActiveFilters)
+  // Определяем данные в зависимости от типа недвижимости
+  const isLoadingFilters =
+    selectedPropertyType === "Жилой комплекс"
+      ? isLoadingComplexes
+      : isLoadingApartments
+
+  // Функция для применения фильтров
+  const handleApplyFilters = (formData: FiltersFormData) => {
+    // TODO: реализовать логику применения фильтров для переданных данных
+    console.log("Применяем фильтры:", formData)
+  }
 
   const { renderSkeletons } = useCatalogueSkeletons()
   const { renderCards } = useCatalogueCards()
   const { renderAdditionalComponents } = useCatalogueAdditionalComponents()
+
+  // Преобразуем данные для отображения
+  const getDisplayData = useCallback((): any[] => {
+    if (selectedPropertyType === "Жилой комплекс") {
+      if (!catalogueResidentialComplexes) return []
+
+      const complexes = Array.isArray(catalogueResidentialComplexes)
+        ? catalogueResidentialComplexes
+        : catalogueResidentialComplexes?.attributes || []
+
+      return mapResidentialComplexesToProperties(
+        complexes as IResidentialComplex[]
+      )
+    } else if (selectedPropertyType === "Квартира") {
+      if (!catalogueApartments) return []
+
+      const apartments = Array.isArray(catalogueApartments)
+        ? catalogueApartments
+        : catalogueApartments?.attributes || []
+
+
+      return apartments as any[]
+    }
+
+    return []
+  }, [selectedPropertyType, catalogueResidentialComplexes, catalogueApartments])
+
+
+  const renderCardsFromData = useCallback(
+    (displayData: any[], sorting: "cards" | "list") => {
+      if (!displayData || displayData.length === 0) return []
+
+      const result: React.ReactNode[] = []
+
+      displayData.forEach((item, index) => {
+
+        if (selectedPropertyType === "Жилой комплекс") {
+          if (sorting === "cards") {
+            result.push(<PropertyCard key={item.id || index} property={item} />)
+          } else {
+            result.push(
+              <PropertyCardList key={item.id || index} property={item} />
+            )
+          }
+
+
+          if (index === 1) {
+            result.push(
+              <div
+                key="dream-flat-in-cards"
+                className={
+                  selectedSorting === "cards"
+                    ? styles.catalogue__cards__fullWidth
+                    : undefined
+                }
+              >
+                <GetYourDreamFlat />
+              </div>
+            )
+          }
+        } else {
+
+          result.push(
+            <FlatLayoutCard key={item.id || index} apartment={item} />
+          )
+
+
+          if (index === 3) {
+            result.push(
+              <div
+                key="dream-flat-in-cards"
+                className={
+                  selectedSorting === "cards"
+                    ? styles.catalogue__cards__fullWidth
+                    : undefined
+                }
+              >
+                <GetYourDreamFlat />
+              </div>
+            )
+          }
+        }
+      })
+
+      return result
+    },
+    [selectedPropertyType, selectedSorting]
+  )
 
   // Мемоизируем функцию для переключения сортировки
   const handleSortingCallback = useCallback(
@@ -96,11 +215,9 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
   // Мемоизируем условие для показа блоков
   const shouldShowBlocks = useMemo(() => {
-    return !(
-      !isLoadingFilters &&
-      (!filtersData?.data || filtersData.data.length === 0)
-    )
-  }, [isLoadingFilters, filtersData?.data])
+    const displayData = getDisplayData()
+    return !(!isLoadingFilters && (!displayData || displayData.length === 0))
+  }, [isLoadingFilters, getDisplayData])
 
   return (
     <div className={styles.catalogue}>
@@ -133,14 +250,25 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
 
       <CatalogueNotFound
         isLoadingFilters={isLoadingFilters}
-        filtersData={filtersData}
+        filtersData={{
+          data: getDisplayData(),
+          total: getDisplayData().length,
+          page: currentPage,
+          per_page: 10,
+          success: true,
+        }}
       />
 
-      {/* Показываем блоки только если нет ошибки "не найдено" */}
       {shouldShowBlocks && (
         <>
           <CatalogueResultsHeader
-            filtersData={filtersData}
+            filtersData={{
+              data: getDisplayData(),
+              total: getDisplayData().length,
+              page: currentPage,
+              per_page: 10,
+              success: true,
+            }}
             selectedPropertyType={storeFiltersData.propertyType}
             selectedSorting={selectedSorting}
             isLaptop={isLaptop}
@@ -153,14 +281,20 @@ export const CatalogueListContent: React.FC<CatalogueListContentProps> = ({
           >
             {isLoadingFilters
               ? renderSkeletons(selectedSorting)
-              : renderCards(filtersData, selectedSorting)}
+              : renderCardsFromData(getDisplayData(), selectedSorting)}
           </CatalogueCardsContainer>
 
           <CataloguePagination
             isLoadingFilters={isLoadingFilters}
-            filtersData={filtersData}
+            filtersData={{
+              data: getDisplayData(),
+              total: getDisplayData().length,
+              page: currentPage,
+              per_page: 10,
+              success: true,
+            }}
             currentPage={currentPage}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
           />
 
           <CatalogueCardsContainer
