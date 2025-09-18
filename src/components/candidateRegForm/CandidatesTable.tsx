@@ -245,7 +245,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
 
     const keysParam = selectedKeys.join(",")
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?key=${encodeURIComponent(keysParam)}`
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/destroy?keys=${encodeURIComponent(keysParam)}`
 
     const headers: Record<string, string> = {
       accept: "application/json",
@@ -341,10 +341,49 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   const deleteMutation = useMutation({
     mutationFn: deleteCandidates,
     onSuccess: ({ deletedKeys }) => {
-      // Удаляем анкеты из локального состояния
+      const deletedCount = deletedKeys.length
+      
+
       setCandidates((prev) =>
         prev.filter((candidate) => !deletedKeys.includes(candidate.vacancyKey))
       )
+      
+
+      setPagination((prev) => {
+        const newTotal = Math.max(0, prev.total - deletedCount)
+        const newTo = Math.max(0, prev.to - deletedCount)
+        
+
+        let newCurrentPage = prev.current_page
+        if (prev.current_page > 1 && newTo <= (prev.current_page - 1) * prev.per_page) {
+          newCurrentPage = prev.current_page - 1
+        }
+        
+
+        const newLastPage = Math.max(1, Math.ceil(newTotal / prev.per_page))
+        
+
+        if (newCurrentPage > newLastPage) {
+          newCurrentPage = newLastPage
+        }
+        
+
+        if (newCurrentPage !== prev.current_page) {
+          setTimeout(() => {
+            fetchCandidates(newCurrentPage, activeFilters !== null)
+          }, 100)
+        }
+        
+        return {
+          ...prev,
+          total: newTotal,
+          to: newTo,
+          current_page: newCurrentPage,
+          last_page: newLastPage,
+          from: newTotal > 0 ? (newCurrentPage - 1) * prev.per_page + 1 : 0,
+        }
+      })
+      
       setSelectedKeys([])
       setIsDeleteModalOpen(false)
 
