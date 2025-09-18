@@ -14,10 +14,9 @@ import {
 } from "@/types/Candidate"
 import { useApiMutation } from "@/utils/hooks/use-api"
 
-import { ICandidate } from "@/types/Candidate"
-
 import styles from "./candidateLoginComponents.module.css"
 
+import MobileCandidateCard from "./MobileCandidateCard"
 import { FormRow } from "./candidatesFormComponents/FormRow"
 import ConfirmationModal from "./confirmationalWindow"
 
@@ -104,6 +103,16 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   // Состояние для модального окна удаления
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  // Адаптивные состояния
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  // Состояния для мобильной пагинации
+  const [allCandidates, setAllCandidates] = useState<ICandidateTableItem[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMorePages, setHasMorePages] = useState(false)
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false)
 
   // API функции для tanstack/react-query
   const downloadSingleFile = async ({
@@ -454,6 +463,21 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }, [])
 
+  // Адаптивная логика
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      setIsTablet(width < 1440)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
   const getCsrfToken = () => {
     const metaTag = document.querySelector('meta[name="csrf-token"]')
     return metaTag ? metaTag.getAttribute("content") : null
@@ -520,14 +544,18 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       case "Принят":
         return "accepted"
       case "Не принят":
-        return "not"
+        return "not_accepted"
       case "Вышел":
-        return "startWorking"
+        return "start_work"
       case "Не вышел":
-        return "not"
+        return "not_start_work"
       default:
         return "new"
     }
+  }
+
+  const getStatusText = (status: string) => {
+    return status
   }
 
   const handleCheckboxChange = (vacancyKey: string, isChecked: boolean) => {
@@ -627,9 +655,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       "needs-work": "Нужна доработка",
       rejected: "Отклонен",
       accepted: "Принят",
-      not: "Не принят",
-      "start-working": "Вышел",
-      "not-working": "Не вышел",
+      not_accepted: "Не принят",
+      start_work: "Вышел",
+      not_start_work: "Не вышел",
     }
 
     return statusFilters
@@ -754,6 +782,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         )
 
         setCandidates(transformedCandidates)
+        setAllCandidates(transformedCandidates)
+        setCurrentPage(data.attributes.current_page)
+        setHasMorePages(
+          data.attributes.current_page < data.attributes.last_page
+        )
         setPagination({
           current_page: data.attributes.current_page,
           last_page: data.attributes.last_page,
@@ -910,7 +943,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           datetime: "11.01.2025 15:30",
           vacancy: "UI/UX дизайнер",
           status: "Вышел",
-          statusID: "startWorking",
+          statusID: "start_work",
           hasVacancyComment: "Начал работу",
           vacancyKey: "mock-key-6",
           fullData: {
@@ -937,7 +970,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           datetime: "10.01.2025 12:15",
           vacancy: "Backend разработчик",
           status: "Не принят",
-          statusID: "not",
+          statusID: "not_accepted",
           hasVacancyComment: "Не подошел по требованиям",
           vacancyKey: "mock-key-7",
           fullData: {
@@ -964,7 +997,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           datetime: "09.01.2025 18:45",
           vacancy: "Frontend разработчик",
           status: "Не вышел",
-          statusID: "not",
+          statusID: "not_start_work",
           hasVacancyComment: "Не явился на работу",
           vacancyKey: "mock-key-8",
           fullData: {
@@ -987,6 +1020,9 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       ]
 
       setCandidates(mockCandidates)
+      setAllCandidates(mockCandidates)
+      setCurrentPage(1)
+      setHasMorePages(false)
       setPagination({
         current_page: 1,
         last_page: 1,
@@ -1040,6 +1076,57 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
     }
   }
 
+  const handleLoadMore = async () => {
+    if (loadMoreLoading || !hasMorePages) return
+
+    setLoadMoreLoading(true)
+    const nextPage = currentPage + 1
+
+    try {
+      const token = getAccessToken()
+      if (!token) {
+        throw new Error("Токен авторизации не найден")
+      }
+
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${nextPage}&city_work=${encodeURIComponent(
+        selectedCity
+      )}`
+
+      const headers: Record<string, string> = {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "p4RiyjWRDjpZo3M9akdBjm8tLR4AhkblqCoVUgmH",
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: headers,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.status}`)
+      }
+
+      const data: ICandidatesResponse = await response.json()
+
+      if (data.response && data.attributes) {
+        const newCandidates = data.attributes.data.map(
+          (candidate: ICandidate) => transformCandidateToTableItem(candidate)
+        )
+
+        setAllCandidates((prev) => [...prev, ...newCandidates])
+        setCandidates((prev) => [...prev, ...newCandidates])
+        setCurrentPage(nextPage)
+        setHasMorePages(nextPage < data.attributes.last_page)
+      }
+    } catch (err) {
+      console.error("Ошибка при загрузке дополнительных кандидатов:", err)
+    } finally {
+      setLoadMoreLoading(false)
+    }
+  }
+
   const generatePageNumbers = () => {
     const { current_page, last_page } = pagination
     const pages: (number | string)[] = []
@@ -1075,6 +1162,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         (candidate: ICandidate) => transformCandidateToTableItem(candidate)
       )
       setCandidates(transformedCandidates)
+      setAllCandidates(transformedCandidates)
+      setCurrentPage(filteredData.attributes.current_page)
+      setHasMorePages(
+        filteredData.attributes.current_page < filteredData.attributes.last_page
+      )
       setPagination({
         current_page: filteredData.attributes.current_page,
         last_page: filteredData.attributes.last_page,
@@ -1139,10 +1231,10 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
 
   return (
     <>
-      <section style={{ flexWrap: "wrap", minHeight: "auto" }}>
-        <FormRow className="w-80" justifyContent="space-between">
+      <section style={{ flexWrap: "wrap", minHeight: "auto", padding: "0" }}>
+        <FormRow className="w-80 filtersRow" justifyContent="space-between">
           <div className="flex-direction-column">
-            <h1>Кандидаты</h1>
+            <h1 className="tableHeading">Кандидаты</h1>
             <button className="aButton" id="checkAll" onClick={handleSelectAll}>
               {candidates.length > 0 &&
               candidates.every((c) => selectedKeys.includes(c.vacancyKey))
@@ -1179,221 +1271,318 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           </div>
         ) : (
           <>
-            <table className="candidatesTable w-80">
-              <thead>
-                <tr style={{ border: "0" }}>
-                  <th></th>
-                  <th>ФИО Кандидата</th>
-                  <th>РОП</th>
-                  <th>Дата и время</th>
-                  <th>Вакансия</th>
-                  <th style={{ textAlign: "right", paddingRight: "30px" }}>
-                    Статус
-                  </th>
-                  <th style={{ width: "100px" }}></th>
-                </tr>
-              </thead>
-              <tbody id="candidatesTableBody">
-                {candidates.map((candidate) => (
-                  <tr
-                    key={candidate.id}
-                    data-keyvacancy={candidate.vacancyKey}
-                    onClick={(e) => handleRowClick(candidate, e)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td>
-                      <label
-                        className="custom-checkbox"
-                        htmlFor={`personalData${candidate.id}`}
-                      >
-                        <input
-                          type="checkbox"
-                          name="personalData"
-                          id={`personalData${candidate.id}`}
-                          checked={selectedKeys.includes(candidate.vacancyKey)}
-                          onChange={(e) =>
-                            handleCheckboxChange(
-                              candidate.vacancyKey,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="checkmark"></span>
-                      </label>
-                    </td>
-                    <td>{candidate.name}</td>
-                    <td>{candidate.rop}</td>
-                    <td>{candidate.datetime}</td>
-                    <td>{candidate.vacancy}</td>
-                    <td
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginRight: "20px",
-                      }}
-                    >
-                      <p className={"status"} id={candidate.statusID}>
-                        {candidate.status}
-                      </p>
-                    </td>
-                    <td>
-                      {candidate.hasVacancyComment && (
-                        <button
-                          id={`radactBtn${candidate.id}`}
-                          className="redactBtn"
-                          onClick={(e) => e.stopPropagation()}
-                          onMouseEnter={() => setActiveTooltip(candidate.id)}
-                          onMouseLeave={() => setActiveTooltip(null)}
-                        >
-                          <Image
-                            src="/images/candidatesSecurityImg/pen.webp"
-                            alt="Кнопка комментария"
-                            width={20}
-                            height={20}
-                          />
-                          <div
-                            className={`comment-tooltip ${
-                              activeTooltip === candidate.id ? "visible" : ""
-                            }`}
-                          >
-                            {candidate.hasVacancyComment}
-                          </div>
-                        </button>
-                      )}
-                      <button
-                        id={`downloadBtn${candidate.id}`}
-                        className={"downloadBtn"}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleSingleDownload(
-                            candidate.vacancyKey,
-                            candidate.name
-                          )
-                        }}
-                        disabled={singleDownloadMutation.isPending}
-                        title={
-                          singleDownloadMutation.isPending
-                            ? "Скачивание..."
-                            : `Скачать анкету в формате ${selectedFormat}`
-                        }
-                      >
-                        {singleDownloadMutation.isPending ? (
-                          <span>⏳</span>
-                        ) : (
-                          <Image
-                            src="/images/icons/download.svg"
-                            alt="Download"
-                            width={20}
-                            height={20}
-                          />
-                        )}
-                      </button>
-                    </td>
+            {/* Десктопная версия таблицы */}
+            <div className="desktop-table-container">
+              <table className="candidatesTable w-80">
+                <thead>
+                  <tr style={{ border: "0" }}>
+                    <th></th>
+                    <th>ФИО Кандидата</th>
+                    <th>РОП</th>
+                    <th>Дата и время</th>
+                    <th>Вакансия</th>
+                    <th style={{ textAlign: "right", paddingRight: "30px" }}>
+                      Статус
+                    </th>
+                    <th style={{ width: "100px" }}></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <FormRow
-              className="w-80"
-              justifyContent="space-between"
-              style={{ marginTop: "2rem" }}
-            >
-              <div className="left-side">
-                <button
-                  id="prevBtn"
-                  className={`navBtn ${
-                    pagination.current_page === 1 ? "inactive" : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page - 1)}
-                  disabled={pagination.current_page === 1}
-                >
-                  Предыдущая
-                </button>
-                <div className="pagination">
-                  {generatePageNumbers().map((page, index) => (
-                    <button
-                      key={index}
-                      className={`paginationBtn ${
-                        page === pagination.current_page ? "active" : ""
-                      }`}
-                      onClick={() =>
-                        typeof page === "number"
-                          ? handlePageChange(page)
-                          : undefined
-                      }
-                      disabled={typeof page !== "number"}
+                </thead>
+                <tbody id="candidatesTableBody">
+                  {candidates.map((candidate) => (
+                    <tr
+                      key={candidate.id}
+                      data-keyvacancy={candidate.vacancyKey}
+                      onClick={(e) => handleRowClick(candidate, e)}
+                      style={{ cursor: "pointer" }}
                     >
-                      {page}
-                    </button>
+                      <td>
+                        <label
+                          className="custom-checkbox"
+                          htmlFor={`personalData${candidate.id}`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="personalData"
+                            id={`personalData${candidate.id}`}
+                            checked={selectedKeys.includes(
+                              candidate.vacancyKey
+                            )}
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                candidate.vacancyKey,
+                                e.target.checked
+                              )
+                            }
+                          />
+                          <span className="checkmark"></span>
+                        </label>
+                      </td>
+                      <td>{candidate.name}</td>
+                      <td>{candidate.rop}</td>
+                      <td>{candidate.datetime}</td>
+                      <td>{candidate.vacancy}</td>
+                      <td
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          marginRight: "20px",
+                        }}
+                      >
+                        <p className="status" id={candidate.statusID}>
+                          {getStatusText(candidate.status)}
+                        </p>
+                      </td>
+                      <td>
+                        {candidate.hasVacancyComment && (
+                          <button
+                            id={`radactBtn${candidate.id}`}
+                            className="redactBtn"
+                            onClick={(e) => e.stopPropagation()}
+                            onMouseEnter={() => setActiveTooltip(candidate.id)}
+                            onMouseLeave={() => setActiveTooltip(null)}
+                          >
+                            <Image
+                              src="/images/candidatesSecurityImg/pen.webp"
+                              alt="Кнопка комментария"
+                              width={20}
+                              height={20}
+                            />
+                            <div
+                              className={`comment-tooltip ${
+                                activeTooltip === candidate.id ? "visible" : ""
+                              }`}
+                            >
+                              {candidate.hasVacancyComment}
+                            </div>
+                          </button>
+                        )}
+                        <button
+                          id={`downloadBtn${candidate.id}`}
+                          className={"downloadBtn"}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleSingleDownload(
+                              candidate.vacancyKey,
+                              candidate.name
+                            )
+                          }}
+                          disabled={singleDownloadMutation.isPending}
+                          title={
+                            singleDownloadMutation.isPending
+                              ? "Скачивание..."
+                              : `Скачать анкету в формате ${selectedFormat}`
+                          }
+                        >
+                          {singleDownloadMutation.isPending ? (
+                            <span>⏳</span>
+                          ) : (
+                            <Image
+                              src="/images/icons/download.svg"
+                              alt="Download"
+                              width={20}
+                              height={20}
+                            />
+                          )}
+                        </button>
+                      </td>
+                    </tr>
                   ))}
-                </div>
-                <button
-                  id="nexBtn"
-                  className={`navBtn ${
-                    pagination.current_page === pagination.last_page
-                      ? "inactive"
-                      : ""
-                  }`}
-                  onClick={() => handlePageChange(pagination.current_page + 1)}
-                  disabled={pagination.current_page === pagination.last_page}
-                >
-                  Следующая
-                </button>
-              </div>
-              <div className="download-button-group right-side">
-                <button
-                  className="deleteBtn"
-                  onClick={handleDeleteClick}
-                  disabled={
-                    selectedKeys.length === 0 || deleteMutation.isPending
-                  }
-                >
-                  {deleteMutation.isPending ? "Удаление..." : "Удалить"}
-                </button>
-                <button
-                  className="download-btn primary"
-                  onClick={handleDownload}
-                  disabled={multipleDownloadMutation.isPending}
-                >
-                  {multipleDownloadMutation.isPending
-                    ? "Скачивание..."
-                    : "Скачать"}
-                </button>
-                <button
-                  className="download-btn dropdown-toggle"
-                  onClick={handleFormatDropdownToggle}
-                  disabled={multipleDownloadMutation.isPending}
-                >
-                  <span className="format-text">{selectedFormat}</span>
-                  <Image
-                    src="/images/icons/chevron-down.svg"
-                    alt="Dropdown"
-                    width={16}
-                    height={16}
-                    className="chevron-down"
-                  />
-                </button>
-                <div
-                  className={`file-formats-card ${
-                    isFormatDropdownOpen ? "" : "hide"
-                  }`}
-                >
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".xlsx")}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Мобильная версия карточек */}
+            <div className="mobile-cards-container">
+              {candidates.map((candidate) => (
+                <MobileCandidateCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  isSelected={selectedKeys.includes(candidate.vacancyKey)}
+                  onCheckboxChange={handleCheckboxChange}
+                  onRowClick={handleRowClick}
+                  onSingleDownload={handleSingleDownload}
+                  singleDownloadLoading={{
+                    [candidate.vacancyKey]: singleDownloadMutation.isPending,
+                  }}
+                  activeTooltip={activeTooltip}
+                  setActiveTooltip={setActiveTooltip}
+                  getStatusText={getStatusText}
+                />
+              ))}
+            </div>
+
+            {/* Мобильная пагинация */}
+            {isMobile ? (
+              <div className="mobile-pagination-container">
+                <div className="load-more-section">
+                  <button
+                    className="load-more-btn"
+                    onClick={handleLoadMore}
+                    disabled={!hasMorePages || loadMoreLoading}
                   >
-                    .xlsx
-                  </div>
-                  <div
-                    className="format-item"
-                    onClick={() => handleFormatSelect(".pdf")}
+                    {loadMoreLoading ? "Загрузка..." : "Показать еще"}
+                  </button>
+                </div>
+                <div className="download-button-group">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={
+                      selectedKeys.length === 0 || deleteMutation.isPending
+                    }
                   >
-                    .pdf
+                    {deleteMutation.isPending ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={multipleDownloadMutation.isPending}
+                  >
+                    {multipleDownloadMutation.isPending
+                      ? "Скачивание..."
+                      : "Скачать выбранные"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={multipleDownloadMutation.isPending}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
+                    >
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
                   </div>
                 </div>
               </div>
-            </FormRow>
+            ) : (
+              /* Десктопная пагинация */
+              <FormRow
+                className="w-80 pagination-container"
+                justifyContent="space-between"
+                style={{ marginTop: "2rem", padding: "0 20px" }}
+              >
+                <div className="left-side">
+                  <button
+                    id="prevBtn"
+                    className={`navBtn ${
+                      pagination.current_page === 1 ? "inactive" : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page - 1)
+                    }
+                    disabled={pagination.current_page === 1}
+                  >
+                    {isTablet ? "Пред" : "Предыдущая"}
+                  </button>
+                  <div className="pagination">
+                    {generatePageNumbers().map((page, index) => (
+                      <button
+                        key={index}
+                        className={`paginationBtn ${
+                          page === pagination.current_page ? "active" : ""
+                        }`}
+                        onClick={() =>
+                          typeof page === "number"
+                            ? handlePageChange(page)
+                            : undefined
+                        }
+                        disabled={typeof page !== "number"}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    id="nexBtn"
+                    className={`navBtn ${
+                      pagination.current_page === pagination.last_page
+                        ? "inactive"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      handlePageChange(pagination.current_page + 1)
+                    }
+                    disabled={pagination.current_page === pagination.last_page}
+                  >
+                    {isTablet ? "След" : "Следующая"}
+                  </button>
+                </div>
+                <div className="download-button-group right-side">
+                  <button
+                    className="deleteBtn"
+                    onClick={handleDeleteClick}
+                    disabled={
+                      selectedKeys.length === 0 || deleteMutation.isPending
+                    }
+                  >
+                    {deleteMutation.isPending ? "Удаление..." : "Удалить"}
+                  </button>
+                  <button
+                    className="download-btn primary"
+                    onClick={handleDownload}
+                    disabled={multipleDownloadMutation.isPending}
+                  >
+                    {multipleDownloadMutation.isPending
+                      ? "Скачивание..."
+                      : "Скачать"}
+                  </button>
+                  <button
+                    className="download-btn dropdown-toggle"
+                    onClick={handleFormatDropdownToggle}
+                    disabled={multipleDownloadMutation.isPending}
+                  >
+                    <span className="format-text">{selectedFormat}</span>
+                    <Image
+                      src="/images/icons/chevron-down.svg"
+                      alt="Dropdown"
+                      width={16}
+                      height={16}
+                      className="chevron-down"
+                    />
+                  </button>
+                  <div
+                    className={`file-formats-card ${
+                      isFormatDropdownOpen ? "" : "hide"
+                    }`}
+                  >
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".xlsx")}
+                    >
+                      .xlsx
+                    </div>
+                    <div
+                      className="format-item"
+                      onClick={() => handleFormatSelect(".pdf")}
+                    >
+                      .pdf
+                    </div>
+                  </div>
+                </div>
+              </FormRow>
+            )}
           </>
         )}
       </section>
