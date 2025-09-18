@@ -84,18 +84,6 @@ interface DetailsPageProps {
 const DetailsPage = ({ params }: DetailsPageProps) => {
   const { key } = params
 
-  if (!key) {
-    return (
-      <div className={styles.details}>
-        <DetailsHeader isError={true} />
-        <div style={{ padding: "20px", textAlign: "center" }}>
-          <h2>Ошибка</h2>
-          <p>Ключ ЖК не найден</p>
-        </div>
-      </div>
-    )
-  }
-
   const FULL_API_URL = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${key}`
 
   const {
@@ -110,6 +98,18 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       gcTime: 10 * 60 * 1000,
     }
   )
+
+  if (!key) {
+    return (
+      <div className={styles.details}>
+        <DetailsHeader isError={true} />
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h2>Ошибка</h2>
+          <p>Ключ ЖК не найден</p>
+        </div>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
@@ -153,6 +153,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     metroStation: complexData.attributes.metro_station,
     metroType: complexData.attributes.metro_type,
     metroTime: complexData.attributes.metro_time,
+    key: key,
   }
 
   const aboutComplexData = {

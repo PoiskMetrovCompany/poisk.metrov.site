@@ -74,6 +74,7 @@ const DetailsPage = () => {
             ?.attributes?.[0]?.h1 ?? ""
         }
         isLoading={apartmentLoading}
+        apartmentKey={flatKey}
       />
       <Estate
         price={apartmentData?.attributes?.price ?? 0}

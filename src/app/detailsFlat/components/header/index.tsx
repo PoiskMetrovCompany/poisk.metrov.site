@@ -1,4 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
+
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 import styles from "./header.module.scss"
 
@@ -14,6 +18,7 @@ interface DetailsHeaderProps {
   mType: string
   resComplexname: string
   isLoading?: boolean
+  apartmentKey?: string
 }
 
 const DetailsHeader = ({
@@ -23,7 +28,49 @@ const DetailsHeader = ({
   mType,
   resComplexname,
   isLoading = false,
+  apartmentKey,
 }: DetailsHeaderProps) => {
+  const { isAuthenticated, user } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const userKey = user?.key || ""
+
+  // Состояние для отслеживания избранного
+  // TODO: Убрать и сделать через запрос
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    if (!apartmentKey || apartmentKey.trim() === "") {
+      console.log("Нет ключа карточки")
+      return
+    }
+
+    const action = isFavorite ? "remove" : "add"
+    const type = "apartment" // Для страницы деталей квартиры всегда тип "apartment"
+
+    switchLikeMutation.mutate(
+      {
+        code: apartmentKey,
+        type,
+        action,
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          setIsFavorite(!isFavorite)
+        },
+        onError: (error) => {
+          console.error("Ошибка при обновлении избранного:", error)
+        },
+      }
+    )
+  }
   if (isLoading) {
     return (
       <div className={styles.header}>
@@ -99,7 +146,12 @@ const DetailsHeader = ({
         </div>
       </div>
       <div className={styles.header__buttons}>
-        <IconButton iconLink={"/images/icons/heart.svg"} />
+        <IconButton
+          iconLink={"/images/icons/heart.svg"}
+          isActive={isFavorite}
+          onClick={handleFavoriteClick}
+          disabled={switchLikeMutation.isPending}
+        />
         <IconButton iconLink={"/images/icons/share.svg"} />
       </div>
     </div>

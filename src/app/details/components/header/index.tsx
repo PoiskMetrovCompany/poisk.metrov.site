@@ -1,4 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
+
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 import styles from "./header.module.scss"
 
@@ -13,6 +17,7 @@ interface HeaderData {
   metroStation: string
   metroType: string
   metroTime: number
+  key?: string
 }
 
 interface DetailsHeaderProps {
@@ -55,6 +60,48 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   isLoading = false,
   isError = false,
 }) => {
+  const { isAuthenticated, user } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const userKey = user?.key || ""
+
+  // Состояние для отслеживания избранного
+  // TODO: Убрать и сделать через запрос
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    if (!data?.key) {
+      console.log("Нет ключа карточки")
+      return
+    }
+
+    const action = isFavorite ? "remove" : "add"
+    const type = "building" // Для страницы деталей ЖК всегда тип "building"
+
+    switchLikeMutation.mutate(
+      {
+        code: data.key,
+        type,
+        action,
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          setIsFavorite(!isFavorite)
+        },
+        onError: (error) => {
+          console.error("Ошибка при обновлении избранного:", error)
+        },
+      }
+    )
+  }
+
   if (isLoading) {
     return <HeaderSkeleton />
   }
@@ -73,7 +120,12 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
           </div>
         </div>
         <div className={styles.header__buttons}>
-          <IconButton iconLink={"/images/icons/heart.svg"} />
+          <IconButton
+            iconLink={"/images/icons/heart.svg"}
+            isActive={isFavorite}
+            onClick={handleFavoriteClick}
+            disabled={switchLikeMutation.isPending}
+          />
           <IconButton iconLink={"/images/icons/share.svg"} />
         </div>
       </div>
@@ -121,7 +173,12 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
         </div>
       </div>
       <div className={styles.header__buttons}>
-        <IconButton iconLink={"/images/icons/heart.svg"} />
+        <IconButton
+          iconLink={"/images/icons/heart.svg"}
+          isActive={isFavorite}
+          onClick={handleFavoriteClick}
+          disabled={switchLikeMutation.isPending}
+        />
         <IconButton iconLink={"/images/icons/share.svg"} />
       </div>
     </div>
