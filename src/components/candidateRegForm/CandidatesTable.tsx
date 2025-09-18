@@ -505,11 +505,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       case "Принят":
         return "accepted"
       case "Не принят":
-        return "not_accepted"
+        return "not"
       case "Вышел":
-        return "start_work"
+        return "startWorking"
       case "Не вышел":
-        return "not_start_work"
+        return "not"
       default:
         return "new"
     }
@@ -615,8 +615,8 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       checked: "Проверен",
       "needs-work": "Нужна доработка",
       rejected: "Отклонен",
-      accepted: "Принят",
-      not_accepted: "Не принят",
+      hired: "Принят",
+      not_hired: "Не принят",
       start_work: "Вышел",
       not_start_work: "Не вышел",
     }
@@ -877,7 +877,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           datetime: "12.01.2025 09:20",
           vacancy: "Project Manager",
           status: "Принят",
-          statusID: "accepted",
+          statusID: "hired",
           hasVacancyComment: "Отличный кандидат",
           vacancyKey: "mock-key-5",
           fullData: {
@@ -931,7 +931,7 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
           datetime: "10.01.2025 12:15",
           vacancy: "Backend разработчик",
           status: "Не принят",
-          statusID: "not_accepted",
+          statusID: "not_hired",
           hasVacancyComment: "Не подошел по требованиям",
           vacancyKey: "mock-key-7",
           fullData: {
