@@ -33,6 +33,7 @@ const Favourites = () => {
       enabled: !!cityCode,
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
+      timeout: 30 * 1000,
     }
   )
 
