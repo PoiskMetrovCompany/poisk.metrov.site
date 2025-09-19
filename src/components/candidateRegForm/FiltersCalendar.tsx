@@ -241,10 +241,23 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
   }
 
   const getAccessTokenFromCookie = () => {
+    if (typeof document === "undefined") return null
     const cookies = document.cookie.split(";")
     for (let cookie of cookies) {
       const [name, value] = cookie.trim().split("=")
       if (name === "access_token") {
+        return value
+      }
+    }
+    return null
+  }
+
+  const getROPKeyFromCookie = () => {
+    if (typeof document === "undefined") return null
+    const cookies = document.cookie.split(";")
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=")
+      if (name === "ropKey") {
         return value
       }
     }
@@ -460,6 +473,11 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
 
     if (selectedCity) {
       queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
+    }
+
+    const ropKey = getROPKeyFromCookie()
+    if (ropKey) {
+      queryParams.push(`rop_key=${encodeURIComponent(ropKey)}`)
     }
 
     if (updatedFilters.dateRange.start && updatedFilters.dateRange.end) {
@@ -1177,7 +1195,7 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
                   maxWidth: "100%",
                 }}
               >
-                {String(vacancyError)}
+                {vacancyError.message || "Ошибка загрузки вакансий"}
                 <button
                   onClick={() => window.location.reload()}
                   style={{

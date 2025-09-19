@@ -74,11 +74,23 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   const router = useRouter()
 
   const getAccessToken = () => {
+    if (typeof document === "undefined") return null
+
     const cookies = document.cookie.split(";")
     const tokenCookie = cookies.find((cookie) =>
       cookie.trim().startsWith("access_token=")
     )
     return tokenCookie ? tokenCookie.split("=")[1] : null
+  }
+
+  const getROPKey = () => {
+    if (typeof document === "undefined") return null
+
+    const cookies = document.cookie.split(";")
+    const ropKeyCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("ropKey=")
+    )
+    return ropKeyCookie ? ropKeyCookie.split("=")[1] : null
   }
 
   const token = getAccessToken()
@@ -680,6 +692,11 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
       queryParams.push(`city_work=${encodeURIComponent(selectedCity)}`)
     }
 
+    const ropKey = getROPKey()
+    if (ropKey) {
+      queryParams.push(`rop_key=${encodeURIComponent(ropKey)}`)
+    }
+
     // Добавляем диапазон дат
     if (filters.dateRange.start && filters.dateRange.end) {
       const dateRange = formatApiDateRange(
@@ -728,34 +745,36 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
         throw new Error("Токен авторизации не найден")
       }
 
+      const ropKey = getROPKey()
+
+      // Проверяем доступность cookie
+      if (typeof document === "undefined") {
+        setLoading(false)
+        return
+      }
+
       // Формируем базовый URL с пагинацией
       let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?page=${page}&city_work=${encodeURIComponent(
         selectedCity
       )}`
 
+      if (ropKey) {
+        url += `&rop_key=${encodeURIComponent(ropKey)}`
+      }
+
       // Если есть активные фильтры, добавляем их к URL
       if (useFilters && activeFilters) {
         const filtersQueryString = buildFiltersQueryString(activeFilters)
         if (filtersQueryString) {
-          // Убираем city_work из filtersQueryString, так как он уже есть в базовом URL
-          const filtersWithoutCity = filtersQueryString.replace(
-            /city_work=[^&]*&?/g,
+          // Убираем city_work и rop_key из filtersQueryString, так как они уже есть в базовом URL
+          const filtersWithoutDuplicates = filtersQueryString.replace(
+            /(city_work=[^&]*&?|rop_key=[^&]*&?)/g,
             ""
           )
-          if (filtersWithoutCity) {
-            url += `&${filtersWithoutCity}`
+          if (filtersWithoutDuplicates) {
+            url += `&${filtersWithoutDuplicates}`
           }
         }
-
-        // Логирование для отладки
-        console.log("🔍 Запрос с фильтрами:", {
-          page,
-          useFilters,
-          activeFilters,
-          finalUrl: url,
-        })
-      } else {
-        console.log("📄 Запрос без фильтров:", { page, url })
       }
 
       const headers: Record<string, string> = {
@@ -1182,15 +1201,25 @@ const CandidatesTable: React.FC<CandidatesTableProps> = ({
   }, [filteredData])
 
   useEffect(() => {
-    if (!filteredData && candidates.length === 0) {
-      fetchCandidates(1, false)
-    }
+    // Добавляем небольшую задержку, чтобы убедиться, что cookie доступны
+    const timer = setTimeout(() => {
+      if (!filteredData && candidates.length === 0) {
+        fetchCandidates(1, false)
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
-    if (selectedCity && !filteredData && candidates.length > 0) {
-      fetchCandidates(1, false)
-    }
+    // Добавляем небольшую задержку для доступа к cookie
+    const timer = setTimeout(() => {
+      if (selectedCity && !filteredData && candidates.length > 0) {
+        fetchCandidates(1, false)
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [selectedCity])
 
   useEffect(() => {
