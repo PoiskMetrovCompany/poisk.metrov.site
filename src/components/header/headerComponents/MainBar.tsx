@@ -11,9 +11,10 @@ import UserActions from "./UserActions"
 
 interface IMainBarProps {
   onCatalogClick: () => void
+  initialCity: { name: string; id: string; slug: string } | null
 }
 
-const MainBar = ({ onCatalogClick }: IMainBarProps) => {
+const MainBar = ({ onCatalogClick, initialCity }: IMainBarProps) => {
   return (
     <div className={styles.main_bar}>
       <div className={styles.main_bar__container}>
@@ -23,7 +24,7 @@ const MainBar = ({ onCatalogClick }: IMainBarProps) => {
         </div>
         <div className={styles.main_bar__right}>
           <ContactInfo />
-          <UserActions />
+          <UserActions initialCity={initialCity} />
         </div>
       </div>
     </div>

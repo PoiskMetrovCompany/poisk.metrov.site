@@ -172,6 +172,10 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
     { value: "Проверен", text: "Проверен" },
     { value: "Нужна доработка", text: "Нужна доработка" },
     { value: "Отклонен", text: "Отклонен" },
+    { value: "Вышел", text: "Вышел" },
+    { value: "Не вышел", text: "Не вышел" },
+    { value: "Принят", text: "Принят" },
+    { value: "Не принят", text: "Не принят" },
   ]
 
   const formatApiDateRange = (startDate: Date, endDate: Date, type: string) => {
@@ -210,6 +214,10 @@ const FiltersCalendar: React.FC<FiltersCalendarProps> = ({
       Проверен: "Проверен",
       "Нужна доработка": "Нужна доработка",
       Отклонен: "Отклонен",
+      Вышел: "start_work",
+      "Не вышел": "not_start_work",
+      Принят: "hired",
+      "Не принят": "not_hired",
     }
 
     return statusValues

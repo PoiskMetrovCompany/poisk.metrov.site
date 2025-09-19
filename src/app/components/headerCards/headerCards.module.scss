@@ -3,126 +3,228 @@
   gap: 20px;
   justify-content: space-around;
 
+  @media (width >= 1440px) and (width < 1920px) {
+    gap: 32px;
+  }
+
+  @media (width >= 1024px) and (width < 1440px) {
+    gap: 24px;
+  }
+
+  @media (width >= 768px) and (width < 1024px) {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width < 768px) {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
   &__title {
-    user-select: none;
-
-    display: flex;
-    grid-template-columns: auto 40px;
-    flex: 1;
-    justify-content: space-between;
-
-    padding: 40px;
-    border-radius: 32px;
-
     background-color: var(--color-green);
     background-image: url("/images/backgrounds/maincard.svg");
     background-position: center;
     background-size: cover;
+    border-radius: 32px;
+
+    display: flex;
+    flex: 1;
+    grid-template-columns: auto 40px;
+    justify-content: space-between;
+
+    padding: 40px;
+    user-select: none;
 
     -webkit-touch-callout: none;
 
+    @media (width >= 1440px) and (width < 1920px) {
+      flex: 1.122 1 0;
+      padding: 32px;
+      width: 100%;
+    }
+
+    @media (width >= 1024px) and (width < 1440px) {
+      flex: 1.319 1 0;
+      padding: 24px;
+      width: 100%;
+    }
+
+    @media (width >= 768px) and (width < 1024px) {
+      flex: 1;
+      grid-column: 1 / 3;
+      height: 282px;
+      padding: 24px;
+      width: 100%;
+    }
+
+    @media (width < 768px) {
+      flex: 1;
+      height: 248px;
+      padding: 16px;
+      width: 100%;
+    }
+
     &__heading {
-      width: 565px;
+      color: var(--color-white);
 
       font-size: 40px;
       font-weight: 400;
       line-height: 130%;
-      color: var(--color-white);
+      width: 565px;
 
-      @media (width <= 1720px) {
-        width: 300px;
-        font-size: 24px;
+      @media (width >= 1440px) and (width < 1920px) {
+        font-size: 26px;
+        width: 334px;
       }
 
-      @media (width <= 1250px) {
+      @media (width >= 1024px) and (width < 1440px) {
+        font-size: 22px;
         width: 260px;
+      }
+
+      @media (width >= 768px) and (width < 1024px) {
+        font-size: 22px;
         margin: 0;
-        font-size: 22px;
+        width: 425px;
       }
 
-      @media (width <= 620px) {
+      @media (width < 768px) {
+        font-size: 22px;
         width: 100%;
-        font-size: 22px;
-      }
-
-      @media (width <= 768px) {
-        flex: 1;
       }
     }
 
     &__link {
-      display: flex;
       align-items: center;
-      justify-content: center;
-
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
 
       background-color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      height: 56px;
+      justify-content: center;
 
       transition: background-color 0.3s ease;
+
+      width: 56px;
 
       &:hover {
         background-color: var(--color-border-gray);
       }
 
       &__icon {
-        width: 28px;
         height: 28px;
+        width: 28px;
+
+        @media (width >= 1440px) and (width < 1920px) {
+          height: 28px;
+          width: 28px;
+        }
+
+        @media (width >= 1024px) and (width < 1440px) {
+          height: 24px;
+          width: 24px;
+        }
+
+        @media (width >= 768px) and (width < 1024px) {
+          height: 24px;
+          width: 24px;
+        }
+
+        @media (width < 768px) {
+          height: 20px;
+          width: 20px;
+        }
       }
 
-      @media (width <= 1250px) {
-        width: 48px;
+      @media (width >= 1440px) and (width < 1920px) {
+        height: 56px;
+        width: 56px;
+      }
+
+      @media (width >= 1024px) and (width < 1440px) {
         height: 48px;
+        width: 48px;
       }
 
-      @media (width <= 620px) {
-        width: 40px;
+      @media (width >= 768px) and (width < 1024px) {
+        height: 48px;
+        width: 48px;
+      }
+
+      @media (width < 768px) {
         height: 40px;
+        width: 40px;
       }
     }
 
-    @media (width <= 1720px) {
-      max-width: 450px;
-    }
+    // @media (width <= 1720px) {
+    //   max-width: 450px;
+    // }
 
-    @media (width <= 1250px) {
-      max-width: 350px;
-    }
+    // @media (width <= 1250px) {
+    //   max-width: 350px;
+    // }
 
-    @media (width <= 1015px) {
-      min-width: 100%;
-      max-width: none;
-      height: 282px;
-    }
+    // @media (width <= 1015px) {
+    //   min-width: 100%;
+    //   max-width: none;
+    //   height: 282px;
+    // }
 
-    @media (width <= 620px) {
-      width: 100%;
-      min-width: 100%;
-      max-width: none;
-      height: 200px;
-      padding: 16px 16px 140px;
+    // @media (width <= 620px) {
+    //   width: 100%;
+    //   min-width: 100%;
+    //   max-width: none;
+    //   height: 200px;
+    //   padding: 16px 16px 140px;
 
-      // padding-bottom: 120px;
-    }
+    //   // padding-bottom: 120px;
+    // }
   }
 
   &__percent {
-    width: 390px;
-    padding: 12px;
+    background-color: var(--color-orange);
     border-radius: 32px;
 
     color: var(--color-white);
+    padding: 12px;
+    width: 390px;
 
-    background-color: var(--color-orange);
+    @media (width >= 1024px) and (width < 1920px) {
+      flex: 1 1 0; /* grow: 1, shrink: 1, basis: 0 */
+      max-width: 1000px !important;
+
+      width: 100% !important;
+    }
+    @media (width < 1024px) {
+      width: 100% !important;
+    }
 
     &__content {
       padding: 28px 28px 0;
 
-      @media (width <= 620px) {
+      @media (width >= 1440px) and (width < 1920px) {
+        padding: 20px 20px 0;
+      }
+
+      @media (width >= 1024px) and (width < 1440px) {
+        padding: 20px 20px 0;
+      }
+
+      @media (width >= 768px) and (width < 1024px) {
+        padding: 10px 10px 0;
+      }
+
+      @media (width < 768px) {
         padding: 4px 4px 0;
       }
+
+      // @media (width <= 620px) {
+      //   padding: 4px 4px 0;
+      // }
     }
 
     &__text {
@@ -158,65 +260,117 @@
       font-weight: 300;
       line-height: 130%;
 
-      @media (width <= 620px) {
+      @media (width >= 768px) and (width < 1920px) {
         font-size: 16px;
+      }
+
+      @media (width < 768px) {
+        font-size: 14px;
       }
     }
 
     &__date {
+      background-color: var(--color-dark-orange);
+      border-radius: 20px;
       display: flex;
       flex-direction: column;
       gap: 0;
-
-      width: 100%;
       margin-top: 32px;
       padding: 8px 12px;
-      border-radius: 20px;
 
-      background-color: var(--color-dark-orange);
+      width: 100%;
+
+      @media (width >= 1440px) and (width < 1920px) {
+        margin-top: 20px;
+      }
+
+      @media (width >= 1024px) and (width < 1440px) {
+        margin-top: 24px;
+        padding: 8px 6px;
+      }
 
       &__skeleton {
-        margin-top: 32px;
         border-radius: 20px;
-        
+        margin-top: 32px;
       }
 
       &__time {
+        align-items: center;
         display: flex;
         gap: 4px;
-        align-items: center;
-        justify-content: space-between;
 
         height: 56px;
+        justify-content: space-between;
+
+        @media (width >= 1440px) and (width < 1920px) {
+          height: 47px;
+          justify-content: center;
+        }
+
+        @media (width >= 1024px) and (width < 1440px) {
+          height: 36px;
+          justify-content: center;
+        }
+
+        @media (width >= 768px) and (width < 1024px) {
+          height: 36px;
+        }
+
+        @media (width < 768px) {
+          height: 34px;
+        }
 
         &__number {
-          width: 80px;
-          height: 56px;
-
           font-size: 48px;
           font-weight: 400;
+          height: 56px;
           line-height: 130%;
           text-align: center;
+          width: 80px;
 
-          @media (width <= 1720px) {
+          @media (width >= 1440px) and (width < 1920px) {
             font-size: 36px;
+            height: 47px;
+            width: 72px;
           }
 
-          @media (width <= 1250px) {
-            height: max-content;
+          @media (width >= 1024px) and (width < 1440px) {
             font-size: 28px;
+            height: 36px;
+            width: 53px;
           }
 
-          @media (width <= 620px) {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            width: 60px;
-            height: 48px;
-
-            font-size: 24px;
+          @media (width >= 768px) and (width < 1024px) {
+            font-size: 28px;
+            height: 36px;
+            width: 67px;
           }
+
+          @media (width < 768px) {
+            font-size: 26px;
+            height: 34px;
+            width: 53px;
+          }
+
+          // @media (width <= 1720px) {
+          //   font-size: 36px;
+          // }
+
+          // @media (width <= 1250px) {
+          //   font-size: 28px;
+          //   height: max-content;
+          // }
+
+          // @media (width <= 620px) {
+          //   align-items: center;
+          //   display: flex;
+
+          //   font-size: 24px;
+          //   height: 48px;
+          //   justify-content: center;
+
+          //   width: 60px;
+          // }
         }
 
         &__colon {
@@ -245,18 +399,40 @@
 
       &__desc {
         display: flex;
-        justify-content: space-between;
 
         font-size: 16px;
         font-weight: 400;
+        justify-content: space-between;
         line-height: 150%;
 
-        &__item {
-          width: 80px;
-          text-align: center;
+        @media (width >= 1440px) and (width < 1920px) {
+          gap: 18px;
+          justify-content: center;
+        }
 
-          @media (width <= 620px) {
-            width: 60px;
+        @media (width >= 1024px) and (width < 1440px) {
+          gap: 18px;
+          justify-content: center;
+        }
+
+        &__item {
+          text-align: center;
+          width: 80px;
+
+          @media (width >= 1440px) and (width < 1920px) {
+            width: 72px;
+          }
+
+          @media (width >= 1024px) and (width < 1440px) {
+            width: 53px;
+          }
+
+          @media (width >= 768px) and (width < 1024px) {
+            width: 67px;
+          }
+
+          @media (width < 768px) {
+            width: 53px;
           }
         }
 
@@ -269,9 +445,9 @@
         }
       }
 
-      @media (width <= 620px) {
-        width: 213px;
+      @media (width < 768px) {
         margin-top: 20px;
+        width: 213px;
       }
     }
 
@@ -279,99 +455,197 @@
       height: 64px;
       margin-top: 34px;
 
-      @media (width <= 620px) {
+      @media (width >= 1440px) and (width < 1920px) {
+        font-size: 15px;
+        height: 56px;
+        margin-top: 28px;
+      }
+
+      @media (width >= 1024px) and (width < 1440px) {
+        font-size: 15px;
+        height: 46px;
+        margin-top: 24px;
+      }
+
+      @media (width >= 768px) and (width < 1024px) {
+        font-size: 15px;
         height: 48px;
+        margin-top: 24px;
+      }
+
+      @media (width < 768px) {
+        font-size: 12px;
+        height: 40px;
         margin-top: 20px;
       }
     }
 
-    @media (width <= 1720px) {
-      max-width: 380px;
-    }
+    // @media (width <= 1720px) {
+    //   max-width: 380px;
+    // }
 
-    @media (width <= 1250px) {
-      max-width: 290px;
-    }
+    // @media (width <= 1250px) {
+    //   max-width: 290px;
+    // }
 
-    @media (width <= 1015px) {
-      width: calc(50% - 10px);
-      max-width: none;
-    }
+    // @media (width <= 1015px) {
+    //   max-width: none;
+    //   width: calc(50% - 10px);
+    // }
 
-    @media (width <= 620px) {
-      width: 100%;
-      max-width: none;
-    }
+    // @media (width <= 620px) {
+    //   max-width: none;
+    //   width: 100%;
+    // }
   }
 
   &__firstCard {
+    align-items: center;
+
+    background-color: var(--color-border-gray);
+    border-radius: 40px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    align-items: center;
+    padding: 12px;
 
     width: 390px;
-    padding: 12px;
-    border-radius: 40px;
 
-    background-color: var(--color-border-gray);
+    @media (width >= 1024px) and (width < 1920px) {
+      flex: 1 1 0; /* grow: 1, shrink: 1, basis: 0 */
+
+      max-width: 1000px !important;
+      width: 100% !important;
+    }
+
+    @media (width >= 1024px) and (width < 1440px) {
+      min-width: 270px;
+    }
+
+    @media (width < 1024px) {
+      width: 100% !important;
+    }
 
     &__content {
       display: flex;
       flex-direction: column;
       padding: 28px 28px 0;
+      width: 100%;
 
-      @media (width <= 620px) {
-        padding: 10px 14px 0;
+      @media (width >= 1440px) and (width < 1920px) {
+        padding: 20px 20px 0;
+      }
+
+      @media (width >= 1024px) and (width < 1440px) {
+        padding: 20px 20px 0;
+      }
+
+      @media (width >= 768px) and (width < 1024px) {
+        padding: 10px 10px 0;
+      }
+
+      @media (width < 768px) {
+        padding: 4px 4px 0;
       }
     }
 
     &__title {
+      color: var(--color-black);
       font-size: 34px;
       font-weight: 400;
       line-height: 130%;
-      color: var(--color-black);
 
-      @media (width <= 1720px) {
+      @media (width >= 1440px) and (width < 1920px) {
+        font-size: 22px;
+        width: 60%;
+      }
+      @media (width >= 1024px) and (width < 1440px) {
         font-size: 22px;
       }
 
-      @media (width <= 768px) {
+      @media (width >= 768px) and (width < 1024px) {
         font-size: 20px;
       }
 
-      @media (width <= 620px) {
-        font-size: 18px;
+      @media (width < 768px) {
+        font-size: 20px;
       }
     }
 
     &__icon {
-      width: 93px;
       height: 93px;
-      margin-top: 75px;
-      margin-right: auto;
       margin-left: auto;
+      margin-right: auto;
+      margin-top: 75px;
+      width: 93px;
 
-      @media (width <= 1720px) {
-        width: 74px;
+      @media (width >= 1440px) and (width < 1920px) {
         height: 74px;
+        margin-top: 45px;
+        width: 74px;
       }
 
-      @media (width <= 620px) {
-        width: 60px;
-        height: 60px;
-        margin-top: 40px;
+      @media (width >= 1024px) and (width < 1440px) {
+        height: 93px;
+        margin-top: 50px;
+        width: 93px;
       }
+
+      @media (width >= 768px) and (width < 1024px) {
+        height: 93px;
+        margin-top: 50px;
+        width: 93px;
+      }
+
+      @media (width < 768px) {
+        height: 93px;
+        margin-top: 50px;
+        width: 93px;
+      }
+
+      // @media (width <= 620px) {
+      //   height: 60px;
+      //   margin-top: 40px;
+      //   width: 60px;
+      // }
     }
 
     &__button {
-      height: 64px;
       margin-top: auto;
       transition: opacity 0.3s ease;
 
+      &__button {
+        height: 64px;
+        // margin-top: 34px;
+
+        @media (width >= 1440px) and (width < 1920px) {
+          font-size: 15px;
+          height: 56px;
+          // margin-top: 28px;
+        }
+
+        @media (width >= 1024px) and (width < 1440px) {
+          font-size: 15px;
+          height: 46px;
+          // margin-top: 24px;
+        }
+
+        @media (width >= 768px) and (width < 1024px) {
+          font-size: 15px;
+          height: 48px;
+          // margin-top: 24px;
+        }
+
+        @media (width < 768px) {
+          font-size: 12px;
+          height: 40px;
+          // margin-top: 20px;
+        }
+      }
+
       &:hover {
-        opacity: 0.8;
         background-color: var(--color-beige) !important;
+        opacity: 0.8;
       }
 
       @media (width <= 620px) {
@@ -379,32 +653,32 @@
       }
     }
 
-    @media (width <= 1720px) {
-      max-width: 381px;
-    }
+    // @media (width <= 1720px) {
+    //   max-width: 381px;
+    // }
 
-    @media (width <= 1250px) {
-      width: 290px;
-      max-width: none;
-    }
+    // @media (width <= 1250px) {
+    //   max-width: none;
+    //   width: 290px;
+    // }
 
-    @media (width <= 1015px) {
-      width: calc(50% - 10px);
-      max-width: none;
-    }
+    // @media (width <= 1015px) {
+    //   max-width: none;
+    //   width: calc(50% - 10px);
+    // }
 
-    @media (width <= 620px) {
-      width: 100%;
-      max-width: none;
-    }
+    // @media (width <= 620px) {
+    //   max-width: none;
+    //   width: 100%;
+    // }
   }
 
-  @media (width <= 1015px) {
-    flex-wrap: wrap;
-  }
+  // @media (width <= 1015px) {
+  //   flex-wrap: wrap;
+  // }
 
-  @media (width <= 620px) {
-    flex-direction: column;
-    gap: 16px;
-  }
+  // @media (width <= 620px) {
+  //   flex-direction: column;
+  //   gap: 16px;
+  // }
 }

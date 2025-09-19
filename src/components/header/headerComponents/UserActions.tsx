@@ -2,10 +2,9 @@
 
 import React, { FC, useState } from "react"
 
-
-import Image from "next/image"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
+
+import { useAuthState } from "@/hooks/useAuthState"
 import { IFavoritesCountResponse } from "@/types/api/favoritesCount"
 import { useApiQuery } from "@/utils/hooks/use-api"
 
@@ -18,22 +17,22 @@ import IconImage from "@/components/ui/IconImage"
 import Skeleton from "@/components/ui/skeleton"
 
 interface IUserActionsProps {
-  isLoggedIn?: boolean
   onFavoritesClick?: () => void
   onMenuClick?: () => void
+  initialCity: { name: string; id: string; slug: string } | null
 }
 
 const UserActions: FC<IUserActionsProps> = ({
-  isLoggedIn = false,
   onFavoritesClick,
   onMenuClick,
+  initialCity,
 }) => {
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false)
   const router = useRouter()
 
+  // Используем новую систему авторизации
+  const { isAuthenticated, user } = useAuthState()
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleFavoritesClick = (): void => {
     if (onFavoritesClick) {
@@ -42,43 +41,25 @@ const UserActions: FC<IUserActionsProps> = ({
       router.push("/favourites")
     }
   }
-
-  const USER_KEY = "e8fe3d65-822b-11f0-8411-10f60a82b815"
+  // Используем ключ пользователя из состояния авторизации
+  const userKey = user?.key || ""
   const { data: fCountData, isLoading: fCountLoading } =
     useApiQuery<IFavoritesCountResponse>(
-      ["fCount"],
-      `/favorites/count?user_key=${USER_KEY}`,
+      ["fCount", userKey, "favourite_list"],
+      userKey ? `/favorites/count?user_key=${userKey}` : "",
       {
+        enabled: !!userKey,
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
       }
     )
   const favoritesCount = fCountData?.attributes
 
-  const handleLoginClick = (): void => {
-    if (isLoggedIn) {
-      setIsProfilePopoverOpen(true)
-    } else {
-      // Открыть форму входа
-      console.log("Открыть форму входа")
-    }
-  }
-
   const handleMenuClick = (): void => {
     setIsMobileMenuOpen(true)
     if (onMenuClick) {
       onMenuClick()
     }
-  }
-  const handleSettingsClick = (): void => {
-    router.push("/LK")
-    setIsProfilePopoverOpen(false)
-  }
-
-  const handleLogoutClick = (): void => {
-    // Обработка выхода из личного кабинета
-    console.log("Выход из личного кабинета")
-    setIsProfilePopoverOpen(false)
   }
 
   return (
@@ -115,7 +96,7 @@ const UserActions: FC<IUserActionsProps> = ({
         onLogoutClick={handleLogoutClick}
       > */}
       {/* </ProfilePopover> */}
-      {isLoggedIn ? (
+      {isAuthenticated ? (
         <button className={styles.user_actions__login} type="button">
           <IconImage
             className={styles.user_actions__icon}
@@ -162,6 +143,7 @@ const UserActions: FC<IUserActionsProps> = ({
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onOpenChange={setIsMobileMenuOpen}
+        initialCity={initialCity}
       />
     </div>
   )

@@ -4,7 +4,14 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import clsx from "clsx"
 
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
+
+import { useAuthPhone, useAuthPincode } from "@/hooks/useAuth"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { CurrentUserResponse } from "@/types/User"
+import { getAuthToken, setAuthToken } from "@/utils/auth"
+import { formatPhoneNumber } from "@/utils/formatPhoneNumber"
+import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./form.module.scss"
 
@@ -22,6 +29,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onClose,
   trigger,
 }) => {
+  // Используем Zustand state для управления формой
+  const { isLoginFormOpen, closeLoginForm } = useAuthStore()
   const [open, setOpen] = useState(isOpen)
   const [phone, setPhone] = useState("")
   const [isAgreed, setIsAgreed] = useState(false)
@@ -29,6 +38,27 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [step, setStep] = useState<"phone" | "code">("phone")
   const [timer, setTimer] = useState(60)
   const [isTimerActive, setIsTimerActive] = useState(false)
+
+  // Хуки для авторизации
+  const authPhoneMutation = useAuthPhone()
+  const authPincodeMutation = useAuthPincode()
+
+  // Zustand store для управления авторизацией
+  const { login } = useAuthStore()
+
+  // Состояние для отслеживания успешной авторизации
+  const [authSuccess, setAuthSuccess] = useState(false)
+
+  // Запрос для получения данных пользователя после успешной авторизации
+  const { data: currentUserData } = useApiQuery<CurrentUserResponse>(
+    ["currentUser"],
+    "/users/get-current",
+    {
+      enabled: authSuccess, // Запрос только после успешной авторизации
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    }
+  )
 
   // Таймер для кнопки "Перезвонить"
   useEffect(() => {
@@ -49,18 +79,39 @@ const LoginForm: React.FC<LoginFormProps> = ({
     }
   }, [isTimerActive, timer])
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen)
-    if (!newOpen && onClose) {
-      // Сброс состояния при закрытии
-      setStep("phone")
-      setPhone("")
-      setCode("")
-      setIsTimerActive(false)
-      setTimer(60)
-      onClose()
+  const handleOpenChange = useCallback(
+    (newOpen: boolean) => {
+      setOpen(newOpen)
+      if (!newOpen) {
+        // Сброс состояния при закрытии
+        setStep("phone")
+        setPhone("")
+        setCode("")
+        setIsTimerActive(false)
+        setTimer(60)
+        setAuthSuccess(false)
+        // Закрываем форму через Zustand
+        closeLoginForm()
+        if (onClose) {
+          onClose()
+        }
+      }
+    },
+    [onClose, closeLoginForm]
+  )
+
+  // Обработка данных пользователя после успешной авторизации
+  useEffect(() => {
+    if (currentUserData?.attributes) {
+      // Сохраняем данные пользователя в состоянии
+      const token = getAuthToken()
+      if (token) {
+        login(token, currentUserData.attributes)
+        // Закрываем форму после успешной авторизации и получения данных
+        handleOpenChange(false)
+      }
     }
-  }
+  }, [currentUserData, login, handleOpenChange])
 
   const isPhoneValid = phone.replace(/\D/g, "").length >= 10
   const canSubmit = isPhoneValid && isAgreed
@@ -71,41 +122,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     setPhone(formattedValue)
   }
 
-  const formatPhoneNumber = (input: string): string => {
-    const numbers = input.replace(/\D/g, "")
-    if (numbers.length === 0) return ""
-
-    let cleanNumbers = numbers
-    if (numbers.startsWith("8")) {
-      cleanNumbers = "7" + numbers.slice(1)
-    } else if (!numbers.startsWith("7")) {
-      cleanNumbers = "7" + numbers
-    }
-
-    cleanNumbers = cleanNumbers.slice(0, 11)
-
-    if (cleanNumbers.length <= 1) return `+${cleanNumbers}`
-    if (cleanNumbers.length <= 4)
-      return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(1)}`
-    if (cleanNumbers.length <= 7)
-      return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(
-        1,
-        4
-      )} ${cleanNumbers.slice(4)}`
-    if (cleanNumbers.length <= 9)
-      return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(
-        1,
-        4
-      )} ${cleanNumbers.slice(4, 7)} ${cleanNumbers.slice(7)}`
-    return `+${cleanNumbers.slice(0, 1)} ${cleanNumbers.slice(
-      1,
-      4
-    )} ${cleanNumbers.slice(4, 7)} ${cleanNumbers.slice(
-      7,
-      9
-    )} ${cleanNumbers.slice(9, 11)}`
-  }
-
   const formatPhoneDisplay = (value: string) => {
     if (!value) return "+7"
     return value
@@ -113,36 +129,70 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const handlePhoneSubmit = () => {
     if (phone.length >= 10) {
-      setStep("code")
-      setIsTimerActive(true)
-      setTimer(60)
+      // Отправляем номер телефона на сервер
+      authPhoneMutation.mutate(
+        { phone },
+        {
+          onSuccess: () => {
+            setStep("code")
+            setIsTimerActive(true)
+            setTimer(60)
+          },
+          onError: (error) => {
+            console.log("Ошибка при отправке номера телефона:", error)
+            // Можно добавить уведомление об ошибке
+          },
+        }
+      )
     }
   }
 
   const handleCodeSubmit = () => {
     if (code.length === 4) {
-      // Здесь можно добавить логику отправки кода
-      console.log("Код отправлен:", code)
+      // Отправляем pincode для авторизации
+      console.log("🔐 Отправляем данные для авторизации:", {
+        phone,
+        pincode: code,
+      })
+      authPincodeMutation.mutate(
+        { phone, pincode: code },
+        {
+          onSuccess: (data) => {
+            console.log("Авторизация успешна:", data)
+            console.log("Access Token:", data.attributes.token.access_token)
+
+            // Сохраняем токен в cookies
+            const token = data.attributes.token.access_token
+            setAuthToken(token)
+
+            // Устанавливаем флаг для запроса данных пользователя
+            setAuthSuccess(true)
+          },
+          onError: (error) => {
+            console.error("Ошибка при авторизации:", error)
+            // Можно добавить уведомление об ошибке
+          },
+        }
+      )
     }
   }
 
   const handleResendCall = () => {
     if (timer === 0) {
-      setIsTimerActive(true)
-      setTimer(60)
-      // Здесь можно добавить логику повторного звонка
-      console.log("Повторный звонок")
-    }
-  }
-
-  const handleClose = () => {
-    setStep("phone")
-    setPhone("")
-    setCode("")
-    setIsTimerActive(false)
-    setTimer(60)
-    if (onClose) {
-      onClose()
+      // Повторно отправляем номер телефона
+      authPhoneMutation.mutate(
+        { phone },
+        {
+          onSuccess: () => {
+            setIsTimerActive(true)
+            setTimer(60)
+            console.log("Повторный звонок отправлен")
+          },
+          onError: (error) => {
+            console.error("Ошибка при повторном звонке:", error)
+          },
+        }
+      )
     }
   }
 
@@ -156,8 +206,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <ActionButton type="primary">Личный кабинет</ActionButton>
   )
 
+  // Используем Zustand state для открытия формы
+  const isFormOpen = isLoginFormOpen || open
+
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
+    <Dialog.Root open={isFormOpen} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{triggerElement}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className={styles.loginForm__overlay} />
@@ -231,10 +284,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       <ActionButton
                         type={canSubmit ? "primary" : "disabled"}
                         className={styles.loginForm__submit_button}
-                        disabled={!canSubmit}
+                        disabled={!canSubmit || authPhoneMutation.isPending}
                         onClick={handlePhoneSubmit}
                       >
-                        Получить код
+                        {authPhoneMutation.isPending
+                          ? "Отправка..."
+                          : "Получить код"}
                       </ActionButton>
 
                       {/* Согласие */}
@@ -267,7 +322,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       <p className={styles.loginForm__description_text}>
                         Вам поступит звонок на номер
                         <br />
-                        +7 (999) 123-45-67
+                        {phone}
                         <br />
                         Отвечать необязательно.
                       </p>
@@ -306,10 +361,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       <ActionButton
                         type={code.length === 4 ? "primary" : "disabled"}
                         className={styles.loginForm__submit_button}
-                        disabled={code.length < 4}
+                        disabled={
+                          code.length < 4 || authPincodeMutation.isPending
+                        }
                         onClick={handleCodeSubmit}
                       >
-                        Отправить
+                        {authPincodeMutation.isPending
+                          ? "Авторизация..."
+                          : "Отправить"}
                       </ActionButton>
 
                       {/* Кнопка перезвонить */}
