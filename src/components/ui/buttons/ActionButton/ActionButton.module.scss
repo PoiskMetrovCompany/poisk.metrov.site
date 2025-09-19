@@ -16,6 +16,16 @@
   transition: background-color 0.3s ease;
   width: 100%;
 
+  &:disabled {
+    background: var(--color-gray);
+    color: var(--color-text-gray);
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: var(--color-gray);
+    }
+  }
+
   &_primary {
     background-color: var(--color-orange);
     color: var(--color-beige);
@@ -87,6 +97,12 @@
     pointer-events: none;
   }
 
+  &_disabled_filled {
+    background: var(--color-border-gray-2);
+    color: var(--color-text-gray-light-2);
+    pointer-events: none;
+  }
+
   &_telegram {
     background: var(--color-telegram);
     min-width: 202px;
@@ -118,6 +134,18 @@
     border: 1.5px solid var(--color-gray-white);
     border-radius: 16px;
     color: var(--color-black);
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: var(--color-border-gray-hover);
+    }
+  }
+
+  &_outline_gray {
+    background-color: white;
+    border: 1.5px solid var(--color-border-gray-3);
+    border-radius: 40px;
+    color: var(--color-text-gray-light-2);
     transition: border-color 0.3s ease;
 
     &:hover {
@@ -226,16 +254,6 @@
       position: absolute;
       top: 0;
       width: 100%;
-    }
-  }
-
-  &:disabled {
-    background: var(--color-gray);
-    color: var(--color-text-gray);
-    cursor: not-allowed;
-
-    &:hover {
-      background-color: var(--color-gray);
     }
   }
 }
