@@ -6,14 +6,17 @@ import clsx from "clsx"
 
 import React, { useCallback, useEffect, useState } from "react"
 
-import { useAuthPhone, useAuthPincode } from "@/hooks/useAuth"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { CurrentUserResponse } from "@/types/User"
-import { getAuthToken, setAuthToken } from "@/utils/auth"
-import { formatPhoneNumber } from "@/utils/formatPhoneNumber"
+import { getAuthToken } from "@/utils/auth"
+// import { formatPhoneNumber } from "@/utils/formatPhoneNumber" // Не используется, логика перенесена в handlePhoneChange
 import { useApiQuery } from "@/utils/hooks/use-api"
 
 import styles from "./form.module.scss"
+
+import PasswordStep from "./PasswordStep"
+import PhoneStep from "./PhoneStep"
+import Recover from "./Recover"
 
 import IconImage from "@/components/ui/IconImage"
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -32,16 +35,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
   // Используем Zustand state для управления формой
   const { isLoginFormOpen, closeLoginForm } = useAuthStore()
   const [open, setOpen] = useState(isOpen)
-  const [phone, setPhone] = useState("")
-  const [isAgreed, setIsAgreed] = useState(false)
-  const [code, setCode] = useState("")
-  const [step, setStep] = useState<"phone" | "code">("phone")
-  const [timer, setTimer] = useState(60)
-  const [isTimerActive, setIsTimerActive] = useState(false)
 
-  // Хуки для авторизации
-  const authPhoneMutation = useAuthPhone()
-  const authPincodeMutation = useAuthPincode()
+  const [loginType, setLoginType] = useState<"phone" | "password" | "recover">(
+    "phone"
+  )
 
   // Zustand store для управления авторизацией
   const { login } = useAuthStore()
@@ -60,35 +57,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
     }
   )
 
-  // Таймер для кнопки "Перезвонить"
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-
-    if (isTimerActive && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1)
-      }, 1000)
-    } else if (timer === 0) {
-      setIsTimerActive(false)
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval)
-      }
-    }
-  }, [isTimerActive, timer])
-
   const handleOpenChange = useCallback(
     (newOpen: boolean) => {
       setOpen(newOpen)
       if (!newOpen) {
         // Сброс состояния при закрытии
-        setStep("phone")
-        setPhone("")
-        setCode("")
-        setIsTimerActive(false)
-        setTimer(60)
         setAuthSuccess(false)
         // Закрываем форму через Zustand
         closeLoginForm()
@@ -113,101 +86,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
     }
   }, [currentUserData, login, handleOpenChange])
 
-  const isPhoneValid = phone.replace(/\D/g, "").length >= 10
-  const canSubmit = isPhoneValid && isAgreed
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
-    const formattedValue = formatPhoneNumber(inputValue)
-    setPhone(formattedValue)
-  }
-
-  const formatPhoneDisplay = (value: string) => {
-    if (!value) return "+7"
-    return value
-  }
-
-  const handlePhoneSubmit = () => {
-    if (phone.length >= 10) {
-      // Отправляем номер телефона на сервер
-      authPhoneMutation.mutate(
-        { phone },
-        {
-          onSuccess: () => {
-            setStep("code")
-            setIsTimerActive(true)
-            setTimer(60)
-          },
-          onError: (error) => {
-            console.log("Ошибка при отправке номера телефона:", error)
-            // Можно добавить уведомление об ошибке
-          },
-        }
-      )
-    }
-  }
-
-  const handleCodeSubmit = () => {
-    if (code.length === 4) {
-      // Отправляем pincode для авторизации
-      console.log("🔐 Отправляем данные для авторизации:", {
-        phone,
-        pincode: code,
-      })
-      authPincodeMutation.mutate(
-        { phone, pincode: code },
-        {
-          onSuccess: (data) => {
-            console.log("Авторизация успешна:", data)
-            console.log("Access Token:", data.attributes.token.access_token)
-
-            // Сохраняем токен в cookies
-            const token = data.attributes.token.access_token
-            setAuthToken(token)
-
-            // Устанавливаем флаг для запроса данных пользователя
-            setAuthSuccess(true)
-          },
-          onError: (error) => {
-            console.error("Ошибка при авторизации:", error)
-            // Можно добавить уведомление об ошибке
-          },
-        }
-      )
-    }
-  }
-
-  const handleResendCall = () => {
-    if (timer === 0) {
-      // Повторно отправляем номер телефона
-      authPhoneMutation.mutate(
-        { phone },
-        {
-          onSuccess: () => {
-            setIsTimerActive(true)
-            setTimer(60)
-            console.log("Повторный звонок отправлен")
-          },
-          onError: (error) => {
-            console.error("Ошибка при повторном звонке:", error)
-          },
-        }
-      )
-    }
-  }
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
-
   const triggerElement = trigger || (
     <ActionButton type="primary">Личный кабинет</ActionButton>
   )
 
   // Используем Zustand state для открытия формы
   const isFormOpen = isLoginFormOpen || open
+
+  const makeRecover = () => {
+    setLoginType("recover")
+  }
 
   return (
     <Dialog.Root open={isFormOpen} onOpenChange={handleOpenChange}>
@@ -232,7 +120,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               aria-label="Закрыть"
             >
               <IconImage
-                iconLink="/images/icons/close.svg"
+                iconLink="/images/icons/close-modal.svg"
                 alt="Закрыть"
                 className={styles.loginForm__close_icon}
               />
@@ -240,155 +128,76 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
             {/* Контент формы */}
             <div className={styles.loginForm__form_content}>
-              {step === "phone" ? (
-                <>
-                  {/* Заголовок и описание */}
-                  <div className={styles.loginForm__header}>
-                    <h2 className={styles.loginForm__title}>Личный кабинет</h2>
-                    <div className={styles.loginForm__description}>
-                      <p className={styles.loginForm__description_text}>
-                        Войдите в личный кабинет, чтобы получить доступ ко всем
-                        возможностям.
-                      </p>
-                      <p className={styles.loginForm__description_text}>
-                        У нас нет паролей - вход осуществляется по номеру
-                        телефона, на который мы звоним.
-                      </p>
-                    </div>
-                  </div>
+              {/* Заголовок и описание */}
+              <div className={styles.loginForm__header}>
+                <IconImage
+                  className={styles.loginForm__logo}
+                  iconLink="/images/icons/logo.svg"
+                  alt="Logo"
+                />
+                <div className={styles.loginForm__description}>
+                  <h2 className={styles.loginForm__description_title}>
+                    {loginType === "recover"
+                      ? "Восстановление доступа"
+                      : "Вход или регистрация"}
+                  </h2>
+                  <p className={styles.loginForm__description_text}>
+                    {loginType === "recover"
+                      ? "Введите E-mail, привязанный к аккаунту. На него придет код подтверждения"
+                      : "Введите номер телефона, чтобы авторизоваться и получить доступ ко всем возможностям сервиса"}
+                  </p>
+                </div>
+              </div>
 
-                  {/* Форма */}
-                  <div className={styles.loginForm__form}>
-                    {/* Поле телефона */}
-                    <div className={styles.loginForm__input_container}>
-                      <div className={styles.loginForm__input_label}>
-                        <label className={styles.loginForm__label}>
-                          Ваш телефон
-                        </label>
-                      </div>
-                      <div className={styles.loginForm__input_wrapper}>
-                        <input
-                          type="text"
-                          value={formatPhoneDisplay(phone)}
-                          onChange={handlePhoneChange}
-                          className={styles.loginForm__input}
-                          placeholder="+7"
-                          maxLength={18}
-                        />
-                      </div>
-                    </div>
+              {loginType !== "recover" && (
+                <div className={styles.loginForm__switch}>
+                  <button
+                    className={clsx(
+                      styles.loginForm__switch_button,
+                      loginType === "phone" &&
+                        styles.loginForm__switch_button_active
+                    )}
+                    onClick={() => setLoginType("phone")}
+                  >
+                    По телефону
+                  </button>
+                  <button
+                    className={clsx(
+                      styles.loginForm__switch_button,
+                      loginType === "password" &&
+                        styles.loginForm__switch_button_active
+                    )}
+                    onClick={() => setLoginType("password")}
+                  >
+                    По паролю
+                  </button>
+                </div>
+              )}
 
-                    {/* Действия формы */}
-                    <div className={styles.loginForm__form_actions}>
-                      {/* Кнопка отправки */}
-                      <ActionButton
-                        type={canSubmit ? "primary" : "disabled"}
-                        className={styles.loginForm__submit_button}
-                        disabled={!canSubmit || authPhoneMutation.isPending}
-                        onClick={handlePhoneSubmit}
-                      >
-                        {authPhoneMutation.isPending
-                          ? "Отправка..."
-                          : "Получить код"}
-                      </ActionButton>
-
-                      {/* Согласие */}
-                      <div className={styles.loginForm__agreement}>
-                        <label className={styles.loginForm__checkbox_container}>
-                          <input
-                            type="checkbox"
-                            checked={isAgreed}
-                            onChange={(e) => setIsAgreed(e.target.checked)}
-                            className={styles.loginForm__checkbox}
-                          />
-                          <span
-                            className={styles.loginForm__checkbox_mark}
-                          ></span>
-                          <span className={styles.loginForm__agreement_text}>
-                            Нажимая на кнопку, вы даете согласие на обработку{" "}
-                            <b> своих персональных данных </b>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </>
+              {loginType === "phone" ? (
+                <PhoneStep
+                  makeRecover={makeRecover}
+                  onAuthSuccess={() => setAuthSuccess(true)}
+                />
+              ) : loginType === "password" ? (
+                <PasswordStep makeRecover={makeRecover} />
               ) : (
-                <>
-                  {/* Заголовок и описание для второго шага */}
-                  <div className={styles.loginForm__header}>
-                    <h2 className={styles.loginForm__title}>Личный кабинет</h2>
-                    <div className={styles.loginForm__description}>
-                      <p className={styles.loginForm__description_text}>
-                        Вам поступит звонок на номер
-                        <br />
-                        {phone}
-                        <br />
-                        Отвечать необязательно.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Форма для второго шага */}
-                  <div className={styles.loginForm__form}>
-                    {/* Поле кода */}
-                    <div className={styles.loginForm__input_container}>
-                      <div className={styles.loginForm__input_label}>
-                        <label className={styles.loginForm__label}>
-                          Введите последние 4 цифры номера
-                        </label>
-                      </div>
-                      <div className={styles.loginForm__input_wrapper}>
-                        <input
-                          type="text"
-                          value={code}
-                          onChange={(e) =>
-                            setCode(e.target.value.replace(/\D/g, ""))
-                          }
-                          className={clsx(
-                            styles.loginForm__input,
-                            styles.loginForm__input_code
-                          )}
-                          placeholder=""
-                          maxLength={4}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Действия формы */}
-                    <div className={styles.loginForm__form_actions}>
-                      {/* Кнопка отправки */}
-                      <ActionButton
-                        type={code.length === 4 ? "primary" : "disabled"}
-                        className={styles.loginForm__submit_button}
-                        disabled={
-                          code.length < 4 || authPincodeMutation.isPending
-                        }
-                        onClick={handleCodeSubmit}
-                      >
-                        {authPincodeMutation.isPending
-                          ? "Авторизация..."
-                          : "Отправить"}
-                      </ActionButton>
-
-                      {/* Кнопка перезвонить */}
-                      <button
-                        onClick={handleResendCall}
-                        disabled={timer > 0}
-                        className={clsx(
-                          styles.loginForm__resend_button,
-                          timer === 0 && styles.loginForm__resend_button_active
-                        )}
-                      >
-                        {timer > 0
-                          ? `Перезвонить повторно через ${formatTime(timer)}`
-                          : "Перезвонить"}
-                      </button>
-                    </div>
-                  </div>
-                </>
+                <Recover />
               )}
             </div>
+
+            {loginType === "recover" && (
+              <button className={styles.loginForm__dialog__support}>
+                <IconImage
+                  iconLink="/images/icons/profile/chat.svg"
+                  alt="Support"
+                  className={styles.loginForm__dialog__support_icon}
+                />
+                <span className={styles.loginForm__dialog__support_text}>
+                  Обратиться в поддержку
+                </span>
+              </button>
+            )}
           </div>
         </Dialog.Content>
       </Dialog.Portal>
