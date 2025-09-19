@@ -175,7 +175,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       <DetailsHeader data={headerData} />
       <Estate images={estateImages} data={complexData.attributes} />
       <FlatList complexKey={key} />
-      {/* <AboutObject items={aboutObjectItems} />
+      <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
       <MapProvider>
         <Location
@@ -186,7 +186,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       </MapProvider>
       <AboutObjectSmall items={aboutObjectItemsSmall} />
       <ConstructionProgress />
-      <Documents /> */}
+      <Documents />
     </div>
   )
 }
