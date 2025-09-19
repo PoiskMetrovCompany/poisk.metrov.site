@@ -799,35 +799,35 @@ const CandidateForm: FC = () => {
   }
 
   const getROPKey = (selectedTitle: string): string => {
-    // Хардкодные данные РОПов
+    // Хардкодные данные РОПов с ключами
     const hardcodedROPs = [
-      "Доронина А.О.",
-      "Иванова А.А.",
-      "Гавриш Е.А.",
-      "Маликова Ю.А.",
-      "Урбан К.Д.",
-      "Руковод КЦ",
-      "Морозова В.А.",
+      { title: "Доронина А.О.", key: "1fc026d7-885a-44a3-8f53-bbd378b7ae48" },
+      { title: "Иванова А.А.", key: "" },
+      { title: "Гавриш Е.А.", key: "" },
+      { title: "Маликова Ю.А.", key: "" },
+      { title: "Урбан К.Д.", key: "" },
+      { title: "Руковод КЦ", key: "" },
+      { title: "Морозова В.А.", key: "" },
     ]
 
-    // Возвращаем само ФИО как ключ, так как это хардкодные данные
-    return hardcodedROPs.includes(selectedTitle) ? selectedTitle : ""
+    const rop = hardcodedROPs.find((rop) => rop.title === selectedTitle)
+    return rop ? rop.key : ""
   }
 
   const getROPFullName = (selectedTitle: string): string => {
-    // Хардкодные данные РОПов
+    // Хардкодные данные РОПов с ключами
     const hardcodedROPs = [
-      "Доронина А.О.",
-      "Иванова А.А.",
-      "Гавриш Е.А.",
-      "Маликова Ю.А.",
-      "Урбан К.Д.",
-      "Руковод КЦ",
-      "Морозова В.А.",
+      { title: "Доронина А.О.", key: "1fc026d7-885a-44a3-8f53-bbd378b7ae48" },
+      { title: "Иванова А.А.", key: "" },
+      { title: "Гавриш Е.А.", key: "" },
+      { title: "Маликова Ю.А.", key: "" },
+      { title: "Урбан К.Д.", key: "" },
+      { title: "Руковод КЦ", key: "" },
+      { title: "Морозова В.А.", key: "" },
     ]
 
-    // Возвращаем само ФИО, так как это хардкодные данные
-    return hardcodedROPs.includes(selectedTitle) ? selectedTitle : ""
+    const rop = hardcodedROPs.find((rop) => rop.title === selectedTitle)
+    return rop ? rop.title : ""
   }
 
   const addEducationTable = () => {
@@ -950,9 +950,8 @@ const CandidateForm: FC = () => {
     const apiData: ICandidateFormRequest = {
       vacancies_key: getVacancyKey(selectedVacancy),
       marital_statuses_key: getMaritalStatusKey(selectedMaritalStatus),
-      rop_key: goingToROP ? getROPKey(selectedROP) : null,
       work_team: goingToROP
-        ? getROPFullName(selectedROP) || "Не указано"
+        ? getROPKey(selectedROP) || "Не указано"
         : "Административный состав",
       status: "active",
       first_name: nameData.first_name,

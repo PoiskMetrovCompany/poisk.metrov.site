@@ -1,4 +1,5 @@
 import { IProperty } from "@/types/PropertyCard"
+import { IApartment } from "@/types/api/complex"
 import {
   IFavoriteResComplexes,
   IFavouriteApartments,
@@ -40,7 +41,8 @@ export const mapFavoriteComplexToProperty = (
       },
     ],
     image: "/images/temporary/house.png",
-    key: complex.key,
+    linkKey: complex.key,
+    isApartment: false, // Это жилой комплекс, не квартира
   }
 }
 
@@ -75,6 +77,6 @@ export const mapFavoriteApartmentToFlatLayout = (
       apartment.floor_plan_url ||
       "/images/temporary/room.png",
     linkUrl: `/detailsFlat/${apartment.key}`,
-    apartment: apartment as any,
+    apartment: apartment as IApartment,
   }
 }

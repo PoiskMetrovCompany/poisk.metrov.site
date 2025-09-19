@@ -2,10 +2,13 @@
 
 import clsx from "clsx"
 
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 
 import { useRouter } from "next/navigation"
 
+import { useAuthState } from "@/hooks/useAuthState"
+import { useSwitchLike } from "@/hooks/useFavorites"
+import { useAuthStore } from "@/stores/useAuthStore"
 import { IProperty } from "@/types/PropertyCard"
 
 import styles from "./propertyCardList.module.scss"
@@ -20,6 +23,16 @@ interface IPropertyCardListProps {
 
 const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
   const router = useRouter()
+
+  // Хуки для авторизации и избранного
+  const { isAuthenticated, user } = useAuthState()
+  const { openLoginForm } = useAuthStore()
+  const switchLikeMutation = useSwitchLike()
+  const userKey = user?.key || ""
+
+  // Состояние для отслеживания избранного
+  // TODO: Убрать и сделать через запрос
+  const [isFavorite, setIsFavorite] = useState(false)
 
   // Выбираем иконку в зависимости от типа передвижения до метро
   const getMetroIcon = () => {
@@ -43,6 +56,39 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
 
   const handleCatalogueClick = () => {
     router.push("/catalogue")
+  }
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      // Если пользователь не авторизован, открыть форму входа
+      openLoginForm()
+      return
+    }
+
+    if (!property.linkKey) {
+      console.log("Нет ключа карточки")
+      return
+    }
+
+    const action = isFavorite ? "remove" : "add"
+    const type = property.isApartment ? "apartment" : "building"
+
+    switchLikeMutation.mutate(
+      {
+        code: property.linkKey,
+        type,
+        action,
+        user_key: userKey,
+      },
+      {
+        onSuccess: () => {
+          setIsFavorite(!isFavorite)
+        },
+        onError: (error) => {
+          console.error("Ошибка при обновлении избранного:", error)
+        },
+      }
+    )
   }
 
   return (
@@ -223,7 +269,13 @@ const PropertyCardList: FC<IPropertyCardListProps> = ({ property }) => {
                   Эскроу счет
                 </span>
               </div>
-              <IconButton size="tiny" iconLink={"/images/icons/heart.svg"} />
+              <IconButton
+                size="tiny"
+                iconLink={"/images/icons/heart.svg"}
+                isActive={isFavorite}
+                onClick={handleFavoriteClick}
+                disabled={switchLikeMutation.isPending}
+              />
             </div>
             <div
               className={

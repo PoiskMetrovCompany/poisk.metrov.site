@@ -15,7 +15,18 @@ import "../../candidatesSecurityBlock/candidateRegForm.css"
 interface AuthAttributes {
   access_token?: string
   user?: {
+    id: number
+    created_at: string
+    updated_at: string
+    deleted_at: string | null
+    key: string
     role: string
+    phone: string | null
+    email: string
+    secret: string
+    last_name: string | null
+    first_name: string | null
+    middle_name: string | null
   }
 }
 
@@ -109,6 +120,22 @@ const SecurityRegForm: FC = () => {
             response.data.attributes.access_token
           )
         }
+
+        // Проверяем роль пользователя и сохраняем ключ РОП если нужно
+        if (
+          response.data.attributes.user?.role === "РОП" &&
+          response.data.attributes.user?.key
+        ) {
+          const expirationDate = new Date()
+          expirationDate.setTime(
+            expirationDate.getTime() + 30 * 24 * 60 * 60 * 1000
+          ) // 30 дней
+          document.cookie = `ropKey=${response.data.attributes.user.key}; expires=${expirationDate.toUTCString()}; path=/; SameSite=Strict`
+          console.log(
+            "Ключ РОП сохранен в cookie:",
+            response.data.attributes.user.key
+          )
+        }
         return true
       } else {
         console.log("Ошибка в ответе сервера")
@@ -188,7 +215,9 @@ const SecurityRegForm: FC = () => {
     // Удаляем токен из cookie
     document.cookie =
       "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    console.log("Токен удален из cookie")
+    // Удаляем ключ РОП из cookie
+    document.cookie = "ropKey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    console.log("Токен и ключ РОП удалены из cookie")
   }
 
   // Если администратор аутентифицирован, перенаправляем

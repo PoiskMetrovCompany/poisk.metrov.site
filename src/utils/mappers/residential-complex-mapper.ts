@@ -40,7 +40,9 @@ export const mapResidentialComplexToProperty = (
       { type: "Срок сдачи", status: "Сдан — IV 2028" },
       { type: "Недвижимость", status: "Жилая" },
       { type: "Класс жилья", status: "Комфорт +" },
+
       { type: "Квартир", status: complex.apartments_count?.toString() || "0" },
+
     ],
     image: extractImageFromMeta(
       complex.meta,

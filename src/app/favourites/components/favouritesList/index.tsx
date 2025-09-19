@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import FlatLayoutCard from "@/components/flatLayoutCard"
 import NotFound from "@/components/notFound"
 import PropertyCard from "@/components/propertyCard"
+import { useAuthState } from "@/hooks/useAuthState"
 import { Coordinate } from "@/types/Coordintes"
 import { IFavouriteView } from "@/types/Favourites"
 import { IApartment, IResidentialComplex } from "@/types/api/complex"
@@ -50,7 +51,10 @@ const FavoutiresList = ({
 }: IFavouritesListProps) => {
   const router = useRouter()
   const [isEmpty, setIsEmpty] = useState(false)
-  const USER_KEY = "06cf32b1-83c2-11f0-a013-10f60a82b815"
+
+  // Получаем user key из состояния авторизации
+  const { user } = useAuthState()
+  const USER_KEY = user?.key || ""
 
   const handleNavigateToCatalogue = () => {
     router.push("/catalogue")
@@ -66,9 +70,10 @@ const FavoutiresList = ({
     isLoading: isLoading,
     isError: responceError,
   } = useApiQuery<FListResponse>(
-    ["favourite_list"],
+    ["favourite_list", USER_KEY],
     `/favorites?user_key=${USER_KEY}`,
     {
+      enabled: !!USER_KEY,
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
     }

@@ -15,6 +15,7 @@ type IconButtonProps = {
   type?: "primary" | "secondary" | "orange" | "orange-light"
   alt?: string
   disabled?: boolean
+  isActive?: boolean
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -26,6 +27,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   type = "primary",
   alt,
   disabled = false,
+  isActive = false,
 }) => {
   return (
     <button
@@ -39,6 +41,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         [styles.iconButton_orange]: type === "orange",
         [styles.iconButton_orangeLight]: type === "orange-light",
         [styles.iconButton_disabled]: disabled,
+        [styles.iconButton_active]: isActive,
       })}
       onClick={onClick}
       disabled={disabled}

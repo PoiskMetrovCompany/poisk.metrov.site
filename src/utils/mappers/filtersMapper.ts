@@ -27,7 +27,7 @@ export const mapFiltersFormToApi = (
       apiParams.pricing = `${formData.priceMin}-${formData.priceMax}`
     } else if (formData.priceMin) {
       // Если указана только минимальная цена
-      apiParams.pricing = formData.priceMin.toString()
+      apiParams.pricing = formData.priceMin?.toString() || "0"
     } else if (formData.priceMax) {
       // Если указана только максимальная цена, отправляем диапазон от 0
       apiParams.pricing = `0-${formData.priceMax}`
@@ -41,7 +41,7 @@ export const mapFiltersFormToApi = (
       apiParams.floors = `${formData.floorMin}-${formData.floorMax}`
     } else if (formData.floorMin) {
       // Если указан только минимальный этаж
-      apiParams.floors = formData.floorMin.toString()
+      apiParams.floors = formData.floorMin?.toString() || "0"
     } else if (formData.floorMax) {
       // Если указан только максимальный этаж, отправляем диапазон от 0
       apiParams.floors = `0-${formData.floorMax}`
@@ -54,7 +54,7 @@ export const mapFiltersFormToApi = (
       apiParams.area_total = `${formData.flatAreaMin}-${formData.flatAreaMax}`
     } else if (formData.flatAreaMin) {
       // Если указана только минимальная площадь
-      apiParams.area_total = formData.flatAreaMin.toString()
+      apiParams.area_total = formData.flatAreaMin?.toString() || "0"
     } else if (formData.flatAreaMax) {
       // Если указана только максимальная площадь, отправляем диапазон от 0
       apiParams.area_total = `0-${formData.flatAreaMax}`
@@ -67,7 +67,7 @@ export const mapFiltersFormToApi = (
       apiParams.living_area = `${formData.livingAreaMin}-${formData.livingAreaMax}`
     } else if (formData.livingAreaMin) {
       // Если указана только минимальная жилая площадь
-      apiParams.living_area = formData.livingAreaMin.toString()
+      apiParams.living_area = formData.livingAreaMin?.toString() || "0"
     } else if (formData.livingAreaMax) {
       // Если указана только максимальная жилая площадь, отправляем диапазон от 0
       apiParams.living_area = `0-${formData.livingAreaMax}`
@@ -141,7 +141,7 @@ export const mapFiltersFormToApi = (
       apiParams.floor_counts = `${formData.floorsInBuildingMin}-${formData.floorsInBuildingMax}`
     } else if (formData.floorsInBuildingMin) {
       // Если указано только минимальное количество этажей
-      apiParams.floor_counts = formData.floorsInBuildingMin.toString()
+      apiParams.floor_counts = formData.floorsInBuildingMin?.toString() || "0"
     } else if (formData.floorsInBuildingMax) {
       // Если указано только максимальное количество этажей, отправляем диапазон от 0
       apiParams.floor_counts = `0-${formData.floorsInBuildingMax}`

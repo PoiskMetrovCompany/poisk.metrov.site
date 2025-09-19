@@ -7,6 +7,23 @@ const api = axios.create({
   timeout: 10000,
 })
 
+// Интерцептор для добавления токена авторизации
+api.interceptors.request.use((config) => {
+  // Получаем токен из cookies
+  const cookies = document.cookie.split(";")
+  const tokenCookie = cookies.find((cookie) =>
+    cookie.trim().startsWith("access_token=")
+  )
+
+  if (tokenCookie) {
+    const token = tokenCookie.split("=")[1]
+    // config.headers.Authentication = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
+
 // Внешний API клиент для запросов к внешним серверам
 const externalApi = axios.create({
   timeout: 15000, // Увеличиваем timeout для внешних запросов
@@ -134,6 +151,7 @@ export function useApiMutation<T, V>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false // Добавляем опцию для контроля инвалидации
   }
 ) {
   const queryClient = useQueryClient()
@@ -161,8 +179,23 @@ export function useApiMutation<T, V>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      // Инвалидируем все запросы для обновления данных
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        // Не инвалидируем ничего
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        // Инвалидируем только указанные ключи запросов
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        // По умолчанию инвалидируем все запросы (для обратной совместимости)
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)
@@ -176,6 +209,7 @@ export function useApiUpdate<T, V>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false
   }
 ) {
   const queryClient = useQueryClient()
@@ -203,7 +237,20 @@ export function useApiUpdate<T, V>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)
@@ -216,6 +263,7 @@ export function useApiDelete<T, V = void>(
   options?: {
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
+    invalidateQueries?: string[] | false
   }
 ) {
   const queryClient = useQueryClient()
@@ -228,7 +276,7 @@ export function useApiDelete<T, V = void>(
         let requestUrl = url
         if (variables && typeof variables === "object") {
           const params = new URLSearchParams()
-          Object.entries(variables as Record<string, any>).forEach(
+          Object.entries(variables as Record<string, unknown>).forEach(
             ([key, value]) => {
               if (value !== undefined && value !== null) {
                 params.append(key, String(value))
@@ -259,7 +307,20 @@ export function useApiDelete<T, V = void>(
     },
     onSuccess: (data) => {
       options?.onSuccess?.(data)
-      queryClient.invalidateQueries()
+
+      // Инвалидируем только указанные запросы или все, если не указано
+      if (options?.invalidateQueries === false) {
+        return
+      } else if (
+        options?.invalidateQueries &&
+        Array.isArray(options.invalidateQueries)
+      ) {
+        options.invalidateQueries.forEach((queryKey) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey] })
+        })
+      } else {
+        queryClient.invalidateQueries()
+      }
     },
     onError: (error) => {
       options?.onError?.(error)
