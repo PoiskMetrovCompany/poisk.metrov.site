@@ -33,7 +33,7 @@ const FlatList: FC<FlatListProps> = ({ complexKey }) => {
   const [debouncedFilters, setDebouncedFilters] = useState<Filters>({})
 
   const buildApiUrl = useCallback((complexKey: string, filters: Filters) => {
-    let url = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${complexKey}&includes=Apartment`
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.room`
 
     const filterParams: string[] = []
 

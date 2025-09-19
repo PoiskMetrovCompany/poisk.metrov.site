@@ -59,7 +59,7 @@ const Filter: React.FC<FilterProps> = ({
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL
         const response = await fetch(
-          `${apiUrl}/residential-complex/read?key=06f57f4a-83c2-11f0-a013-10f60a82b815&includes=Apartment&filter=apartments.filters`
+          `${apiUrl}/residential-complex/read?key=${complexKey}&includes=Apartment&filter=apartments.filters`
         )
 
         if (response.ok) {

@@ -24,6 +24,19 @@ const LayoutItem = ({ isOpen, name, apartments, title }: ILayoutItemProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(8)
 
+  if (!Array.isArray(apartments)) {
+    console.error("LayoutItem: apartments is not an array", {
+      apartments,
+      name,
+      title,
+    })
+    return null
+  }
+
+  if (apartments.length === 0) {
+    return null
+  }
+
   const minPrice = Math.min(...apartments.map((apt) => apt.price))
   const minArea = Math.min(...apartments.map((apt) => apt.area))
   const apartmentsCount = apartments.length
