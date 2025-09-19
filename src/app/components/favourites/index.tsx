@@ -9,7 +9,10 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 import { IProperty } from "@/types/PropertyCard"
-import { IResidentialComplex } from "@/types/api/ResidentialComplex"
+import {
+  IResidentialComplex,
+  IResidentialComplexResponse,
+} from "@/types/api/ResidentialComplex"
 import { useApiQuery } from "@/utils/hooks/use-api"
 import { useCityCode } from "@/utils/hooks/use-city-code"
 import { mapResidentialComplexToProperty } from "@/utils/mappers/residential-complex-mapper"
@@ -26,19 +29,20 @@ const Favourites = () => {
   const router = useRouter()
   const cityCode = useCityCode()
 
-  const { data: bestOffers, isLoading } = useApiQuery<IResidentialComplex[]>(
-    ["best-offers", cityCode],
-    `/residential-complex/best-offers/?city_code=${cityCode}`,
-    {
-      enabled: !!cityCode,
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-      timeout: 30 * 1000,
-    }
-  )
+  const { data: bestOffers, isLoading } =
+    useApiQuery<IResidentialComplexResponse>(
+      ["best-offers", cityCode],
+      `/residential-complex/best-offers/?city_code=${cityCode}`,
+      {
+        enabled: !!cityCode,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        timeout: 30 * 1000,
+      }
+    )
 
   const apiCards: IProperty[] = bestOffers
-    ? bestOffers.map(mapResidentialComplexToProperty)
+    ? bestOffers.residential_complexes.map(mapResidentialComplexToProperty)
     : []
 
   const handleCatalogueClick = () => {
