@@ -37,8 +37,26 @@ const LayoutItem = ({ isOpen, name, apartments, title }: ILayoutItemProps) => {
     return null
   }
 
-  const minPrice = Math.min(...apartments.map((apt) => apt.price))
-  const minArea = Math.min(...apartments.map((apt) => apt.area))
+  // Фильтруем корректные значения цены и площади
+  const validPrices = apartments
+    .map((apt) => apt.price)
+    .filter(
+      (price) =>
+        typeof price === "number" &&
+        !isNaN(price) &&
+        isFinite(price) &&
+        price > 0
+    )
+
+  const validAreas = apartments
+    .map((apt) => apt.area)
+    .filter(
+      (area) =>
+        typeof area === "number" && !isNaN(area) && isFinite(area) && area > 0
+    )
+
+  const minPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0
+  const minArea = validAreas.length > 0 ? Math.min(...validAreas) : 0
   const apartmentsCount = apartments.length
 
   useEffect(() => {
@@ -80,17 +98,19 @@ const LayoutItem = ({ isOpen, name, apartments, title }: ILayoutItemProps) => {
       <AccordionTrigger className={styles.layoutList__header}>
         <span className={styles.layoutList__header__title}>
           {title}{" "}
-          <b className={styles.layoutList__header__title__price}>
-            от {minPrice.toLocaleString("ru-RU")} ₽
-          </b>
+          {minPrice > 0 && (
+            <b className={styles.layoutList__header__title__price}>
+              от {minPrice.toLocaleString("ru-RU")} ₽
+            </b>
+          )}
         </span>
         <span>
           {apartmentsCount} квартир
           {apartmentsCount === 1 ? "а" : apartmentsCount < 5 ? "ы" : ""}
         </span>
-        <span>от {minArea.toFixed(1)} м²</span>
+        {minArea > 0 && <span>от {minArea.toFixed(1)} м²</span>}
         <span>
-          от {minPrice.toLocaleString("ru-RU")} ₽
+          {minPrice > 0 && <>от {minPrice.toLocaleString("ru-RU")} ₽</>}
           <IconImage
             className={clsx(styles.arrow, isOpen && styles.arrow_open)}
             iconLink="/images/icons/arrow-top-price.svg"
