@@ -11,36 +11,52 @@ import Skeleton from "@/components/ui/skeleton"
 
 interface EstateProps {
   images?: string[]
+  data?: {
+    builder?: string
+    built_year?: number
+    residential_min_price?: number
+    min_prices_by_room_type?: {
+      studio?: number | null
+      "1_rooms"?: number | null
+      "2_rooms"?: number | null
+      "3_rooms"?: number | null
+      "4_plus_rooms"?: number | null
+    }
+  }
 }
 
-const features = [
-  {
-    title: "Застройщик",
-    value: "ГК СМСС",
-  },
-  {
-    title: "Срок сдачи",
-    value: "2027",
-  },
-  {
-    title: "Отделка",
-    value: "Подготовка под чистовую отделку",
-  },
-  {
-    title: "Тип дома",
-    value: "Кирпично-монолитный",
-  },
-  {
-    title: "Этажность",
-    value: "10",
-  },
-]
-
-const Estate = ({ images }: EstateProps) => {
+const Estate = ({ images, data }: EstateProps) => {
   const [isImageLoading, setIsImageLoading] = useState(true)
   const [isHandled, setIsHandled] = useState(false)
 
   const imageToShow = images && images.length > 0 ? images[0] : ""
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("ru-RU").format(price) + " ₽"
+  }
+
+  const features = [
+    {
+      title: "Застройщик",
+      value: data?.builder || "Не указано",
+    },
+    {
+      title: "Срок сдачи",
+      value: data?.built_year?.toString() || "Не указано",
+    },
+    {
+      title: "Отделка",
+      value: "Подготовка под чистовую отделку",
+    },
+    {
+      title: "Тип дома",
+      value: "Кирпично-монолитный",
+    },
+    {
+      title: "Этажность",
+      value: "10",
+    },
+  ]
 
   useEffect(() => {
     setIsImageLoading(true)
@@ -114,7 +130,9 @@ const Estate = ({ images }: EstateProps) => {
               Минимальная цена
             </span>
             <span className={styles.info__description__price__minimal__price}>
-              от 4 359 990 ₽
+              {data?.residential_min_price
+                ? `от ${formatPrice(data.residential_min_price)}`
+                : "Цена не указана"}
             </span>
           </div>
           <Link

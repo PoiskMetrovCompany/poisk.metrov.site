@@ -115,7 +115,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isLoading={true} />
-        <Estate images={[]} />
+        <Estate images={[]} data={undefined} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex isLoading={true} />
@@ -133,7 +133,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isError={true} />
-        <Estate images={[]} />
+        <Estate images={[]} data={undefined} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex />
@@ -173,7 +173,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
   return (
     <div className={styles.details}>
       <DetailsHeader data={headerData} />
-      <Estate images={estateImages} />
+      <Estate images={estateImages} data={complexData.attributes} />
       <FlatList complexKey={key} />
       {/* <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
