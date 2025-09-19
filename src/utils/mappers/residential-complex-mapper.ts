@@ -1,6 +1,8 @@
 import { IProperty } from "@/types/PropertyCard"
 import { IResidentialComplex } from "@/types/api/ResidentialComplex"
-import { pluralizeMinutes } from "@/utils/lib/pluralize"
+
+import { extractImageFromMeta } from "../../utils/lib/metaUtils"
+import { pluralizeMinutes } from "../../utils/lib/pluralize"
 
 export const mapResidentialComplexToProperty = (
   complex: IResidentialComplex
@@ -41,7 +43,10 @@ export const mapResidentialComplexToProperty = (
         status: complex.apartments_count?.toString() || "Не указано",
       },
     ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
+    image: extractImageFromMeta(
+      complex.meta,
+      "/images/buildingCarousel/buidingExpandImg.webp"
+    ),
     linkKey: complex.key,
   }
 }

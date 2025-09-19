@@ -9,9 +9,11 @@ import { IPoint } from "@/components/map/variables/variables"
 import { PointType } from "@/components/map/variables/variables"
 import PropertyCard from "@/components/propertyCard"
 import { Coordinate } from "@/types/Coordintes"
+import { IProperty } from "@/types/PropertyCard"
 
 import styles from "./fullMap.module.scss"
 
+import { extractImageFromMeta } from "../../../../utils/lib/metaUtils"
 import PointTypes from "../pointTypes"
 
 import ActionButton from "@/components/ui/buttons/ActionButton"
@@ -20,7 +22,7 @@ const transformApiDataToCard = (
   complexId: number,
   complexesData: any,
   apartmentsData?: any
-) => {
+): IProperty => {
   if (!complexesData || complexesData.length === 0) {
     return {
       id: 1,
@@ -32,7 +34,8 @@ const transformApiDataToCard = (
       driveTime: "",
       specifications: [],
       description: [],
-      image: "/images/buildingCarousel/buidingExpandImg.webp",
+      image: "/images/buildingCarousel/buidingExpandImg.webp", // Fallback для случая без данных
+      metroType: "on_foot" as const,
     }
   }
 
@@ -48,7 +51,8 @@ const transformApiDataToCard = (
       driveTime: "",
       specifications: [],
       description: [],
-      image: "/images/buildingCarousel/buidingExpandImg.webp",
+      image: "/images/buildingCarousel/buidingExpandImg.webp", // Fallback для случая, когда комплекс не найден
+      metroType: "on_foot" as const,
     }
   }
 
@@ -132,7 +136,13 @@ const transformApiDataToCard = (
       },
       { type: "Парковка", status: complex.parking || "Не указано" },
     ],
-    image: "/images/buildingCarousel/buidingExpandImg.webp",
+    image: extractImageFromMeta(
+      complex.meta,
+      "/images/buildingCarousel/buidingExpandImg.webp"
+    ),
+    linkKey: complex.key,
+    metroType:
+      complex.metro_type === "by_transport" ? "by_transport" : "on_foot",
   }
 }
 
@@ -157,7 +167,9 @@ const card = {
     { type: "Класс жилья", status: "Комфорт +" },
     { type: "Квартир", status: "8 402" },
   ],
-  image: "/images/buildingCarousel/buidingExpandImg.webp",
+  image: "/images/buildingCarousel/buidingExpandImg.webp", // Статическое изображение для демо
+  linkKey: "demo-key",
+  metroType: "on_foot" as const,
 }
 
 const points: IPoint[] = [

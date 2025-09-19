@@ -1,12 +1,14 @@
 "use client"
 
 import React, { FC } from "react"
-import styles from "../../components/carouselBuildings/carouselComponent.module.scss"
-import "../globals.css"
+
 import CarouselComponent from "@/components/carouselBuildings/carouselComponent"
 import PropertyCard from "@/components/carouselBuildings/carouselComponents/PropertyCard"
 
-const cardExpandImg = "/images/buildingCarousel/buidingExpandImg.webp"
+import styles from "../../components/carouselBuildings/carouselComponent.module.scss"
+import "../globals.css"
+
+const cardExpandImg = "/images/buildingCarousel/buidingExpandImg.webp" // Демо-данные для карусели
 
 interface ISpecification {
   type: string

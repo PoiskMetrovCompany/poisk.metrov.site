@@ -114,10 +114,10 @@ const ShowForm: React.FC<ShowFormProps> = ({
     { value: "needs-work", text: "Нужна доработка" },
     { value: "checked", text: "Проверен" },
     { value: "rejected", text: "Отклонен" },
-    { value: "came", text: "Вышел" },
-    { value: "not-came", text: "Не вышел" },
-    { value: "accepted", text: "Принят" },
-    { value: "not-accepted", text: "Не принят" },
+    { value: "start_work", text: "Вышел" },
+    { value: "not_start_work", text: "Не вышел" },
+    { value: "hired", text: "Принят" },
+    { value: "not_hired", text: "Не принят" },
   ]
 
   useEffect(() => {
@@ -381,9 +381,9 @@ const ShowForm: React.FC<ShowFormProps> = ({
               checked: "Проверен",
               rejected: "Отклонен",
               start_work: "Вышел",
-              "not_start_work": "Не вышел",
+              not_start_work: "Не вышел",
               hired: "Принят",
-              "not_hired": "Не принят",
+              not_hired: "Не принят",
             }
             return statusMap[option.value] === currentStatus
           })
@@ -540,9 +540,9 @@ const ShowForm: React.FC<ShowFormProps> = ({
       checked: "Проверен",
       rejected: "Отклонен",
       start_work: "Вышел",
-      "not_start_work": "Не вышел",
+      not_start_work: "Не вышел",
       hired: "Принят",
-      "not_hired": "Не принят",
+      not_hired: "Не принят",
     }
     return statusMap[statusValue] || statusValue
   }

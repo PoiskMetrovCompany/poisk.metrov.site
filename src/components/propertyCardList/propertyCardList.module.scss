@@ -1,21 +1,20 @@
 .property_card_list {
-  overflow: hidden;
+  background-color: #fff;
+  border-radius: 40px;
   display: flex;
   gap: 48px;
 
   height: 520px;
-  border-radius: 40px;
-
-  background-color: #fff;
+  overflow: hidden;
 
   &__image {
+    border-radius: 40px;
+    height: 100%;
+
+    object-fit: cover;
     overflow: hidden;
 
     width: 660px;
-    height: 100%;
-    border-radius: 40px;
-
-    object-fit: cover;
 
     @media screen and (width >= 1440px) and (width < 1920px) {
       min-width: 375px;
@@ -28,18 +27,18 @@
     padding: 32px 32px 32px 0;
 
     &__separator {
-      width: 1px;
-      height: 100%;
       background-color: var(--color-gray);
+      height: 100%;
+      width: 1px;
     }
 
     &__info {
       display: flex;
       flex-direction: column;
       gap: 32px;
+      height: 100%;
 
       width: 555px;
-      height: 100%;
 
       &__header {
         display: flex;
@@ -47,10 +46,10 @@
         gap: 16px;
 
         &__title {
+          color: var(--text-black);
           font-size: 28px;
           font-weight: 500;
           line-height: 130%;
-          color: var(--text-black);
 
           @media screen and (width >= 1440px) and (width < 1920px) {
             font-size: 20px;
@@ -63,30 +62,30 @@
           gap: 8px;
 
           &__adress {
-            display: flex;
-            gap: 12px;
             align-items: center;
-
-            margin: 0;
+            color: var(--color-text-gray-dark);
+            display: flex;
 
             font-size: 16px;
             font-weight: 300;
+            gap: 12px;
             line-height: 150%;
-            color: var(--color-text-gray-dark);
+
+            margin: 0;
 
             &__button {
-              display: flex;
-              gap: 4px;
               align-items: center;
+              color: var(--color-orange);
+              display: flex;
 
               font-size: 16px;
               font-weight: 400;
+              gap: 4px;
               line-height: 150%;
-              color: var(--color-orange);
 
               &__icon {
-                width: 20px;
                 height: 20px;
+                width: 20px;
               }
 
               @media screen and (width >= 1440px) and (width < 1920px) {
@@ -100,30 +99,30 @@
           }
 
           &__way {
+            align-items: center;
             display: flex;
             gap: 8px;
-            align-items: center;
 
             &__item {
+              align-items: center;
               display: flex;
               gap: 8px;
-              align-items: center;
 
               &__icon {
-                width: 24px;
                 height: 24px;
+                width: 24px;
 
                 &_metro {
-                  width: 28px;
                   height: 28px;
+                  width: 28px;
                 }
               }
 
               &__text {
+                color: var(--color-text-gray);
                 font-size: 16px;
                 font-weight: 300;
                 line-height: 150%;
-                color: var(--color-text-gray);
 
                 @media screen and (width >= 1440px) and (width < 1920px) {
                   font-size: 14px;
@@ -144,8 +143,8 @@
 
       &__specifications {
         display: grid;
-        grid-template-columns: 1fr 1fr;
         gap: 12px 8px;
+        grid-template-columns: 1fr 1fr;
 
         &__item {
           display: flex;
@@ -153,10 +152,10 @@
           gap: 4px;
 
           &__name {
+            color: var(--color-black);
             font-size: 16px;
             font-weight: 400;
             line-height: 150%;
-            color: var(--color-black);
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               font-size: 14px;
@@ -164,10 +163,10 @@
           }
 
           &__price {
+            color: var(--color-text-gray);
             font-size: 16px;
             font-weight: 300;
             line-height: 150%;
-            color: var(--color-text-gray);
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               font-size: 14px;
@@ -177,12 +176,12 @@
       }
 
       &__description {
+        border-top: 1px solid var(--color-gray);
         display: flex;
         gap: 32px;
 
         margin-top: auto;
         padding-top: 32px;
-        border-top: 1px solid var(--color-gray);
 
         &__item {
           display: flex;
@@ -195,10 +194,10 @@
           }
 
           &__type {
+            color: var(--color-text-gray);
             font-size: 16px;
             font-weight: 300;
             line-height: 150%;
-            color: var(--color-text-gray);
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               font-size: 14px;
@@ -206,10 +205,10 @@
           }
 
           &__status {
+            color: var(--color-black);
             font-size: 16px;
             font-weight: 300;
             line-height: 150%;
-            color: var(--color-black);
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               font-size: 14px;
@@ -255,10 +254,10 @@
             gap: 8px;
 
             &__number {
+              color: var(--color-black);
               font-size: 24px;
               font-weight: 400;
               line-height: 120%;
-              color: var(--color-black);
 
               @media screen and (width >= 1440px) and (width < 1920px) {
                 font-size: 20px;
@@ -266,18 +265,18 @@
             }
 
             &__description {
-              width: fit-content;
-              padding: 4px 8px;
+              backdrop-filter: blur(8px);
+
+              background: var(--color-beige);
               border-radius: 64px;
+              color: var(--color-text-gray-dark);
 
               font-size: 12px;
               font-weight: 400;
               line-height: 150%;
-              color: var(--color-text-gray-dark);
+              padding: 4px 8px;
               text-align: center;
-
-              background: var(--color-beige);
-              backdrop-filter: blur(8px);
+              width: fit-content;
             }
           }
         }
@@ -288,9 +287,9 @@
           gap: 16px;
 
           &__price {
-            width: 100%;
             height: 40px;
             padding: 8px 0;
+            width: 100%;
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               height: 37px;
@@ -303,10 +302,10 @@
             gap: 4px;
 
             &__header {
+              color: var(--color-black);
               font-size: 16px;
               font-weight: 400;
               line-height: 150%;
-              color: var(--color-black);
 
               @media screen and (width >= 1440px) and (width < 1920px) {
                 font-size: 14px;
@@ -314,10 +313,10 @@
             }
 
             &__text {
-              margin: 0;
+              color: var(--color-text-gray);
               font-size: 16px;
               font-weight: 300;
-              color: var(--color-text-gray);
+              margin: 0;
 
               @media screen and (width >= 1440px) and (width < 1920px) {
                 font-size: 14px;
@@ -346,15 +345,15 @@
         margin-top: auto;
 
         &__header {
-          display: flex;
           align-items: center;
+          display: flex;
           justify-content: space-between;
 
           &__title {
+            color: var(--color-black);
             font-size: 16px;
             font-weight: 300;
             line-height: 150%;
-            color: var(--color-black);
 
             @media screen and (width >= 1440px) and (width < 1920px) {
               font-size: 14px;
@@ -362,12 +361,12 @@
           }
 
           &__icon {
-            width: 48px;
             height: 48px;
+            width: 48px;
 
             @media screen and (width >= 1440px) and (width < 1920px) {
-              width: 40px;
               height: 40px;
+              width: 40px;
             }
           }
         }
@@ -379,8 +378,8 @@
 
           &__more {
             display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 8px;
+            grid-template-columns: 1fr 1fr;
 
             &__button {
               height: 56px;

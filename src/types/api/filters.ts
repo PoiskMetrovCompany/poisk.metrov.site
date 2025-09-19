@@ -47,6 +47,7 @@ export interface ApartmentItem {
   created_at: string
   updated_at: string
   residential_complex: unknown | null
+  meta?: string // JSON строка с дополнительными метаданными
 }
 
 // Тип для жилого комплекса в ответе API
@@ -66,6 +67,7 @@ export interface ComplexItem {
   metro_time: number
   created_at: string
   updated_at: string
+  meta?: string // JSON строка с дополнительными метаданными
 }
 
 // Union тип для элементов данных в зависимости от типа сущности

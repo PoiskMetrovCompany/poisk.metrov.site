@@ -115,7 +115,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isLoading={true} />
-        <Estate />
+        <Estate images={[]} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex isLoading={true} />
@@ -133,7 +133,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isError={true} />
-        <Estate />
+        <Estate images={[]} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex />
@@ -159,10 +159,21 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     description: complexData.attributes.description,
   }
 
+  // Парсим meta данные для получения изображений
+  let estateImages: string[] = []
+  try {
+    const metaData = JSON.parse(complexData.attributes.meta)
+    if (metaData.renderer && Array.isArray(metaData.renderer)) {
+      estateImages = metaData.renderer
+    }
+  } catch (error) {
+    console.error("Ошибка при парсинге meta данных:", error)
+  }
+
   return (
     <div className={styles.details}>
       <DetailsHeader data={headerData} />
-      <Estate />
+      <Estate images={estateImages} />
       <FlatList complexKey={key} />
       <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />

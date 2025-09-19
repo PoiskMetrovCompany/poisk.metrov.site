@@ -1,5 +1,6 @@
 import { IProperty } from "@/types/PropertyCard"
 import { ApartmentItem } from "@/types/api/filters"
+import { extractImageFromMeta } from "@/utils/lib/metaUtils"
 
 /**
  * Создает объект IProperty из данных квартиры
@@ -19,7 +20,7 @@ export const createApartmentProperty = (
     typeof itemData.price === "number"
       ? `${itemData.price.toLocaleString()} ₽`
       : "Цена не указана",
-  image: "/images/temporary/flat.png",
+  image: extractImageFromMeta(itemData.meta, "/images/temporary/flat.png"),
   badge: {
     developer: "Жилой комплекс",
     period: "2024",
