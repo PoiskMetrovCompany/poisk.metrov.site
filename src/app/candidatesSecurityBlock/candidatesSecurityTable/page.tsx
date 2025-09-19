@@ -29,6 +29,18 @@ const getAccessTokenFromCookie = (): string | null => {
   return null
 }
 
+const getROPKeyFromCookie = (): string | null => {
+  if (typeof document === "undefined") return null
+  const cookies = document.cookie.split(";")
+  for (let cookie of cookies) {
+    const [name, value] = cookie.trim().split("=")
+    if (name === "ropKey") {
+      return value
+    }
+  }
+  return null
+}
+
 interface FilteredData {
   attributes: {
     data: ICandidate[]
@@ -79,7 +91,7 @@ const CandidatesLoginPage = () => {
     error: candidatesError,
     refetch: refetchCandidates,
   } = useQuery({
-    queryKey: ["candidates", selectedCity],
+    queryKey: ["candidates", selectedCity, getROPKeyFromCookie()],
     queryFn: async (): Promise<ICandidatesResponse> => {
       const accessToken = getAccessTokenFromCookie()
 
@@ -87,17 +99,23 @@ const CandidatesLoginPage = () => {
         throw new Error("Токен доступа не найден")
       }
 
-      const response = await axios.get<ICandidatesResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/candidates/?city_work=${encodeURIComponent(selectedCity)}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
-          },
-          timeout: 15000,
-        }
-      )
+      // Получаем ключ РОП из cookie
+      const ropKey = getROPKeyFromCookie()
+
+      // Формируем URL с параметрами
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/candidates/?city_work=${encodeURIComponent(selectedCity)}`
+      if (ropKey) {
+        url += `&rop_key=${encodeURIComponent(ropKey)}`
+      }
+
+      const response = await axios.get<ICandidatesResponse>(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+        timeout: 15000,
+      })
 
       return response.data
     },

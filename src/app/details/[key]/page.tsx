@@ -76,13 +76,13 @@ const aboutObjectItemsSmall: IAboutObjectItem[] = [
 ]
 
 interface DetailsPageProps {
-  params: {
+  params: Promise<{
     key: string
-  }
+  }>
 }
 
 const DetailsPage = ({ params }: DetailsPageProps) => {
-  const { key } = params
+  const { key } = React.use(params)
 
   if (!key) {
     return (
@@ -115,7 +115,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isLoading={true} />
-        <Estate />
+        <Estate images={[]} data={undefined} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex isLoading={true} />
@@ -133,7 +133,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     return (
       <div className={styles.details}>
         <DetailsHeader isError={true} />
-        <Estate />
+        <Estate images={[]} data={undefined} />
         <FlatList complexKey={key} />
         <AboutObject items={aboutObjectItems} />
         <AboutComplex />
@@ -159,12 +159,23 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
     description: complexData.attributes.description,
   }
 
+  // Парсим meta данные для получения изображений
+  let estateImages: string[] = []
+  try {
+    const metaData = JSON.parse(complexData.attributes.meta)
+    if (metaData.renderer && Array.isArray(metaData.renderer)) {
+      estateImages = metaData.renderer
+    }
+  } catch (error) {
+    console.error("Ошибка при парсинге meta данных:", error)
+  }
+
   return (
     <div className={styles.details}>
       <DetailsHeader data={headerData} />
-      <Estate />
+      <Estate images={estateImages} data={complexData.attributes} />
       <FlatList complexKey={key} />
-      <AboutObject items={aboutObjectItems} />
+      {/* <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
       <MapProvider>
         <Location
@@ -175,7 +186,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       </MapProvider>
       <AboutObjectSmall items={aboutObjectItemsSmall} />
       <ConstructionProgress />
-      <Documents />
+      <Documents /> */}
     </div>
   )
 }

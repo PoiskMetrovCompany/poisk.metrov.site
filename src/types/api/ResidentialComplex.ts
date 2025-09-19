@@ -1,5 +1,9 @@
 import { ISpecification } from "@/types/PropertyCard"
 
+export interface IResidentialComplexResponse {
+  residential_complexes: IResidentialComplex[]
+}
+
 export interface IResidentialComplex {
   id: number
   created_at: string

@@ -294,6 +294,12 @@ const CatalogueList = () => {
       isSticky={isSticky}
       isVisible={isVisible}
       isLaptop={isLaptop}
+      catalogueResidentialComplexes={catalogueResidentialComplexes}
+      catalogueApartments={catalogueApartments}
+      isLoadingComplexes={isLoadingComplexes}
+      isLoadingApartments={isLoadingApartments}
+      selectedPropertyType={selectedPropertyType}
+      onPageChange={handlePageChange}
     />
   )
 }

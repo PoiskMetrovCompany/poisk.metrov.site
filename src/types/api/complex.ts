@@ -55,6 +55,16 @@ export interface IResidentialComplex {
   head_title: string
   h1: string
   includes: IInclude[]
+  residential_min_price?: number
+  built_year?: number
+  ready_quarter?: number
+  min_prices_by_room_type?: {
+    studio: number | null
+    "1_rooms": number | null
+    "2_rooms": number | null
+    "3_rooms": number | null
+    "4_plus_rooms": number | null
+  }
 }
 
 export interface ResidentialComplexDataResponse {

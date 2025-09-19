@@ -45,6 +45,13 @@ const Range: React.FC<RangeProps> = ({
     }
   }, [value])
 
+  // Обновляем internalRange при изменении min/max пропсов
+  useEffect(() => {
+    if (!value) {
+      setInternalRange([min, max])
+    }
+  }, [min, max, value])
+
   const handleRangeChange = (newRange: [number, number]) => {
     setInternalRange(newRange)
     onValueChange?.(newRange)
@@ -76,7 +83,7 @@ const Range: React.FC<RangeProps> = ({
               value={internalRange[0]}
               type="number"
               min={min}
-              max={max}
+              max={internalRange[1]}
               step={step}
               onChange={handleMinInputChange}
             />
@@ -90,7 +97,7 @@ const Range: React.FC<RangeProps> = ({
               className={styles.range__input__display__value__count}
               value={internalRange[1]}
               type="number"
-              min={min}
+              min={internalRange[0]}
               max={max}
               step={step}
               onChange={handleMaxInputChange}
