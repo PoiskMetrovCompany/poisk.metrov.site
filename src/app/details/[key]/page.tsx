@@ -76,13 +76,13 @@ const aboutObjectItemsSmall: IAboutObjectItem[] = [
 ]
 
 interface DetailsPageProps {
-  params: {
+  params: Promise<{
     key: string
-  }
+  }>
 }
 
 const DetailsPage = ({ params }: DetailsPageProps) => {
-  const { key } = params
+  const { key } = React.use(params)
 
   if (!key) {
     return (
@@ -175,7 +175,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       <DetailsHeader data={headerData} />
       <Estate images={estateImages} />
       <FlatList complexKey={key} />
-      <AboutObject items={aboutObjectItems} />
+      {/* <AboutObject items={aboutObjectItems} />
       <AboutComplex data={aboutComplexData} />
       <MapProvider>
         <Location
@@ -186,7 +186,7 @@ const DetailsPage = ({ params }: DetailsPageProps) => {
       </MapProvider>
       <AboutObjectSmall items={aboutObjectItemsSmall} />
       <ConstructionProgress />
-      <Documents />
+      <Documents /> */}
     </div>
   )
 }

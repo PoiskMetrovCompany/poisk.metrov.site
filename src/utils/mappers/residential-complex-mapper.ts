@@ -22,10 +22,12 @@ export const mapResidentialComplexToProperty = (
       period: "I – IV 2026", // Можно получать из других полей если есть
     },
     metro: complex.metro_station,
-    driveTime: pluralizeMinutes(complex.metro_time),
+    driveTime: complex.metro_time
+      ? pluralizeMinutes(complex.metro_time)
+      : "0 минут",
     metroType: complex.metro_type,
     specifications:
-      complex.apartments.length > 0
+      complex.apartments && complex.apartments.length > 0
         ? complex.apartments
         : [
             { type: "Студии", price: "от 4,3 млн ₽" },
@@ -38,7 +40,7 @@ export const mapResidentialComplexToProperty = (
       { type: "Срок сдачи", status: "Сдан — IV 2028" },
       { type: "Недвижимость", status: "Жилая" },
       { type: "Класс жилья", status: "Комфорт +" },
-      { type: "Квартир", status: complex.apartments_count.toString() },
+      { type: "Квартир", status: complex.apartments_count?.toString() || "0" },
     ],
     image: extractImageFromMeta(
       complex.meta,

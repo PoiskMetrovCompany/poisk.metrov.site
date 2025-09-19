@@ -46,7 +46,10 @@ const FlatLayoutCard = ({
           `№${apartment.apartment_number}`,
           apartment.renovation || "Отделка не указана",
         ],
-        imageUrl: apartment.plan_URL || "/images/temporary/room.png",
+        imageUrl:
+          apartment.plan_URL && apartment.plan_URL.trim() !== ""
+            ? apartment.plan_URL
+            : "/images/temporary/room.png",
         linkUrl: `/detailsFlat?key=${apartment.key}`,
       }
     : null
@@ -60,8 +63,11 @@ const FlatLayoutCard = ({
       "Дом кирпичный",
       "Отделка улучшенная черновая",
     ]
-  const finalImageUrl =
-    apartmentData?.imageUrl || imageUrl || "/images/temporary/room.png"
+  const finalImageUrl = (() => {
+    const url =
+      apartmentData?.imageUrl || imageUrl || "/images/temporary/room.png"
+    return url && url.trim() !== "" ? url : "/images/temporary/room.png"
+  })()
   const finalLinkUrl =
     apartmentData?.linkUrl || linkUrl || `/detailsFlat?key=asdf1231sdas`
   return (
