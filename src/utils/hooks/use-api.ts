@@ -4,7 +4,7 @@ import axios from "axios"
 // Базовый API клиент для внутренних запросов
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
-  timeout: 10000,
+  timeout: 30000,
 })
 
 // Интерцептор для добавления токена авторизации
@@ -26,7 +26,7 @@ api.interceptors.request.use((config) => {
 
 // Внешний API клиент для запросов к внешним серверам
 const externalApi = axios.create({
-  timeout: 15000, // Увеличиваем timeout для внешних запросов
+  timeout: 30000, // Увеличиваем timeout для внешних запросов
 })
 
 // Типы для API ответов
@@ -68,6 +68,7 @@ export function useApiQuery<T>(
     refetchOnReconnect?: boolean
     refetchInterval?: number
     refetchIntervalInBackground?: boolean
+    timeout?: number
   }
 ) {
   return useQuery({
@@ -80,7 +81,10 @@ export function useApiQuery<T>(
         }
 
         const client = getApiClient(url)
-        const response = await client.get<unknown>(url)
+
+        // Создаем конфигурацию с кастомным таймаутом, если он указан
+        const config = options?.timeout ? { timeout: options.timeout } : {}
+        const response = await client.get<unknown>(url, config)
         const payload: unknown = response.data
 
         // Логирование для отладки запросов к вакансиям
@@ -152,6 +156,7 @@ export function useApiMutation<T, V>(
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
     invalidateQueries?: string[] | false // Добавляем опцию для контроля инвалидации
+    timeout?: number
   }
 ) {
   const queryClient = useQueryClient()
@@ -160,7 +165,10 @@ export function useApiMutation<T, V>(
     mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.post<unknown>(url, variables)
+
+        // Создаем конфигурацию с кастомным таймаутом, если он указан
+        const config = options?.timeout ? { timeout: options.timeout } : {}
+        const response = await client.post<unknown>(url, variables, config)
         const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
@@ -210,6 +218,7 @@ export function useApiUpdate<T, V>(
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
     invalidateQueries?: string[] | false
+    timeout?: number
   }
 ) {
   const queryClient = useQueryClient()
@@ -218,7 +227,10 @@ export function useApiUpdate<T, V>(
     mutationFn: async (variables: V): Promise<T> => {
       try {
         const client = getApiClient(url)
-        const response = await client.put<unknown>(url, variables)
+
+        // Создаем конфигурацию с кастомным таймаутом, если он указан
+        const config = options?.timeout ? { timeout: options.timeout } : {}
+        const response = await client.put<unknown>(url, variables, config)
         const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
@@ -264,6 +276,7 @@ export function useApiDelete<T, V = void>(
     onSuccess?: (data: T) => void
     onError?: (error: Error) => void
     invalidateQueries?: string[] | false
+    timeout?: number
   }
 ) {
   const queryClient = useQueryClient()
@@ -288,7 +301,9 @@ export function useApiDelete<T, V = void>(
           }
         }
 
-        const response = await client.delete<unknown>(requestUrl)
+        // Создаем конфигурацию с кастомным таймаутом, если он указан
+        const config = options?.timeout ? { timeout: options.timeout } : {}
+        const response = await client.delete<unknown>(requestUrl, config)
         const payload: unknown = response.data
 
         if (isExternalUrl(url)) {
